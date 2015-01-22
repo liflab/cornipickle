@@ -17,7 +17,27 @@
  */
 package ca.uqac.lif.cornipickle;
 
+import java.io.IOException;
+import java.util.Map;
+
+import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
+import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.cornipickle.json.JsonParser;
+import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
+import ca.uqac.lif.util.FileReadWrite;
+
 public class Interpreter
 {
-
+  public static void main(String[] args) throws IOException, JsonParseException, ParseException
+  {
+    String corni_filename = args[0];
+    String json_filename = args[1];
+    String corni_file_contents = FileReadWrite.readFile(corni_filename);
+    String json_file_contents = FileReadWrite.readFile(json_filename);
+    JsonElement jse = JsonParser.parse(json_file_contents);
+    CornipickleParser parser = new CornipickleParser();
+    parser.parseProperties(corni_file_contents);
+    Map<String,Boolean> verdicts = parser.evaluateAll(jse);
+    System.out.println(verdicts);
+  }
 }

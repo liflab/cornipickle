@@ -48,7 +48,7 @@ public class CssSelector extends SetExpression
   {
     if (right == null)
       return;
-    m_cssSelector = m_cssSelector + " " + right.m_cssSelector;
+    m_cssSelector =  right.m_cssSelector + " " + m_cssSelector;
   }
   
   @Override

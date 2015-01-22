@@ -20,13 +20,16 @@ package ca.uqac.lif.cornipickle;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.ParseNodeVisitor;
 import ca.uqac.lif.bullwinkle.BnfParser.InvalidGrammarException;
+import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.util.EmptyException;
 
@@ -34,13 +37,14 @@ public class CornipickleParser implements ParseNodeVisitor
 {
   public static BnfParser s_parser = initializeParser();
   
-  List<ParseNode> m_parseTrees;
+  Map<String,Statement> m_statements;
   
   protected Stack<LanguageElement> m_nodes;
   
   public CornipickleParser()
   {
     super();
+    m_statements = new HashMap<String,Statement>();
     reset();
   }
   
@@ -87,9 +91,11 @@ public class CornipickleParser implements ParseNodeVisitor
   {
     // Split properties: dot followed by a new line
     String[] property_list = properties.split("\\.\n");
+    int i = 0;
     for (String property : property_list)
     {
       ParseNode node = null;
+      property = sanitizeProperty(property);
       try
       {
         node = s_parser.parse(property);
@@ -100,10 +106,46 @@ public class CornipickleParser implements ParseNodeVisitor
       }
       if (node != null)
       {
-        m_parseTrees.add(node);
-        parseStatement(node);
+        Statement s = (Statement) parseStatement(node);
+        m_statements.put(Integer.toString(i), s);
+      }
+      i++;
+    }
+  }
+  
+  /**
+   * Remove comments from property
+   * @param property
+   * @return
+   */
+  protected static String sanitizeProperty(String property)
+  {
+    // Remove Python-like comments (triple quotes)
+    property = property.replaceAll("\"\"\".*?\"\"\"", "");
+    property = property.trim();
+    String[] lines = property.split("\n");
+    StringBuilder out = new StringBuilder();
+    for (String line : lines)
+    {
+      line = line.trim();
+      if (!line.startsWith("#")) // Comment
+      {
+        out.append(line).append(" ");
       }
     }
+    return out.toString();
+  }
+  
+  public Map<String,Boolean> evaluateAll(JsonElement j)
+  {
+    Map<String,Boolean> verdicts = new HashMap<String,Boolean>();
+    for (String key : m_statements.keySet())
+    {
+      Statement s = m_statements.get(key);
+      boolean b = s.evaluate(j);
+      verdicts.put(key, b);
+    }
+    return verdicts;
   }
   
   public Statement parseStatement(String property) throws ParseException
@@ -179,7 +221,7 @@ public class CornipickleParser implements ParseNodeVisitor
         if (top instanceof CssSelector)
         {
           // Merge both selectors
-          CssSelector right = (CssSelector) top;
+          CssSelector right = (CssSelector) m_nodes.pop();
           sel.mergeWith(right);
         }
         m_nodes.push(sel);

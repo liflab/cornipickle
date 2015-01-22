@@ -12,7 +12,7 @@
 <prop>          := <attribute> : <S>;
 <attribute>     := <string>;
 
-<string>        := ^"[^"\s\[\]]*";
+<string>        := ^"[^"]*";
 <number>        := ^\d+;
 <boolean>       := true | false ;
 <null>          := null ;
