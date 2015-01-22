@@ -1,0 +1,47 @@
+# -----------------------------------------
+# Grammar for Cornipickle; do not edit!
+# -----------------------------------------
+
+<S> := <def_set> | <statement> ;
+
+# Auxiliary constructs in statements
+<el_or_not>          := element | ε ;
+<set_name>           := <css_selector> ;
+<var_name>           := ^\$[\w\d]+;
+
+# CSS selector
+
+<css_selector>     := $( <css_sel_contents> ) ;
+<css_sel_contents> := <css_sel_part> <css_sel_contents> | <css_sel_part> ;
+<css_sel_part>     := ^[\w\d\u0023\.\*]+; # \u0023 is the # symbol
+
+# CSS attributes
+
+<css_attribute>      := height | width | top | left | right | bottom | color ;
+
+# Element property
+
+<elem_property>      := <var_name> 's <css_attribute>;
+
+# Cornichon statements
+
+<statement>          := <foreach> | <exists> | <binary_stmt> ;
+<binary_stmt>        := <equality> | <gt> | <and> | <or> | <implies> ;
+<foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
+<exists>             := There exists a <var_name> in <set_name> such that ( <statement> ) ;
+<and>                := ( <statement> ) And ( <statement> ) ;
+<or>                 := ( <statement> ) Or ( <statement> ) ;
+<implies>            := If ( <statement> ) then ( <statement> ) ;
+<property_or_const>  := <elem_property> | <constant> ;
+<equality>           := <property_or_const> equals <property_or_const> ;
+<gt>                 := <property_or_const> is greater than <property_or_const> ;
+<constant>           := <number> | <string> ;
+<number>             := ^\d+;
+<string>             := ^"[^"\s]";
+
+# User-defined set in extension
+
+<def_set>            := A <def_set_name> is any of <def_set_elements> ;
+<def_set_name>       := ^[\w\d]+;
+<def_set_elements>   := <def_set_element> , <def_set_elements> | <def_set_element> ;
+<def_set_element>    := ^[\w\d]+;
