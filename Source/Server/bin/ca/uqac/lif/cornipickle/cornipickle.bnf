@@ -27,7 +27,7 @@
 
 # Cornichon statements
 
-<statement>          := <foreach> | <exists> | <binary_stmt> ;
+<statement>          := <foreach> | <exists> | <binary_stmt> | <userdef_stmt> ;
 <binary_stmt>        := <equality> | <gt> | <and> | <or> | <implies> ;
 <foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
 <exists>             := There exists a <var_name> in <set_name> such that ( <statement> ) ;
@@ -52,3 +52,7 @@
 
 <predicate>          := We say that <pred_pattern> when ( <statement> ) ;
 <pred_pattern>       := ^.*?(?=when);
+
+# User-defined statements. Rules get dynamically added here
+
+<userdef_stmt>       := foo ;

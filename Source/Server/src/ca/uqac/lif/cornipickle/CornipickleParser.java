@@ -20,34 +20,27 @@ package ca.uqac.lif.cornipickle;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
+import ca.uqac.lif.bullwinkle.BnfParser.InvalidGrammarException;
+import ca.uqac.lif.bullwinkle.BnfRule;
+import ca.uqac.lif.bullwinkle.NonTerminalToken;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.ParseNodeVisitor;
-import ca.uqac.lif.bullwinkle.BnfParser.InvalidGrammarException;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonList;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.util.EmptyException;
 
 public class CornipickleParser implements ParseNodeVisitor 
 {
-  public static BnfParser s_parser = initializeParser();
-
-  Map<String,Statement> m_statements;
-
-  Map<String,SetDefinition> m_setDefs;
-
+  public BnfParser m_parser;
+  
   protected Stack<LanguageElement> m_nodes;
 
   public CornipickleParser()
   {
     super();
-    m_statements = new HashMap<String,Statement>();
-    m_setDefs = new HashMap<String,SetDefinition>();
+    m_parser = initializeParser();
     reset();
   }
 
@@ -63,7 +56,7 @@ public class CornipickleParser implements ParseNodeVisitor
 
   protected BnfParser getParser()
   {
-    return s_parser;
+    return m_parser;
   }
 
   /**
@@ -90,87 +83,6 @@ public class CornipickleParser implements ParseNodeVisitor
     return parser;
   }
 
-  public void parseProperties(String properties) throws ParseException
-  {
-    properties = sanitizeProperty(properties);
-    // Split properties: dot followed by a new line
-    String[] property_list = properties.split("\\.\n");
-    int i = 0;
-    for (String property : property_list)
-    {
-      ParseNode node = null;
-      try
-      {
-        node = s_parser.parse(property);
-      }
-      catch (BnfParser.ParseException e)
-      {
-        throw new ParseException("Error parsing properties");
-      }
-      if (node != null)
-      {
-        LanguageElement le = parseStatement(node);
-        if (le instanceof Statement)
-        {
-          Statement s = (Statement) le; 
-          m_statements.put(Integer.toString(i), s);
-          i++;
-        }
-        else if (le instanceof SetDefinitionExtension)
-        {
-          SetDefinitionExtension s = (SetDefinitionExtension) le;
-          m_setDefs.put(s.getSetName(), s);
-        }
-
-      }
-
-    }
-  }
-
-  /**
-   * Remove comments from property
-   * @param property
-   * @return
-   */
-  protected static String sanitizeProperty(String property)
-  {
-    // Remove Python-like comments (triple quotes)
-    property = property.replaceAll("(?s)\"\"\".*?\"\"\"", "");
-    property = property.trim();
-    String[] lines = property.split("\n");
-    StringBuilder out = new StringBuilder();
-    for (String line : lines)
-    {
-      line = line.trim();
-      if (!line.startsWith("#")) // Comment
-      {
-        out.append(line).append("\n");
-      }
-    }
-    return out.toString();
-  }
-
-  public Map<String,Boolean> evaluateAll(JsonElement j)
-  {
-    Map<String,Boolean> verdicts = new HashMap<String,Boolean>();
-    Map<String,JsonElement> d = new HashMap<String,JsonElement>();
-    // Fill dictionary with user-defined sets
-    for (String set_name : m_setDefs.keySet())
-    {
-      SetDefinition def = m_setDefs.get(set_name);
-      JsonList jl = new JsonList();
-      jl.addAll(def.evaluate(null));
-      d.put(set_name, jl);
-    }
-    for (String key : m_statements.keySet())
-    {
-      Statement s = m_statements.get(key);
-      boolean b = s.evaluate(j, d);
-      verdicts.put(key, b);
-    }
-    return verdicts;
-  }
-
   public Statement parseStatement(String property) throws ParseException
   {
     LanguageElement el = parseLanguage(property);
@@ -184,7 +96,7 @@ public class CornipickleParser implements ParseNodeVisitor
     ParseNode node = null;
     try
     {
-      node = s_parser.parse(property);
+      node = m_parser.parse(property);
     }
     catch (BnfParser.ParseException e)
     {
@@ -207,6 +119,14 @@ public class CornipickleParser implements ParseNodeVisitor
     }
     return m_nodes.peek();
   }
+  
+  public void addPredicateDefinition(PredicateDefinition pd)
+  {
+    BnfRule rule = pd.getRule();
+    String rule_name = pd.getRuleName();
+    m_parser.addRule(rule);
+    m_parser.addCaseToRule("<userdef_stmt>", "<" + rule_name + ">");
+  }
 
   @Override
   public void visit(ParseNode node)
@@ -219,6 +139,7 @@ public class CornipickleParser implements ParseNodeVisitor
     case "<css_attribute>":
     case "<el_or_not>":
     case "<number>":
+    case "<pred_pattern>":
     case "<property_or_const>":
     case "<S>":
     case "<statement>":
@@ -377,6 +298,23 @@ public class CornipickleParser implements ParseNodeVisitor
       GreaterThanStatement out = new GreaterThanStatement();
       out.setLeft(left);
       out.setRight(right);
+      m_nodes.push(out);
+      break;
+    }
+    case "<predicate>":
+    {
+      m_nodes.pop(); // )
+      Statement statement = (Statement) m_nodes.pop();
+      m_nodes.pop(); // (
+      m_nodes.pop(); // when
+      StringConstant pattern = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // that
+      m_nodes.pop(); // say
+      m_nodes.pop(); // We
+      StringConstant rule_name = new StringConstant("TODO:userdef");
+      PredicateDefinition out = new PredicateDefinition(rule_name);
+      out.setPattern(pattern);
+      out.setStatement(statement);
       m_nodes.push(out);
       break;
     }

@@ -83,6 +83,13 @@ public class GrammarTest
     ParseNode pn = shouldParseAndNotNull(line, "<predicate>", false);
   }
   
+  @Test
+  public void testPredicate2() throws ParseException
+  {
+    String line = "We say that $x is thin when ($x's width equals 0)";
+    ParseNode pn = shouldParseAndNotNull(line, "<predicate>", false);
+  }
+  
   public ParseNode shouldParseAndNotNull(String line, String start_symbol, boolean debug_mode)
   {
     BnfParser p = parser.getParser();
