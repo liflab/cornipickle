@@ -1,0 +1,84 @@
+{
+ "tagname" : "body",
+ "height" : 368,
+ "width" : 924,
+ "top" : 0,
+ "left" : 0,
+ "children" : [
+  {
+   "tagname" : "h1",
+   "height" : 39,
+   "width" : 924,
+   "top" : 21,
+   "left" : 8,
+   "children" : [
+    {
+     "tagname" : "#CDATA",
+     "text" : "Sample page"
+    }  
+   ]
+  },
+  {
+   "tagname" : "ul",
+   "class" : "menu",
+   "height" : 76,
+   "width" : 924,
+   "top" : 82,
+   "left" : 8,
+   "children" : [
+    {
+     "tagname" : "li",
+     "height" : 19,
+     "width" : 884,
+     "top" : 82,
+     "left" : 48,
+     "children" : [
+      {
+       "tagname" : "#CDATA",
+       "text" : "Menu 1"
+      }    
+     ]
+    },
+    {
+     "tagname" : "li",
+     "height" : 19,
+     "width" : 879,
+     "top" : 101,
+     "left" : 48,
+     "children" : [
+      {
+       "tagname" : "#CDATA",
+       "text" : "Menu 2"
+      }    
+     ]
+    },
+    {
+     "tagname" : "li",
+     "height" : 19,
+     "width" : 884,
+     "top" : 120,
+     "left" : 48,
+     "children" : [
+      {
+       "tagname" : "#CDATA",
+       "text" : "Menu 3"
+      }    
+     ]
+    },
+    {
+     "tagname" : "li",
+     "height" : 19,
+     "width" : 884,
+     "top" : 139,
+     "left" : 48,
+     "children" : [
+      {
+       "tagname" : "#CDATA",
+       "text" : "Menu 4"
+      }    
+     ]
+    }  
+   ]
+  }
+ ]
+}

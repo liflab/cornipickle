@@ -2,7 +2,7 @@
 # Grammar for Cornipickle; do not edit!
 # -----------------------------------------
 
-<S> := <def_set> | <statement> | <predicate> ;
+<S> := <predicate> | <def_set> | <statement> ;
 
 # Auxiliary constructs in statements
 
@@ -27,13 +27,14 @@
 
 # Cornichon statements
 
-<statement>          := <foreach> | <exists> | <binary_stmt> | <userdef_stmt> ;
+<statement>          := <foreach> | <exists> | <binary_stmt> | <negation> | <userdef_stmt> ;
 <binary_stmt>        := <equality> | <gt> | <and> | <or> | <implies> ;
 <foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
 <exists>             := There exists a <var_name> in <set_name> such that ( <statement> ) ;
 <and>                := ( <statement> ) And ( <statement> ) ;
 <or>                 := ( <statement> ) Or ( <statement> ) ;
 <implies>            := If ( <statement> ) then ( <statement> ) ;
+<negation>           := Not ( <statement> ) ;
 <property_or_const>  := <elem_property> | <constant> ;
 <equality>           := <property_or_const> equals <property_or_const> ;
 <gt>                 := <property_or_const> is greater than <property_or_const> ;
@@ -55,4 +56,4 @@
 
 # User-defined statements. Rules get dynamically added here
 
-<userdef_stmt>       := foo ;
+<userdef_stmt>       := gnarfnfar ;

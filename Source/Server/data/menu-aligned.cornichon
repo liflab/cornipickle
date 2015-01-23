@@ -1,0 +1,29 @@
+"""
+----------------------------------------------------------
+ Vocabulary definitions
+----------------------------------------------------------
+"""
+
+# We define a predicate using the construct
+# "We say that <arguments> is/are <predicate name> when".
+# The construct "an element" is neutral: it adds no meaning to the sentence
+# and could be omitted.
+
+We say that $x and $y are left-aligned when (
+  $x's left equals $y's left
+).
+
+We say that $x and $y are top-aligned when (
+  $x's top equals $y's top
+).
+
+# We then express the fact that all menu items are either
+# left- or top-aligned.
+
+For each $z in $(.menu li) (
+  For each $t in $(.menu li) (
+    ($z and $t are left-aligned)
+    Or
+    ($z and $t are top-aligned)
+  )
+).

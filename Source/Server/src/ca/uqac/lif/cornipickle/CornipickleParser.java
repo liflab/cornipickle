@@ -20,12 +20,15 @@ package ca.uqac.lif.cornipickle;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
+import java.util.Vector;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.BnfParser.InvalidGrammarException;
 import ca.uqac.lif.bullwinkle.BnfRule;
-import ca.uqac.lif.bullwinkle.NonTerminalToken;
+import ca.uqac.lif.bullwinkle.CaptureBlockParseNode;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.ParseNodeVisitor;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
@@ -36,11 +39,17 @@ public class CornipickleParser implements ParseNodeVisitor
   public BnfParser m_parser;
   
   protected Stack<LanguageElement> m_nodes;
+  
+  protected Map<String,PredicateDefinition> m_predicateDefinitions;
+  
+  protected int m_predicateCount;
 
   public CornipickleParser()
   {
     super();
+    m_predicateCount = 0;
     m_parser = initializeParser();
+    m_predicateDefinitions = new HashMap<String,PredicateDefinition>();
     reset();
   }
 
@@ -80,6 +89,7 @@ public class CornipickleParser implements ParseNodeVisitor
     {
       e.printStackTrace();
     }
+    //parser.setDebugMode(true);
     return parser;
   }
 
@@ -100,7 +110,7 @@ public class CornipickleParser implements ParseNodeVisitor
     }
     catch (BnfParser.ParseException e)
     {
-      throw new ParseException("Error parsing properties");
+      throw new ParseException("Error: the BNF parser returned null");
     }
     if (node != null)
     {
@@ -122,16 +132,27 @@ public class CornipickleParser implements ParseNodeVisitor
   
   public void addPredicateDefinition(PredicateDefinition pd)
   {
+    // Add rules to the parser
+    String rule_name = "USERDEFRULE" + m_predicateCount; // So that each predicate is unique
+    pd.setRuleName(rule_name);
     BnfRule rule = pd.getRule();
-    String rule_name = pd.getRuleName();
     m_parser.addRule(rule);
     m_parser.addCaseToRule("<userdef_stmt>", "<" + rule_name + ">");
+    // Add definition
+    m_predicateDefinitions.put(rule_name, pd);
+    m_predicateCount++;
   }
 
   @Override
   public void visit(ParseNode node)
   {
     String node_token =  node.getToken();
+    if (node instanceof CaptureBlockParseNode)
+    {
+      CaptureBlock cb = new CaptureBlock(node_token);
+      m_nodes.push(cb);
+      return;
+    }
     switch (node_token)
     {
     case "<binary_stmt>":
@@ -144,9 +165,25 @@ public class CornipickleParser implements ParseNodeVisitor
     case "<S>":
     case "<statement>":
     case "<userdef_set>":
+    case "<userdef_stmt>":
     case "<var_name>":
     {
       // Nothing to do: leave statement on stack
+      break;
+    }
+    case "<and>":
+    {
+      m_nodes.pop(); // (
+      Statement right = (Statement) m_nodes.pop();
+      m_nodes.pop(); // )
+      m_nodes.pop(); // And
+      m_nodes.pop(); // (
+      Statement left = (Statement) m_nodes.pop();
+      m_nodes.pop(); // )
+      AndStatement out = new AndStatement();
+      out.addOperand(left);
+      out.addOperand(right);
+      m_nodes.push(out);
       break;
     }
     case "<css_selector>":
@@ -253,21 +290,6 @@ public class CornipickleParser implements ParseNodeVisitor
       m_nodes.push(out);
       break;
     }
-    case "<and>":
-    {
-      m_nodes.pop(); // (
-      Statement right = (Statement) m_nodes.pop();
-      m_nodes.pop(); // )
-      m_nodes.pop(); // And
-      m_nodes.pop(); // (
-      Statement left = (Statement) m_nodes.pop();
-      m_nodes.pop(); // )
-      AndStatement out = new AndStatement();
-      out.addOperand(left);
-      out.addOperand(right);
-      m_nodes.push(out);
-      break;
-    }
     case "<equality>":
     {
       Property right = (Property) m_nodes.pop();
@@ -298,6 +320,33 @@ public class CornipickleParser implements ParseNodeVisitor
       GreaterThanStatement out = new GreaterThanStatement();
       out.setLeft(left);
       out.setRight(right);
+      m_nodes.push(out);
+      break;
+    }
+    case "<negation>":
+    {
+      m_nodes.pop(); // (
+      Statement right = (Statement) m_nodes.pop();
+      m_nodes.pop(); // )
+      m_nodes.pop(); // Not
+      m_nodes.pop(); // (
+      NegationStatement out = new NegationStatement();
+      out.setInnerStatement(right);
+      m_nodes.push(out);
+      break;
+    }
+    case "<or>":
+    {
+      m_nodes.pop(); // (
+      Statement right = (Statement) m_nodes.pop();
+      m_nodes.pop(); // )
+      m_nodes.pop(); // Or
+      m_nodes.pop(); // (
+      Statement left = (Statement) m_nodes.pop();
+      m_nodes.pop(); // )
+      OrStatement out = new OrStatement();
+      out.addOperand(left);
+      out.addOperand(right);
       m_nodes.push(out);
       break;
     }
@@ -352,9 +401,33 @@ public class CornipickleParser implements ParseNodeVisitor
         NumberConstant out = new NumberConstant(node_token);
         m_nodes.push(out);
       }
+      else if (node_token.startsWith("<"))
+      {
+        // Most probably a user-defined non-terminal token
+        StringConstant pattern = (StringConstant) m_nodes.pop(); // The pattern that was matched
+        // Remove stack of any regex capture blocks associated to the match
+        Vector<String> capture_blocks = new Vector<String>();
+        while (!m_nodes.isEmpty() && m_nodes.peek() instanceof CaptureBlock)
+        {
+          CaptureBlock cb = (CaptureBlock) m_nodes.pop();
+          capture_blocks.add(0, cb.toString());
+        }
+        String predicate_name = node_token;
+        predicate_name = predicate_name.replaceAll("<", "");
+        predicate_name = predicate_name.replaceAll(">", "");
+        // In predicate call, put a reference to the predicate's definition
+        PredicateDefinition pred_def = m_predicateDefinitions.get(predicate_name);
+        if (pred_def == null)
+        {
+          System.err.println("Could not find definition for " + predicate_name);
+          //throw new ParseException("Could not find definition for " + predicate_name);
+        }
+        PredicateCall out = new PredicateCall(pred_def, pattern.toString(), capture_blocks);
+        m_nodes.push(out);
+      }
       else
       {
-        // A string
+        // A normal string
         StringConstant out = new StringConstant(node_token);
         m_nodes.push(out);
       }

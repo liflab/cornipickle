@@ -17,9 +17,8 @@
  */
 package ca.uqac.lif.cornipickle;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +36,7 @@ public class PredicateDefinition extends Statement
    * What variable name is associated to each capture group
    * in the regex pattern
    */
-  protected List<String> m_captureGroups;
+  protected Vector<String> m_captureGroups;
   
   protected BnfRule m_rule;
   
@@ -47,7 +46,7 @@ public class PredicateDefinition extends Statement
   {
     super();
     m_ruleName = ruleName;
-    m_captureGroups = new LinkedList<String>();
+    m_captureGroups = new Vector<String>();
   }
   
   public void setPattern(StringConstant pattern)
@@ -61,7 +60,7 @@ public class PredicateDefinition extends Statement
    * @param pattern The pattern
    * @return
    */
-  protected void createBnfRule(String pattern)
+  protected BnfRule createBnfRule(String pattern)
   {
     BnfRule out = null;
     pattern = pattern.trim(); // Remove spurious space at the tail
@@ -89,7 +88,12 @@ public class PredicateDefinition extends Statement
       e.printStackTrace();
     }
     // Set the BNF rule or null if parsing failed (should not)
-    m_rule = out;
+    return out;
+  }
+  
+  public String getCaptureGroup(int i)
+  {
+    return m_captureGroups.elementAt(i);
   }
   
   public void setStatement(Statement st)
@@ -104,7 +108,12 @@ public class PredicateDefinition extends Statement
   
   public BnfRule getRule()
   {
-    return m_rule;
+    return createBnfRule(m_pattern.toString());
+  }
+  
+  public void setRuleName(String name)
+  {
+    m_ruleName = new StringConstant(name);
   }
   
   public Statement getStatement()
@@ -121,7 +130,6 @@ public class PredicateDefinition extends Statement
   @Override
   public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
   {
-    // TODO Auto-generated method stub
-    return false;
+    return m_predicate.evaluate(j, d);
   }
 }

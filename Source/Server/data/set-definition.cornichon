@@ -1,0 +1,15 @@
+# To define a set of elements and name it, we use the construct
+# "A <name of set> is any of <list of elements>. Here we define a set of
+# numbers.
+
+A foo is any of 1000, 2000.
+
+# Some predicate
+
+We say that $x is large when (
+  $x's value is greater than 1500
+).
+
+# References to user-defined sets must be put in quotes
+
+For each $x in "foo" ($x is large).

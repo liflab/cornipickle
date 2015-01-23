@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import ca.uqac.lif.bullwinkle.BnfRule;
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonList;
@@ -32,11 +31,11 @@ import ca.uqac.lif.util.FileReadWrite;
 public class Interpreter
 {
   
-  Map<String,Statement> m_statements;
+  protected Map<String,Statement> m_statements;
 
-  Map<String,SetDefinition> m_setDefs;
+  protected Map<String,SetDefinition> m_setDefs;
   
-  CornipickleParser m_parser;
+  protected CornipickleParser m_parser;
   
   public Interpreter()
   {
@@ -69,6 +68,10 @@ public class Interpreter
     int i = 0;
     for (String property : property_list)
     {
+      if (property.trim().isEmpty())
+      {
+        continue;
+      }
       LanguageElement le = m_parser.parseLanguage(property);
       if (le instanceof PredicateDefinition)
       {
