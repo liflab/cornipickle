@@ -21,7 +21,6 @@ package ca.uqac.lif.cornipickle;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -30,39 +29,43 @@ import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.ParseNodeVisitor;
 import ca.uqac.lif.bullwinkle.BnfParser.InvalidGrammarException;
 import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.cornipickle.json.JsonList;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.util.EmptyException;
 
 public class CornipickleParser implements ParseNodeVisitor 
 {
   public static BnfParser s_parser = initializeParser();
-  
+
   Map<String,Statement> m_statements;
-  
+
+  Map<String,SetDefinition> m_setDefs;
+
   protected Stack<LanguageElement> m_nodes;
-  
+
   public CornipickleParser()
   {
     super();
     m_statements = new HashMap<String,Statement>();
+    m_setDefs = new HashMap<String,SetDefinition>();
     reset();
   }
-  
+
   public void reset()
   {
     m_nodes = new Stack<LanguageElement>();
   }
-  
+
   protected static InputStream getGrammarStream()
   {
     return CornipickleParser.class.getResourceAsStream("cornipickle.bnf");
   }
-  
+
   protected BnfParser getParser()
   {
     return s_parser;
   }
-  
+
   /**
    * Initializes the BNF parser
    * @return
@@ -86,16 +89,16 @@ public class CornipickleParser implements ParseNodeVisitor
     }
     return parser;
   }
-  
+
   public void parseProperties(String properties) throws ParseException
   {
+    properties = sanitizeProperty(properties);
     // Split properties: dot followed by a new line
     String[] property_list = properties.split("\\.\n");
     int i = 0;
     for (String property : property_list)
     {
       ParseNode node = null;
-      property = sanitizeProperty(property);
       try
       {
         node = s_parser.parse(property);
@@ -106,13 +109,24 @@ public class CornipickleParser implements ParseNodeVisitor
       }
       if (node != null)
       {
-        Statement s = (Statement) parseStatement(node);
-        m_statements.put(Integer.toString(i), s);
+        LanguageElement le = parseStatement(node);
+        if (le instanceof Statement)
+        {
+          Statement s = (Statement) le; 
+          m_statements.put(Integer.toString(i), s);
+          i++;
+        }
+        else if (le instanceof SetDefinitionExtension)
+        {
+          SetDefinitionExtension s = (SetDefinitionExtension) le;
+          m_setDefs.put(s.getSetName(), s);
+        }
+
       }
-      i++;
+
     }
   }
-  
+
   /**
    * Remove comments from property
    * @param property
@@ -121,7 +135,7 @@ public class CornipickleParser implements ParseNodeVisitor
   protected static String sanitizeProperty(String property)
   {
     // Remove Python-like comments (triple quotes)
-    property = property.replaceAll("\"\"\".*?\"\"\"", "");
+    property = property.replaceAll("(?s)\"\"\".*?\"\"\"", "");
     property = property.trim();
     String[] lines = property.split("\n");
     StringBuilder out = new StringBuilder();
@@ -130,24 +144,33 @@ public class CornipickleParser implements ParseNodeVisitor
       line = line.trim();
       if (!line.startsWith("#")) // Comment
       {
-        out.append(line).append(" ");
+        out.append(line).append("\n");
       }
     }
     return out.toString();
   }
-  
+
   public Map<String,Boolean> evaluateAll(JsonElement j)
   {
     Map<String,Boolean> verdicts = new HashMap<String,Boolean>();
+    Map<String,JsonElement> d = new HashMap<String,JsonElement>();
+    // Fill dictionary with user-defined sets
+    for (String set_name : m_setDefs.keySet())
+    {
+      SetDefinition def = m_setDefs.get(set_name);
+      JsonList jl = new JsonList();
+      jl.addAll(def.evaluate(null));
+      d.put(set_name, jl);
+    }
     for (String key : m_statements.keySet())
     {
       Statement s = m_statements.get(key);
-      boolean b = s.evaluate(j);
+      boolean b = s.evaluate(j, d);
       verdicts.put(key, b);
     }
     return verdicts;
   }
-  
+
   public Statement parseStatement(String property) throws ParseException
   {
     LanguageElement el = parseLanguage(property);
@@ -155,7 +178,7 @@ public class CornipickleParser implements ParseNodeVisitor
       return null;
     return (Statement) el;
   }
-  
+
   public LanguageElement parseLanguage(String property) throws ParseException
   {
     ParseNode node = null;
@@ -173,7 +196,7 @@ public class CornipickleParser implements ParseNodeVisitor
     }
     return null;    
   }
-  
+
   protected LanguageElement parseStatement(ParseNode root)
   {
     reset();
@@ -191,117 +214,213 @@ public class CornipickleParser implements ParseNodeVisitor
     String node_token =  node.getToken();
     switch (node_token)
     {
-      case "<binary_stmt>":
-      case "<constant>":
-      case "<css_attribute>":
-      case "<el_or_not>":
-      case "<number>":
-      case "<property_or_const>":
-      case "<S>":
-      case "<set_name>":
-      case "<statement>":
-      case "<string>":
-      case "<var_name>":
+    case "<binary_stmt>":
+    case "<constant>":
+    case "<css_attribute>":
+    case "<el_or_not>":
+    case "<number>":
+    case "<property_or_const>":
+    case "<S>":
+    case "<statement>":
+    case "<userdef_set>":
+    case "<var_name>":
+    {
+      // Nothing to do: leave statement on stack
+      break;
+    }
+    case "<css_selector>":
+    {
+      m_nodes.pop(); // )
+      CssSelector out = (CssSelector) m_nodes.pop();
+      m_nodes.pop(); // $(
+      m_nodes.push(out);
+      break;
+    }
+    case "<css_sel_contents>":
+    {
+      CssSelector sel = (CssSelector) m_nodes.pop();
+      LanguageElement top = m_nodes.peek();
+      if (top instanceof CssSelector)
       {
-        // Nothing to do: leave statement on stack
-        break;
+        // Merge both selectors
+        CssSelector right = (CssSelector) m_nodes.pop();
+        sel.mergeWith(right);
       }
-      case "<css_selector>":
+      m_nodes.push(sel);
+      break;
+    }
+    case "<css_sel_part>":
+    {
+      StringConstant part = (StringConstant) m_nodes.pop();
+      CssSelector out = new CssSelector(part);
+      m_nodes.push(out);
+      break;
+    }
+    case "<def_set>":
+    {
+      ElementList set_elements = (ElementList) m_nodes.pop();
+      m_nodes.pop(); // of
+      m_nodes.pop(); // any
+      m_nodes.pop(); // is
+      StringConstant set_name = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // A
+      SetDefinitionExtension out = new SetDefinitionExtension(set_name, set_elements);
+      m_nodes.push(out);
+      break;
+    }
+    case "<def_set_element>":
+    {
+      Property part = (Property) m_nodes.pop();
+      ElementList out = new ElementList();
+      out.add(part);
+      m_nodes.push(out);
+      break;        
+    }
+    case "<def_set_elements>":
+    {
+      ElementList sel = (ElementList) m_nodes.pop();
+      while (true)
       {
-        m_nodes.pop(); // )
-        CssSelector out = (CssSelector) m_nodes.pop();
-        m_nodes.pop(); // $(
-        m_nodes.push(out);
-        break;
-      }
-      case "<css_sel_contents>":
-      {
-        CssSelector sel = (CssSelector) m_nodes.pop();
         LanguageElement top = m_nodes.peek();
-        if (top instanceof CssSelector)
+        if (top instanceof StringConstant)
         {
-          // Merge both selectors
-          CssSelector right = (CssSelector) m_nodes.pop();
-          sel.mergeWith(right);
-        }
-        m_nodes.push(sel);
-        break;
-      }
-      case "<css_sel_part>":
-      {
-        StringConstant part = (StringConstant) m_nodes.pop();
-        CssSelector out = new CssSelector(part);
-        m_nodes.push(out);
-        break;
-      }
-      case "<foreach>":
-      {
-        m_nodes.pop(); // )
-        Statement statement = (Statement) m_nodes.pop();
-        m_nodes.pop(); // (
-        SetExpression set_name = (SetExpression) m_nodes.pop();
-        m_nodes.pop(); // in
-        StringConstant var_name = (StringConstant) m_nodes.pop();
-        m_nodes.pop(); // each
-        m_nodes.pop(); // For
-        ForAllStatement out = new ForAllStatement();
-        out.setDomain(set_name);
-        out.setInnerStatement(statement);
-        out.setVariable(var_name);
-        m_nodes.push(out);
-        break;
-      }
-      case "<and>":
-      {
-        m_nodes.pop(); // (
-        Statement right = (Statement) m_nodes.pop();
-        m_nodes.pop(); // )
-        m_nodes.pop(); // And
-        m_nodes.pop(); // (
-        Statement left = (Statement) m_nodes.pop();
-        m_nodes.pop(); // )
-        AndStatement out = new AndStatement();
-        out.addOperand(left);
-        out.addOperand(right);
-        m_nodes.push(out);
-        break;
-      }
-      case "<equality>":
-      {
-        Property right = (Property) m_nodes.pop();
-        m_nodes.pop(); // equals
-        Property left = (Property) m_nodes.pop();
-        EqualsStatement out = new EqualsStatement();
-        out.setLeft(left);
-        out.setRight(right);
-        m_nodes.push(out);
-        break;
-      }
-      case "<elem_property>":
-      {
-        StringConstant sel = (StringConstant) m_nodes.pop();
-        m_nodes.pop(); // 's
-        StringConstant var = (StringConstant) m_nodes.pop();
-        ElementProperty out = new ElementProperty(var, sel);
-        m_nodes.push(out);
-        break;
-      }
-      default:
-      {
-        // This is a node that does not contain a label
-        // Guess if this is a string or a number
-        if (isNumeric(node_token))
-        {
-          NumberConstant out = new NumberConstant(node_token);
-          m_nodes.push(out);
+          StringConstant s = (StringConstant) top;
+          if (s.toString().compareTo(",") == 0)
+          {
+            m_nodes.pop(); // ,
+            // Merge both lists
+            ElementList right = (ElementList) m_nodes.pop();
+            sel.addAll(right);
+          }
+          else
+          {
+            break;
+          }
         }
         else
         {
-          // A string
-          StringConstant out = new StringConstant(node_token);
-          m_nodes.push(out);
+          break;
         }
       }
+      m_nodes.push(sel);
+      break;
+    }
+    case "<def_set_name>":
+    {
+      // Trim spaces
+      LanguageElement el = m_nodes.pop();
+      StringConstant sc = (StringConstant) el;
+      String s = sc.toString();
+      s = s.trim();
+      m_nodes.push(new StringConstant(s));
+      break;
+    }
+    case "<foreach>":
+    {
+      m_nodes.pop(); // )
+      Statement statement = (Statement) m_nodes.pop();
+      m_nodes.pop(); // (
+      SetExpression set_name = (SetExpression) m_nodes.pop();
+      m_nodes.pop(); // in
+      StringConstant var_name = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // each
+      m_nodes.pop(); // For
+      ForAllStatement out = new ForAllStatement();
+      out.setDomain(set_name);
+      out.setInnerStatement(statement);
+      out.setVariable(var_name);
+      m_nodes.push(out);
+      break;
+    }
+    case "<and>":
+    {
+      m_nodes.pop(); // (
+      Statement right = (Statement) m_nodes.pop();
+      m_nodes.pop(); // )
+      m_nodes.pop(); // And
+      m_nodes.pop(); // (
+      Statement left = (Statement) m_nodes.pop();
+      m_nodes.pop(); // )
+      AndStatement out = new AndStatement();
+      out.addOperand(left);
+      out.addOperand(right);
+      m_nodes.push(out);
+      break;
+    }
+    case "<equality>":
+    {
+      Property right = (Property) m_nodes.pop();
+      m_nodes.pop(); // equals
+      Property left = (Property) m_nodes.pop();
+      EqualsStatement out = new EqualsStatement();
+      out.setLeft(left);
+      out.setRight(right);
+      m_nodes.push(out);
+      break;
+    }
+    case "<elem_property>":
+    {
+      StringConstant sel = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // 's
+      StringConstant var = (StringConstant) m_nodes.pop();
+      ElementProperty out = new ElementProperty(var, sel);
+      m_nodes.push(out);
+      break;
+    }
+    case "<gt>":
+    {
+      Property right = (Property) m_nodes.pop();
+      m_nodes.pop(); // than
+      m_nodes.pop(); // greater
+      m_nodes.pop(); // is
+      Property left = (Property) m_nodes.pop();
+      GreaterThanStatement out = new GreaterThanStatement();
+      out.setLeft(left);
+      out.setRight(right);
+      m_nodes.push(out);
+      break;
+    }
+    case "<set_name>":
+    {
+      LanguageElement el = m_nodes.pop();
+      if (el instanceof CssSelector)
+      {
+        m_nodes.push(el);
+      }
+      else if (el instanceof StringConstant)
+      {
+        StringConstant set_name = (StringConstant) el;
+        SetDefinition sd = new SetDefinition(set_name.toString());
+        m_nodes.push(sd);
+      }
+      break;
+    }
+    case "<string>":
+    {
+      // Trim quotes
+      LanguageElement el = m_nodes.pop();
+      StringConstant sc = (StringConstant) el;
+      String s = sc.toString();
+      s = s.replaceAll("\"", "");
+      m_nodes.push(new StringConstant(s));
+      break;
+    }
+    default:
+    {
+      // This is a node that does not contain a label
+      // Guess if this is a string or a number
+      if (isNumeric(node_token))
+      {
+        NumberConstant out = new NumberConstant(node_token);
+        m_nodes.push(out);
+      }
+      else
+      {
+        // A string
+        StringConstant out = new StringConstant(node_token);
+        m_nodes.push(out);
+      }
+    }
     }    
   }
 
@@ -310,7 +429,7 @@ public class CornipickleParser implements ParseNodeVisitor
   {
     // Nothing to do
   }
-  
+
   protected static boolean isNumeric(String str)  
   {  
     try  
@@ -323,7 +442,7 @@ public class CornipickleParser implements ParseNodeVisitor
     }  
     return true;  
   }
-  
+
   public static class ParseException extends EmptyException
   {
     /**

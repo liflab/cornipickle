@@ -99,6 +99,23 @@ public class CornipickleParserTest
       fail("Got wrong type of object");
     }
   }
+  
+  /*
+  @Test
+  public void testForEach3() throws ParseException
+  {
+    String line = "For each $x in \"my set\" ($x's abc equals 1)";
+    ParseNode pn = shouldParseAndNotNull(line, "<foreach>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof ForAllStatement))
+    {
+      fail("Got wrong type of object");
+    }
+  }*/
 
   @Test
   public void testCssSelector1() throws ParseException
@@ -127,6 +144,38 @@ public class CornipickleParserTest
       fail("Parsing returned null");
     }
     if (!(e instanceof CssSelector))
+    {
+      fail("Got wrong type of object");
+    }
+  }
+  
+  @Test
+  public void testUserDefinedSet2() throws ParseException
+  {
+    String line = "A tomato is any of \"abc\", \"def\", \"h1f\"";
+    ParseNode pn = shouldParseAndNotNull(line, "<def_set>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof SetDefinition))
+    {
+      fail("Got wrong type of object");
+    }
+  }
+  
+  @Test
+  public void testUserDefinedSet1() throws ParseException
+  {
+    String line = "A tomato is any of \"abc\"";
+    ParseNode pn = shouldParseAndNotNull(line, "<def_set>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof SetDefinition))
     {
       fail("Got wrong type of object");
     }

@@ -23,15 +23,15 @@ public class GrammarTest
   @Test
   public void testUserDefinedSet2() throws ParseException
   {
-    String line = "A tomato is any of abc, def, h1f";
+    String line = "A tomato is any of \"abc\", \"def\", \"h1f\"";
     ParseNode pn = shouldParseAndNotNull(line, "<def_set>", false);
   }
   
   @Test
   public void testUserDefinedSet1() throws ParseException
   {
-    String line = "A tomato is any of abc";
-    ParseNode pn = shouldParseAndNotNull(line, "<def_set>", false);
+    String line = "A tomato is any of \"abc\"";
+    ParseNode pn = shouldParseAndNotNull(line, "<def_set>", true);
   }
   
   @Test
@@ -74,6 +74,13 @@ public class GrammarTest
   {
     String line = "$(p1.menu h1 h2#myid)";
     ParseNode pn = shouldParseAndNotNull(line, "<css_selector>", false);
+  }
+  
+  @Test
+  public void testPredicate1() throws ParseException
+  {
+    String line = "We say that all is good when (1 equals 1)";
+    ParseNode pn = shouldParseAndNotNull(line, "<predicate>", false);
   }
   
   public ParseNode shouldParseAndNotNull(String line, String start_symbol, boolean debug_mode)

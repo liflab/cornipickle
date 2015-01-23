@@ -32,7 +32,7 @@ public class JsonList extends JsonElement implements List<JsonElement>
     super();
     m_list = new LinkedList<JsonElement>();
   }
-
+  
   @Override
   public String toString(String indent)
   {

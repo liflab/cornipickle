@@ -58,6 +58,10 @@ public class ElementProperty extends Property
     // Fetch element
     JsonElement e = d.get(m_elementName);
     // Get its value
+    if (m_propertyName.compareToIgnoreCase("value") == 0)
+    {
+      return e;
+    }
     JsonElement v = JsonPath.get(e, m_propertyName);
     // Return
     return v;
