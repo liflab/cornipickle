@@ -43,7 +43,7 @@ var CornipickleProbe = function()
       if (n.tagName)
       {
         output_something = true;
-        out += indent + " \"tagname\" : \"" + n.tagName.toLowerCase() + "\",\n";
+        out += indent + " \"tagname\" : \"" + n.tagName.toLowerCase() + "\"\n";
         out += this.outputStringIfDefined("class", n.className, n_indent);
         out += this.outputStringIfDefined("id", n.id, n_indent);
         out += this.outputNumberIfDefined("height", n.clientHeight, n_indent);
@@ -51,12 +51,14 @@ var CornipickleProbe = function()
         var pos = cumulativeOffset(n);
         out += this.outputNumberIfDefined("top", pos.top, n_indent);
         out += this.outputNumberIfDefined("left", pos.left, n_indent);
+        out += this.outputNumberIfDefined("bottom", pos.top + n.clientHeight, n_indent);
+        out += this.outputNumberIfDefined("right", pos.left + n.clientWidth, n_indent);
       }
       else
       {
         output_something = true;
         out += indent + " \"tagname\" : \"#CDATA\",\n";
-        out += indent + " \"text\" : \"" + n.nodeValue + "\"\n";
+        out += indent + " \"text\" : \"" + n.nodeValue + "\"";
       }
     }
     if (this.includeInResult(n, path) !== CornipickleProbe.DONT_INCLUDE_RECURSIVE)
@@ -87,7 +89,7 @@ var CornipickleProbe = function()
       else
       {
         output_something = true;
-        out += indent + " \"children\" : [\n" + in_children + indent + "\n" + indent + " ]\n";
+        out += ",\n" + indent + " \"children\" : [\n" + in_children + indent + "\n" + indent + " ]\n";
       }
     }
     out += indent + "}";
@@ -112,7 +114,7 @@ var CornipickleProbe = function()
   {
     if (property != undefined && property !== "")
     {
-      return indent + "\"" + property_name + "\" : \"" + property + "\",\n";
+      return ",\n" + indent + "\"" + property_name + "\" : \"" + property + "\"";
     }
     return "";
   }
@@ -121,7 +123,7 @@ var CornipickleProbe = function()
   {
     if (property != undefined && property !== "")
     {
-      return indent + "\"" + property_name + "\" : " + property + ",\n";
+      return ",\n" + indent + "\"" + property_name + "\" : " + property;
     }
     return "";
   }
