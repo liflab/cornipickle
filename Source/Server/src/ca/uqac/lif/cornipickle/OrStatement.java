@@ -35,7 +35,7 @@ public class OrStatement extends AndStatement
     {
       return false;
     }
-    boolean out = true;
+    boolean out = false;
     for (Statement s : m_statements)
     {
       boolean b = s.evaluate(j, d);
