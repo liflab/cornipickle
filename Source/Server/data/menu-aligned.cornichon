@@ -27,3 +27,45 @@ For each $z in $(.menu li) (
     ($z and $t are top-aligned)
   )
 ).
+
+
+
+"""
+P1 +-------+
+   | P3    |
+   |   +---+------+
+   +---+---+      |
+       |    P2    |
+       +----------+ P4
+
+P2.y >= P3.y && P1.y <= P4.y && P2.x >= P3.x && P1.x <= P4.x
+"""
+We say that $x x-intersects $y when (
+  ($y's right is greater than $x's left)
+  And
+  ($x's right is greater than $y's left)
+).
+
+We say that $x y-intersects $y when (
+  ($y's top is greater than $x's top)
+  And
+  ($x's bottom is greater than $y's top)
+).
+
+We say that $x and $y overlap when (
+  ($x x-intersects $y)
+  And
+  ($x y-intersects $y)
+).
+
+We say that $x and $y don't overlap when (
+  Not ($x and $y overlap)
+).
+
+For each $x in $(.square) (
+  For each $y in $(.square) (
+   ( $x's id equals $y's id ) # Look out, as x and y might be the same element
+  Or
+   ( $x and $y don't overlap )
+  )
+).
