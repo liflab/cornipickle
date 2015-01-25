@@ -61,10 +61,6 @@ public class ForAllStatement extends Statement
   {
     // Fetch values for set
     List<JsonElement> domain = m_set.evaluate(j, d);
-    if (domain.isEmpty())
-    {
-      return false;
-    }
     // Iterate over values
     boolean out = true;
     for (JsonElement v : domain)

@@ -29,10 +29,6 @@ public class ExistsStatement extends ForAllStatement
   {
     // Fetch values for set
     List<JsonElement> domain = m_set.evaluate(j, d);
-    if (domain.isEmpty())
-    {
-      return false;
-    }
     // Iterate over values
     boolean out = false;
     for (JsonElement v : domain)
