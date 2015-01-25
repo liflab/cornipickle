@@ -37,12 +37,15 @@ public class Interpreter
   
   protected CornipickleParser m_parser;
   
+  protected Map<String,Boolean> m_verdicts;
+  
   public Interpreter()
   {
     super();
     m_statements = new HashMap<String,Statement>();
     m_setDefs = new HashMap<String,SetDefinition>();
     m_parser = new CornipickleParser();
+    m_verdicts = new HashMap<String,Boolean>();
   }
   
   public static void main(String[] args) throws IOException, JsonParseException, ParseException
@@ -56,7 +59,8 @@ public class Interpreter
     
     Interpreter interpreter = new Interpreter();
     interpreter.parseProperties(corni_file_contents);
-    Map<String,Boolean> verdicts = interpreter.evaluateAll(jse);
+    interpreter.evaluateAll(jse);
+    Map<String,Boolean> verdicts = interpreter.getVerdicts();
     System.out.println(verdicts);
   }
   
@@ -119,8 +123,13 @@ public class Interpreter
     }
     return out.toString();
   }
+  
+  public Map<String,Boolean> getVerdicts()
+  {
+  	return m_verdicts;
+  }
 
-  public Map<String,Boolean> evaluateAll(JsonElement j)
+  public void evaluateAll(JsonElement j)
   {
     Map<String,Boolean> verdicts = new HashMap<String,Boolean>();
     Map<String,JsonElement> d = new HashMap<String,JsonElement>();
@@ -138,6 +147,6 @@ public class Interpreter
       boolean b = s.evaluate(j, d);
       verdicts.put(key, b);
     }
-    return verdicts;
+    m_verdicts = verdicts;
   }
 }
