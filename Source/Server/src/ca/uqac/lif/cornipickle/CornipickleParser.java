@@ -329,7 +329,6 @@ public class CornipickleParser implements ParseNodeVisitor
       Statement right = (Statement) m_nodes.pop();
       m_nodes.pop(); // )
       m_nodes.pop(); // Not
-      m_nodes.pop(); // (
       NegationStatement out = new NegationStatement();
       out.setInnerStatement(right);
       m_nodes.push(out);
