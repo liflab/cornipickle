@@ -102,7 +102,7 @@ public class CssSelector extends SetExpression
     String sel_class_name = mat.group(3);
     String sel_id_name = mat.group(5);
     if ((sel_tag_name == null || (el_tag_name != null && el_tag_name.compareTo(sel_tag_name) == 0))
-        && (sel_class_name == null || (el_class_name != null && el_class_name.compareTo(sel_class_name) == 0))
+        && (sel_class_name == null || (el_class_name != null && containsClass(el_class_name, sel_class_name)))
         && (sel_id_name == null || (el_id_name != null && el_id_name.compareTo(sel_id_name) == 0)))
     {
       if (css_expression.size() == 1)
@@ -133,6 +133,19 @@ public class CssSelector extends SetExpression
       }
     }
     return out;
+  }
+  
+  protected static boolean containsClass(String element_classes, String target_class)
+  {
+  	String[] parts = element_classes.split(" ");
+  	for (String part : parts)
+  	{
+  		if (part.compareTo(target_class) == 0)
+  		{
+  			return true;
+  		}
+  	}
+  	return false;
   }
   
   @Override
