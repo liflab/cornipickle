@@ -18,6 +18,7 @@
 package ca.uqac.lif.cornipickle.server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -88,9 +89,10 @@ public class CornipickleServer extends InnerFileServer
     // Update class reference
     m_referenceClass = this.getClass();
     // Register callbacks
+    registerCallback(0, new PropertyAddCallback());
+    registerCallback(0, new StatusPageCallback());
+    registerCallback(0, new ProbeCallback());
     registerCallback(0, new DummyImageCallback());
-    registerCallback(1, new StatusPageCallback());
-    registerCallback(2, new ProbeCallback());
   }
 
   public void readProperties(String filename)
@@ -200,6 +202,83 @@ public class CornipickleServer extends InnerFileServer
       return true;
     }
   }
+  
+  protected class PropertyAddCallback extends RequestCallback
+  {
+    @Override
+    public boolean fire(HttpExchange t)
+    {
+      URI u = t.getRequestURI();
+      String path = u.getPath();
+      String method = t.getRequestMethod();
+      return method.compareToIgnoreCase("post") == 0 && 
+          path.compareTo("/add") == 0;
+    }
+
+    @Override
+    public boolean process(HttpExchange t)
+    {
+      StringBuilder page = new StringBuilder();
+      page.append("<!DOCTYPE html>\n");
+      page.append("<html>\n");
+      page.append("<head>\n");
+      page.append("<title>Cornipickle Properties</title>\n");
+      page.append("<script src=\"http://code.jquery.com/jquery-1.11.2.min.js\"></script>\n");
+      page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"screen.css\" />\n");
+      page.append("</head>\n");
+      page.append("<body>\n");
+      
+      // Read POST data
+      InputStream is_post = t.getRequestBody();
+      String post_data = streamToString(is_post);
+      
+      // Try to decode and parse it
+      boolean success = true;
+      try
+      {
+        post_data = URLDecoder.decode(post_data, "UTF-8");
+        Map<String,String> params = queryToMap(post_data);
+        String props = params.get("properties");
+        if (props != null)
+        {
+          m_interpreter.parseProperties(props);
+        }
+      } 
+      catch (ParseException e)
+      {
+        success = false;
+        page.append("<h1>Add properties</h1>\n");
+        page.append("<p>The properties could not be added.\n");
+        page.append("Message from the parser:</p>");
+        page.append("<blockquote>\n");
+        page.append(e.toString());
+        page.append("</blockquote>\n");
+      }
+      catch (UnsupportedEncodingException e)
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+        success = false;
+      }
+      if (success)
+      {
+        page.append("<h1>Add properties</h1>\n");
+        page.append("<p>The properties were successfully added.</p>");
+      }
+      page.append("<hr />\n");
+      Date d = new Date();
+      page.append(d);
+      page.append("</body>\n</html>\n");
+      String page_string = page.toString();
+      // Disable caching on the client
+      Headers h = t.getResponseHeaders();
+      h.add("Pragma", "no-cache");
+      h.add("Cache-Control", "no-cache, no-store, must-revalidate");
+      h.add("Expires", "0"); 
+      sendResponse(t, HTTP_OK, page_string);
+      return true;
+    }    
+  }
 
   protected class DummyImageCallback extends RequestCallback
   {
@@ -267,6 +346,7 @@ public class CornipickleServer extends InnerFileServer
       page.append("<html>\n");
       page.append("<head>\n");
       page.append("<title>Cornipickle Status</title>\n");
+      page.append("<script src=\"http://code.jquery.com/jquery-1.11.2.min.js\"></script>\n");
       page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"screen.css\" />\n");
       page.append("</head>\n");
       page.append("<body>\n");
@@ -290,6 +370,14 @@ public class CornipickleServer extends InnerFileServer
         }
       }
       page.append("</ul>\n");
+      page.append("\n<div id=\"add-properties\">\n");
+      page.append("<h2>Add properties</h2>\n\n");
+      page.append("<p>Type here the Cornipickle properties you want to add.</p>\n");
+      page.append("<form method=\"post\" action=\"add\">\n");
+      page.append("<div><textarea name=\"properties\"></textarea></div>\n");
+      page.append("<input type=\"submit\" />\n");
+      page.append("</form>\n");
+      page.append("</div>\n");
       page.append("<hr />\n");
       Date d = new Date();
       page.append(d);
