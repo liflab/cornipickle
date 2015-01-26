@@ -79,3 +79,23 @@ For each $x in $(.square) (
    ( $x and $y don't overlap )
   )
 ).
+
+We say that $x extends outside the window when (
+  For each $w in $(window) (
+   (
+    ($x's right is greater than $w's width)
+    Or
+    (0 is greater than $x's left)
+   )
+   Or
+   (
+    ($x's bottom is greater than $w's height)
+    Or
+    (0 is greater than $x's top)
+   )
+  )
+).
+
+For each $x in $(.square) (
+  $x extends outside the window
+).
