@@ -32,12 +32,12 @@ import ca.uqac.lif.util.EmptyException;
 public class JsonParser
 {
   public static BnfParser s_parser = initializeParser();
-  
+
   public static InputStream getGrammarStream()
   {
     return JsonParser.class.getResourceAsStream("json.bnf");
   }
-  
+
   /**
    * Initializes the BNF parser
    * @return
@@ -61,7 +61,7 @@ public class JsonParser
     }
     return parser;
   }
-  
+
   public static JsonElement parse(String input) throws JsonParseException
   {
     ParseNode root = null;
@@ -75,7 +75,7 @@ public class JsonParser
     }
     return parse(root);
   }
-  
+
   protected static JsonElement parse(ParseNode root) throws JsonParseException
   {
     JsonElement out = null;
@@ -90,47 +90,40 @@ public class JsonParser
     }
     ParseNode object = root.getChildren().get(0);
     String object_token = object.getToken();
-    switch (object_token)
+    if (object_token.compareTo("<object>") == 0)
     {
-      case "<object>":
-      {
-        JsonMap e = new JsonMap();
-        ParseNode prop_list = object.getChildren().get(1);
-        fillMap(e, prop_list);
-        out = e;
-        break;
-      }
-      case "<list>":
-      {
-        JsonList e = new JsonList();
-        ParseNode list_contents = object.getChildren().get(1);
-        fillList(e, list_contents);
-        out = e;
-        break;
-      }
-      case "<string>":
-      {
-        JsonString e = new JsonString(fillString(object));
-        out = e;
-        break;
-      }
-      case "<number>":
-      {
-        JsonNumber e = new JsonNumber(fillNumber(object));
-        out = e;
-        break;
-      }
+      JsonMap e = new JsonMap();
+      ParseNode prop_list = object.getChildren().get(1);
+      fillMap(e, prop_list);
+      out = e;
+    }
+    else if (object_token.compareTo("<list>") == 0)
+    {
+      JsonList e = new JsonList();
+      ParseNode list_contents = object.getChildren().get(1);
+      fillList(e, list_contents);
+      out = e;
+    }
+    else if (object_token.compareTo("<string>") == 0)
+    {
+      JsonString e = new JsonString(fillString(object));
+      out = e;
+    }
+    else if (object_token.compareTo("<number>") == 0)
+    {
+      JsonNumber e = new JsonNumber(fillNumber(object));
+      out = e;
     }
     return out;
   }
-  
+
   protected static Number fillNumber(ParseNode root)
   {
     ParseNode child = root.getChildren().get(0);
     String s_value = child.getToken();
     return Float.parseFloat(s_value);
   }
-  
+
   protected static String fillString(ParseNode root)
   {
     ParseNode child = root.getChildren().get(0);
@@ -138,7 +131,7 @@ public class JsonParser
     contents = contents.replace("\"", "");
     return contents;
   }  
-  
+
   protected static void fillList(JsonList e, ParseNode list_contents) throws JsonParseException
   {
     List<ParseNode> list_contents_children = list_contents.getChildren();
@@ -157,7 +150,7 @@ public class JsonParser
       fillList(e, new_list_contents);
     }    
   }
-  
+
   protected static void fillMap(JsonMap e, ParseNode prop_list) throws JsonParseException
   {
     List<ParseNode> prop_list_children = prop_list.getChildren();
@@ -180,8 +173,8 @@ public class JsonParser
       fillMap(e, new_list_contents);
     }    
   }
-  
-  
+
+
   public static class JsonParseException extends EmptyException
   {
     /**
@@ -193,7 +186,7 @@ public class JsonParser
     {
       super(message);
     }
-    
+
   }
 
 }

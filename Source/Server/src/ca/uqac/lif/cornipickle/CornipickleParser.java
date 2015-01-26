@@ -153,25 +153,19 @@ public class CornipickleParser implements ParseNodeVisitor
       m_nodes.push(cb);
       return;
     }
-    switch (node_token)
-    {
-    case "<binary_stmt>":
-    case "<constant>":
-    case "<css_attribute>":
-    case "<el_or_not>":
-    case "<number>":
-    case "<pred_pattern>":
-    case "<property_or_const>":
-    case "<S>":
-    case "<statement>":
-    case "<userdef_set>":
-    case "<userdef_stmt>":
-    case "<var_name>":
-    {
-      // Nothing to do: leave statement on stack
-      break;
-    }
-    case "<and>":
+    if (node_token.compareTo("<binary_stmt>") == 0) { }
+    else if (node_token.compareTo("<constant>") == 0) { }
+    else if (node_token.compareTo("<css_attribute>") == 0) { }
+    else if (node_token.compareTo("<el_or_not>") == 0) { }
+    else if (node_token.compareTo("<number>") == 0) { }
+    else if (node_token.compareTo("<pred_pattern>") == 0) { }
+    else if (node_token.compareTo("<property_or_const>") == 0) { }
+    else if (node_token.compareTo("<S>") == 0) { }
+    else if (node_token.compareTo("<statement>") == 0) { }
+    else if (node_token.compareTo("<userdef_set>") == 0) { }
+    else if (node_token.compareTo("<userdef_stmt>") == 0) { }
+    else if (node_token.compareTo("<var_name>") == 0) { }
+    else if (node_token.compareTo("<and>") == 0)
     {
       m_nodes.pop(); // (
       Statement right = (Statement) m_nodes.pop();
@@ -184,17 +178,15 @@ public class CornipickleParser implements ParseNodeVisitor
       out.addOperand(left);
       out.addOperand(right);
       m_nodes.push(out);
-      break;
     }
-    case "<css_selector>":
+    else if (node_token.compareTo("<css_selector>") == 0)
     {
       m_nodes.pop(); // )
       CssSelector out = (CssSelector) m_nodes.pop();
       m_nodes.pop(); // $(
       m_nodes.push(out);
-      break;
     }
-    case "<css_sel_contents>":
+    else if (node_token.compareTo("<css_sel_contents>") == 0)
     {
       CssSelector sel = (CssSelector) m_nodes.pop();
       LanguageElement top = m_nodes.peek();
@@ -205,16 +197,14 @@ public class CornipickleParser implements ParseNodeVisitor
         sel.mergeWith(right);
       }
       m_nodes.push(sel);
-      break;
     }
-    case "<css_sel_part>":
+    else if (node_token.compareTo("<css_sel_part>") == 0)
     {
       StringConstant part = (StringConstant) m_nodes.pop();
       CssSelector out = new CssSelector(part);
       m_nodes.push(out);
-      break;
     }
-    case "<def_set>":
+    else if (node_token.compareTo("<def_set>") == 0)
     {
       ElementList set_elements = (ElementList) m_nodes.pop();
       m_nodes.pop(); // of
@@ -224,17 +214,15 @@ public class CornipickleParser implements ParseNodeVisitor
       m_nodes.pop(); // A
       SetDefinitionExtension out = new SetDefinitionExtension(set_name, set_elements);
       m_nodes.push(out);
-      break;
     }
-    case "<def_set_element>":
+    else if (node_token.compareTo("<def_set_element>") == 0)
     {
       Property part = (Property) m_nodes.pop();
       ElementList out = new ElementList();
       out.add(part);
       m_nodes.push(out);
-      break;        
     }
-    case "<def_set_elements>":
+    else if (node_token.compareTo("<def_set_elements>") == 0)
     {
       ElementList sel = (ElementList) m_nodes.pop();
       while (true)
@@ -261,9 +249,8 @@ public class CornipickleParser implements ParseNodeVisitor
         }
       }
       m_nodes.push(sel);
-      break;
     }
-    case "<def_set_name>":
+    else if (node_token.compareTo("<def_set_name>") == 0)
     {
       // Trim spaces
       LanguageElement el = m_nodes.pop();
@@ -271,9 +258,8 @@ public class CornipickleParser implements ParseNodeVisitor
       String s = sc.toString();
       s = s.trim();
       m_nodes.push(new StringConstant(s));
-      break;
     }
-    case "<foreach>":
+    else if (node_token.compareTo("<foreach>") == 0)
     {
       m_nodes.pop(); // )
       Statement statement = (Statement) m_nodes.pop();
@@ -288,9 +274,8 @@ public class CornipickleParser implements ParseNodeVisitor
       out.setInnerStatement(statement);
       out.setVariable(var_name);
       m_nodes.push(out);
-      break;
     }
-    case "<equality>":
+    else if (node_token.compareTo("<equality>") == 0)
     {
       Property right = (Property) m_nodes.pop();
       m_nodes.pop(); // equals
@@ -299,18 +284,16 @@ public class CornipickleParser implements ParseNodeVisitor
       out.setLeft(left);
       out.setRight(right);
       m_nodes.push(out);
-      break;
     }
-    case "<elem_property>":
+    else if (node_token.compareTo("<elem_property>") == 0)
     {
       StringConstant sel = (StringConstant) m_nodes.pop();
       m_nodes.pop(); // 's
       StringConstant var = (StringConstant) m_nodes.pop();
       ElementProperty out = new ElementProperty(var, sel);
       m_nodes.push(out);
-      break;
     }
-    case "<gt>":
+    else if (node_token.compareTo("<gt>") == 0)
     {
       Property right = (Property) m_nodes.pop();
       m_nodes.pop(); // than
@@ -321,9 +304,8 @@ public class CornipickleParser implements ParseNodeVisitor
       out.setLeft(left);
       out.setRight(right);
       m_nodes.push(out);
-      break;
     }
-    case "<negation>":
+    else if (node_token.compareTo("<negation>") == 0)
     {
       m_nodes.pop(); // (
       Statement right = (Statement) m_nodes.pop();
@@ -332,9 +314,8 @@ public class CornipickleParser implements ParseNodeVisitor
       NegationStatement out = new NegationStatement();
       out.setInnerStatement(right);
       m_nodes.push(out);
-      break;
     }
-    case "<or>":
+    else if (node_token.compareTo("<or>") == 0)
     {
       m_nodes.pop(); // (
       Statement right = (Statement) m_nodes.pop();
@@ -347,9 +328,8 @@ public class CornipickleParser implements ParseNodeVisitor
       out.addOperand(left);
       out.addOperand(right);
       m_nodes.push(out);
-      break;
     }
-    case "<predicate>":
+    else if (node_token.compareTo("<predicate>") == 0)
     {
       m_nodes.pop(); // )
       Statement statement = (Statement) m_nodes.pop();
@@ -364,9 +344,8 @@ public class CornipickleParser implements ParseNodeVisitor
       out.setPattern(pattern);
       out.setStatement(statement);
       m_nodes.push(out);
-      break;
     }
-    case "<set_name>":
+    else if (node_token.compareTo("<set_name>") == 0)
     {
       LanguageElement el = m_nodes.pop();
       if (el instanceof CssSelector)
@@ -379,9 +358,8 @@ public class CornipickleParser implements ParseNodeVisitor
         SetDefinition sd = new SetDefinition(set_name.toString());
         m_nodes.push(sd);
       }
-      break;
     }
-    case "<string>":
+    else if (node_token.compareTo("<string>") == 0)
     {
       // Trim quotes
       LanguageElement el = m_nodes.pop();
@@ -389,9 +367,8 @@ public class CornipickleParser implements ParseNodeVisitor
       String s = sc.toString();
       s = s.replaceAll("\"", "");
       m_nodes.push(new StringConstant(s));
-      break;
     }
-    default:
+    else
     {
       // This is a node that does not contain a label
       // Guess if this is a string or a number
@@ -430,8 +407,7 @@ public class CornipickleParser implements ParseNodeVisitor
         StringConstant out = new StringConstant(node_token);
         m_nodes.push(out);
       }
-    }
-    }    
+    } 
   }
 
   @Override
