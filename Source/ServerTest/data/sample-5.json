@@ -1,0 +1,56 @@
+{
+ "tagname" : "window",
+ "width" : 956,
+ "height" : 165,
+ "children" : [
+  {
+   "tagname" : "body"
+,
+   "height" : 654,
+   "width" : 923,
+   "top" : 0,
+   "left" : 0,
+   "bottom" : 654,
+   "right" : 923,
+   "children" : [
+    {
+     "tagname" : "h1"
+,
+     "height" : 39,
+     "width" : 923,
+     "top" : 21,
+     "left" : 8,
+     "bottom" : 60,
+     "right" : 931,
+     "children" : [
+      {
+       "tagname" : "#CDATA",
+       "text" : "Sample page"      }    
+     ]
+    },
+    {
+     "tagname" : "div"
+,
+     "id" : "container",
+     "height" : 150,
+     "width" : 200,
+     "top" : 82,
+     "left" : 8,
+     "bottom" : 232,
+     "right" : 208,
+     "children" : [
+      {
+       "tagname" : "div"
+,
+       "class" : "square",
+       "id" : "red",
+       "height" : 100,
+       "width" : 100,
+       "bottom" : 182,
+       "right" : 128      }
+     ]
+    }  
+   ]
+  }
+ ]
+}

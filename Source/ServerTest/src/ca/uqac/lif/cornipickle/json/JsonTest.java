@@ -100,6 +100,17 @@ public class JsonTest
   }
   
   @Test
+  public void testParser4() throws IOException, JsonParseException
+  {
+    String json = FileReadWrite.readFile("data/sample-5.json");
+    JsonElement jse = JsonParser.parse(json);
+    if (jse == null)
+    {
+      fail("Element is null");
+    }
+  }
+  
+  @Test
   public void testParser2() throws IOException, JsonParseException
   {
     String json = FileReadWrite.readFile("data/sample-2.json");

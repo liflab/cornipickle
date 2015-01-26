@@ -59,6 +59,8 @@ public class JsonParser
     {
       e.printStackTrace();
     }
+    //parser.setDebugMode(true);
+    BnfParser.s_maxRecursionSteps = 500;
     return parser;
   }
 
