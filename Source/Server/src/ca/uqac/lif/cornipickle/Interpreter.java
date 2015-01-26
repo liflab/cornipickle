@@ -20,6 +20,8 @@ package ca.uqac.lif.cornipickle;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.json.JsonElement;
@@ -31,21 +33,23 @@ import ca.uqac.lif.util.FileReadWrite;
 public class Interpreter
 {
   
-  protected Map<String,Statement> m_statements;
+  protected Map<StatementMetadata,Statement> m_statements;
 
   protected Map<String,SetDefinition> m_setDefs;
   
   protected CornipickleParser m_parser;
   
-  protected Map<String,Boolean> m_verdicts;
+  public static enum Verdict {TRUE, FALSE, INCONCLUSIVE};
+  
+  protected Map<StatementMetadata,Verdict> m_verdicts;
   
   public Interpreter()
   {
     super();
-    m_statements = new HashMap<String,Statement>();
+    m_statements = new HashMap<StatementMetadata,Statement>();
     m_setDefs = new HashMap<String,SetDefinition>();
     m_parser = new CornipickleParser();
-    m_verdicts = new HashMap<String,Boolean>();
+    m_verdicts = new HashMap<StatementMetadata,Verdict>();
   }
   
   public static void main(String[] args) throws IOException, JsonParseException, ParseException
@@ -60,13 +64,101 @@ public class Interpreter
     Interpreter interpreter = new Interpreter();
     interpreter.parseProperties(corni_file_contents);
     interpreter.evaluateAll(jse);
-    Map<String,Boolean> verdicts = interpreter.getVerdicts();
+    Map<StatementMetadata,Verdict> verdicts = interpreter.getVerdicts();
     System.out.println(verdicts);
   }
   
   public void parseProperties(String properties) throws ParseException
   {
-    properties = sanitizeProperty(properties);
+    String[] lines = properties.split("\n");
+    StatementMetadata meta = new StatementMetadata();
+    boolean in_comment = false;
+    StringBuilder le_string = new StringBuilder();
+    String meta_param_name = "";
+    StringBuilder meta_param_value = new StringBuilder();
+    int i = 0;
+    for (String line : lines)
+    {
+      line = line.trim();
+      if (line.startsWith("#"))
+      {
+        // Do nothing
+      }
+      else if (line.startsWith("\"\"\""))
+      {
+        in_comment = !in_comment;
+        if (in_comment)
+        {
+          meta_param_value = new StringBuilder();
+        }
+      }
+      else if (in_comment)
+      {
+        if (line.startsWith("@"))
+        {
+          Pattern pat = Pattern.compile("@([^\\s]+)\\s(.*)");
+          Matcher mat = pat.matcher(line);
+          if (mat.find())
+          {
+            if (!meta_param_name.isEmpty())
+            {
+              meta.put(meta_param_name, meta_param_value.toString());
+              meta_param_value = new StringBuilder();
+            }
+            meta_param_name = mat.group(1);
+            meta_param_value.append(mat.group(2)).append(" ");
+          }
+        }
+        else
+        {
+          meta_param_value.append(line.trim()).append(" ");
+        }
+      }
+      else
+      {
+        le_string.append(line).append(" ");
+        if (line.endsWith(".")) // End of language element: parse it
+        {
+          String property_string = le_string.toString().trim();
+          property_string = property_string.substring(0, property_string.length() - 1); // Remove end period
+          LanguageElement le = m_parser.parseLanguage(property_string);
+          if (le instanceof PredicateDefinition)
+          {
+            // A user-defined predicate; we add it to the grammar
+            PredicateDefinition pd = (PredicateDefinition) le;
+            m_parser.addPredicateDefinition(pd);
+            meta = new StatementMetadata();
+            le_string = new StringBuilder();
+          }
+          else if (le instanceof Statement)
+          {
+            Statement s = (Statement) le;
+            meta.put("uniqueid", Integer.toString(i));
+            m_statements.put(meta, s);
+            m_verdicts.put(meta, Verdict.INCONCLUSIVE);
+            meta = new StatementMetadata();
+            le_string = new StringBuilder();
+          }
+          else if (le instanceof SetDefinitionExtension)
+          {
+            SetDefinitionExtension s = (SetDefinitionExtension) le;
+            m_setDefs.put(s.getSetName(), s);
+          }
+          else if (le == null)
+          {
+            System.err.println("Error parsing the following statement\n" + property_string);
+          }
+          i++;
+          meta = new StatementMetadata();
+          le_string = new StringBuilder();
+        }
+      }
+    }
+  }
+  
+  /*
+  public void parseProperties(String properties) throws ParseException
+  {
     // Split properties: dot followed by a new line
     String[] property_list = properties.split("\\.\n");
     int i = 0;
@@ -99,6 +191,28 @@ public class Interpreter
         System.err.println("Error parsing the following statement\n" + property);
       }
     }
+  }*/
+  
+  public static class StatementMetadata extends HashMap<String,String>
+  {
+    /**
+     * Dummy UID
+     */
+    private static final long serialVersionUID = 1L;
+    
+    @Override
+    public String toString()
+    {
+      StringBuilder out = new StringBuilder();
+      for (String key : keySet())
+      {
+        out.append("@").append(key).append(" ");
+        String value = get(key);
+        out.append(value);
+        out.append("\n");
+      }
+      return out.toString();
+    }
   }
 
   /**
@@ -124,14 +238,14 @@ public class Interpreter
     return out.toString();
   }
   
-  public Map<String,Boolean> getVerdicts()
+  public Map<StatementMetadata,Verdict> getVerdicts()
   {
   	return m_verdicts;
   }
 
   public void evaluateAll(JsonElement j)
   {
-    Map<String,Boolean> verdicts = new HashMap<String,Boolean>();
+    Map<StatementMetadata,Verdict> verdicts = new HashMap<StatementMetadata,Verdict>();
     Map<String,JsonElement> d = new HashMap<String,JsonElement>();
     // Fill dictionary with user-defined sets
     for (String set_name : m_setDefs.keySet())
@@ -141,11 +255,18 @@ public class Interpreter
       jl.addAll(def.evaluate(null));
       d.put(set_name, jl);
     }
-    for (String key : m_statements.keySet())
+    for (StatementMetadata key : m_statements.keySet())
     {
       Statement s = m_statements.get(key);
       boolean b = s.evaluate(j, d);
-      verdicts.put(key, b);
+      if (b)
+      {
+        verdicts.put(key, Verdict.TRUE);
+      }
+      else
+      {
+        verdicts.put(key, Verdict.FALSE);
+      }
     }
     m_verdicts = verdicts;
   }

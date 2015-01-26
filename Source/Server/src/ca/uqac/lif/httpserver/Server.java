@@ -1,4 +1,4 @@
-package ca.uqac.lif.cornipickle.server;
+package ca.uqac.lif.httpserver;
 
 import java.io.IOException;
 import java.io.OutputStream;

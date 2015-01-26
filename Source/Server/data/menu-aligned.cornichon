@@ -20,6 +20,11 @@ We say that $x and $y are top-aligned when (
 # We then express the fact that all menu items are either
 # left- or top-aligned.
 
+"""
+  @name Menus aligned
+  @description All menu items are either left- or top-aligned.
+  @severity Warning
+"""
 For each $z in $(.menu li) (
   For each $t in $(.menu li) (
     ($z and $t are left-aligned)
@@ -62,9 +67,14 @@ We say that $x and $y don't overlap when (
   Not ($x and $y overlap)
 ).
 
+"""
+  @name Overlapping squares
+  @description Coloured squares should not overlap in the page
+  @severity Error
+"""
 For each $x in $(.square) (
   For each $y in $(.square) (
-   ( $x's id equals $y's id ) # Look out, as x and y might be the same element
+   ( $x's id equals $y's id )
   Or
    ( $x and $y don't overlap )
   )

@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ca.uqac.lif.cornipickle.server;
+package ca.uqac.lif.httpserver;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
