@@ -13,6 +13,6 @@
 <attribute>     := <string>;
 
 <string>        := ^"[^"]*";
-<number>        := ^\d+;
+<number>        := ^[\-\d\.]+;
 <boolean>       := true | false ;
 <null>          := null ;
