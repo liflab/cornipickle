@@ -19,17 +19,45 @@ package ca.uqac.lif.httpserver;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public abstract class RequestCallback<T extends Server>
+/**
+ * Like a normal RequestCallback, except that it will return an HTTP 304
+ * ("Not Modified") response every time except the first time it is
+ * called
+ * @author sylvain
+ *
+ */
+public abstract class CachedRequestCallback<T extends Server> extends RequestCallback<T>
 {
-  public RequestCallback(T s)
+  public CachedRequestCallback(T s)
   {
-    super();
-    m_server = s;
+    super(s);
+  }
+
+  /**
+   * Whether the page has been already served
+   */
+  protected boolean m_served = false;
+
+  @Override
+  public boolean process(HttpExchange t)
+  {
+    if (m_served)
+    {
+      m_server.sendResponse(t, Server.HTTP_NOT_MODIFIED);
+    }
+    else
+    {
+      m_served = true;
+      return serve(t);
+    }
+    return true;
   }
   
-  public abstract boolean fire(final HttpExchange t);
+  public void reset()
+  {
+    m_served = false;
+  }
+  
+  protected abstract boolean serve(HttpExchange t);
 
-  public abstract boolean process(HttpExchange t);
-
-  protected T m_server;
 }

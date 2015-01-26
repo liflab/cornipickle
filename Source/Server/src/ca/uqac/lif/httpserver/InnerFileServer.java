@@ -26,73 +26,82 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class InnerFileServer extends Server
 {
-	public static String m_resourceFolder;
-	
-	protected Class<? extends InnerFileServer> m_referenceClass;
-	
-	public InnerFileServer()
-	{
-		super();
-		m_resourceFolder = "resource";
-		registerCallback(0, this.new InnerFileCallback());
-		m_referenceClass = this.getClass();
-	}
-	
-	protected InnerFileServer(Class<? extends InnerFileServer> c)
-	{
-		super();
-		m_resourceFolder = "resource";
-		registerCallback(0, this.new InnerFileCallback());
-		m_referenceClass = c;
-	}
-	
-	public class InnerFileCallback extends RequestCallback
-	{
+  public static String m_resourceFolder;
 
-		@Override
-		public boolean fire(HttpExchange t)
-		{
-			return true;
-		}
+  protected Class<? extends InnerFileServer> m_referenceClass;
 
-		@Override
-		public boolean process(HttpExchange t)
-		{
-			URI uri = t.getRequestURI();
-			int response_code = HTTP_OK;
-			// Get file
-			InputStream is = m_referenceClass.getResourceAsStream(m_resourceFolder + uri.getPath());
-			if (is != null)
-			{
-				byte[] file_contents = readBytes(is);
-				sendResponse(t, response_code, file_contents);
-			}
-			else
-			{
-				// Resource not found: send 404
-				sendResponse(t, HTTP_NOT_FOUND);
-			}
-			return true;
-		}
-	}
-	
-	public static byte[] readBytes(InputStream is)
-	{
-		int nRead;
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		byte[] data = new byte[2048];
-		try
-		{
-			while ((nRead = is.read(data, 0, data.length)) != -1)
-			{
-				buffer.write(data, 0, nRead);
-			}
-			buffer.flush();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		return buffer.toByteArray();
-	}
+  public InnerFileServer()
+  {
+    super();
+    m_resourceFolder = "resource";
+    registerCallback(0, new InnerFileCallback(this));
+    m_referenceClass = this.getClass();
+  }
+
+  protected InnerFileServer(Class<? extends InnerFileServer> c)
+  {
+    super();
+    m_resourceFolder = "resource";
+    registerCallback(0, new InnerFileCallback(this));
+    m_referenceClass = c;
+  }
+  
+  public InputStream getResourceAsStream(String path)
+  {
+    return m_referenceClass.getResourceAsStream(path);
+  }
+
+  public static class InnerFileCallback extends CachedRequestCallback<InnerFileServer>
+  {
+    public InnerFileCallback(InnerFileServer s)
+    {
+      super(s);
+    }
+
+    @Override
+    public boolean fire(HttpExchange t)
+    {
+      return true;
+    }
+
+    @Override
+    public boolean serve(HttpExchange t)
+    {
+      URI uri = t.getRequestURI();
+      int response_code = HTTP_OK;
+      // Get file
+      InputStream is = m_server.getResourceAsStream(m_resourceFolder + uri.getPath());
+      if (is != null)
+      {
+        byte[] file_contents = readBytes(is);
+        m_server.sendResponse(t, response_code, file_contents);
+      }
+      else
+      {
+        // Resource not found: send 404
+        m_server.sendResponse(t, HTTP_NOT_FOUND);
+      }
+      return true;
+    }
+  }
+
+  public static byte[] readBytes(InputStream is)
+  {
+    int nRead;
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    byte[] data = new byte[2048];
+    try
+    {
+      while ((nRead = is.read(data, 0, data.length)) != -1)
+      {
+        buffer.write(data, 0, nRead);
+      }
+      buffer.flush();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    return buffer.toByteArray();
+  }
 }

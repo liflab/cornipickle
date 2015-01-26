@@ -18,14 +18,8 @@
 package ca.uqac.lif.cornipickle.server;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.net.URI;
-import java.net.URLDecoder;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -35,19 +29,10 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 
-import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
-import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonParser;
-import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
-import ca.uqac.lif.cornipickle.util.PackageFileReader;
+import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.httpserver.InnerFileServer;
-import ca.uqac.lif.httpserver.RequestCallback;
 import ca.uqac.lif.util.FileReadWrite;
-
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
 
 public class CornipickleServer extends InnerFileServer
 {
@@ -79,8 +64,6 @@ public class CornipickleServer extends InnerFileServer
    */
   protected static int s_verbosity = 1;
 
-  static byte[] s_dummyImage = readBytes(CornipickleServer.class.getResourceAsStream("resource/dummy-image.png"));
-
   public CornipickleServer()
   {
     super();
@@ -89,10 +72,10 @@ public class CornipickleServer extends InnerFileServer
     // Update class reference
     m_referenceClass = this.getClass();
     // Register callbacks
-    registerCallback(0, new PropertyAddCallback());
-    registerCallback(0, new StatusPageCallback());
-    registerCallback(0, new ProbeCallback());
-    registerCallback(0, new DummyImageCallback());
+    registerCallback(0, new PropertyAddCallback(this));
+    registerCallback(0, new StatusPageCallback(this));
+    registerCallback(0, new ProbeCallback(this));
+    registerCallback(0, new DummyImageCallback(this));
   }
 
   public void readProperties(String filename)
@@ -174,224 +157,13 @@ public class CornipickleServer extends InnerFileServer
     }
   }
 
-  protected class ProbeCallback extends RequestCallback
-  {
-    @Override
-    public boolean fire(HttpExchange t)
-    {
-      URI u = t.getRequestURI();
-      String path = u.getPath();
-      return path.compareTo("/probe") == 0;
-    }
 
-    @Override
-    public boolean process(HttpExchange t)
-    {
-      try
-      {
-        String witness_code = PackageFileReader.readPackageFile(m_referenceClass.getResourceAsStream(m_resourceFolder + "/witness.js"));
-        String probe_code = PackageFileReader.readPackageFile(m_referenceClass.getResourceAsStream(m_resourceFolder + "/probe.js"));
-        probe_code = probe_code.replace("%%WITNESS_CODE%%", escapeString(witness_code));
-        probe_code = probe_code.replace("%%SERVER_NAME%%", getServerName() + ":" + s_defaultPort);
-        sendResponse(t, HTTP_OK, probe_code);
-      }
-      catch (IOException e)
-      {
-        e.printStackTrace();
-      }
-      return true;
-    }
-  }
   
-  protected class PropertyAddCallback extends RequestCallback
-  {
-    @Override
-    public boolean fire(HttpExchange t)
-    {
-      URI u = t.getRequestURI();
-      String path = u.getPath();
-      String method = t.getRequestMethod();
-      return method.compareToIgnoreCase("post") == 0 && 
-          path.compareTo("/add") == 0;
-    }
 
-    @Override
-    public boolean process(HttpExchange t)
-    {
-      StringBuilder page = new StringBuilder();
-      page.append("<!DOCTYPE html>\n");
-      page.append("<html>\n");
-      page.append("<head>\n");
-      page.append("<title>Cornipickle Properties</title>\n");
-      page.append("<script src=\"http://code.jquery.com/jquery-1.11.2.min.js\"></script>\n");
-      page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"screen.css\" />\n");
-      page.append("</head>\n");
-      page.append("<body>\n");
-      
-      // Read POST data
-      InputStream is_post = t.getRequestBody();
-      String post_data = streamToString(is_post);
-      
-      // Try to decode and parse it
-      boolean success = true;
-      try
-      {
-        post_data = URLDecoder.decode(post_data, "UTF-8");
-        Map<String,String> params = queryToMap(post_data);
-        String props = params.get("properties");
-        if (props != null)
-        {
-          m_interpreter.parseProperties(props);
-        }
-      } 
-      catch (ParseException e)
-      {
-        success = false;
-        page.append("<h1>Add properties</h1>\n");
-        page.append("<p>The properties could not be added.\n");
-        page.append("Message from the parser:</p>");
-        page.append("<blockquote>\n");
-        page.append(e.toString());
-        page.append("</blockquote>\n");
-      }
-      catch (UnsupportedEncodingException e)
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        success = false;
-      }
-      if (success)
-      {
-        page.append("<h1>Add properties</h1>\n");
-        page.append("<p>The properties were successfully added.</p>");
-      }
-      page.append("<hr />\n");
-      Date d = new Date();
-      page.append(d);
-      page.append("</body>\n</html>\n");
-      String page_string = page.toString();
-      // Disable caching on the client
-      Headers h = t.getResponseHeaders();
-      h.add("Pragma", "no-cache");
-      h.add("Cache-Control", "no-cache, no-store, must-revalidate");
-      h.add("Expires", "0"); 
-      sendResponse(t, HTTP_OK, page_string);
-      return true;
-    }    
-  }
 
-  protected class DummyImageCallback extends RequestCallback
-  {
-    @Override
-    public boolean fire(HttpExchange t)
-    {
-      URI u = t.getRequestURI();
-      String path = u.getPath();
-      return path.compareTo("/image") == 0;
-    }
 
-    @Override
-    public boolean process(HttpExchange t)
-    {
-      URI uri = t.getRequestURI();
-      Map<String,String> attributes = uriToMap(uri); 
 
-      // Extract JSON from URL string
-      String json_encoded = attributes.get("contents");
-      if (json_encoded != null)
-      {
-        JsonElement j = null;
-        // Parse JSON
-        try
-        {
-          String json_decoded = URLDecoder.decode(json_encoded, "UTF-8");
-          j = JsonParser.parse(json_decoded);
-          System.out.println("JSON received");
-          //System.out.println(json_decoded);
-        }
-        catch (JsonParseException e)
-        {
-          e.printStackTrace();
-        } 
-        catch (UnsupportedEncodingException e)
-        {
-          e.printStackTrace();
-        }
-        if (j != null)
-        {
-          m_interpreter.evaluateAll(j);
-        }
-      }
-      // Whatever happens, serve the dummy image
-      sendResponse(t, HTTP_OK, s_dummyImage);
-      return true;
-    }
-  }
 
-  protected class StatusPageCallback extends RequestCallback
-  {
-    @Override
-    public boolean fire(HttpExchange t)
-    {
-      URI u = t.getRequestURI();
-      String path = u.getPath();
-      return path.compareTo("/status") == 0;
-    }
-
-    @Override
-    public boolean process(HttpExchange t)
-    {
-      StringBuilder page = new StringBuilder();
-      page.append("<!DOCTYPE html>\n");
-      page.append("<html>\n");
-      page.append("<head>\n");
-      page.append("<title>Cornipickle Status</title>\n");
-      page.append("<script src=\"http://code.jquery.com/jquery-1.11.2.min.js\"></script>\n");
-      page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"screen.css\" />\n");
-      page.append("</head>\n");
-      page.append("<body>\n");
-      page.append("<h1>Cornipickle Status</h1>");
-      Map<StatementMetadata,Interpreter.Verdict> verdicts = m_interpreter.getVerdicts();
-      page.append("<ul class=\"verdicts\">\n");
-      for (StatementMetadata key : verdicts.keySet())
-      {
-        Interpreter.Verdict v = verdicts.get(key);
-        if (v == Interpreter.Verdict.TRUE)
-        {
-          page.append("<li class=\"true\">").append(key.get("name")).append("</li>");
-        }
-        else if (v == Interpreter.Verdict.FALSE)
-        {
-          page.append("<li class=\"false\">").append(key.get("name")).append("</li>");
-        }
-        else
-        {
-          page.append("<li class=\"inconclusive\">").append(key.get("name")).append("</li>");
-        }
-      }
-      page.append("</ul>\n");
-      page.append("\n<div id=\"add-properties\">\n");
-      page.append("<h2>Add properties</h2>\n\n");
-      page.append("<p>Type here the Cornipickle properties you want to add.</p>\n");
-      page.append("<form method=\"post\" action=\"add\">\n");
-      page.append("<div><textarea name=\"properties\"></textarea></div>\n");
-      page.append("<input type=\"submit\" />\n");
-      page.append("</form>\n");
-      page.append("</div>\n");
-      page.append("<hr />\n");
-      Date d = new Date();
-      page.append(d);
-      page.append("</body>\n</html>\n");
-      String page_string = page.toString();
-      // Disable caching on the client
-      Headers h = t.getResponseHeaders();
-      h.add("Pragma", "no-cache");
-      h.add("Cache-Control", "no-cache, no-store, must-revalidate");
-      h.add("Expires", "0"); 
-      sendResponse(t, HTTP_OK, page_string);
-      return true;
-    }
-  }	
 
   /**
    * Escapes a string for JavaScript
@@ -439,6 +211,7 @@ public class CornipickleServer extends InnerFileServer
     options.addOption(opt);
     return options;
   }
+  
   /**
    * Show the benchmark's usage
    * @param options The options created for the command line parser

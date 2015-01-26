@@ -22,6 +22,7 @@ public class Server implements HttpHandler
    * Common HTTP response codes
    */
   public static final int HTTP_OK = 200;
+  public static final int HTTP_NOT_MODIFIED = 304;
   public static final int HTTP_BAD_REQUEST = 400;
   public static final int HTTP_NOT_FOUND = 404;
 
@@ -35,14 +36,14 @@ public class Server implements HttpHandler
    */
   protected String m_serverName = "localhost";
 
-  protected Vector<RequestCallback> m_callbacks;
+  protected Vector<RequestCallback<? extends Server>> m_callbacks;
 
   HttpServer m_server;
 
   public Server()
   {
     super();
-    m_callbacks = new Vector<RequestCallback>();
+    m_callbacks = new Vector<RequestCallback<? extends Server>>();
   }
 
   public void startServer(int port)
@@ -81,7 +82,7 @@ public class Server implements HttpHandler
     m_userAgent = ua;
   }
 
-  public void registerCallback(int index, RequestCallback cb)
+  public void registerCallback(int index, RequestCallback<? extends Server> cb)
   {
     m_callbacks.add(index, cb);
   }
@@ -91,7 +92,7 @@ public class Server implements HttpHandler
   {
     // Go through registered callbacks
     boolean has_fired = false;
-    for (RequestCallback cb : m_callbacks)
+    for (RequestCallback<? extends Server> cb : m_callbacks)
     {
       if (cb.fire(t))
       {
@@ -110,22 +111,22 @@ public class Server implements HttpHandler
     }
   }
 
-  protected void sendResponse(HttpExchange t, int response_code)
+  public void sendResponse(HttpExchange t, int response_code)
   {
     sendResponse(t, response_code, "");
   }
 
-  protected void sendResponse(HttpExchange t, int response_code, String contents)
+  public void sendResponse(HttpExchange t, int response_code, String contents)
   {
     sendResponse(t, response_code, contents.getBytes());
   }
 
-  protected void sendResponse(HttpExchange t, int response_code, byte[] contents)
+  public void sendResponse(HttpExchange t, int response_code, byte[] contents)
   {
     sendResponse(t, response_code, contents, "");
   }
 
-  protected void sendResponse(HttpExchange t, int response_code, byte[] contents, String content_type)
+  public void sendResponse(HttpExchange t, int response_code, byte[] contents, String content_type)
   {
     Headers h = t.getResponseHeaders();
     h.add("User-agent", m_userAgent);
