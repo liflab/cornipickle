@@ -55,8 +55,13 @@ public class AndStatement extends NAryStatement
     for (Statement s : m_statements)
     {
       if (first)
+      {
         first = false;
-      out.append(" And ");
+      }
+      else
+      {
+      	out.append(" And ");
+      }
       out.append("(").append(s).append(")");
     }
     return out.toString();

@@ -54,8 +54,13 @@ public class OrStatement extends AndStatement
     for (Statement s : m_statements)
     {
       if (first)
+      {
         first = false;
-      out.append(" Or ");
+      }
+      else
+      {
+      	out.append(" Or ");
+      }
       out.append("(").append(s).append(")");
     }
     return out.toString();
