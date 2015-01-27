@@ -19,6 +19,8 @@ package ca.uqac.lif.cornipickle;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -154,6 +156,27 @@ public class Interpreter
         }
       }
     }
+  }
+  
+  public List<PredicateDefinition> getPredicates()
+  {
+  	return m_parser.getPredicates();
+  }
+  
+  public List<SetDefinition> getSetDefinitions()
+  {
+  	List<SetDefinition> out = new LinkedList<SetDefinition>();
+  	for (String k : m_setDefs.keySet())
+  	{
+  		SetDefinition sd = m_setDefs.get(k);
+  		out.add(sd);
+  	}
+  	return out;
+  }
+  
+  public Statement getProperty(StatementMetadata m)
+  {
+  	return m_statements.get(m);
   }
   
   /*

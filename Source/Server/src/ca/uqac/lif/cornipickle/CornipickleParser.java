@@ -21,6 +21,8 @@ package ca.uqac.lif.cornipickle;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
@@ -51,6 +53,17 @@ public class CornipickleParser implements ParseNodeVisitor
     m_parser = initializeParser();
     m_predicateDefinitions = new HashMap<String,PredicateDefinition>();
     reset();
+  }
+  
+  public List<PredicateDefinition> getPredicates()
+  {
+  	List<PredicateDefinition> out = new LinkedList<PredicateDefinition>();
+  	for (String k : m_predicateDefinitions.keySet())
+  	{
+  		PredicateDefinition pd = m_predicateDefinitions.get(k);
+  		out.add(pd);
+  	}
+  	return out;
   }
 
   public void reset()

@@ -19,10 +19,13 @@ package ca.uqac.lif.cornipickle.server;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
+import ca.uqac.lif.cornipickle.PredicateDefinition;
+import ca.uqac.lif.cornipickle.SetDefinition;
 import ca.uqac.lif.httpserver.RequestCallback;
 import ca.uqac.lif.httpserver.Server;
 
@@ -55,20 +58,41 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     for (StatementMetadata key : verdicts.keySet())
     {
       Interpreter.Verdict v = verdicts.get(key);
+      String class_name = "inconclusive";
       if (v == Interpreter.Verdict.TRUE)
       {
-        page.append("<li class=\"true\">").append(key.get("name")).append("</li>");
+      	class_name = "true";
       }
       else if (v == Interpreter.Verdict.FALSE)
       {
-        page.append("<li class=\"false\">").append(key.get("name")).append("</li>");
+        class_name = "false";
       }
-      else
-      {
-        page.append("<li class=\"inconclusive\">").append(key.get("name")).append("</li>");
-      }
+      page.append("<li class=\"").append(class_name).append("\">");
+      page.append("<span class=\"prop-name\">").append(key.get("name")).append("</span>\n");
+      page.append("<div class=\"property-contents\">\n");
+      page.append(m_server.m_interpreter.getProperty(key));
+      page.append("</div>\n");
+      page.append("</li>");
     }
     page.append("</ul>\n");
+    // Show predicates
+    page.append("<h2>Predicates</h2>\n");
+    page.append("<ul class=\"predicates\">\n");
+    List<PredicateDefinition> preds = m_server.m_interpreter.getPredicates();
+    for (PredicateDefinition pd : preds)
+    {
+    	page.append("<li>").append(pd.getStatement().toString()).append("</li>\n");
+    }
+    page.append("</ul>");
+    // Show sets
+    page.append("<h2>Sets</h2>\n");
+    page.append("<ul class=\"sets\">\n");
+    List<SetDefinition> sets = m_server.m_interpreter.getSetDefinitions();
+    for (SetDefinition sd : sets)
+    {
+    	page.append("<li>").append(sd.toString()).append("</li>\n");
+    }
+    page.append("</ul>");
     page.append("\n<div id=\"add-properties\">\n");
     page.append("<h2>Add properties</h2>\n\n");
     page.append("<p>Type here the Cornipickle properties you want to add.</p>\n");

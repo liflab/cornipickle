@@ -157,14 +157,6 @@ public class CornipickleServer extends InnerFileServer
     }
   }
 
-
-  
-
-
-
-
-
-
   /**
    * Escapes a string for JavaScript
    * @param s The string
