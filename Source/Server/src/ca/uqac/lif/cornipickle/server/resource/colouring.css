@@ -1,0 +1,42 @@
+/* Colouring of expressions */
+
+.comparison-statement {
+  color: #44f;
+}
+
+.element-name, .set-name {
+  color: green;
+}
+
+.property-name {
+  color: #e09;
+}
+
+.nary-statement, .forall, .exists, .negation,
+.set-definition-extension, .predicate-definition {
+  color: #007;
+}
+
+.css-selector {
+  color: #862;
+}
+
+.line-comment {
+  color: darkred;
+}
+
+.comment {
+  color: #80a;
+}
+
+.comment .attribute-name {
+  color: #c6f;
+}
+
+.parenthesis {
+  color: #aaa;
+}
+
+.cornipickle-code:hover .parenthesis {
+  color: #444;
+}

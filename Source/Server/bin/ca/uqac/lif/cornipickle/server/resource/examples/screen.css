@@ -1,0 +1,23 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans);
+
+html, body {
+  font-family: 'Droid Sans', sans-serif;
+}
+
+/* Found here: http://fabrice.lemainque.free.fr/CSS_56.html */
+.playground {
+  width: 75%;
+  padding: 20px;
+  border-radius: 6px;
+  border: solid 1px darkgrey;
+  background-image: linear-gradient(transparent 23px, rgba(220,220,200,.4) 24px, transparent 24px), linear-gradient(90deg, transparent 23px, rgba(220,220,200,.4) 24px, transparent 24px);
+  background-size: 100% 24px, 24px 100%;
+}
+
+.cornipickle-code {
+  background: #f0f0ff;
+  padding: 10px;
+  border-radius: 6px;
+  font-family: 'Ubuntu Mono', monospace;
+  display: inline-block;
+}

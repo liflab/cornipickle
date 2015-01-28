@@ -123,6 +123,7 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     page.append("<title>").append(title).append("</title>\n");
     page.append("<script src=\"http://code.jquery.com/jquery-1.11.2.min.js\"></script>\n");
     page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"screen.css\" />\n");
+    page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"colouring.css\" />\n");
     page.append("</head>\n<body>\n");
     return page;
   }

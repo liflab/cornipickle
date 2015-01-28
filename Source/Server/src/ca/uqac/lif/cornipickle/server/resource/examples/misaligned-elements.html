@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="screen.css" />
+<link rel="stylesheet" type="text/css" href="../colouring.css" />
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="cornipickle.js"></script>
+<script type="text/javascript" src="/probe"></script>
+<title>Misaligned menu elements - Cornipickle</title>
+<script type="text/javascript">
+// <![CDATA[
+$(document).ready(function() {
+    toggled = false;
+    // Colourize each code snippet
+    cornipickle_colourize_all();
+    // Move second menu
+    $("#second-menu").css({ "margin-left": "10px"});
+    // Button code
+    $("#misalign-toggle").click(function() {
+        if (toggled)
+        {
+          $("#second-menu").css({ "margin-left": "10px"});
+        }
+        else
+        {
+          $("#second-menu").css({ "margin-left": "0px"});
+        }
+        toggled = !toggled;
+    });
+});
+// ]]>
+</script>
+</head>
+
+<body>
+
+<div id="contents">
+<h1>Example</h1>
+
+<div class="playground">
+
+<ul class="menu">
+<li>First menu item</li>
+<li id="second-menu">Second menu item</li>
+<li>Another menu item</li>
+<li>Final menu item</li>
+</ul>
+
+</div>
+
+<!-- Cornipickle explanation -->
+<div id="cornipickle-explanation">
+
+<h2>What's the problem?</h2>
+<p>An element in the menu is misaligned with respect to the others. This
+alignment problem is caused by client-side code; it cannot be detected
+by analyzing the HTML or CSS declarations.</p>
+
+<p><button id="misalign-toggle">Toggle misalignment</button></p>
+
+<h2>Detect it with Cornipickle</h2>
+
+
+<div class="cornipickle-square">
+
+<p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
+
+<div class="cornipickle-code">
+# We define a predicate using the construct
+# "We say that &lt;arguments&gt; is/are &lt;predicate name&gt; when".
+
+We say that $x and $y are left-aligned when (
+  $x's left equals $y's left
+).
+
+We say that $x and $y are top-aligned when (
+  $x's top equals $y's top
+).
+
+# We then express the fact that all menu items are either
+# left- or top-aligned.
+
+"""
+  @name Menus aligned
+  @description All menu items are either left- or top-aligned.
+  @severity Warning
+"""
+For each $z in $(.menu li) (
+  For each $t in $(.menu li) (
+    ($z and $t are left-aligned)
+    Or
+    ($z and $t are top-aligned)
+  )
+).
+</div>
+
+</div>
+
+</div> <!-- /explanation -->
+
+<div id="footer">
+<hr />
+&copy; 2015 LIF
+</div>
+
+</div> <!-- /contents -->
+
+</body>
+</html>

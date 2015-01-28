@@ -11,26 +11,3 @@ ul.verdicts li.false {
 ul.verdicts li.true {
   background-color: #9f9;
 }
-
-/* Colouring of expressions */
-
-.comparison-statement {
-  color: #44f;
-}
-
-.element-name, .set-name {
-  color: green;
-}
-
-.property-name {
-  color: #e09;
-}
-
-.nary-statement, .forall, .exists, .negation,
-.set-definition-extension, .predicate-definition {
-  color: #007;
-}
-
-.css-selector {
-  color: orange;
-}
