@@ -85,3 +85,15 @@ cornipickle_colourize_all = function()
         $(this).html(cornipickle_colourize($(this).text()));
     });
 };
+
+add_to_cornipickle = function(text)
+{
+  $.ajax({
+    url : "/add",
+    type : "POST",
+    data : text,
+    success : function(result) {
+      $("#to-cornipickle").prop('disabled', true);
+    },
+  });
+};

@@ -72,6 +72,11 @@ class PropertyAddCallback extends RequestCallback<CornipickleServer>
       post_data = URLDecoder.decode(post_data, "UTF-8");
       Map<String,String> params = Server.queryToMap(post_data);
       String props = params.get("properties");
+      if (props == null)
+      {
+      	// Try to get POST payload instead
+      	props = params.get("");
+      }
       if (props != null)
       {
         m_server.m_interpreter.parseProperties(props);

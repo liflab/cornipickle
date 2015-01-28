@@ -14,10 +14,26 @@ html, body {
   background-size: 100% 24px, 24px 100%;
 }
 
+.cornipickle-square {
+  border-radius: 6px;
+  background: #ccc;
+  display: inline-block;
+  position: relative;
+  border: solid 1px darkgrey;
+}
+
 .cornipickle-code {
   background: #f0f0ff;
   padding: 10px;
   border-radius: 6px;
   font-family: 'Ubuntu Mono', monospace;
   display: inline-block;
+}
+
+.cornipickle-square p.button {
+  right: 10px;
+  top: 10px;
+  padding: 0;
+  margin: 4px;
+  text-align: right;
 }

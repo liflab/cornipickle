@@ -54,8 +54,20 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     StringBuilder page = new StringBuilder();
     page.append(pageHead("Cornipickle status"));
     page.append("<h1>Cornipickle Status</h1>");
+    Date last_contact = m_server.getLastProbeContact();
+    if (last_contact == null)
+    {
+    	page.append("<p id=\"last-probe-contact\">No contact with probe so far.</p>\n");
+    }
+    else
+    {
+    	page.append("<p id=\"last-probe-contact\">Last contact with probe on ");
+    	page.append(m_server.getLastProbeContact()).append("</p>\n");
+    }
     Map<StatementMetadata,Interpreter.Verdict> verdicts = m_server.m_interpreter.getVerdicts();
-    page.append("<ul class=\"verdicts\">\n");
+    int num_errors = 0;
+    StringBuilder verdict_string = new StringBuilder();
+    verdict_string.append("<ul class=\"verdicts\">\n");
     for (StatementMetadata key : verdicts.keySet())
     {
       Interpreter.Verdict v = verdicts.get(key);
@@ -67,16 +79,37 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
       else if (v == Interpreter.Verdict.FALSE)
       {
         class_name = "false";
+        num_errors++;
       }
-      page.append("<li class=\"").append(class_name).append("\">");
-      page.append("<span class=\"prop-name\">").append(key.get("name")).append("</span>\n");
-      page.append("<div class=\"property-contents\">\n");
-      page.append(formatter.getFormatted(m_server.m_interpreter.getProperty(key)));
-      page.append("</div>\n");
-      page.append("</li>");
+      verdict_string.append("<li class=\"").append(class_name).append("\">");
+      verdict_string.append("<span class=\"prop-name\">").append(key.get("name")).append("</span>\n");
+      verdict_string.append("<div class=\"property-contents\">\n");
+      verdict_string.append(formatter.getFormatted(m_server.m_interpreter.getProperty(key)));
+      verdict_string.append("</div>\n");
+      verdict_string.append("</li>");
     }
-    page.append("</ul>\n");
-    
+    verdict_string.append("</ul>\n");
+    if (num_errors == 0)
+    {
+    	if (verdicts.isEmpty())
+    	{
+    		page.append("<p class=\"verdicts-empty\">Cornipickle has no property to evaluate.</p>");
+    	}
+    	else
+    	{
+    		page.append("<p class=\"verdicts-no-error\">All's well! All properties evaluate to true.</p>");	
+    	}
+    }
+    else if (num_errors == 1)
+    {
+    	page.append("<p class=\"verdicts-errors\">Oops! There is a problem with some property.</p>");
+    }
+    else
+    {
+    	page.append("<p class=\"verdicts-errors\">Oops! There is a problem with ").append(num_errors).append(" properties.</p>");
+    }
+    page.append("<h2>Properties</h2>\n");
+    page.append(verdict_string);
     // Show predicates
     page.append("<h2>Predicates</h2>\n");
     page.append("<ul class=\"predicates\">\n");

@@ -15,8 +15,14 @@
 // <![CDATA[
 $(document).ready(function() {
     toggled = false;
+    // Put Cornipickle codde in global var
+    cornipickle_code = $(".cornipickle-code").text();
     // Colourize each code snippet
     cornipickle_colourize_all();
+    // Add handler to button
+    $("#to-cornipickle").click(function() {
+        add_to_cornipickle(cornipickle_code);
+      });
     // Move second menu
     $("#second-menu").css({ "margin-left": "10px"});
     // Button code
@@ -63,6 +69,12 @@ by analyzing the HTML or CSS declarations.</p>
 <p><button id="misalign-toggle">Toggle misalignment</button></p>
 
 <h2>Detect it with Cornipickle</h2>
+
+
+<div class="cornipickle-square">
+
+<p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
+
 <div class="cornipickle-code">
 # We define a predicate using the construct
 # "We say that &lt;arguments&gt; is/are &lt;predicate name&gt; when".
@@ -90,6 +102,8 @@ For each $z in $(.menu li) (
     ($z and $t are top-aligned)
   )
 ).
+</div>
+
 </div>
 
 </div> <!-- /explanation -->

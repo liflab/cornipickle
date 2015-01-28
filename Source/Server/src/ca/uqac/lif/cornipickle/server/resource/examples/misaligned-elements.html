@@ -15,8 +15,14 @@
 // <![CDATA[
 $(document).ready(function() {
     toggled = false;
+    // Put Cornipickle codde in global var
+    cornipickle_code = $(".cornipickle-code").text();
     // Colourize each code snippet
     cornipickle_colourize_all();
+    // Add handler to button
+    $("#to-cornipickle").click(function() {
+        add_to_cornipickle(cornipickle_code);
+      });
     // Move second menu
     $("#second-menu").css({ "margin-left": "10px"});
     // Button code

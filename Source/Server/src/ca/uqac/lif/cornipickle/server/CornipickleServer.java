@@ -19,6 +19,7 @@ package ca.uqac.lif.cornipickle.server;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -59,6 +60,8 @@ public class CornipickleServer extends InnerFileServer
 
   protected static int s_defaultPort = 10101;
   
+  protected Date m_lastProbeContact;
+  
   /**
    * Verbosity level for CLI
    */
@@ -76,6 +79,23 @@ public class CornipickleServer extends InnerFileServer
     registerCallback(0, new StatusPageCallback(this));
     registerCallback(0, new ProbeCallback(this));
     registerCallback(0, new DummyImageCallback(this));
+  }
+  
+  /**
+   * Sets the time of the last contact from JS probe to current time
+   */
+  public void setLastProbeContact()
+  {
+  	m_lastProbeContact = new Date();
+  }
+  
+  /**
+   * Retrieves moment of last contact from JS probe
+   * @return The time of last contact
+   */
+  public Date getLastProbeContact()
+  {
+  	return m_lastProbeContact;
   }
 
   public void readProperties(String filename)
