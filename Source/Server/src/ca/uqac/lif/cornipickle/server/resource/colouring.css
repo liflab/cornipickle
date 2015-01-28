@@ -56,4 +56,5 @@
 
 .predicate-definition-item.highlighted {
   background: yellow;
+  color: red;
 }

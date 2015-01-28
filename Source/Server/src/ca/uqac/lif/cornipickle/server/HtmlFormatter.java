@@ -17,6 +17,8 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 import ca.uqac.lif.cornipickle.ComparisonStatement;
@@ -24,6 +26,7 @@ import ca.uqac.lif.cornipickle.CssSelector;
 import ca.uqac.lif.cornipickle.ElementProperty;
 import ca.uqac.lif.cornipickle.ExistsStatement;
 import ca.uqac.lif.cornipickle.ForAllStatement;
+import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.LanguageElement;
 import ca.uqac.lif.cornipickle.LanguageElementVisitor;
 import ca.uqac.lif.cornipickle.NAryStatement;
@@ -34,6 +37,7 @@ import ca.uqac.lif.cornipickle.PredicateDefinition;
 import ca.uqac.lif.cornipickle.SetDefinitionExtension;
 import ca.uqac.lif.cornipickle.StringConstant;
 import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.cornipickle.util.StringUtils;
 
 public class HtmlFormatter implements LanguageElementVisitor
 {
@@ -46,6 +50,59 @@ public class HtmlFormatter implements LanguageElementVisitor
     super();
     m_elements = new Stack<StringBuilder>();
     m_indent = new Stack<String>();
+  }
+  
+  public static String format(LanguageElement root)
+  {
+    HtmlFormatter hf = new HtmlFormatter();
+    return hf.getFormatted(root);
+  }
+  
+  /**
+   * Creates an HTML fragment out of a statement's metadata
+   * @param metadata The metadata to format
+   * @return The formatted metadata
+   */
+  public static String format(StatementMetadata metadata)
+  {
+    Set<String> ignore_nothing = new HashSet<String>();
+    return format(metadata, ignore_nothing);
+  }
+  
+  /**
+   * Creates an HTML fragment out of a statement's metadata
+   * @param metadata The metadata to format
+   * @param ignored_attributes A set of strings representing
+   *   attributes to ignore
+   * @return The formatted metadata
+   */
+  public static String format(StatementMetadata metadata, Set<String> ignored_attributes)
+  {
+    StringBuilder out = new StringBuilder();
+    out.append("<span class=\"comment\">\"\"\"<br/>\n");
+    boolean added_one = false;
+    for (String key : metadata.keySet())
+    {
+      if (ignored_attributes.contains(key))
+      {
+        // Ignore
+        continue;
+      }
+      added_one = true;
+      StringBuilder param_string = new StringBuilder();
+      String value = metadata.get(key);
+      param_string.append("<span class=\"attribute-name\">@").append(key).append("</span> ");
+      param_string.append(value);
+      String s = StringUtils.wordWrap(param_string, 80, "<br />\n&nbsp;&nbsp;");
+      s = StringUtils.prepend("&nbsp;&nbsp;", s);
+      out.append(s).append("<br />\n");
+    }
+    out.append("\"\"\"<br />\n</span>\n");
+    if (!added_one)
+    {
+      return "";
+    }
+    return out.toString();    
   }
   
   public String getFormatted(LanguageElement root)
@@ -142,8 +199,7 @@ public class HtmlFormatter implements LanguageElementVisitor
       out.append(set_exp);
       out.append(" (<br/>\n");
       StringBuilder inner_exp = m_elements.pop(); // Inner statement
-      inner_exp = prepend("&nbsp;", inner_exp);
-      out.append(inner_exp);
+      out.append(StringUtils.prepend("&nbsp;", inner_exp));
       out.append("<br/>\n)");
       m_indent.push(indent);
     }
@@ -180,8 +236,7 @@ public class HtmlFormatter implements LanguageElementVisitor
       out.append(" when (<br />");
       StringBuilder pred = m_elements.pop();
       pred.append("\n<br/>)");
-      pred = prepend("&nbsp;", pred);
-      out.append(pred);
+      out.append(StringUtils.prepend("&nbsp;", pred));
       m_indent.push(indent);
     }
     else if (element instanceof SetDefinitionExtension)
@@ -234,17 +289,6 @@ public class HtmlFormatter implements LanguageElementVisitor
     top.append("</span>");
     m_elements.push(top);
     m_indent.pop();
-  }
-  
-  protected static StringBuilder prepend(String p, StringBuilder b)
-  {
-    String[] lines = b.toString().split("\n");
-    StringBuilder out = new StringBuilder();
-    for (String line : lines)
-    {
-      out.append(p).append(line).append("\n");
-    }
-    return out;
   }
 
 }
