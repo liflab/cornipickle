@@ -17,56 +17,20 @@
  */
 package ca.uqac.lif.cornipickle;
 
-import java.util.Map;
-
-import ca.uqac.lif.cornipickle.json.JsonElement;
-
-public class NegationStatement extends Statement
+public abstract class Constant extends Property
 {
-  protected Statement m_innerStatement;
-  
-  public NegationStatement()
-  {
-    super();
-  }
-  
-  public void setInnerStatement(Statement s)
-  {
-    m_innerStatement = s;
-  }
-  
-  public Statement getStatement()
-  {
-    return m_innerStatement;
-  }
 
   @Override
-  public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
+  public final void postfixAccept(LanguageElementVisitor visitor)
   {
-    return !m_innerStatement.evaluate(j, d);
-  }
-  
-  @Override
-  public String toString(String indent)
-  {
-    StringBuilder out = new StringBuilder();
-    out.append("Not (").append(m_innerStatement).append(")");
-    return out.toString();
-  }
-  
-  @Override
-  public void postfixAccept(LanguageElementVisitor visitor)
-  {
-    m_innerStatement.postfixAccept(visitor);
     visitor.visit(this);
     visitor.pop();
   }
   
   @Override
-  public void prefixAccept(LanguageElementVisitor visitor)
+  public final void prefixAccept(LanguageElementVisitor visitor)
   {
     visitor.visit(this);
-    m_innerStatement.prefixAccept(visitor);
     visitor.pop();
   }
 

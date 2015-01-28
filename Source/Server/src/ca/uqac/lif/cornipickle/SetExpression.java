@@ -32,4 +32,18 @@ public abstract class SetExpression extends LanguageElement
   }
   
   public abstract List<JsonElement> evaluate(JsonElement t, Map<String, JsonElement> d);
+  
+  @Override
+  public void prefixAccept(LanguageElementVisitor visitor)
+  {
+    visitor.visit(this);
+    visitor.pop();
+  }
+
+  @Override
+  public void postfixAccept(LanguageElementVisitor visitor)
+  {
+    visitor.visit(this);
+    visitor.pop();
+  }
 }

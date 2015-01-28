@@ -61,4 +61,24 @@ public abstract class ComparisonStatement extends Statement
   protected abstract boolean compare(JsonString e1, JsonString e2);
   
   protected abstract boolean compare(JsonNumber e1, JsonNumber e2);
+  
+  public abstract String getKeyword();
+  
+  @Override
+  public final void postfixAccept(LanguageElementVisitor visitor)
+  {
+    m_left.postfixAccept(visitor);
+    m_right.postfixAccept(visitor);
+    visitor.visit(this);
+    visitor.pop();
+  }
+  
+  @Override
+  public final void prefixAccept(LanguageElementVisitor visitor)
+  {
+    visitor.visit(this);
+    m_left.prefixAccept(visitor);
+    m_right.prefixAccept(visitor);
+    visitor.pop();
+  }
 }

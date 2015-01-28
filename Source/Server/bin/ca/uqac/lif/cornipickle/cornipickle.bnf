@@ -38,6 +38,7 @@
 <property_or_const>  := <elem_property> | <constant> ;
 <equality>           := <property_or_const> equals <property_or_const> ;
 <gt>                 := <property_or_const> is greater than <property_or_const> ;
+<lt>                 := <property_or_const> is less than <property_or_const> ;
 <constant>           := <number> | <string> ;
 <number>             := ^\d+;
 <string>             := ^"[^"]*";

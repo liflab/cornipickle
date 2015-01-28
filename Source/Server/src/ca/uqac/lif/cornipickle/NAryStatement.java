@@ -18,6 +18,7 @@
 package ca.uqac.lif.cornipickle;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public abstract class NAryStatement extends Statement
 {
@@ -31,6 +32,55 @@ public abstract class NAryStatement extends Statement
   public final void addOperand(Statement s)
   {
     m_statements.add(s);
+  }
+  
+  public abstract String getKeyword();
+  
+  public List<Statement> getStatements()
+  {
+    return m_statements;
+  }
+
+  @Override
+  public void postfixAccept(LanguageElementVisitor visitor)
+  {
+    for (Statement n : m_statements)
+    {
+      n.postfixAccept(visitor);
+    }
+    visitor.visit(this);
+    visitor.pop();
+  }
+  
+  @Override
+  public void prefixAccept(LanguageElementVisitor visitor)
+  {
+    visitor.visit(this);
+    for (Statement n : m_statements)
+    {
+      n.prefixAccept(visitor);
+    }
+    visitor.pop();
+  }
+  
+  @Override
+  public String toString(String indent)
+  {
+    StringBuilder out = new StringBuilder();
+    boolean first = true;
+    for (Statement s : m_statements)
+    {
+      if (first)
+      {
+        first = false;
+      }
+      else
+      {
+        out.append(" ").append(getKeyword()).append(" ");
+      }
+      out.append("(").append(s).append(")");
+    }
+    return out.toString();
   }
 
 }

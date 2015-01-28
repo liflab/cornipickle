@@ -22,7 +22,7 @@ import java.util.Map;
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonNumber;
 
-public class NumberConstant extends Property
+public class NumberConstant extends Constant
 {
   protected final JsonNumber m_value;
   

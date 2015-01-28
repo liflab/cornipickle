@@ -51,6 +51,11 @@ public class CssSelector extends SetExpression
     m_cssSelector =  right.m_cssSelector + " " + m_cssSelector;
   }
   
+  public String getSelector()
+  {
+    return m_cssSelector;
+  }
+  
   @Override
   public List<JsonElement> evaluate(JsonElement j, Map<String, JsonElement> d)
   {

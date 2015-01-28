@@ -21,6 +21,18 @@ public abstract class LanguageElement
 {
   public abstract String toString(String indent);
   
+  /**
+   * Prefix traversal of the parse tree by a visitor
+   * @param visitor The visitor
+   */
+  public abstract void prefixAccept(LanguageElementVisitor visitor);
+  
+  /**
+   * Postfix traversal of the parse tree by a visitor
+   * @param visitor The visitor
+   */
+  public abstract void postfixAccept(LanguageElementVisitor visitor);
+  
   @Override
   public final String toString()
   {

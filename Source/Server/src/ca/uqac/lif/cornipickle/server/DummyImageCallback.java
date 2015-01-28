@@ -81,7 +81,7 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
       }
     }
     // Whatever happens, serve the dummy image
-    m_server.sendResponse(t, Server.HTTP_OK, s_dummyImage);
+    m_server.sendResponse(t, Server.HTTP_OK, s_dummyImage, "image/png");
     return true;
   }
 }

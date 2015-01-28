@@ -29,6 +29,12 @@ public class OrStatement extends AndStatement
   }
   
   @Override
+  public String getKeyword()
+  {
+    return "Or";
+  }
+  
+  @Override
   public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
   {
     if (m_statements.isEmpty())
@@ -45,25 +51,4 @@ public class OrStatement extends AndStatement
     }
     return out;
   }
-  
-  @Override
-  public String toString(String indent)
-  {
-    StringBuilder out = new StringBuilder();
-    boolean first = true;
-    for (Statement s : m_statements)
-    {
-      if (first)
-      {
-        first = false;
-      }
-      else
-      {
-      	out.append(" Or ");
-      }
-      out.append("(").append(s).append(")");
-    }
-    return out.toString();
-  }
-
 }

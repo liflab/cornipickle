@@ -37,6 +37,11 @@ public class SetDefinition extends SetExpression
   {
     this(new StringConstant(name));
   }
+  
+  public String getName()
+  {
+    return m_setName.toString();
+  }
 
   @Override
   public List<JsonElement> evaluate(JsonElement t, Map<String, JsonElement> d)

@@ -28,6 +28,12 @@ public class AndStatement extends NAryStatement
   {
     super();
   }
+  
+  @Override
+  public String getKeyword()
+  {
+    return "And";
+  }
 
   @Override
   public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
@@ -45,26 +51,6 @@ public class AndStatement extends NAryStatement
         break;
     }
     return out;
-  }
-  
-  @Override
-  public String toString(String indent)
-  {
-    StringBuilder out = new StringBuilder();
-    boolean first = true;
-    for (Statement s : m_statements)
-    {
-      if (first)
-      {
-        first = false;
-      }
-      else
-      {
-      	out.append(" And ");
-      }
-      out.append("(").append(s).append(")");
-    }
-    return out.toString();
   }
 
 }

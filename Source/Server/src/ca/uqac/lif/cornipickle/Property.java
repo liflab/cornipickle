@@ -31,4 +31,18 @@ public abstract class Property extends LanguageElement
   }
   
   public abstract JsonElement evaluate(JsonElement t, Map<String, JsonElement> d);
+  
+  @Override
+  public void prefixAccept(LanguageElementVisitor visitor)
+  {
+    visitor.visit(this);
+    visitor.pop();
+  }
+
+  @Override
+  public void postfixAccept(LanguageElementVisitor visitor)
+  {
+    visitor.visit(this);
+    visitor.pop();
+  }
 }

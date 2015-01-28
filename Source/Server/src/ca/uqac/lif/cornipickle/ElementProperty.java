@@ -47,6 +47,16 @@ public class ElementProperty extends Property
     m_elementName = n;
   }
   
+  public String getElementName()
+  {
+    return m_elementName;
+  }
+  
+  public String getPropertyName()
+  {
+    return m_propertyName;
+  }
+  
   public void setPropertyName(String n)
   {
     m_propertyName = n;

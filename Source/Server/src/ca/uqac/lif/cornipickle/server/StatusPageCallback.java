@@ -50,6 +50,7 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
   @Override
   public boolean process(HttpExchange t)
   {
+    HtmlFormatter formatter = new HtmlFormatter();
     StringBuilder page = new StringBuilder();
     page.append(pageHead("Cornipickle status"));
     page.append("<h1>Cornipickle Status</h1>");
@@ -70,18 +71,19 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
       page.append("<li class=\"").append(class_name).append("\">");
       page.append("<span class=\"prop-name\">").append(key.get("name")).append("</span>\n");
       page.append("<div class=\"property-contents\">\n");
-      page.append(m_server.m_interpreter.getProperty(key));
+      page.append(formatter.getFormatted(m_server.m_interpreter.getProperty(key)));
       page.append("</div>\n");
       page.append("</li>");
     }
     page.append("</ul>\n");
+    
     // Show predicates
     page.append("<h2>Predicates</h2>\n");
     page.append("<ul class=\"predicates\">\n");
     List<PredicateDefinition> preds = m_server.m_interpreter.getPredicates();
     for (PredicateDefinition pd : preds)
     {
-    	page.append("<li>").append(pd.getStatement().toString()).append("</li>\n");
+    	page.append("<li>").append(formatter.getFormatted(pd)).append("</li>\n");
     }
     page.append("</ul>");
     // Show sets
@@ -90,14 +92,14 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     List<SetDefinition> sets = m_server.m_interpreter.getSetDefinitions();
     for (SetDefinition sd : sets)
     {
-    	page.append("<li>").append(sd.toString()).append("</li>\n");
+    	page.append("<li>").append(formatter.getFormatted(sd)).append("</li>\n");
     }
     page.append("</ul>");
     page.append("\n<div id=\"add-properties\">\n");
     page.append("<h2>Add properties</h2>\n\n");
     page.append("<p>Type here the Cornipickle properties you want to add.</p>\n");
     page.append("<form method=\"post\" action=\"add\">\n");
-    page.append("<div><textarea name=\"properties\"></textarea></div>\n");
+    page.append("<div><textarea name=\"properties\" rows=\"10\" cols=\"40\"></textarea></div>\n");
     page.append("<input type=\"submit\" />\n");
     page.append("</form>\n");
     page.append("</div>\n");
@@ -108,7 +110,7 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     h.add("Pragma", "no-cache");
     h.add("Cache-Control", "no-cache, no-store, must-revalidate");
     h.add("Expires", "0"); 
-    m_server.sendResponse(t, Server.HTTP_OK, page_string);
+    m_server.sendResponse(t, Server.HTTP_OK, page_string, "text/html");
     return true;
   }
   

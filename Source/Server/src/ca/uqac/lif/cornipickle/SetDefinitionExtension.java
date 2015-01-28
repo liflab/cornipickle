@@ -39,6 +39,11 @@ public class SetDefinitionExtension extends SetDefinition
     this(new StringConstant(name));
   }
   
+  public List<JsonElement> getElements()
+  {
+    return m_elements;
+  }
+  
   public SetDefinitionExtension(StringConstant name, ElementList elements)
   {
     this(name);

@@ -120,6 +120,11 @@ public class Server implements HttpHandler
   {
     sendResponse(t, response_code, contents.getBytes());
   }
+  
+  public void sendResponse(HttpExchange t, int response_code, String contents, String content_type)
+  {
+    sendResponse(t, response_code, contents.getBytes(), content_type);
+  }
 
   public void sendResponse(HttpExchange t, int response_code, byte[] contents)
   {

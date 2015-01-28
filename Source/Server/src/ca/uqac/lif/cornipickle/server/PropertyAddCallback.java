@@ -96,7 +96,8 @@ class PropertyAddCallback extends RequestCallback<CornipickleServer>
     if (success)
     {
       page.append("<h1>Add properties</h1>\n");
-      page.append("<p>The properties were successfully added.</p>");
+      page.append("<p>The properties were successfully added.</p>\n");
+      page.append("<p><a href=\"status\">Go to status page</a></p>\n");
     }
     page.append("<hr />\n");
     Date d = new Date();
@@ -108,7 +109,7 @@ class PropertyAddCallback extends RequestCallback<CornipickleServer>
     h.add("Pragma", "no-cache");
     h.add("Cache-Control", "no-cache, no-store, must-revalidate");
     h.add("Expires", "0"); 
-    m_server.sendResponse(t, Server.HTTP_OK, page_string);
+    m_server.sendResponse(t, Server.HTTP_OK, page_string, "text/html");
     return true;
   }    
 }

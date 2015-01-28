@@ -318,6 +318,18 @@ public class CornipickleParser implements ParseNodeVisitor
       out.setRight(right);
       m_nodes.push(out);
     }
+    else if (node_token.compareTo("<lt>") == 0)
+    {
+      Property right = (Property) m_nodes.pop();
+      m_nodes.pop(); // than
+      m_nodes.pop(); // less
+      m_nodes.pop(); // is
+      Property left = (Property) m_nodes.pop();
+      LessThanStatement out = new LessThanStatement();
+      out.setLeft(left);
+      out.setRight(right);
+      m_nodes.push(out);
+    }
     else if (node_token.compareTo("<negation>") == 0)
     {
       m_nodes.pop(); // (

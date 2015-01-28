@@ -41,6 +41,21 @@ public class ForAllStatement extends Statement
     m_innerStatement = s;
   }
   
+  public String getVariable()
+  {
+    return m_variable.toString();
+  }
+  
+  public Statement getStatement()
+  {
+    return m_innerStatement;
+  }
+  
+  public SetExpression getSet()
+  {
+    return m_set;
+  }
+  
   public void setVariable(StringConstant s)
   {
     m_variable = s;
@@ -82,5 +97,24 @@ public class ForAllStatement extends Statement
     out.append(indent).append("For each ").append(m_variable).append(" in ").append(m_set).append("\n");
     out.append(m_innerStatement.toString(indent + "  "));
     return out.toString();
+  }
+  
+  @Override
+  public void postfixAccept(LanguageElementVisitor visitor)
+  {
+    //m_variable.prefixAccept(visitor);
+    m_innerStatement.postfixAccept(visitor);
+    m_set.prefixAccept(visitor);
+    visitor.visit(this);
+    visitor.pop();
+  }
+  
+  @Override
+  public void prefixAccept(LanguageElementVisitor visitor)
+  {
+    visitor.visit(this);
+    m_innerStatement.prefixAccept(visitor);
+    m_set.prefixAccept(visitor);
+    visitor.pop();
   }
 }

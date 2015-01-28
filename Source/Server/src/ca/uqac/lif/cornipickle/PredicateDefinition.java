@@ -55,6 +55,16 @@ public class PredicateDefinition extends Statement
     createBnfRule(pattern.toString()); 
   }
   
+  public String getPattern()
+  {
+    return m_pattern.toString();
+  }
+  
+  public Statement getPredicate()
+  {
+    return m_predicate;
+  }
+  
   /**
    * Turns the pattern into a BNF rule for the grammar
    * @param pattern The pattern
@@ -131,5 +141,21 @@ public class PredicateDefinition extends Statement
   public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
   {
     return m_predicate.evaluate(j, d);
+  }
+  
+  @Override
+  public void prefixAccept(LanguageElementVisitor visitor)
+  {
+    visitor.visit(this);
+    m_predicate.prefixAccept(visitor);
+    visitor.pop();
+  }
+  
+  @Override
+  public void postfixAccept(LanguageElementVisitor visitor)
+  {
+    m_predicate.postfixAccept(visitor);
+    visitor.visit(this);
+    visitor.pop();
   }
 }

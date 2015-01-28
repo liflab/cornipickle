@@ -42,5 +42,11 @@ public class GreaterThanStatement extends ComparisonStatement
     out.append(m_left).append(" is greater than ").append(m_right);
     return out.toString();
   }
+  
+  @Override
+  public String getKeyword()
+  {
+    return "is greater than";
+  }
 
 }

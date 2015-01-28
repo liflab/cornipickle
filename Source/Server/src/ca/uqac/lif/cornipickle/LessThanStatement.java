@@ -17,57 +17,36 @@
  */
 package ca.uqac.lif.cornipickle;
 
-import java.util.Map;
+import ca.uqac.lif.cornipickle.json.JsonNumber;
+import ca.uqac.lif.cornipickle.json.JsonString;
 
-import ca.uqac.lif.cornipickle.json.JsonElement;
-
-public class NegationStatement extends Statement
+public class LessThanStatement extends ComparisonStatement
 {
-  protected Statement m_innerStatement;
-  
-  public NegationStatement()
-  {
-    super();
-  }
-  
-  public void setInnerStatement(Statement s)
-  {
-    m_innerStatement = s;
-  }
-  
-  public Statement getStatement()
-  {
-    return m_innerStatement;
-  }
 
   @Override
-  public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
+  protected boolean compare(JsonString e1, JsonString e2)
   {
-    return !m_innerStatement.evaluate(j, d);
+    return e1.stringValue().compareTo(e2.stringValue()) == 0;
+  }
+  
+  @Override
+  protected boolean compare(JsonNumber e1, JsonNumber e2)
+  {
+    return e1.numberValue().floatValue() < e2.numberValue().floatValue();
   }
   
   @Override
   public String toString(String indent)
   {
     StringBuilder out = new StringBuilder();
-    out.append("Not (").append(m_innerStatement).append(")");
+    out.append(m_left).append(" is less than ").append(m_right);
     return out.toString();
   }
   
   @Override
-  public void postfixAccept(LanguageElementVisitor visitor)
+  public String getKeyword()
   {
-    m_innerStatement.postfixAccept(visitor);
-    visitor.visit(this);
-    visitor.pop();
-  }
-  
-  @Override
-  public void prefixAccept(LanguageElementVisitor visitor)
-  {
-    visitor.visit(this);
-    m_innerStatement.prefixAccept(visitor);
-    visitor.pop();
+    return "is less than";
   }
 
 }

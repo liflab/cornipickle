@@ -42,5 +42,11 @@ public class EqualsStatement extends ComparisonStatement
     out.append(m_left).append(" equals ").append(m_right);
     return out.toString();
   }
+  
+  @Override
+  public String getKeyword()
+  {
+    return "equals";
+  }
 
 }
