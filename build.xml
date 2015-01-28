@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="Cornipickle" default="dist" basedir=".">
+
+  <description>Build file for Cornipickle</description>
+  
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Nothing else to do -->
+    <mkdir dir="doc"/>
+    <mkdir dir="Source/Server/bin"/>
+    <mkdir dir="Source/ServerTest/bin"/>
+  </target>
+  
+  <target name="compile" depends="init" description="Compile the source">
+    <!-- Compile the java code for each project -->
+    <javac
+      srcdir="Source/Server/src"
+      destdir="Source/Server/bin"
+      includeantruntime="false" />
+  </target>
+  
+  <target name="javadoc" depends="init" description="Generate the documentation">
+    <javadoc packagenames="ca.uqac.lif.cornipickle.*"
+             sourcepath="Source/Server/src"
+             excludepackagenames=""
+             defaultexcludes="yes"
+             destdir="doc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Cornipickle Documentation">
+      <doctitle><![CDATA[<h1>Cornipickle Documentation</h1>]]></doctitle>
+      <bottom><![CDATA[<i>Copyright &#169; 2014-2015 Sylvain Hall&eacute;. All Rights Reserved.</i>]]></bottom>
+      <link href="http://docs.oracle.com/javase/7/docs/api/"/>
+    </javadoc>
+  </target>
+  
+  <target name="create_run_jar" depends="compile,javadoc" description="Create the runnable JAR">
+      <jar destfile="Cornipickle.jar" filesetmanifest="mergewithoutmain">
+	  <manifest>
+	      <attribute name="Main-Class" value="ca.uqac.lif.cornipickle.server.CornipickleServer"/>
+	      <attribute name="Class-Path" value="."/>
+	  </manifest>
+	  <fileset dir="Source/Server/bin"/>
+	  <fileset dir="Source/Server/src"/>
+	  <fileset dir="Source/Server/lib"/>
+	  <zipfileset excludes="META-INF/*.SF" src="Source/Server/lib/BullwinkleParser.jar"/>
+	  <fileset dir="doc"/>
+      </jar>
+  </target>
+  
+  <target name="dist" depends="create_run_jar" description="Create distribution">
+    <!-- Do nothing -->
+  </target>
+
+</project>
