@@ -32,10 +32,17 @@ public class InnerFileServer extends Server
 
   public InnerFileServer()
   {
+    this(true);
+  }
+  
+  public InnerFileServer(boolean caching_enabled)
+  {
     super();
     m_resourceFolder = "resource";
-    registerCallback(0, new InnerFileCallback(this));
-    m_referenceClass = this.getClass();
+    InnerFileCallback ifc = new InnerFileCallback(this);
+    ifc.setEnabled(caching_enabled);
+    registerCallback(0, ifc);
+    m_referenceClass = this.getClass();    
   }
 
   protected InnerFileServer(Class<? extends InnerFileServer> c)

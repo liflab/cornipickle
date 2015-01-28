@@ -44,6 +44,11 @@ public class PredicateCall extends Statement
   {
     return m_matchedString;
   }
+  
+  public PredicateDefinition getPredicateDefinition()
+  {
+    return m_predicate;
+  }
 
   @Override
   public boolean evaluate(JsonElement j, Map<String, JsonElement> d)

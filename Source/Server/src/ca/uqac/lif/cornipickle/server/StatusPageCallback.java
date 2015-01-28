@@ -116,7 +116,7 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     List<PredicateDefinition> preds = m_server.m_interpreter.getPredicates();
     for (PredicateDefinition pd : preds)
     {
-    	page.append("<li>").append(formatter.getFormatted(pd)).append("</li>\n");
+    	page.append("<li class=\"predicate-definition-item ").append(pd.getRuleName()).append("\">").append(formatter.getFormatted(pd)).append("</li>\n");
     }
     page.append("</ul>");
     // Show sets
@@ -155,6 +155,7 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     page.append("<head>\n");
     page.append("<title>").append(title).append("</title>\n");
     page.append("<script src=\"http://code.jquery.com/jquery-1.11.2.min.js\"></script>\n");
+    page.append("<script src=\"highlight.js\"></script>\n");
     page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"screen.css\" />\n");
     page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"colouring.css\" />\n");
     page.append("</head>\n<body>\n");

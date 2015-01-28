@@ -39,15 +39,20 @@ public class HtmlFormatter implements LanguageElementVisitor
 {
   protected Stack<StringBuilder> m_elements;
   
+  protected Stack<String> m_indent;
+  
   public HtmlFormatter()
   {
     super();
     m_elements = new Stack<StringBuilder>();
+    m_indent = new Stack<String>();
   }
   
   public String getFormatted(LanguageElement root)
   {
     m_elements.clear();
+    m_indent.clear();
+    m_indent.push("");
     root.postfixAccept(this);
     if (m_elements.isEmpty())
     {
@@ -65,20 +70,18 @@ public class HtmlFormatter implements LanguageElementVisitor
       return;
     }
     StringBuilder out = new StringBuilder();
+    String indent = m_indent.peek();
     if (element instanceof StringConstant)
     {
       StringConstant e = (StringConstant) element;
       out.append("<span class=\"string-constant\">").append(e.toString());
+      m_indent.push(indent);
     }
     else if (element instanceof NumberConstant)
     {
       NumberConstant e = (NumberConstant) element;
       out.append("<span class=\"number-constant\">").append(e.toString());
-    }
-    else if (element instanceof NumberConstant)
-    {
-      NumberConstant e = (NumberConstant) element;
-      out.append("<span class=\"number-constant\">").append(e.toString());
+      m_indent.push(indent);
     }
     else if (element instanceof ElementProperty)
     {
@@ -87,6 +90,7 @@ public class HtmlFormatter implements LanguageElementVisitor
       out.append("<span class=\"element-name\">").append(e.getElementName()).append("</span>");
       out.append("'s ");
       out.append("<span class=\"property-name\">").append(e.getPropertyName()).append("</span>");
+      m_indent.push(indent);
     }
     else if (element instanceof ComparisonStatement)
     {
@@ -95,6 +99,7 @@ public class HtmlFormatter implements LanguageElementVisitor
       StringBuilder right = m_elements.pop(); // RHS
       StringBuilder left = m_elements.pop(); // LHS
       out.append(left).append(" ").append(e.getKeyword()).append(" ").append(right);
+      m_indent.push(indent);
     }
     else if (element instanceof NAryStatement)
     {
@@ -105,10 +110,14 @@ public class HtmlFormatter implements LanguageElementVisitor
       {
         if (i > 0)
         {
-          out.append(" ").append(keyword).append(" ");
+          out.append("<br/>\n").append(keyword).append("<br/>\n");
         }
         StringBuilder sts = m_elements.pop();
-        out.append("(").append(sts).append(")");
+        sts.insert(0, "(");
+        sts.append(")");
+        //sts = prepend("&nbsp;", sts);
+        out.append(sts);
+        m_indent.push(indent);
       }      
     }
     else if (element instanceof ExistsStatement)
@@ -122,6 +131,7 @@ public class HtmlFormatter implements LanguageElementVisitor
       StringBuilder inner_exp = m_elements.pop(); // Inner statement
       out.append(inner_exp);
       out.append(" )");
+      m_indent.push(indent);
     }
     else if (element instanceof ForAllStatement)
     {
@@ -130,15 +140,19 @@ public class HtmlFormatter implements LanguageElementVisitor
       out.append("<span class=\"element-name\">").append(e.getVariable()).append("</span> in ");
       StringBuilder set_exp = m_elements.pop(); // Set expression
       out.append(set_exp);
-      out.append(" (");
+      out.append(" (<br/>\n");
       StringBuilder inner_exp = m_elements.pop(); // Inner statement
+      inner_exp = prepend("&nbsp;", inner_exp);
       out.append(inner_exp);
-      out.append(" )");
+      out.append("<br/>\n)");
+      m_indent.push(indent);
     }
     else if (element instanceof PredicateCall)
     {
       PredicateCall e = (PredicateCall) element;
-      out.append("<span class=\"predicate-call\">");
+      PredicateDefinition pd = e.getPredicateDefinition();
+      String rule_name = pd.getRuleName();
+      out.append("<span class=\"predicate-call ").append(rule_name).append("\" onclick=\"highlight_predicate('").append(rule_name).append("');\">");
       out.append(e.getMatchedString());
       /*out.append("<span class=\"element-name\">").append(e.getVariable()).append("</span> in ");
       StringBuilder set_exp = m_elements.pop(); // Set expression
@@ -147,6 +161,7 @@ public class HtmlFormatter implements LanguageElementVisitor
       StringBuilder inner_exp = m_elements.pop(); // Inner statement
       out.append(inner_exp);
       out.append(" )");*/
+      m_indent.push(indent);
     }
     else if (element instanceof NegationStatement)
     {
@@ -154,6 +169,7 @@ public class HtmlFormatter implements LanguageElementVisitor
       out.append("<span class=\"negation\">");
       StringBuilder top = m_elements.pop();
       out.append("Not (").append(top).append(")");
+      m_indent.push(indent);
     }
     else if (element instanceof PredicateDefinition)
     {
@@ -161,10 +177,12 @@ public class HtmlFormatter implements LanguageElementVisitor
       out.append("<span class=\"predicate-definition\">");
       out.append("We say that ");
       out.append(e.getPattern());
-      out.append(" when (");
+      out.append(" when (<br />");
       StringBuilder pred = m_elements.pop();
+      pred.append("\n<br/>)");
+      pred = prepend("&nbsp;", pred);
       out.append(pred);
-      out.append(")");
+      m_indent.push(indent);
     }
     else if (element instanceof SetDefinitionExtension)
     {
@@ -189,6 +207,7 @@ public class HtmlFormatter implements LanguageElementVisitor
         out.append(el.toString());
       }
       out.append(")");
+      m_indent.push(indent);
     }
     else if (element instanceof CssSelector)
     {
@@ -197,10 +216,12 @@ public class HtmlFormatter implements LanguageElementVisitor
       out.append("$(");
       out.append(e.getSelector());
       out.append(")");
+      m_indent.push(indent);
     }
     else
     {
       out.append("<span>");
+      m_indent.push(indent);
     }
     m_elements.push(out);
 
@@ -212,6 +233,18 @@ public class HtmlFormatter implements LanguageElementVisitor
     StringBuilder top = m_elements.pop();
     top.append("</span>");
     m_elements.push(top);
+    m_indent.pop();
+  }
+  
+  protected static StringBuilder prepend(String p, StringBuilder b)
+  {
+    String[] lines = b.toString().split("\n");
+    StringBuilder out = new StringBuilder();
+    for (String line : lines)
+    {
+      out.append(p).append(line).append("\n");
+    }
+    return out;
   }
 
 }

@@ -69,7 +69,7 @@ public class CornipickleServer extends InnerFileServer
 
   public CornipickleServer()
   {
-    super();
+    super(false); // false: at the moment we disable sending HTTP 304 responses
     // Instantiate Cornipickle interpreter
     m_interpreter = new Interpreter();
     // Update class reference

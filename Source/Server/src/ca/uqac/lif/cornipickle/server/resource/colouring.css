@@ -40,3 +40,20 @@
 .cornipickle-code:hover .parenthesis {
   color: #444;
 }
+
+.predicate-call {
+  cursor: pointer;
+}
+
+.predicate-call:hover {
+  background: #ffc;
+}
+
+.predicate-call.highlighted, .predicate-call.highlighted:hover {
+  border: solid 1px red;
+  background: yellow;
+}
+
+.predicate-definition-item.highlighted {
+  background: yellow;
+}

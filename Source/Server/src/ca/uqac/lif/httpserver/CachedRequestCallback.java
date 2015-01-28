@@ -37,10 +37,20 @@ public abstract class CachedRequestCallback<T extends Server> extends RequestCal
    */
   protected Set<String> m_served;
   
+  /**
+   * Whether caching is enabled
+   */
+  protected boolean m_cachingEnabled;
+  
   public CachedRequestCallback(T s)
   {
     super(s);
     m_served = new HashSet<String>();
+  }
+  
+  public void setEnabled(boolean b)
+  {
+    m_cachingEnabled = b;
   }
 
   @Override
@@ -48,7 +58,7 @@ public abstract class CachedRequestCallback<T extends Server> extends RequestCal
   {
     URI u = t.getRequestURI();
     String path = u.getPath();
-    if (!m_served.contains(path))
+    if (!m_cachingEnabled || !m_served.contains(path))
     {
       m_served.add(path);
       return serve(t);
@@ -56,6 +66,7 @@ public abstract class CachedRequestCallback<T extends Server> extends RequestCal
     else
     {
       m_server.sendResponse(t, Server.HTTP_NOT_MODIFIED);
+      System.out.println(path + ": not modified");
     }
     return true;
   }
