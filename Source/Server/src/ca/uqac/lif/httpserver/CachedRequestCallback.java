@@ -17,6 +17,10 @@
  */
 package ca.uqac.lif.httpserver;
 
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.sun.net.httpserver.HttpExchange;
 
 /**
@@ -28,34 +32,37 @@ import com.sun.net.httpserver.HttpExchange;
  */
 public abstract class CachedRequestCallback<T extends Server> extends RequestCallback<T>
 {
-  public CachedRequestCallback(T s)
-  {
-    super(s);
-  }
-
   /**
    * Whether the page has been already served
    */
-  protected boolean m_served = false;
+  protected Set<String> m_served;
+  
+  public CachedRequestCallback(T s)
+  {
+    super(s);
+    m_served = new HashSet<String>();
+  }
 
   @Override
   public boolean process(HttpExchange t)
   {
-    if (m_served)
+    URI u = t.getRequestURI();
+    String path = u.getPath();
+    if (!m_served.contains(path))
     {
-      m_server.sendResponse(t, Server.HTTP_NOT_MODIFIED);
+      m_served.add(path);
+      return serve(t);
     }
     else
     {
-      m_served = true;
-      return serve(t);
+      m_server.sendResponse(t, Server.HTTP_NOT_MODIFIED);
     }
     return true;
   }
   
   public void reset()
   {
-    m_served = false;
+    m_served.clear();
   }
   
   protected abstract boolean serve(HttpExchange t);
