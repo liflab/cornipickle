@@ -67,6 +67,7 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     
     // Show properties
     page.append("<h2 class=\"ui-accordion-header\">Properties</h2>\n");
+    page.append("<p><a href=\"/reset\">Reset history</a></p>\n");
     //page.append("<div class=\"ui-accordion-content\">\n");
     createPropertyList(verdicts, page);
     //page.append("</div>\n");
@@ -137,8 +138,9 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     }
     else
     {
-        page.append("<p id=\"last-probe-contact\">Last contact with probe on ");
-        page.append(last_contact).append("</p>\n");
+        page.append("<p id=\"last-probe-contact\">Last contact with probe <span id=\"time-string\">just now</span>");
+        //page.append(last_contact)
+        page.append("</p>\n");
     }
   }
   
@@ -215,6 +217,8 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     page.append("<script src=\"https://code.jquery.com/jquery-1.11.2.min.js\"></script>\n");
     page.append("<script src=\"https://code.jquery.com/ui/1.11.1/jquery-ui.min.js\"></script>\n");
     page.append("<script src=\"highlight.js\"></script>\n");
+    page.append("<script type=\"text/javascript\">\n//<![CDATA[\nprobe_last_contact = new Date(\"");
+    page.append(m_server.getLastProbeContact()).append("\");\n//]]>\n</script>\n");
     page.append("</head>\n<body>\n");
     return page;
   }

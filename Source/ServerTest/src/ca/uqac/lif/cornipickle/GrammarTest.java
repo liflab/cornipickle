@@ -84,6 +84,13 @@ public class GrammarTest
   } 
   
   @Test
+  public void testIfThen1() throws ParseException
+  {
+    String line = "If (0 equals 0) Then (0 equals 0)";
+    ParseNode pn = shouldParseAndNotNull(line, "<implies>", false);
+  } 
+  
+  @Test
   public void testCssSelector1() throws ParseException
   {
     String line = "$(p1.menu)";

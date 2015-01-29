@@ -26,39 +26,50 @@ import ca.uqac.lif.cornipickle.json.JsonString;
 public class RegexMatch extends ComparisonStatement
 {
 
-	@Override
-	protected Verdict compare(JsonString e1, JsonString e2)
-	{
-		String subject = e1.stringValue();
-		String pattern = e2.stringValue();
-		Pattern pat = Pattern.compile(pattern);
-		Matcher mat = pat.matcher(subject);
-		if (mat.find())
-		{
-			return Verdict.TRUE;
-		}
-		return Verdict.FALSE;
-	}
+  @Override
+  protected Verdict compare(JsonString e1, JsonString e2)
+  {
+    String subject = e1.stringValue();
+    String pattern = e2.stringValue();
+    Pattern pat = Pattern.compile(pattern);
+    Matcher mat = pat.matcher(subject);
+    if (mat.find())
+    {
+      return Verdict.TRUE;
+    }
+    return Verdict.FALSE;
+  }
 
-	@Override
-	protected Verdict compare(JsonNumber e1, JsonNumber e2)
-	{
-		// Regexes don't apply to numbers
-		return Verdict.FALSE;
-	}
+  @Override
+  protected Verdict compare(JsonNumber e1, JsonNumber e2)
+  {
+    // Regexes don't apply to numbers
+    return Verdict.FALSE;
+  }
 
-	@Override
-	public String getKeyword()
-	{
-		return "matches";
-	}
+  @Override
+  public String getKeyword()
+  {
+    return "matches";
+  }
 
-	@Override
-	public String toString(String indent)
-	{
+  @Override
+  public String toString(String indent)
+  {
     StringBuilder out = new StringBuilder();
     out.append(m_left).append(" matches ").append(m_right);
     return out.toString();
-	}
+  }
+
+  @Override
+  public RegexMatch getClone()
+  {
+    RegexMatch out = new RegexMatch();
+    out.m_left = m_left.getClone();
+    out.m_right = m_right.getClone();
+    return out;
+  }
+
+
 
 }

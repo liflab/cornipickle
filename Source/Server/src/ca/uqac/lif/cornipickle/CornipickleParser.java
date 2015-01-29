@@ -123,7 +123,7 @@ public class CornipickleParser implements ParseNodeVisitor
     }
     catch (BnfParser.ParseException e)
     {
-      throw new ParseException("Error: the BNF parser returned null");
+      throw new ParseException(e.toString());
     }
     if (node != null)
     {
@@ -287,6 +287,24 @@ public class CornipickleParser implements ParseNodeVisitor
       out.setInnerStatement(right);
       m_nodes.push(out);
     }
+    else if (node_token.compareTo("<exists>") == 0)
+    {
+      m_nodes.pop(); // )
+      Statement statement = (Statement) m_nodes.pop();
+      m_nodes.pop(); // (
+      m_nodes.pop(); // that
+      m_nodes.pop(); // such
+      SetExpression set_name = (SetExpression) m_nodes.pop();
+      m_nodes.pop(); // in
+      StringConstant var_name = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // exists
+      m_nodes.pop(); // There
+      ExistsStatement out = new ExistsStatement();
+      out.setDomain(set_name);
+      out.setInnerStatement(statement);
+      out.setVariable(var_name);
+      m_nodes.push(out);
+    }
     else if (node_token.compareTo("<foreach>") == 0)
     {
       m_nodes.pop(); // )
@@ -380,6 +398,16 @@ public class CornipickleParser implements ParseNodeVisitor
       out.setInnerStatement(right);
       m_nodes.push(out);
     }
+    else if (node_token.compareTo("<never>") == 0)
+    {
+      m_nodes.pop(); // (
+      Statement right = (Statement) m_nodes.pop();
+      m_nodes.pop(); // )
+      m_nodes.pop(); // Never
+      Never out = new Never();
+      out.setInnerStatement(right);
+      m_nodes.push(out);
+    }
     else if (node_token.compareTo("<or>") == 0)
     {
       m_nodes.pop(); // (
@@ -419,6 +447,16 @@ public class CornipickleParser implements ParseNodeVisitor
       RegexCapture out = new RegexCapture();
       out.setProperty(variable);
       out.setPattern(pattern.toString());
+      m_nodes.push(out);
+    }
+    else if (node_token.compareTo("<regex_match>") == 0)
+    {
+      Property right = (Property) m_nodes.pop();
+      m_nodes.pop(); // matches
+      Property left = (Property) m_nodes.pop();
+      RegexMatch out = new RegexMatch();
+      out.setLeft(left);
+      out.setRight(right);
       m_nodes.push(out);
     }
     else if (node_token.compareTo("<set_name>") == 0)

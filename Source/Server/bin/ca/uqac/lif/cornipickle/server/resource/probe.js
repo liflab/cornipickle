@@ -48,6 +48,7 @@ var CornipickleProbe = function()
         out += this.outputStringIfDefined("id", n.id, n_indent);
         out += this.outputNumberIfDefined("height", n.clientHeight, n_indent);
         out += this.outputNumberIfDefined("width", n.clientWidth, n_indent);
+        out += this.outputStringIfDefined("border", CornipickleProbe.formatBorderString(n), n_indent);
         var pos = cumulativeOffset(n);
         out += this.outputNumberIfDefined("top", pos.top, n_indent);
         out += this.outputNumberIfDefined("left", pos.left, n_indent);
@@ -229,6 +230,40 @@ CornipickleProbe.updateTransmitIcon = function(active)
   {
     icon.style.opacity = 0.3;
   }
+};
+
+/* Obtained from http://stackoverflow.com/a/25078870 */
+CornipickleProbe.getStyle = function(elem, prop)
+{
+  if (elem.currentStyle)
+  {
+    var res = elem.currentStyle.margin;
+  }
+  else if (window.getComputedStyle)
+  {
+    if (window.getComputedStyle.getPropertyValue)
+    {
+      var res = window.getComputedStyle(elem, null).getPropertyValue(prop)
+    }
+    else
+    {
+      var res = window.getComputedStyle(elem)[prop]
+    }
+  }
+  return res;
+};
+
+/**
+ * Creates a style string for an element's border.
+ * Caveat emptor: only reads the properties for the top border!
+ */
+CornipickleProbe.formatBorderString = function(elem)
+{
+  var s_top_style = CornipickleProbe.getStyle(elem, "border-top-style");
+  var s_top_colour = CornipickleProbe.getStyle(elem, "border-top-color");
+  var s_top_width = CornipickleProbe.getStyle(elem, "border-top-width");
+  var out = s_top_style + " " + s_top_colour + " " + s_top_width;
+  return out.trim();
 };
 
 window.onload = function()

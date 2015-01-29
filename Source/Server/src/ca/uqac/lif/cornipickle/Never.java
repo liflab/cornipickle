@@ -18,37 +18,15 @@
 package ca.uqac.lif.cornipickle;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import ca.uqac.lif.cornipickle.json.JsonElement;
 
-public class Globally extends TemporalStatement
+public class Never extends Globally
 {
-  protected Statement m_innerStatement;
-
-  protected List<Statement> m_inMonitors;
-
-  protected Statement.Verdict m_verdict;
-
-  public Globally()
+  public Never()
   {
     super();
-    m_inMonitors = new LinkedList<Statement>();
-    m_verdict = Statement.Verdict.INCONCLUSIVE;
-  }
-
-  @Override
-  public void resetHistory()
-  {
-    m_inMonitors.clear();
-    m_verdict = Statement.Verdict.INCONCLUSIVE;
-  }
-
-  public void setInnerStatement(Statement s)
-  {
-    m_innerStatement = s;
   }
 
   @Override
@@ -67,11 +45,11 @@ public class Globally extends TemporalStatement
     {
       Statement st = it.next();
       Verdict st_v = st.evaluate(j, d);
-      if (st_v == Verdict.TRUE)
+      if (st_v == Verdict.FALSE)
       {
         it.remove();
       }
-      if (st_v == Verdict.FALSE)
+      if (st_v == Verdict.TRUE)
       {
         m_verdict = Verdict.FALSE;
         return m_verdict;
@@ -84,33 +62,16 @@ public class Globally extends TemporalStatement
   public String toString(String indent)
   {
     StringBuilder out = new StringBuilder();
-    out.append(indent).append("Always (\n");
+    out.append(indent).append("Never (\n");
     out.append(m_innerStatement.toString(indent + "  "));
     out.append("\n").append(indent).append(")");
     return out.toString();
   }
 
   @Override
-  public void postfixAccept(LanguageElementVisitor visitor)
-  {
-    //m_variable.prefixAccept(visitor);
-    m_innerStatement.postfixAccept(visitor);
-    visitor.visit(this);
-    visitor.pop();
-  }
-
-  @Override
-  public void prefixAccept(LanguageElementVisitor visitor)
-  {
-    visitor.visit(this);
-    m_innerStatement.prefixAccept(visitor);
-    visitor.pop();
-  }
-
-  @Override
   public Statement getClone()
   {
-    Globally out = new Globally();
+    Never out = new Never();
     out.setInnerStatement(m_innerStatement.getClone());
     return out;
   }

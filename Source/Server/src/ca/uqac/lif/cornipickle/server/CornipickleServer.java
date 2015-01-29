@@ -75,6 +75,7 @@ public class CornipickleServer extends InnerFileServer
     // Update class reference
     m_referenceClass = this.getClass();
     // Register callbacks
+    registerCallback(0, new ResetHistoryCallback(this));
     registerCallback(0, new PropertyAddCallback(this));
     registerCallback(0, new StatusPageCallback(this));
     registerCallback(0, new ProbeCallback(this));

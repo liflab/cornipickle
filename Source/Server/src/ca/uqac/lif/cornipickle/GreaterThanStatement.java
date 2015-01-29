@@ -56,5 +56,14 @@ public class GreaterThanStatement extends ComparisonStatement
   {
     return "is greater than";
   }
+  
+  @Override
+  public GreaterThanStatement getClone()
+  {
+    GreaterThanStatement out = new GreaterThanStatement();
+    out.m_left = m_left.getClone();
+    out.m_right = m_right.getClone();
+    return out;
+  }
 
 }

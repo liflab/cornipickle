@@ -24,59 +24,67 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 
 public abstract class Statement extends LanguageElement
 { 
-	public static enum Verdict {TRUE, FALSE, INCONCLUSIVE};
-	
+  public static enum Verdict {TRUE, FALSE, INCONCLUSIVE};
+
+  protected Statement.Verdict m_verdict;
+  
+  public Statement()
+  {
+    m_verdict = Verdict.INCONCLUSIVE;
+  }
+
   public final Verdict evaluate(JsonElement j)
   {
     Map<String,JsonElement> d = new HashMap<String,JsonElement>();
     return evaluate(j, d);
   }
-  
+
   public abstract Verdict evaluate(JsonElement j, Map<String,JsonElement> d);
-  
+
   public static final Verdict threeValuedAnd(Verdict x, Verdict y)
   {
-  	if (x == Verdict.FALSE || y == Verdict.FALSE)
-  	{
-  		return Verdict.FALSE;
-  	}
-  	if (x == Verdict.TRUE && y == Verdict.TRUE)
-  	{
-  		return Verdict.TRUE;
-  	}
-  	return Verdict.INCONCLUSIVE;
+    if (x == Verdict.FALSE || y == Verdict.FALSE)
+    {
+      return Verdict.FALSE;
+    }
+    if (x == Verdict.TRUE && y == Verdict.TRUE)
+    {
+      return Verdict.TRUE;
+    }
+    return Verdict.INCONCLUSIVE;
   }
-  
-  public Statement getClone()
+
+  public abstract Statement getClone();
+
+  public void resetHistory()
   {
-  	// Default behaviour of cloning: return same object
-  	// This only needs to be overridden by temporal statements
-  	return this;
+    // Nothing to do for non-temporal statements
+    return;
   }
-  
+
   public static final Verdict threeValuedOr(Verdict x, Verdict y)
   {
-  	if (x == Verdict.TRUE || y == Verdict.TRUE)
-  	{
-  		return Verdict.TRUE;
-  	}
-  	if (x == Verdict.FALSE && y == Verdict.FALSE)
-  	{
-  		return Verdict.FALSE;
-  	}
-  	return Verdict.INCONCLUSIVE;
+    if (x == Verdict.TRUE || y == Verdict.TRUE)
+    {
+      return Verdict.TRUE;
+    }
+    if (x == Verdict.FALSE && y == Verdict.FALSE)
+    {
+      return Verdict.FALSE;
+    }
+    return Verdict.INCONCLUSIVE;
   }
-  
+
   public static final Verdict threeValuedNot(Verdict x)
   {
-  	if (x == Verdict.FALSE)
-  	{
-  		return Verdict.TRUE;
-  	}
-  	if (x == Verdict.TRUE)
-  	{
-  		return Verdict.FALSE;
-  	}
-  	return Verdict.INCONCLUSIVE;
+    if (x == Verdict.FALSE)
+    {
+      return Verdict.TRUE;
+    }
+    if (x == Verdict.TRUE)
+    {
+      return Verdict.FALSE;
+    }
+    return Verdict.INCONCLUSIVE;
   }
 }

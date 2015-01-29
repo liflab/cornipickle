@@ -26,27 +26,44 @@ public class ImpliesStatement extends AndStatement
   @Override
   public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
+    if (m_verdict != Statement.Verdict.INCONCLUSIVE)
+    {
+      return m_verdict;
+    }
     if (m_statements.size() < 2)
     {
-      return Verdict.FALSE;
+      m_verdict = Verdict.FALSE;
+      return m_verdict;
     }
     Statement left = m_statements.get(0);
     Statement right = m_statements.get(1);
     Verdict v_left = left.evaluate(j, d);
     Verdict v_right = right.evaluate(j, d);
     // p -> q == !p or q
-    return threeValuedOr(threeValuedNot(v_left), v_right);
+    m_verdict = threeValuedOr(threeValuedNot(v_left), v_right);
+    return m_verdict;
   }
-  
+
   @Override
   public String toString(String indent)
   {
-  	StringBuilder out = new StringBuilder();
-  	out.append(indent).append("If (\n");
-  	out.append(m_statements.get(0).toString(indent + "  "));
-  	out.append(")\n").append(indent).append("Then (\n");
-  	out.append(m_statements.get(1).toString(indent + "  "));
-  	out.append(")");
-  	return out.toString();
+    StringBuilder out = new StringBuilder();
+    out.append(indent).append("If (\n");
+    out.append(m_statements.get(0).toString(indent + "  "));
+    out.append(")\n").append(indent).append("Then (\n");
+    out.append(m_statements.get(1).toString(indent + "  "));
+    out.append(")");
+    return out.toString();
+  }
+  
+  @Override
+  public ImpliesStatement getClone()
+  {
+    ImpliesStatement out = new ImpliesStatement();
+    for (Statement s : m_statements)
+    {
+      out.addOperand(s.getClone());
+    }
+    return out;
   }
 }

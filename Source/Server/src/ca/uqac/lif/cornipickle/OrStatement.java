@@ -37,9 +37,14 @@ public class OrStatement extends AndStatement
   @Override
   public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
+        if (m_verdict != Statement.Verdict.INCONCLUSIVE)
+    {
+      return m_verdict;
+    }
     if (m_statements.isEmpty())
     {
-      return Verdict.FALSE;
+      m_verdict = Verdict.FALSE;
+      return m_verdict;
     }
     Verdict out = Verdict.FALSE;
     for (Statement s : m_statements)
@@ -48,6 +53,17 @@ public class OrStatement extends AndStatement
       out = threeValuedOr(out, b);
       if (out == Verdict.TRUE)
         break;
+    }
+    return out;
+  }
+  
+  @Override
+  public OrStatement getClone()
+  {
+    OrStatement out = new OrStatement();
+    for (Statement s : m_statements)
+    {
+      out.addOperand(s.getClone());
     }
     return out;
   }

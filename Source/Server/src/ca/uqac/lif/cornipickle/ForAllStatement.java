@@ -74,6 +74,10 @@ public class ForAllStatement extends Statement
   @Override
   public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
+        if (m_verdict != Statement.Verdict.INCONCLUSIVE)
+    {
+      return m_verdict;
+    }
     // Fetch values for set
     List<JsonElement> domain = m_set.evaluate(j, d);
     // Iterate over values
@@ -87,7 +91,8 @@ public class ForAllStatement extends Statement
       if (out == Verdict.FALSE)
         break;
     }
-    return out;
+    m_verdict = out;
+    return m_verdict;
   }
   
   @Override
@@ -116,5 +121,15 @@ public class ForAllStatement extends Statement
     m_innerStatement.prefixAccept(visitor);
     m_set.prefixAccept(visitor);
     visitor.pop();
+  }
+  
+  @Override
+  public ForAllStatement getClone()
+  {
+    ForAllStatement out = new ForAllStatement();
+    out.m_innerStatement = m_innerStatement.getClone();
+    out.m_variable = m_variable;
+    out.m_set = m_set;
+    return out;
   }
 }

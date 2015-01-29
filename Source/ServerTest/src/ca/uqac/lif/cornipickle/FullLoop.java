@@ -39,8 +39,8 @@ public class FullLoop
     {
       fail("JSON document is null");
     }
-    boolean verdict = st.evaluate(document);
-    if (verdict != true)
+    Statement.Verdict verdict = st.evaluate(document);
+    if (verdict != Statement.Verdict.TRUE)
     {
       fail("Wrong verdict");
     }
@@ -60,8 +60,8 @@ public class FullLoop
     {
       fail("JSON document is null");
     }
-    boolean verdict = st.evaluate(document);
-    if (verdict != false)
+    Statement.Verdict verdict = st.evaluate(document);
+    if (verdict != Statement.Verdict.FALSE)
     {
       fail("Wrong verdict");
     }

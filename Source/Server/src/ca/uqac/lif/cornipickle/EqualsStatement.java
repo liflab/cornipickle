@@ -56,5 +56,14 @@ public class EqualsStatement extends ComparisonStatement
   {
     return "equals";
   }
+  
+  @Override
+  public EqualsStatement getClone()
+  {
+    EqualsStatement out = new EqualsStatement();
+    out.m_left = m_left.getClone();
+    out.m_right = m_right.getClone();
+    return out;
+  }
 
 }

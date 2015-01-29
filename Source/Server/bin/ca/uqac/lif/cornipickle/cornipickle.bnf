@@ -36,14 +36,15 @@
                         | <temporal_stmt> | <userdef_stmt> ;
 <binary_stmt>        := <equality> | <gt> | <lt> | <regex_match> 
                         | <and> | <or> | <implies> ;
-<temporal_stmt>      := <globally> | <eventually> ;
+<temporal_stmt>      := <globally> | <eventually> | <never> ;
 <foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
-<exists>             := There exists a <var_name> in <set_name> such that ( <statement> ) ;
+<exists>             := There exists <var_name> in <set_name> such that ( <statement> ) ;
 <and>                := ( <statement> ) And ( <statement> ) ;
 <or>                 := ( <statement> ) Or ( <statement> ) ;
-<implies>            := If ( <statement> ) then ( <statement> ) ;
+<implies>            := If ( <statement> ) Then ( <statement> ) ;
 <negation>           := Not ( <statement> ) ;
-<globally>           := Globally ( <statement> ) ;
+<globally>           := Always ( <statement> ) ;
+<never>              := Never ( <statement> ) ;
 <eventually>         := Eventually ( <statement> ) ;
 <property_or_const>  := <elem_property> | <constant> ;
 <equality>           := <property_or_const> equals <property_or_const> ;

@@ -24,13 +24,17 @@ import java.util.Stack;
 import ca.uqac.lif.cornipickle.ComparisonStatement;
 import ca.uqac.lif.cornipickle.CssSelector;
 import ca.uqac.lif.cornipickle.ElementProperty;
+import ca.uqac.lif.cornipickle.Eventually;
 import ca.uqac.lif.cornipickle.ExistsStatement;
 import ca.uqac.lif.cornipickle.ForAllStatement;
+import ca.uqac.lif.cornipickle.Globally;
+import ca.uqac.lif.cornipickle.ImpliesStatement;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.LanguageElement;
 import ca.uqac.lif.cornipickle.LanguageElementVisitor;
 import ca.uqac.lif.cornipickle.NAryStatement;
 import ca.uqac.lif.cornipickle.NegationStatement;
+import ca.uqac.lif.cornipickle.Never;
 import ca.uqac.lif.cornipickle.NumberConstant;
 import ca.uqac.lif.cornipickle.PredicateCall;
 import ca.uqac.lif.cornipickle.PredicateDefinition;
@@ -126,7 +130,7 @@ public class HtmlFormatter implements LanguageElementVisitor
     if (element instanceof StringConstant)
     {
       StringConstant e = (StringConstant) element;
-      out.append("<span class=\"string-constant\">").append(e.toString());
+      out.append("<span class=\"string-constant\">").append("\"").append(e.toString()).append("\"");
     }
     else if (element instanceof NumberConstant)
     {
@@ -148,6 +152,16 @@ public class HtmlFormatter implements LanguageElementVisitor
       StringBuilder right = m_elements.pop(); // RHS
       StringBuilder left = m_elements.pop(); // LHS
       out.append(left).append(" ").append(e.getKeyword()).append(" ").append(right);
+    }
+    else if (element instanceof ImpliesStatement)
+    {
+      out.append("<span class=\"implies\">If (<br />\n");
+      StringBuilder right = m_elements.pop(); // Inner statement
+      StringBuilder left = m_elements.pop(); // Inner statement
+      out.append(StringUtils.prepend("&nbsp;", left));
+      out.append("<br />\n)<br/>\nThen (<br />\n");
+      out.append(StringUtils.prepend("&nbsp;", right));
+      out.append("<br />\n)");
     }
     else if (element instanceof NAryStatement)
     {
@@ -179,11 +193,11 @@ public class HtmlFormatter implements LanguageElementVisitor
     else if (element instanceof ExistsStatement)
     {
       ExistsStatement e = (ExistsStatement) element;
-      out.append("<span class=\"exists\">For each ");
+      out.append("<span class=\"exists\">There exists ");
       out.append("<span class=\"element-name\">").append(e.getVariable()).append("</span> in ");
       StringBuilder set_exp = m_elements.pop(); // Set expression
       out.append(set_exp);
-      out.append(" (");
+      out.append(" such that (");
       StringBuilder inner_exp = m_elements.pop(); // Inner statement
       out.append(inner_exp);
       out.append(" )");
@@ -232,6 +246,27 @@ public class HtmlFormatter implements LanguageElementVisitor
       StringBuilder pred = m_elements.pop();
       pred.append("\n<br/>)");
       out.append(StringUtils.prepend("&nbsp;", pred));
+    }
+    else if (element instanceof Eventually)
+    {
+      out.append("<span><span class=\"temporal-operator\">Eventually</span> (<br />\n");
+      StringBuilder inner_exp = m_elements.pop(); // Inner statement
+      out.append(StringUtils.prepend("&nbsp;", inner_exp));
+      out.append("<br/>\n)");
+    }
+    else if (element instanceof Never)
+    {
+      out.append("<span><span class=\"temporal-operator\">Never</span> (<br />\n");
+      StringBuilder inner_exp = m_elements.pop(); // Inner statement
+      out.append(StringUtils.prepend("&nbsp;", inner_exp));
+      out.append("<br/>\n)");
+    }
+    else if (element instanceof Globally)
+    {
+      out.append("<span><span class=\"temporal-operator\">Always</span> (<br />\n");
+      StringBuilder inner_exp = m_elements.pop(); // Inner statement
+      out.append(StringUtils.prepend("&nbsp;", inner_exp));
+      out.append("<br/>\n)");
     }
     else if (element instanceof SetDefinitionExtension)
     {

@@ -45,4 +45,9 @@ public abstract class Property extends LanguageElement
     visitor.visit(this);
     visitor.pop();
   }
+  
+  public Property getClone()
+  {
+    return this;
+  }
 }

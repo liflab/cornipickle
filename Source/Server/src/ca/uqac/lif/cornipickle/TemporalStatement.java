@@ -21,4 +21,7 @@ public abstract class TemporalStatement extends Statement
 {
 	// Force descendants to override Statement's getClone()
 	public abstract Statement getClone();
+	
+	// Force descendants to override Statement's resetHistory()
+	public abstract void resetHistory();
 }

@@ -13,7 +13,8 @@
 }
 
 .nary-statement, .forall, .exists, .negation,
-.set-definition-extension, .predicate-definition {
+.set-definition-extension, .predicate-definition,
+.implies {
   color: #007;
 }
 
@@ -57,4 +58,8 @@
 .predicate-definition-item.highlighted {
   background: yellow;
   color: red;
+}
+
+.temporal-operator {
+  color: #0aa;
 }

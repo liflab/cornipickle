@@ -78,6 +78,7 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
       if (j != null)
       {
         m_server.m_interpreter.evaluateAll(j);
+        m_server.setLastProbeContact();
       }
     }
     // Whatever happens, serve the dummy image

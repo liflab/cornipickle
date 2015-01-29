@@ -28,8 +28,8 @@ public class EvaluationTest
     eq.setLeft(new NumberConstant(1));
     eq.setRight(new NumberConstant(1));
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
-    boolean answer = eq.evaluate(null, d);
-    if (answer != true)
+    Statement.Verdict answer = eq.evaluate(null, d);
+    if (answer != Statement.Verdict.TRUE)
     {
       fail("Expected true, got something else");
     }
@@ -47,8 +47,8 @@ public class EvaluationTest
     ns.setInnerStatement(eq);
     as.addOperand(ns);
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
-    boolean answer = as.evaluate(null, d);
-    if (answer != false)
+    Statement.Verdict answer = as.evaluate(null, d);
+    if (answer != Statement.Verdict.FALSE)
     {
       fail("Expected false, got something else");
     }
@@ -65,8 +65,8 @@ public class EvaluationTest
     eq.setRight(new NumberConstant(100));
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
     d.put("$x", x);
-    boolean answer = eq.evaluate(null, d);
-    if (answer != true)
+    Statement.Verdict answer = eq.evaluate(null, d);
+    if (answer != Statement.Verdict.TRUE)
     {
       fail("Expected true, got something else");
     }
@@ -83,8 +83,8 @@ public class EvaluationTest
     eq.setRight(new NumberConstant(100));
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
     d.put("$x", x);
-    boolean answer = eq.evaluate(null, d);
-    if (answer != false)
+    Statement.Verdict answer = eq.evaluate(null, d);
+    if (answer != Statement.Verdict.FALSE)
     {
       fail("Expected false, got something else");
     }
@@ -129,8 +129,8 @@ public class EvaluationTest
     
     // Evaluate formula on document 
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
-    boolean answer = foa.evaluate(main, d);
-    if (answer != true)
+    Statement.Verdict answer = foa.evaluate(main, d);
+    if (answer != Statement.Verdict.TRUE)
     {
       fail("Expected true, got something else");
     }
@@ -175,8 +175,8 @@ public class EvaluationTest
     
     // Evaluate formula on document 
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
-    boolean answer = foa.evaluate(main, d);
-    if (answer != false)
+    Statement.Verdict answer = foa.evaluate(main, d);
+    if (answer != Statement.Verdict.FALSE)
     {
       fail("Expected false, got something else");
     }

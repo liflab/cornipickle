@@ -68,6 +68,15 @@ public class Interpreter
     System.out.println(verdicts);
   }
   
+  public void resetHistory()
+  {
+    for (StatementMetadata key : m_statements.keySet())
+    {
+      Statement s = m_statements.get(key);
+      s.resetHistory();
+    }
+  }
+  
   public void parseProperties(String properties) throws ParseException
   {
     String[] lines = properties.split("\n");

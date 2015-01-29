@@ -1,0 +1,38 @@
+
+
+# Define what it means to be selected
+We say that $x is highlighted when (
+  $x's border matches "rgb\(0, 128, 0\)"
+).
+
+We say that the red square is highlighted when (
+  There exists $x in $(.square) such that (
+    ($x's id equals "red")
+    And
+    ($x is highlighted)
+  )
+).
+
+We say that the blue square is highlighted when (
+  There exists $x in $(.square) such that (
+    ($x's id equals "blue")
+    And
+    ($x is highlighted)
+  )
+).
+
+"""
+  @name No red after blue
+  @description Once the blue square is highlighted, the red
+    square cannot be highlighted again
+  @severity Error
+"""
+Always (
+  If (
+    the blue square is highlighted )
+  Then (
+    Never (
+      the red square is highlighted
+    )
+  )
+).

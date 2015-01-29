@@ -43,7 +43,12 @@ public class NegationStatement extends Statement
   @Override
   public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
-    return threeValuedNot(m_innerStatement.evaluate(j, d));
+        if (m_verdict != Statement.Verdict.INCONCLUSIVE)
+    {
+      return m_verdict;
+    }
+    m_verdict = threeValuedNot(m_innerStatement.evaluate(j, d));
+    return m_verdict;
   }
   
   @Override
@@ -68,6 +73,14 @@ public class NegationStatement extends Statement
     visitor.visit(this);
     m_innerStatement.prefixAccept(visitor);
     visitor.pop();
+  }
+  
+  @Override
+  public NegationStatement getClone()
+  {
+    NegationStatement out = new NegationStatement();
+    out.m_innerStatement = m_innerStatement;
+    return out;
   }
 
 }

@@ -53,6 +53,10 @@ public class PredicateCall extends Statement
   @Override
   public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
+        if (m_verdict != Statement.Verdict.INCONCLUSIVE)
+    {
+      return m_verdict;
+    }
     Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
     // Put in the map the values
     for (int i = 0; i < m_captureBlocks.size(); i++)
@@ -61,7 +65,8 @@ public class PredicateCall extends Statement
       String var_in_pred = m_predicate.getCaptureGroup(i);
       new_d.put(var_in_pred, d.get(var_in_match));
     }
-    return m_predicate.evaluate(j, new_d);
+    m_verdict = m_predicate.evaluate(j, new_d);
+    return m_verdict;
   }
 
   @Override
@@ -82,5 +87,12 @@ public class PredicateCall extends Statement
   {
     visitor.visit(this);
     visitor.pop();
+  }
+  
+  @Override
+  public PredicateCall getClone()
+  {
+    PredicateCall out = new PredicateCall(m_predicate.getClone(), m_matchedString, m_captureBlocks);
+    return out;
   }
 }

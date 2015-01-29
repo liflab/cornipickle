@@ -24,51 +24,51 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 
 public class Eventually extends Globally
 {
-	@Override
-	public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
-	{
-		if (m_verdict != Verdict.INCONCLUSIVE)
-		{
-			return m_verdict;
-		}
-		// Instantiate new inner statement
-		Statement new_s = m_innerStatement.getClone();
-		m_inMonitors.add(new_s);
-		// Evaluate each
-		Iterator<Statement> it = m_inMonitors.iterator();
-		while (it.hasNext())
-		{
-			Statement st = it.next();
-			Verdict st_v = st.evaluate(j, d);
-			if (st_v == Verdict.FALSE)
-			{
-				it.remove();
-			}
-			if (st_v == Verdict.TRUE)
-			{
-				m_verdict = Verdict.TRUE;
-				return m_verdict;
-			}
-		}
-		return Verdict.INCONCLUSIVE;
-	}
-	
-	@Override
-	public String toString(String indent)
-	{
-		StringBuilder out = new StringBuilder();
-		out.append(indent).append("Always (\n");
-		out.append(m_innerStatement.toString(indent + "  "));
-		out.append("\n").append(indent).append(")");
-		return out.toString();
-	}
-	
-	@Override
-	public Statement getClone()
-	{
-		Eventually out = new Eventually();
-		out.setInnerStatement(m_innerStatement.getClone());
-		return out;
-	}
+  @Override
+  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
+  {
+    if (m_verdict != Verdict.INCONCLUSIVE)
+    {
+      return m_verdict;
+    }
+    // Instantiate new inner statement
+    Statement new_s = m_innerStatement.getClone();
+    m_inMonitors.add(new_s);
+    // Evaluate each
+    Iterator<Statement> it = m_inMonitors.iterator();
+    while (it.hasNext())
+    {
+      Statement st = it.next();
+      Verdict st_v = st.evaluate(j, d);
+      if (st_v == Verdict.FALSE)
+      {
+        it.remove();
+      }
+      if (st_v == Verdict.TRUE)
+      {
+        m_verdict = Verdict.TRUE;
+        return m_verdict;
+      }
+    }
+    return Verdict.INCONCLUSIVE;
+  }
+
+  @Override
+  public String toString(String indent)
+  {
+    StringBuilder out = new StringBuilder();
+    out.append(indent).append("Always (\n");
+    out.append(m_innerStatement.toString(indent + "  "));
+    out.append("\n").append(indent).append(")");
+    return out.toString();
+  }
+
+  @Override
+  public Statement getClone()
+  {
+    Eventually out = new Eventually();
+    out.setInnerStatement(m_innerStatement.getClone());
+    return out;
+  }
 
 }

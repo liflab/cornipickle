@@ -158,4 +158,13 @@ public class PredicateDefinition extends Statement
     visitor.visit(this);
     visitor.pop();
   }
+  
+  @Override
+  public PredicateDefinition getClone()
+  {
+    PredicateDefinition out = new PredicateDefinition(m_ruleName);
+    out.m_captureGroups = m_captureGroups;
+    out.m_predicate = m_predicate.getClone();
+    return out;
+  }
 }

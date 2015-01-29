@@ -27,6 +27,10 @@ public class ExistsStatement extends ForAllStatement
   @Override
   public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
+        if (m_verdict != Statement.Verdict.INCONCLUSIVE)
+    {
+      return m_verdict;
+    }
     // Fetch values for set
     List<JsonElement> domain = m_set.evaluate(j, d);
     // Iterate over values
@@ -40,7 +44,8 @@ public class ExistsStatement extends ForAllStatement
       if (out == Verdict.TRUE)
         break;
     }
-    return out;
+    m_verdict = out;
+    return m_verdict;
   }
   
   @Override
@@ -50,5 +55,15 @@ public class ExistsStatement extends ForAllStatement
     out.append(indent).append("There exists a ").append(m_variable).append(" in ").append(m_set).append(" such that\n");
     out.append(m_innerStatement.toString(indent + "  "));
     return out.toString();
+  }
+  
+  @Override
+  public ExistsStatement getClone()
+  {
+    ExistsStatement out = new ExistsStatement();
+    out.m_innerStatement = m_innerStatement.getClone();
+    out.m_variable = m_variable;
+    out.m_set = m_set;
+    return out;
   }
 }

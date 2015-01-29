@@ -52,6 +52,15 @@ public class LessThanStatement extends ComparisonStatement
   }
   
   @Override
+  public LessThanStatement getClone()
+  {
+    LessThanStatement out = new LessThanStatement();
+    out.m_left = m_left.getClone();
+    out.m_right = m_right.getClone();
+    return out;
+  }
+  
+  @Override
   public String getKeyword()
   {
     return "is less than";

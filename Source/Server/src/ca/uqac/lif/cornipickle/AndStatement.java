@@ -38,9 +38,14 @@ public class AndStatement extends NAryStatement
   @Override
   public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
+    if (m_verdict != Statement.Verdict.INCONCLUSIVE)
+    {
+      return m_verdict;
+    }
     if (m_statements.isEmpty())
     {
-      return Verdict.FALSE;
+      m_verdict = Verdict.FALSE;
+      return m_verdict;
     }
     Verdict out = Verdict.TRUE;
     for (Statement s : m_statements)
@@ -49,6 +54,17 @@ public class AndStatement extends NAryStatement
       out = threeValuedAnd(out, b);
       if (out == Verdict.FALSE)
         break;
+    }
+    return out;
+  }
+  
+  @Override
+  public AndStatement getClone()
+  {
+    AndStatement out = new AndStatement();
+    for (Statement s : m_statements)
+    {
+      out.addOperand(s.getClone());
     }
     return out;
   }

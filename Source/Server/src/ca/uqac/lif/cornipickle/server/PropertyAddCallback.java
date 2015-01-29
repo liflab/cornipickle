@@ -91,6 +91,7 @@ class PropertyAddCallback extends RequestCallback<CornipickleServer>
       page.append("<blockquote>\n");
       page.append(e.toString());
       page.append("</blockquote>\n");
+      System.err.println(e);
     }
     catch (UnsupportedEncodingException e)
     {
