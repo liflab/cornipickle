@@ -20,7 +20,10 @@ package ca.uqac.lif.cornipickle;
 import java.util.Map;
 
 import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.cornipickle.json.JsonList;
+import ca.uqac.lif.cornipickle.json.JsonMap;
 import ca.uqac.lif.cornipickle.json.JsonPath;
+import ca.uqac.lif.cornipickle.json.JsonString;
 
 public class ElementProperty extends Property
 {
@@ -72,9 +75,54 @@ public class ElementProperty extends Property
     {
       return e;
     }
+    else if (m_propertyName.compareToIgnoreCase("text") == 0)
+    {
+      if (!(e instanceof JsonMap))
+      {
+        assert false; // Should not happen
+        return null;
+      }
+      // Text is a recursive property: concatenate the text of all children
+      JsonMap jm = (JsonMap) e;
+      String s = getClearText(jm);
+      JsonString js = new JsonString(s);
+      return js;
+    }
     JsonElement v = JsonPath.get(e, m_propertyName);
     // Return
     return v;
+  }
+  
+  protected static String getClearText(JsonMap t)
+  {
+    StringBuilder sb = getClearTextRecursive(t);
+    String out = sb.toString();
+    // Replace all multiple whitespace by a single one
+    out = out.replaceAll("\\s+", " ");
+    return out;
+  }
+  
+  protected static StringBuilder getClearTextRecursive(JsonMap t)
+  {
+    StringBuilder out = new StringBuilder();
+    JsonElement jt = t.get("text");
+    if (jt != null && jt instanceof JsonString)
+    {
+      JsonString js = (JsonString) jt;
+      out.append(js.stringValue()).append(" ");
+    }
+    JsonList children_list = (JsonList) t.get("children");
+    if (children_list != null)
+    {
+      for (JsonElement e : children_list)
+      {
+        if (e instanceof JsonMap)
+        {
+          out.append(getClearText((JsonMap) e)).append(" ");        
+        }
+      }
+    }
+    return out;
   }
   
   @Override

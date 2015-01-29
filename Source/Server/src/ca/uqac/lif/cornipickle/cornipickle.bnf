@@ -19,7 +19,8 @@
 
 # CSS attributes
 
-<css_attribute>      := value | height | width | top | left | right | bottom | color | id ;
+<css_attribute>      := value | height | width | top | left 
+                        | right | bottom | color | id | text;
 
 # Element property
 

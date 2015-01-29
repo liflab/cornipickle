@@ -21,11 +21,11 @@ ul.sets, ul.predicates, ul.verdicts  {
 
 ul.sets > li, ul.predicates > li,
 ul.verdicts > li  {
-  padding: 6px;
+  padding: 10pt;
   margin: 10pt;
   display: inline-block;
   vertical-align: middle;
-  border: solid 1px lightgrey;
+  border: solid 1px darkgrey;
   border-radius: 4px;
   background: #ffe;
   box-shadow: 3px 3px 1px 0px rgba(50, 50, 50, 0.23);
