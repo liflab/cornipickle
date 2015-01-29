@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="screen.css" />
+<link rel="stylesheet" type="text/css" href="../colouring.css" />
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="cornipickle.js"></script>
+<script type="text/javascript" src="/probe"></script>
+<title>Overlapping elements - Cornipickle</title>
+<script type="text/javascript">
+// <![CDATA[
+$(document).ready(function() {
+    toggled = false;
+    // Put Cornipickle codde in global var
+    cornipickle_code = $(".cornipickle-code").text();
+    // Colourize each code snippet
+    cornipickle_colourize_all();
+    // Add handler to button
+    $("#to-cornipickle").click(function() {
+        add_to_cornipickle(cornipickle_code);
+      });
+    $(".square").draggable();
+});
+// ]]>
+</script>
+<style type="text/css">
+/* <![CDATA[ */
+.square {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  opacity: 0.8;
+}
+
+#red {
+  background: red;
+  left: 10px;
+  top: 10px;
+}
+
+#yellow {
+  background: yellow;
+  left: 120px;
+  top: 20px;
+}
+
+#blue {
+  background: blue;
+  right: 60px;
+  top: 5px;
+}
+
+.playground {
+  position: relative;
+  height: 150px;
+}
+/* ]]> */
+</style>
+</head>
+
+<body>
+
+<div id="contents">
+<h1>Overlapping elements</h1>
+
+<p class="backmenu"><a href="index.html">Back to example list</a></p>
+
+<div class="playground">
+
+<div class="square" id="red"></div>
+<div class="square" id="yellow"></div>
+<div class="square" id="blue"></div>
+
+</div>
+
+<!-- Cornipickle explanation -->
+<div id="cornipickle-explanation">
+
+<h2>What's the problem?</h2>
+<p>Two squares overlap (let's pretend they shouldn't). Try moving the
+squares around and re-evaluate the property.</p>
+
+<h2>Detect it with Cornipickle</h2>
+
+<div class="cornipickle-square">
+
+<p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
+
+<div class="cornipickle-code">
+We say that $x extends outside $y when (
+ (
+  ($x's right is greater than $y's width)
+  Or
+  (0 is greater than $y's left)
+ )
+ Or
+ (
+  ($x's bottom is greater than $y's height)
+  Or
+  (0 is greater than $y's top)
+ )
+).
+
+# We define the negation to increase readability
+We say that $x doesn't extend outside $y when (
+  Not ($x extends outside $y)
+).
+
+"""
+  @name Outside playground
+  @description Coloured squares should not extend outside
+    the checkered div
+  @severity Error
+"""
+For each $x in $(.square) (
+  For each $y in $(.playground) (
+    $x doesn't extend outside $y
+  )
+).
+
+"""
+  @name Outside window
+  @description Coloured squares should not extend outside
+    the browser's window
+  @severity Error
+"""
+For each $x in $(.square) (
+  For each $y in $(window) (
+    $x doesn't extend outside $y
+  )
+).
+</div>
+
+</div>
+
+</div> <!-- /explanation -->
+
+<div id="footer">
+<hr />
+&copy; 2015 LIF
+</div>
+
+</div> <!-- /contents -->
+
+</body>
+</html>
