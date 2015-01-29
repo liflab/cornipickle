@@ -129,7 +129,11 @@ public class CornipickleParser implements ParseNodeVisitor
     {
       return parseStatement(node);
     }
-    return null;    
+    else
+    {
+      throw new ParseException("Error: the BNF parser returned null");
+    }
+    //return null;    
   }
 
   protected LanguageElement parseStatement(ParseNode root)
@@ -370,10 +374,25 @@ public class CornipickleParser implements ParseNodeVisitor
       out.setStatement(statement);
       m_nodes.push(out);
     }
+    else if (node_token.compareTo("<regex_capture>") == 0)
+    {
+      StringConstant pattern = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // with
+      ElementProperty variable = (ElementProperty) m_nodes.pop();
+      m_nodes.pop(); // match
+      RegexCapture out = new RegexCapture();
+      out.setProperty(variable);
+      out.setPattern(pattern.toString());
+      m_nodes.push(out);
+    }
     else if (node_token.compareTo("<set_name>") == 0)
     {
       LanguageElement el = m_nodes.pop();
       if (el instanceof CssSelector)
+      {
+        m_nodes.push(el);
+      }
+      else if (el instanceof RegexCapture)
       {
         m_nodes.push(el);
       }

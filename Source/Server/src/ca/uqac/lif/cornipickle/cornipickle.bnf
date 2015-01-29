@@ -7,7 +7,7 @@
 # Auxiliary constructs in statements
 
 <el_or_not>          := element | ε ;
-<set_name>           := <css_selector> | <userdef_set> ;
+<set_name>           := <css_selector> | <userdef_set> | <regex_capture> ;
 <userdef_set>        := <string> ;
 <var_name>           := ^\$[\w\d]+;
 
@@ -20,11 +20,15 @@
 # CSS attributes
 
 <css_attribute>      := value | height | width | top | left 
-                        | right | bottom | color | id | text;
+                        | right | bottom | color | id | text ;
 
 # Element property
 
-<elem_property>      := <var_name> 's <css_attribute>;
+<elem_property>      := <var_name> 's <css_attribute> ;
+
+# Regular expression capture
+
+<regex_capture>      := match <elem_property> with <string> ;
 
 # Cornichon statements
 

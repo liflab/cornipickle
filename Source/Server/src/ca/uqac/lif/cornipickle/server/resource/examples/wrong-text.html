@@ -29,11 +29,11 @@ $(document).ready(function() {
     $("#misalign-toggle").click(function() {
         if (toggled)
         {
-          $("#second-menu").css({ "margin-left": "10px"});
+          $("#greeting").html("Hi <span class=\"username\">Joe</span>!");
         }
         else
         {
-          $("#second-menu").css({ "margin-left": "0px"});
+          $("#greeting").html("Hi <span class=\"username\">Bill</span>!");
         }
         toggled = !toggled;
     });
@@ -47,11 +47,13 @@ $(document).ready(function() {
 <div id="contents">
 <h1>Example</h1>
 
+<p class="backmenu"><a href="index.html">Back to example list</a></p>
+
 <div class="playground">
 
 <h2>Homepage for <span class="username">Bill</span></h2>
 
-<p class="greeting">Hi <span class="username">Joe</span>!</p>
+<p id="greeting" class="greeting">Hi <span class="username">Joe</span>!</p>
 
 </div>
 

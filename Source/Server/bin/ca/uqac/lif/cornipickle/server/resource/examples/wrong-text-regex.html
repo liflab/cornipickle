@@ -10,7 +10,7 @@
 <script type="text/javascript" src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
 <script type="text/javascript" src="cornipickle.js"></script>
 <script type="text/javascript" src="/probe"></script>
-<title>Misaligned menu elements - Cornipickle</title>
+<title>Matching username, part II - Cornipickle</title>
 <script type="text/javascript">
 // <![CDATA[
 $(document).ready(function() {
@@ -29,11 +29,11 @@ $(document).ready(function() {
     $("#misalign-toggle").click(function() {
         if (toggled)
         {
-          $("#second-menu").css({ "margin-left": "10px"});
+          $("#greeting").html("Hi Joe!");
         }
         else
         {
-          $("#second-menu").css({ "margin-left": "0px"});
+          $("#greeting").html("Hi Bill!");
         }
         toggled = !toggled;
     });
@@ -51,12 +51,9 @@ $(document).ready(function() {
 
 <div class="playground">
 
-<ul class="menu">
-<li>First menu item</li>
-<li id="second-menu">Second menu item</li>
-<li>Another menu item</li>
-<li>Final menu item</li>
-</ul>
+<h2>Homepage for Bill</h2>
+
+<p id="greeting" class="greeting">Hi Joe!</p>
 
 </div>
 
@@ -64,11 +61,12 @@ $(document).ready(function() {
 <div id="cornipickle-explanation">
 
 <h2>What's the problem?</h2>
-<p>An element in the menu is misaligned with respect to the others. This
-alignment problem is caused by client-side code; it cannot be detected
-by analyzing the HTML or CSS declarations.</p>
+<p>The title says the page is Bill's, yet the next paragraph greets
+Joe. This time, we can't rely on the class "username" to fetch all
+occurrences of the user's name; we must use regular expression matching
+of the inner text.</p>
 
-<p><button id="misalign-toggle">Toggle misalignment</button></p>
+<p><button id="misalign-toggle">Toggle username</button></p>
 
 <h2>Detect it with Cornipickle</h2>
 
@@ -78,30 +76,19 @@ by analyzing the HTML or CSS declarations.</p>
 <p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
 
 <div class="cornipickle-code">
-# We define a predicate using the construct
-# "We say that &lt;arguments&gt; is/are &lt;predicate name&gt; when".
-
-We say that $x and $y are left-aligned when (
-  $x's left equals $y's left
-).
-
-We say that $x and $y are top-aligned when (
-  $x's top equals $y's top
-).
-
-# We then express the fact that all menu items are either
-# left- or top-aligned.
-
 """
-  @name Menus aligned
-  @description All menu items are either left- or top-aligned.
-  @severity Warning
+@description The username must match in the title
+  and the greeting
+@name Matching username II
+@severity Error
 """
-For each $z in $(.menu li) (
-  For each $t in $(.menu li) (
-    ($z and $t are left-aligned)
-    Or
-    ($z and $t are top-aligned)
+For each $t in $(h2) (
+  For each $g in $(p.greeting) (
+    For each $u1 in match $t's text with "Homepage for (.*)" (
+      For each $u2 in match $g's text with "Hi (.*)!" (
+        $u1's value equals $u2's value
+      )
+    )
   )
 ).
 </div>

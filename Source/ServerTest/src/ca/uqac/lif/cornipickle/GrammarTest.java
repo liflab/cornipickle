@@ -21,6 +21,13 @@ public class GrammarTest
   }
   
   @Test
+  public void testRegexCapture() throws ParseException
+  {
+    String line = "match $x's text with \"yo man (.*)\"";
+    ParseNode pn = shouldParseAndNotNull(line, "<regex_capture>", false);
+  }  
+  
+  @Test
   public void testUserDefinedSet2() throws ParseException
   {
     String line = "A tomato is any of \"abc\", \"def\", \"h1f\"";
@@ -61,7 +68,21 @@ public class GrammarTest
     String line = "For each $x in $(p) ($x's width equals 100)";
     ParseNode pn = shouldParseAndNotNull(line, "<foreach>", false);
   }
-
+  
+  @Test
+  public void testForEach3() throws ParseException
+  {
+    String line = "For each $x in match $y's text with \"yo man (.*?)\"";
+    ParseNode pn = shouldParseAndNotNull(line, "<foreach>", false);
+  }
+  
+  @Test
+  public void testForEach4() throws ParseException
+  {
+    String line = "For each $u1 in match $x's text with \"Homepage for (.*)\" (\n      For each $u2 in match $g's text with \"Hello (.*)!\" (\n        $u1's value equals $u2's value\n      )\n    )";
+    ParseNode pn = shouldParseAndNotNull(line, "<foreach>", false);
+  } 
+  
   @Test
   public void testCssSelector1() throws ParseException
   {

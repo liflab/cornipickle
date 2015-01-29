@@ -34,6 +34,7 @@ import ca.uqac.lif.cornipickle.NegationStatement;
 import ca.uqac.lif.cornipickle.NumberConstant;
 import ca.uqac.lif.cornipickle.PredicateCall;
 import ca.uqac.lif.cornipickle.PredicateDefinition;
+import ca.uqac.lif.cornipickle.RegexCapture;
 import ca.uqac.lif.cornipickle.SetDefinitionExtension;
 import ca.uqac.lif.cornipickle.StringConstant;
 import ca.uqac.lif.cornipickle.json.JsonElement;
@@ -43,13 +44,10 @@ public class HtmlFormatter implements LanguageElementVisitor
 {
   protected Stack<StringBuilder> m_elements;
   
-  protected Stack<String> m_indent;
-  
   public HtmlFormatter()
   {
     super();
     m_elements = new Stack<StringBuilder>();
-    m_indent = new Stack<String>();
   }
   
   public static String format(LanguageElement root)
@@ -108,8 +106,6 @@ public class HtmlFormatter implements LanguageElementVisitor
   public String getFormatted(LanguageElement root)
   {
     m_elements.clear();
-    m_indent.clear();
-    m_indent.push("");
     root.postfixAccept(this);
     if (m_elements.isEmpty())
     {
@@ -127,18 +123,15 @@ public class HtmlFormatter implements LanguageElementVisitor
       return;
     }
     StringBuilder out = new StringBuilder();
-    String indent = m_indent.peek();
     if (element instanceof StringConstant)
     {
       StringConstant e = (StringConstant) element;
       out.append("<span class=\"string-constant\">").append(e.toString());
-      m_indent.push(indent);
     }
     else if (element instanceof NumberConstant)
     {
       NumberConstant e = (NumberConstant) element;
       out.append("<span class=\"number-constant\">").append(e.toString());
-      m_indent.push(indent);
     }
     else if (element instanceof ElementProperty)
     {
@@ -147,7 +140,6 @@ public class HtmlFormatter implements LanguageElementVisitor
       out.append("<span class=\"element-name\">").append(e.getElementName()).append("</span>");
       out.append("'s ");
       out.append("<span class=\"property-name\">").append(e.getPropertyName()).append("</span>");
-      m_indent.push(indent);
     }
     else if (element instanceof ComparisonStatement)
     {
@@ -156,7 +148,6 @@ public class HtmlFormatter implements LanguageElementVisitor
       StringBuilder right = m_elements.pop(); // RHS
       StringBuilder left = m_elements.pop(); // LHS
       out.append(left).append(" ").append(e.getKeyword()).append(" ").append(right);
-      m_indent.push(indent);
     }
     else if (element instanceof NAryStatement)
     {
@@ -174,8 +165,16 @@ public class HtmlFormatter implements LanguageElementVisitor
         sts.append(")");
         //sts = prepend("&nbsp;", sts);
         out.append(sts);
-        m_indent.push(indent);
       }      
+    }
+    else if (element instanceof RegexCapture)
+    {
+      RegexCapture e = (RegexCapture) element;
+      out.append("<span class=\"regex-capture\">match ");
+      String variable = e.getVariable();
+      out.append("<span class=\"element-name\">").append(variable).append("</span> with ");
+      String pattern = e.getPattern();
+      out.append("<span class=\"string\">\"").append(pattern).append("\"</span>");
     }
     else if (element instanceof ExistsStatement)
     {
@@ -188,7 +187,6 @@ public class HtmlFormatter implements LanguageElementVisitor
       StringBuilder inner_exp = m_elements.pop(); // Inner statement
       out.append(inner_exp);
       out.append(" )");
-      m_indent.push(indent);
     }
     else if (element instanceof ForAllStatement)
     {
@@ -201,7 +199,6 @@ public class HtmlFormatter implements LanguageElementVisitor
       StringBuilder inner_exp = m_elements.pop(); // Inner statement
       out.append(StringUtils.prepend("&nbsp;", inner_exp));
       out.append("<br/>\n)");
-      m_indent.push(indent);
     }
     else if (element instanceof PredicateCall)
     {
@@ -217,7 +214,6 @@ public class HtmlFormatter implements LanguageElementVisitor
       StringBuilder inner_exp = m_elements.pop(); // Inner statement
       out.append(inner_exp);
       out.append(" )");*/
-      m_indent.push(indent);
     }
     else if (element instanceof NegationStatement)
     {
@@ -225,7 +221,6 @@ public class HtmlFormatter implements LanguageElementVisitor
       out.append("<span class=\"negation\">");
       StringBuilder top = m_elements.pop();
       out.append("Not (").append(top).append(")");
-      m_indent.push(indent);
     }
     else if (element instanceof PredicateDefinition)
     {
@@ -237,7 +232,6 @@ public class HtmlFormatter implements LanguageElementVisitor
       StringBuilder pred = m_elements.pop();
       pred.append("\n<br/>)");
       out.append(StringUtils.prepend("&nbsp;", pred));
-      m_indent.push(indent);
     }
     else if (element instanceof SetDefinitionExtension)
     {
@@ -262,7 +256,6 @@ public class HtmlFormatter implements LanguageElementVisitor
         out.append(el.toString());
       }
       out.append(")");
-      m_indent.push(indent);
     }
     else if (element instanceof CssSelector)
     {
@@ -271,12 +264,10 @@ public class HtmlFormatter implements LanguageElementVisitor
       out.append("$(");
       out.append(e.getSelector());
       out.append(")");
-      m_indent.push(indent);
     }
     else
     {
       out.append("<span>");
-      m_indent.push(indent);
     }
     m_elements.push(out);
 
@@ -288,7 +279,6 @@ public class HtmlFormatter implements LanguageElementVisitor
     StringBuilder top = m_elements.pop();
     top.append("</span>");
     m_elements.push(top);
-    m_indent.pop();
   }
 
 }

@@ -99,7 +99,7 @@ public class ElementProperty extends Property
     String out = sb.toString();
     // Replace all multiple whitespace by a single one
     out = out.replaceAll("\\s+", " ");
-    return out;
+    return out.trim();
   }
   
   protected static StringBuilder getClearTextRecursive(JsonMap t)
