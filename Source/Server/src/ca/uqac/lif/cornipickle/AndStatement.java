@@ -36,18 +36,18 @@ public class AndStatement extends NAryStatement
   }
 
   @Override
-  public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
     if (m_statements.isEmpty())
     {
-      return false;
+      return Verdict.FALSE;
     }
-    boolean out = true;
+    Verdict out = Verdict.TRUE;
     for (Statement s : m_statements)
     {
-      boolean b = s.evaluate(j, d);
-      out = out && b;
-      if (!out)
+      Verdict b = s.evaluate(j, d);
+      out = threeValuedAnd(out, b);
+      if (out == Verdict.FALSE)
         break;
     }
     return out;

@@ -41,9 +41,9 @@ public class NegationStatement extends Statement
   }
 
   @Override
-  public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
-    return !m_innerStatement.evaluate(j, d);
+    return threeValuedNot(m_innerStatement.evaluate(j, d));
   }
   
   @Override

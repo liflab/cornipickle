@@ -25,19 +25,19 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 public class ExistsStatement extends ForAllStatement
 {
   @Override
-  public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
     // Fetch values for set
     List<JsonElement> domain = m_set.evaluate(j, d);
     // Iterate over values
-    boolean out = false;
+    Verdict out = Verdict.FALSE;
     for (JsonElement v : domain)
     {
       Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
       new_d.put(m_variable.toString(), v);
-      boolean b = m_innerStatement.evaluate(j, new_d);
-      out = out || b;
-      if (out == true)
+      Verdict b = m_innerStatement.evaluate(j, new_d);
+      out = threeValuedOr(out, b);
+      if (out == Verdict.TRUE)
         break;
     }
     return out;

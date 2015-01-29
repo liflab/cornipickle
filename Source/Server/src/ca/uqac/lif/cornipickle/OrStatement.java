@@ -35,18 +35,18 @@ public class OrStatement extends AndStatement
   }
   
   @Override
-  public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
     if (m_statements.isEmpty())
     {
-      return false;
+      return Verdict.FALSE;
     }
-    boolean out = false;
+    Verdict out = Verdict.FALSE;
     for (Statement s : m_statements)
     {
-      boolean b = s.evaluate(j, d);
-      out = out || b;
-      if (out)
+      Verdict b = s.evaluate(j, d);
+      out = threeValuedOr(out, b);
+      if (out == Verdict.TRUE)
         break;
     }
     return out;

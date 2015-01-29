@@ -28,7 +28,7 @@ public abstract class ComparisonStatement extends Statement
   protected Property m_left;
   protected Property m_right;
   
-  public final boolean evaluate(JsonElement j, Map<String,JsonElement> d)
+  public final Verdict evaluate(JsonElement j, Map<String,JsonElement> d)
   {
     JsonElement e1 = m_left.evaluate(j, d);
     JsonElement e2 = m_right.evaluate(j, d);
@@ -45,7 +45,7 @@ public abstract class ComparisonStatement extends Statement
     m_right = p;
   }
   
-  protected boolean compare(JsonElement e1, JsonElement e2)
+  protected Verdict compare(JsonElement e1, JsonElement e2)
   {
     if (e1 instanceof JsonString && e2 instanceof JsonString)
     {
@@ -55,12 +55,12 @@ public abstract class ComparisonStatement extends Statement
     {
       return compare((JsonNumber) e1, (JsonNumber) e2);
     }
-    return false;
+    return Verdict.FALSE;
   }
   
-  protected abstract boolean compare(JsonString e1, JsonString e2);
+  protected abstract Verdict compare(JsonString e1, JsonString e2);
   
-  protected abstract boolean compare(JsonNumber e1, JsonNumber e2);
+  protected abstract Verdict compare(JsonNumber e1, JsonNumber e2);
   
   public abstract String getKeyword();
   

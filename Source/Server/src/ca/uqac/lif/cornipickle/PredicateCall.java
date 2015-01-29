@@ -51,7 +51,7 @@ public class PredicateCall extends Statement
   }
 
   @Override
-  public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
     Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
     // Put in the map the values

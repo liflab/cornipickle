@@ -24,15 +24,23 @@ public class GreaterThanStatement extends ComparisonStatement
 {
 
   @Override
-  protected boolean compare(JsonString e1, JsonString e2)
+  protected Verdict compare(JsonString e1, JsonString e2)
   {
-    return e1.stringValue().compareTo(e2.stringValue()) == 0;
+    if (e1.stringValue().compareTo(e2.stringValue()) == 0)
+    {
+    	return Verdict.TRUE;
+    }
+    return Verdict.FALSE;
   }
   
   @Override
-  protected boolean compare(JsonNumber e1, JsonNumber e2)
+  protected Verdict compare(JsonNumber e1, JsonNumber e2)
   {
-    return e1.numberValue().floatValue() > e2.numberValue().floatValue();
+    if (e1.numberValue().floatValue() > e2.numberValue().floatValue())
+    {
+    	return Verdict.TRUE;
+    }
+    return Verdict.FALSE;
   }
   
   @Override

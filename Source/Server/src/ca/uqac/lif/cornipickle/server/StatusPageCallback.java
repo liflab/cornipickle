@@ -23,10 +23,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.PredicateDefinition;
 import ca.uqac.lif.cornipickle.SetDefinition;
+import ca.uqac.lif.cornipickle.Statement;
 import ca.uqac.lif.httpserver.RequestCallback;
 import ca.uqac.lif.httpserver.Server;
 
@@ -60,7 +60,7 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     createProbeContactMessage(m_server.getLastProbeContact(), page);
     
     // Compute verdicts
-    Map<StatementMetadata,Interpreter.Verdict> verdicts = m_server.m_interpreter.getVerdicts();
+    Map<StatementMetadata,Statement.Verdict> verdicts = m_server.m_interpreter.getVerdicts();
     createStatusMessage(verdicts, page);
     
     //page.append("<div id=\"main-accordion\" class=\"ui-accordion\">\n");
@@ -142,13 +142,13 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     }
   }
   
-  protected static void createStatusMessage(Map<StatementMetadata,Interpreter.Verdict> verdicts, StringBuilder page)
+  protected static void createStatusMessage(Map<StatementMetadata,Statement.Verdict> verdicts, StringBuilder page)
   {
     int num_errors = 0;
     for (StatementMetadata key : verdicts.keySet())
     {
-      Interpreter.Verdict v = verdicts.get(key);
-      if (v == Interpreter.Verdict.FALSE)
+      Statement.Verdict v = verdicts.get(key);
+      if (v == Statement.Verdict.FALSE)
       {
         num_errors++;
       }
@@ -174,7 +174,7 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     }
   }
   
-  protected void createPropertyList(Map<StatementMetadata,Interpreter.Verdict> verdicts, StringBuilder verdict_string)
+  protected void createPropertyList(Map<StatementMetadata,Statement.Verdict> verdicts, StringBuilder verdict_string)
   {
     // Ignore unique ID given by interpreter to each statement
     HashSet<String> ignored_attributes = new HashSet<String>();
@@ -182,13 +182,13 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     verdict_string.append("<ul class=\"verdicts\">\n");
     for (StatementMetadata key : verdicts.keySet())
     {
-      Interpreter.Verdict v = verdicts.get(key);
+      Statement.Verdict v = verdicts.get(key);
       String class_name = "inconclusive";
-      if (v == Interpreter.Verdict.TRUE)
+      if (v == Statement.Verdict.TRUE)
       {
         class_name = "true";
       }
-      else if (v == Interpreter.Verdict.FALSE)
+      else if (v == Statement.Verdict.FALSE)
       {
         class_name = "false";
       }

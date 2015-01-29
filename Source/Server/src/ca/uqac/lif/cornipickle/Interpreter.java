@@ -41,9 +41,7 @@ public class Interpreter
   
   protected CornipickleParser m_parser;
   
-  public static enum Verdict {TRUE, FALSE, INCONCLUSIVE};
-  
-  protected Map<StatementMetadata,Verdict> m_verdicts;
+  protected Map<StatementMetadata,Statement.Verdict> m_verdicts;
   
   public Interpreter()
   {
@@ -51,7 +49,7 @@ public class Interpreter
     m_statements = new HashMap<StatementMetadata,Statement>();
     m_setDefs = new HashMap<String,SetDefinition>();
     m_parser = new CornipickleParser();
-    m_verdicts = new HashMap<StatementMetadata,Verdict>();
+    m_verdicts = new HashMap<StatementMetadata,Statement.Verdict>();
   }
   
   public static void main(String[] args) throws IOException, JsonParseException, ParseException
@@ -66,7 +64,7 @@ public class Interpreter
     Interpreter interpreter = new Interpreter();
     interpreter.parseProperties(corni_file_contents);
     interpreter.evaluateAll(jse);
-    Map<StatementMetadata,Verdict> verdicts = interpreter.getVerdicts();
+    Map<StatementMetadata,Statement.Verdict> verdicts = interpreter.getVerdicts();
     System.out.println(verdicts);
   }
   
@@ -137,7 +135,7 @@ public class Interpreter
             Statement s = (Statement) le;
             meta.put("uniqueid", Integer.toString(i));
             m_statements.put(meta, s);
-            m_verdicts.put(meta, Verdict.INCONCLUSIVE);
+            m_verdicts.put(meta, Statement.Verdict.INCONCLUSIVE);
             meta = new StatementMetadata();
             le_string = new StringBuilder();
           }
@@ -261,14 +259,14 @@ public class Interpreter
     return out.toString();
   }
   
-  public Map<StatementMetadata,Verdict> getVerdicts()
+  public Map<StatementMetadata,Statement.Verdict> getVerdicts()
   {
   	return m_verdicts;
   }
 
   public void evaluateAll(JsonElement j)
   {
-    Map<StatementMetadata,Verdict> verdicts = new HashMap<StatementMetadata,Verdict>();
+    Map<StatementMetadata,Statement.Verdict> verdicts = new HashMap<StatementMetadata,Statement.Verdict>();
     Map<String,JsonElement> d = new HashMap<String,JsonElement>();
     // Fill dictionary with user-defined sets
     for (String set_name : m_setDefs.keySet())
@@ -281,15 +279,8 @@ public class Interpreter
     for (StatementMetadata key : m_statements.keySet())
     {
       Statement s = m_statements.get(key);
-      boolean b = s.evaluate(j, d);
-      if (b)
-      {
-        verdicts.put(key, Verdict.TRUE);
-      }
-      else
-      {
-        verdicts.put(key, Verdict.FALSE);
-      }
+      Statement.Verdict b = s.evaluate(j, d);
+      verdicts.put(key, b);
     }
     m_verdicts = verdicts;
   }

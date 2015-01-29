@@ -72,19 +72,19 @@ public class ForAllStatement extends Statement
   }
 
   @Override
-  public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
     // Fetch values for set
     List<JsonElement> domain = m_set.evaluate(j, d);
     // Iterate over values
-    boolean out = true;
+    Verdict out = Verdict.TRUE;
     for (JsonElement v : domain)
     {
       Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
       new_d.put(m_variable.toString(), v);
-      boolean b = m_innerStatement.evaluate(j, new_d);
-      out = out && b;
-      if (out == false)
+      Verdict b = m_innerStatement.evaluate(j, new_d);
+      out = threeValuedAnd(out, b);
+      if (out == Verdict.FALSE)
         break;
     }
     return out;

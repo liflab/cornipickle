@@ -138,7 +138,7 @@ public class PredicateDefinition extends Statement
   }
 
   @Override
-  public boolean evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
     return m_predicate.evaluate(j, d);
   }
