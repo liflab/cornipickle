@@ -179,6 +179,7 @@ public class CornipickleParser implements ParseNodeVisitor
     else if (node_token.compareTo("<property_or_const>") == 0) { }
     else if (node_token.compareTo("<S>") == 0) { }
     else if (node_token.compareTo("<statement>") == 0) { }
+    else if (node_token.compareTo("<temporal_stmt>") == 0) { }
     else if (node_token.compareTo("<userdef_set>") == 0) { }
     else if (node_token.compareTo("<userdef_stmt>") == 0) { }
     else if (node_token.compareTo("<var_name>") == 0) { }
@@ -276,6 +277,16 @@ public class CornipickleParser implements ParseNodeVisitor
       s = s.trim();
       m_nodes.push(new StringConstant(s));
     }
+    else if (node_token.compareTo("<eventually>") == 0)
+    {
+      m_nodes.pop(); // (
+      Statement right = (Statement) m_nodes.pop();
+      m_nodes.pop(); // )
+      m_nodes.pop(); // Eventually
+      Eventually out = new Eventually();
+      out.setInnerStatement(right);
+      m_nodes.push(out);
+    }
     else if (node_token.compareTo("<foreach>") == 0)
     {
       m_nodes.pop(); // )
@@ -310,6 +321,16 @@ public class CornipickleParser implements ParseNodeVisitor
       ElementProperty out = new ElementProperty(var, sel);
       m_nodes.push(out);
     }
+    else if (node_token.compareTo("<globally>") == 0)
+    {
+      m_nodes.pop(); // (
+      Statement right = (Statement) m_nodes.pop();
+      m_nodes.pop(); // )
+      m_nodes.pop(); // Globally
+      Globally out = new Globally();
+      out.setInnerStatement(right);
+      m_nodes.push(out);
+    }
     else if (node_token.compareTo("<gt>") == 0)
     {
       Property right = (Property) m_nodes.pop();
@@ -320,6 +341,21 @@ public class CornipickleParser implements ParseNodeVisitor
       GreaterThanStatement out = new GreaterThanStatement();
       out.setLeft(left);
       out.setRight(right);
+      m_nodes.push(out);
+    }
+    else if (node_token.compareTo("<implies>") == 0)
+    {
+    	m_nodes.pop(); // )
+      Statement right = (Statement) m_nodes.pop();
+      m_nodes.pop(); // (
+      m_nodes.pop(); // Then
+      m_nodes.pop(); // )
+      Statement left = (Statement) m_nodes.pop();
+      m_nodes.pop(); // (
+      m_nodes.pop(); // If
+      ImpliesStatement out = new ImpliesStatement();
+      out.addOperand(left);
+      out.addOperand(right);
       m_nodes.push(out);
     }
     else if (node_token.compareTo("<lt>") == 0)

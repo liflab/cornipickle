@@ -47,6 +47,13 @@ public abstract class Statement extends LanguageElement
   	return Verdict.INCONCLUSIVE;
   }
   
+  public Statement getClone()
+  {
+  	// Default behaviour of cloning: return same object
+  	// This only needs to be overridden by temporal statements
+  	return this;
+  }
+  
   public static final Verdict threeValuedOr(Verdict x, Verdict y)
   {
   	if (x == Verdict.TRUE || y == Verdict.TRUE)

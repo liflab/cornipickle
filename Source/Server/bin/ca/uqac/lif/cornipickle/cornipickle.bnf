@@ -19,8 +19,8 @@
 
 # CSS attributes
 
-<css_attribute>      := value | height | width | top | left 
-                        | right | bottom | color | id | text ;
+<css_attribute>      := value | height | width | top | left | right
+                        | bottom | color | id | text | border;
 
 # Element property
 
@@ -32,18 +32,24 @@
 
 # Cornichon statements
 
-<statement>          := <foreach> | <exists> | <binary_stmt> | <negation> | <userdef_stmt> ;
-<binary_stmt>        := <equality> | <gt> | <and> | <or> | <implies> ;
+<statement>          := <foreach> | <exists> | <binary_stmt> | <negation>
+                        | <temporal_stmt> | <userdef_stmt> ;
+<binary_stmt>        := <equality> | <gt> | <lt> | <regex_match> 
+                        | <and> | <or> | <implies> ;
+<temporal_stmt>      := <globally> | <eventually> ;
 <foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
 <exists>             := There exists a <var_name> in <set_name> such that ( <statement> ) ;
 <and>                := ( <statement> ) And ( <statement> ) ;
 <or>                 := ( <statement> ) Or ( <statement> ) ;
 <implies>            := If ( <statement> ) then ( <statement> ) ;
 <negation>           := Not ( <statement> ) ;
+<globally>           := Globally ( <statement> ) ;
+<eventually>         := Eventually ( <statement> ) ;
 <property_or_const>  := <elem_property> | <constant> ;
 <equality>           := <property_or_const> equals <property_or_const> ;
 <gt>                 := <property_or_const> is greater than <property_or_const> ;
 <lt>                 := <property_or_const> is less than <property_or_const> ;
+<regex_match>        := <property_or_const> matches <property_or_const> ;
 <constant>           := <number> | <string> ;
 <number>             := ^\d+;
 <string>             := ^"[^"]*";
