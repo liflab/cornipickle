@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="screen.css" />
+<link rel="stylesheet" type="text/css" href="../colouring.css" />
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="cornipickle.js"></script>
+<script type="text/javascript" src="/probe"></script>
+<title>Matching username, part I - Cornipickle</title>
+<script type="text/javascript">
+// <![CDATA[
+$(document).ready(function() {
+    // Put Cornipickle codde in global var
+    cornipickle_code = $(".cornipickle-code").text();
+    // Colourize each code snippet
+    cornipickle_colourize_all();
+    // Add handler to button
+    $("#to-cornipickle").click(function() {
+        add_to_cornipickle(cornipickle_code);
+      });
+    // Move second menu
+    $("#second-menu").css({ "margin-left": "10px"});
+    // Button code
+    $(".set-value").click(function() {
+        $("#value").html($(this).attr("value"));
+    });
+});
+// ]]>
+</script>
+</head>
+
+<body>
+
+<div id="contents">
+<h1>Example</h1>
+
+<p class="backmenu"><a href="index.html">Back to example list</a></p>
+
+<div class="playground">
+
+<p id="greeting" class="greeting">The value is: <span id="value">0</span>.</p>
+
+</div>
+
+<input class="set-value" value="0" /> <input class="set-value" value="1" /> <input class="set-value" value="2" />
+
+<!-- Cornipickle explanation -->
+<div id="cornipickle-explanation">
+
+<h2>What's the problem?</h2>
+<p>The title says the page is Bill's, yet the next paragraph greets
+Joe.</p>
+
+<p><button id="misalign-toggle">Toggle misalignment</button></p>
+
+<h2>Detect it with Cornipickle</h2>
+
+
+<div class="cornipickle-square">
+
+<p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
+
+<div class="cornipickle-code">
+"""
+@description The value in every "username" span 
+  must be the same
+@name Matching username
+@severity Error
+"""
+For each $x in $(.username) (
+  For each $y in $(.username) (
+    $x's text equals $y's text
+  )
+).
+</div>
+
+</div>
+
+</div> <!-- /explanation -->
+
+<div id="footer">
+<hr />
+&copy; 2015 LIF
+</div>
+
+</div> <!-- /contents -->
+
+</body>
+</html>
