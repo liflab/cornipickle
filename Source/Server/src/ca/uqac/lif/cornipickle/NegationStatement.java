@@ -51,6 +51,11 @@ public class NegationStatement extends Statement
     return m_verdict;
   }
   
+  public void resetHistory()
+  {
+    m_innerStatement.resetHistory();
+  }
+  
   @Override
   public String toString(String indent)
   {

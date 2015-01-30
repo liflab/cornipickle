@@ -63,7 +63,7 @@ public class ExistsStatement extends ForAllStatement
     ExistsStatement out = new ExistsStatement();
     out.m_innerStatement = m_innerStatement.getClone();
     out.m_variable = m_variable;
-    out.m_set = m_set;
+    out.m_set = m_set.getClone();
     return out;
   }
 }

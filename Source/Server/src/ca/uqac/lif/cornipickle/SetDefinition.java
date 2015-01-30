@@ -59,4 +59,11 @@ public class SetDefinition extends SetExpression
   {
     return m_setName.toString();
   }
+
+  @Override
+  public SetExpression getClone()
+  {
+    SetDefinition out = new SetDefinition(m_setName);
+    return out;
+  }
 }

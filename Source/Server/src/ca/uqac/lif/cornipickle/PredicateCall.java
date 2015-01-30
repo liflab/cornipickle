@@ -49,6 +49,12 @@ public class PredicateCall extends Statement
   {
     return m_predicate;
   }
+  
+  @Override
+  public void resetHistory()
+  {
+    m_predicate.resetHistory();
+  }
 
   @Override
   public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)

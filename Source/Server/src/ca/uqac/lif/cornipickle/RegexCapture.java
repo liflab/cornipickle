@@ -87,4 +87,13 @@ public class RegexCapture extends SetExpression
     return out.toString();
   }
 
+  @Override
+  public RegexCapture getClone()
+  {
+    RegexCapture out = new RegexCapture();
+    out.m_variable = m_variable.getClone();
+    out.m_pattern = m_pattern;
+    return out;
+  }
+
 }

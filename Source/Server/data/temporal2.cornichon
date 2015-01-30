@@ -1,0 +1,14 @@
+"""
+@description The value in the "#value" element always increases 
+@name Increasing value
+@severity Error
+"""
+Always (
+  For each $x in $(#value) (
+    Next (
+      For each $y in $(#value) (
+        $y's text is greater than $x's text
+      )
+    )
+  )
+).

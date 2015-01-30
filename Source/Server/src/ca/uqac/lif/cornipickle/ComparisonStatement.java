@@ -35,6 +35,11 @@ public abstract class ComparisonStatement extends Statement
     return compare(e1, e2);
   }
   
+  public void resetHistory()
+  {
+    // Nothing to do
+  }
+  
   public void setLeft(final Property p)
   {
     m_left = p;

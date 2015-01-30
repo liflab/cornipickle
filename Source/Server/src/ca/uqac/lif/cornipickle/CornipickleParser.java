@@ -33,6 +33,7 @@ import ca.uqac.lif.bullwinkle.BnfRule;
 import ca.uqac.lif.bullwinkle.CaptureBlockParseNode;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.ParseNodeVisitor;
+import ca.uqac.lif.cornipickle.json.JsonNumber;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.util.EmptyException;
 
@@ -500,7 +501,7 @@ public class CornipickleParser implements ParseNodeVisitor
     {
       // This is a node that does not contain a label
       // Guess if this is a string or a number
-      if (isNumeric(node_token))
+      if (JsonNumber.isNumeric(node_token))
       {
         NumberConstant out = new NumberConstant(node_token);
         m_nodes.push(out);
@@ -542,19 +543,6 @@ public class CornipickleParser implements ParseNodeVisitor
   public void pop()
   {
     // Nothing to do
-  }
-
-  protected static boolean isNumeric(String str)  
-  {  
-    try  
-    {  
-      Double.parseDouble(str);  
-    }  
-    catch(NumberFormatException nfe)  
-    {  
-      return false;  
-    }  
-    return true;  
   }
 
   public static class ParseException extends EmptyException

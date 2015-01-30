@@ -74,6 +74,7 @@ public class Interpreter
     {
       Statement s = m_statements.get(key);
       s.resetHistory();
+      m_verdicts.put(key, Statement.Verdict.INCONCLUSIVE);
     }
   }
   

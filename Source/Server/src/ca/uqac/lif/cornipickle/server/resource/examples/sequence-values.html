@@ -42,20 +42,26 @@ $(document).ready(function() {
 
 <div class="playground">
 
-<p id="greeting" class="greeting">The value is: <span id="value">0</span>.</p>
+<p id="greeting" class="greeting">The value is: <b id="value">0</b>.</p>
 
 </div>
 
-<input class="set-value" value="0" /> <input class="set-value" value="1" /> <input class="set-value" value="2" />
+
 
 <!-- Cornipickle explanation -->
 <div id="cornipickle-explanation">
 
 <h2>What's the problem?</h2>
-<p>The title says the page is Bill's, yet the next paragraph greets
-Joe.</p>
+<p>The value displayed by the paragraph should always increase,
+never decrease. Try clicking on the buttons to change its value, and
+see what the interpreter does.</p>
 
-<p><button id="misalign-toggle">Toggle misalignment</button></p>
+<p><input type="button" class="set-value" value="0" />
+<input type="button" class="set-value" value="1" />
+<input type="button" class="set-value" value="2" />
+<input type="button" class="set-value" value="3" />
+<input type="button" class="set-value" value="4" />
+<input type="button" class="set-value" value="5" /></p>
 
 <h2>Detect it with Cornipickle</h2>
 
@@ -66,14 +72,17 @@ Joe.</p>
 
 <div class="cornipickle-code">
 """
-@description The value in every "username" span 
-  must be the same
-@name Matching username
+@description The value in the "#value" element always increases 
+@name Increasing value
 @severity Error
 """
-For each $x in $(.username) (
-  For each $y in $(.username) (
-    $x's text equals $y's text
+Always (
+  For each $x in $(#value) (
+    Next (
+      For each $y in $(#value) (
+        $y's text is greater than $x's text
+      )
+    )
   )
 ).
 </div>

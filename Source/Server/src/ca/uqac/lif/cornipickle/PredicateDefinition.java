@@ -49,6 +49,13 @@ public class PredicateDefinition extends Statement
     m_captureGroups = new Vector<String>();
   }
   
+  @Override
+  public void resetHistory()
+  {
+    // Nothing to do
+    return;
+  }
+  
   public void setPattern(StringConstant pattern)
   {
     m_pattern = pattern;

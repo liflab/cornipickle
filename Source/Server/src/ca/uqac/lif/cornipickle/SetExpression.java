@@ -25,6 +25,14 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 
 public abstract class SetExpression extends LanguageElement
 {
+  protected List<JsonElement> m_result;
+  
+  public SetExpression()
+  {
+    super();
+    m_result = null;
+  }
+  
   public final List<JsonElement> evaluate(JsonElement j)
   {
     Map<String,JsonElement> d = new HashMap<String,JsonElement>();
@@ -45,5 +53,12 @@ public abstract class SetExpression extends LanguageElement
   {
     visitor.visit(this);
     visitor.pop();
+  }
+  
+  public abstract SetExpression getClone();
+  
+  public void resetHistory()
+  {
+    m_result = null;
   }
 }

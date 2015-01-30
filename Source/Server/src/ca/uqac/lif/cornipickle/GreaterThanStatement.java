@@ -26,6 +26,13 @@ public class GreaterThanStatement extends ComparisonStatement
   @Override
   protected Verdict compare(JsonString e1, JsonString e2)
   {
+    // If both values are actually numbers, we compare them as numbers
+    if (JsonNumber.isNumeric(e1) && JsonNumber.isNumeric(e2))
+    {
+      JsonNumber n1 = new JsonNumber(Integer.parseInt(e1.stringValue()));
+      JsonNumber n2 = new JsonNumber(Integer.parseInt(e2.stringValue()));
+      return compare(n1, n2);
+    }
     if (e1.stringValue().compareTo(e2.stringValue()) == 0)
     {
     	return Verdict.TRUE;

@@ -35,6 +35,7 @@ import ca.uqac.lif.cornipickle.LanguageElementVisitor;
 import ca.uqac.lif.cornipickle.NAryStatement;
 import ca.uqac.lif.cornipickle.NegationStatement;
 import ca.uqac.lif.cornipickle.Never;
+import ca.uqac.lif.cornipickle.Next;
 import ca.uqac.lif.cornipickle.NumberConstant;
 import ca.uqac.lif.cornipickle.PredicateCall;
 import ca.uqac.lif.cornipickle.PredicateDefinition;
@@ -246,6 +247,13 @@ public class HtmlFormatter implements LanguageElementVisitor
       StringBuilder pred = m_elements.pop();
       pred.append("\n<br/>)");
       out.append(StringUtils.prepend("&nbsp;", pred));
+    }
+    else if (element instanceof Next)
+    {
+      out.append("<span><span class=\"temporal-operator\">Next</span> (<br />\n");
+      StringBuilder inner_exp = m_elements.pop(); // Inner statement
+      out.append(StringUtils.prepend("&nbsp;", inner_exp));
+      out.append("<br/>\n)");
     }
     else if (element instanceof Eventually)
     {

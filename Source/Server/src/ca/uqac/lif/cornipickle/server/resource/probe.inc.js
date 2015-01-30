@@ -277,5 +277,8 @@ window.onload = function()
   document.body.appendChild(cp_witness_div);
   document.getElementById("cp-witness").innerHTML = "%%WITNESS_CODE%%";
   //document.getElementById("cp-witness").onclick = cp_probe.handleEvent;
-  document.body.onmouseup = cp_probe.handleEvent;
+  document.body.onmouseup = function() {
+	  // Wait .25 sec, so that the browser has time to process the click
+	  window.setTimeout(cp_probe.handleEvent, 0.25);
+  };
 };

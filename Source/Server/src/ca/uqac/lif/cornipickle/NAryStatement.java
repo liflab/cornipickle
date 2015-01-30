@@ -82,5 +82,14 @@ public abstract class NAryStatement extends Statement
     }
     return out.toString();
   }
+  
+  @Override
+  public void resetHistory()
+  {
+    for (Statement n : m_statements)
+    {
+      n.resetHistory();
+    }
+  }
 
 }

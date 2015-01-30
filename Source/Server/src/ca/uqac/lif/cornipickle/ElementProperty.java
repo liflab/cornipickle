@@ -132,5 +132,12 @@ public class ElementProperty extends Property
     out.append(m_elementName).append("'s ").append(m_propertyName);
     return out.toString();
   }
+  
+  @Override
+  public ElementProperty getClone()
+  {
+    ElementProperty out = new ElementProperty(m_elementName, m_propertyName);
+    return out;
+  }
 
 }

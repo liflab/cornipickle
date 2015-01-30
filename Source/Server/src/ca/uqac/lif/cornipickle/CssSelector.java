@@ -64,8 +64,12 @@ public class CssSelector extends SetExpression
       assert false;
       return null; // Should not happen
     }
-    List<JsonElement> values = fetch(m_cssSelector, (JsonMap) j);
-    return values;
+    if (m_result != null)
+    {
+      return m_result;
+    }
+    m_result = fetch(m_cssSelector, (JsonMap) j);
+    return m_result;
   }
   
   protected static List<JsonElement> fetch(String css_expression, JsonMap root)
@@ -159,6 +163,13 @@ public class CssSelector extends SetExpression
     StringBuilder out = new StringBuilder();
     out.append("$(").append(m_cssSelector).append(")");
     return out.toString();
+  }
+  
+  @Override
+  public CssSelector getClone()
+  {
+    CssSelector out = new CssSelector(m_cssSelector);
+    return out;
   }
 
 }

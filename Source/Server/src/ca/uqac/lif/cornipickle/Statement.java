@@ -56,11 +56,7 @@ public abstract class Statement extends LanguageElement
 
   public abstract Statement getClone();
 
-  public void resetHistory()
-  {
-    // Nothing to do for non-temporal statements
-    return;
-  }
+  public abstract void resetHistory();
 
   public static final Verdict threeValuedOr(Verdict x, Verdict y)
   {

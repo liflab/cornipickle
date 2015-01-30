@@ -29,43 +29,43 @@ public class ForAllStatement extends Statement
   {
     super();
   }
-  
+
   protected Statement m_innerStatement;
-  
+
   protected StringConstant m_variable;
-  
+
   protected SetExpression m_set;
-  
+
   public void setInnerStatement(Statement s)
   {
     m_innerStatement = s;
   }
-  
+
   public String getVariable()
   {
     return m_variable.toString();
   }
-  
+
   public Statement getStatement()
   {
     return m_innerStatement;
   }
-  
+
   public SetExpression getSet()
   {
     return m_set;
   }
-  
+
   public void setVariable(StringConstant s)
   {
     m_variable = s;
   }
-  
+
   public void setVariable(String s)
   {
     m_variable = new StringConstant(s);
   }
-  
+
   public void setDomain(SetExpression s)
   {
     m_set = s;
@@ -74,7 +74,7 @@ public class ForAllStatement extends Statement
   @Override
   public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
-        if (m_verdict != Statement.Verdict.INCONCLUSIVE)
+    if (m_verdict != Statement.Verdict.INCONCLUSIVE)
     {
       return m_verdict;
     }
@@ -95,6 +95,12 @@ public class ForAllStatement extends Statement
     return m_verdict;
   }
   
+  public void resetHistory()
+  {
+    m_set.resetHistory();
+    m_innerStatement.resetHistory();
+  }
+
   @Override
   public String toString(String indent)
   {
@@ -103,7 +109,7 @@ public class ForAllStatement extends Statement
     out.append(m_innerStatement.toString(indent + "  "));
     return out.toString();
   }
-  
+
   @Override
   public void postfixAccept(LanguageElementVisitor visitor)
   {
@@ -113,7 +119,7 @@ public class ForAllStatement extends Statement
     visitor.visit(this);
     visitor.pop();
   }
-  
+
   @Override
   public void prefixAccept(LanguageElementVisitor visitor)
   {
@@ -122,14 +128,14 @@ public class ForAllStatement extends Statement
     m_set.prefixAccept(visitor);
     visitor.pop();
   }
-  
+
   @Override
   public ForAllStatement getClone()
   {
     ForAllStatement out = new ForAllStatement();
     out.m_innerStatement = m_innerStatement.getClone();
     out.m_variable = m_variable;
-    out.m_set = m_set;
+    out.m_set = m_set.getClone();
     return out;
   }
 }
