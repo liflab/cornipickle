@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -108,6 +109,20 @@ public class Server implements HttpHandler
     if (!has_fired)
     {
       sendResponse(t, HTTP_BAD_REQUEST);
+    }
+  }
+  
+  public void addResponseCookie(HttpExchange t, Cookie c)
+  {
+    Headers h = t.getResponseHeaders();
+    h.add("Set-Cookie", c.getName() + "=" + c.getValue());
+  }
+  
+  public void addResponseCookies(HttpExchange t, Collection<Cookie> cookies)
+  {
+    for (Cookie c : cookies)
+    {
+      addResponseCookie(t, c);
     }
   }
 
