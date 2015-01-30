@@ -5,9 +5,11 @@
 /* This code found on http://stackoverflow.com/questions/1480133/how-can-i-get-an-objects-absolute-position-on-the-page-in-javascript
    ----------------- */
    
-var cumulativeOffset = function(element) {
+var cumulativeOffset = function(element)
+{
     var top = 0, left = 0;
-    do {
+    do
+    {
         top += element.offsetTop  || 0;
         left += element.offsetLeft || 0;
         element = element.offsetParent;
@@ -99,7 +101,7 @@ var CornipickleProbe = function()
       return "";
     }
     return out;
-  }
+  };
   
   this.ru = function(s)
   {
@@ -109,25 +111,25 @@ var CornipickleProbe = function()
       s = s.replace("px", "");
     }
     return Number(s);
-  }
+  };
   
   this.outputStringIfDefined = function(property_name, property, indent)
   {
-    if (property != undefined && property !== "")
+    if (property !== undefined && property !== "")
     {
       return ",\n" + indent + "\"" + property_name + "\" : \"" + property + "\"";
     }
     return "";
-  }
+  };
   
   this.outputNumberIfDefined = function(property_name, property, indent)
   {
-    if (property != undefined && property !== "")
+    if (property !== undefined && property !== "")
     {
       return ",\n" + indent + "\"" + property_name + "\" : " + property;
     }
     return "";
-  }
+  };
   
   this.includeInResult = function(n, path)
   {
@@ -148,7 +150,7 @@ var CornipickleProbe = function()
       }
     }
     return CornipickleProbe.INCLUDE;
-  }
+  };
   
   /*this.handleEvent = function()
   {
@@ -193,7 +195,7 @@ var CornipickleProbe = function()
     var url = "http://%%SERVER_NAME%%/image?rand=" + Math.round(Math.random() * 1000);
     document.getElementById("cp-image").src = url + "&contents=" + json_url;
   };
-}
+};
 
 CornipickleProbe.INCLUDE = 0;
 CornipickleProbe.DONT_INCLUDE = 1;
@@ -235,19 +237,20 @@ CornipickleProbe.updateTransmitIcon = function(active)
 /* Obtained from http://stackoverflow.com/a/25078870 */
 CornipickleProbe.getStyle = function(elem, prop)
 {
+  var res = null;
   if (elem.currentStyle)
   {
-    var res = elem.currentStyle.margin;
+    res = elem.currentStyle.margin;
   }
   else if (window.getComputedStyle)
   {
     if (window.getComputedStyle.getPropertyValue)
     {
-      var res = window.getComputedStyle(elem, null).getPropertyValue(prop)
+      res = window.getComputedStyle(elem, null).getPropertyValue(prop);
     }
     else
     {
-      var res = window.getComputedStyle(elem)[prop]
+      res = window.getComputedStyle(elem)[prop];
     }
   }
   return res;
@@ -273,5 +276,6 @@ window.onload = function()
   cp_witness_div.id = "cp-witness";
   document.body.appendChild(cp_witness_div);
   document.getElementById("cp-witness").innerHTML = "%%WITNESS_CODE%%";
-  document.getElementById("cp-witness").onclick = cp_probe.handleEvent;
-}
+  //document.getElementById("cp-witness").onclick = cp_probe.handleEvent;
+  document.body.onmouseup = cp_probe.handleEvent;
+};
