@@ -90,7 +90,7 @@ add_to_cornipickle = function(text)
 {
   $.ajax({
     url : "/add",
-    type : "POST",
+    type : "PUT",
     data : text,
     success : function(result) {
       $("#to-cornipickle").prop('disabled', true);

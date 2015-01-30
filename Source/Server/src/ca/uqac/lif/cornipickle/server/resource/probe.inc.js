@@ -175,8 +175,9 @@ var CornipickleProbe = function()
 		var json_url = encodeURIComponent(json);
 		var url = "http://%%SERVER_NAME%%/image?rand=" + Math.round(Math.random() * 1000);
 		document.getElementById("cp-image").src = url + "&contents=" + json_url;
-		//document.getElementById("bp_witness").backgroundImage = "url(\"" + url + "&contents=" + json_url + "\")"; Doesn't work
-		window.setTimeout(CornipickleProbe.handleResponse, 500);
+		window.setTimeout(CornipickleProbe.handleResponse, 1500);
+		// The timeout here is 1.5 sec. If set too low, the witness
+		// processes the cookie before the server has had the time to update it
 	};
 };
 
@@ -313,5 +314,5 @@ window.onload = function()
 		window.setTimeout(cp_probe.handleEvent, 0.25);
 	};
 	// Call the probe a first time at startup
-	window.setTimeout(cp_probe.handleEvent, 0.25);
+	//window.setTimeout(cp_probe.handleEvent, 0.25);
 };

@@ -19,6 +19,10 @@ $(document).ready(function() {
     cornipickle_code = $(".cornipickle-code").text();
     // Colourize each code snippet
     cornipickle_colourize_all();
+    // Remove onmouseup event on some elements
+    $(".no-event").mouseup(function(event) {
+      event.stopPropagation();
+    });
     // Add handler to button
     $("#to-cornipickle").click(function() {
         add_to_cornipickle(cornipickle_code);
@@ -67,7 +71,7 @@ $(document).ready(function() {
 <div id="contents">
 <h1>Overlapping elements</h1>
 
-<p class="backmenu"><a href="index.html">Back to example list</a></p>
+<p class="backmenu"><a href="index.html" class="no-event">Back to example list</a></p>
 
 <div class="playground">
 
