@@ -194,6 +194,9 @@ var CornipickleProbe = function()
     var json_url = encodeURIComponent(json);
     var url = "http://%%SERVER_NAME%%/image?rand=" + Math.round(Math.random() * 1000);
     document.getElementById("cp-image").src = url + "&contents=" + json_url;
+    window.setTimeout(function() {
+    	CornipickleProbe.updateTransmitIcon(false);
+    }, 500);
   };
 };
 
