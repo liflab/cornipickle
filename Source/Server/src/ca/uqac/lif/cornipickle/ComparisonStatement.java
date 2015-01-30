@@ -37,7 +37,7 @@ public abstract class ComparisonStatement extends Statement
   
   public void resetHistory()
   {
-    // Nothing to do
+    m_verdict = Statement.Verdict.INCONCLUSIVE;
   }
   
   public void setLeft(final Property p)

@@ -52,8 +52,8 @@ public class PredicateDefinition extends Statement
   @Override
   public void resetHistory()
   {
-    // Nothing to do
-    return;
+    m_verdict = Statement.Verdict.INCONCLUSIVE;
+    m_predicate.resetHistory();
   }
   
   public void setPattern(StringConstant pattern)

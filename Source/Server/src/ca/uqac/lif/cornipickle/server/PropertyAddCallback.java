@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.Map;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
+import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.httpserver.RequestCallback;
 import ca.uqac.lif.httpserver.Server;
 
@@ -44,13 +45,14 @@ class PropertyAddCallback extends RequestCallback<CornipickleServer>
     URI u = t.getRequestURI();
     String path = u.getPath();
     String method = t.getRequestMethod();
-    return method.compareToIgnoreCase("post") == 0 && 
-        path.compareTo("/add") == 0;
+    return (method.compareToIgnoreCase("post") == 0 || method.compareToIgnoreCase("put") == 0) 
+        && path.compareTo("/add") == 0;
   }
 
   @Override
   public boolean process(HttpExchange t)
   {
+    String method = t.getRequestMethod();
     StringBuilder page = new StringBuilder();
     page.append("<!DOCTYPE html>\n");
     page.append("<html>\n");
@@ -71,6 +73,11 @@ class PropertyAddCallback extends RequestCallback<CornipickleServer>
     {
       post_data = URLDecoder.decode(post_data, "UTF-8");
       Map<String,String> params = Server.queryToMap(post_data);
+      if (method.compareToIgnoreCase("put") == 0)
+      {
+        // First, reset the interpreter
+        m_server.m_interpreter = new Interpreter();
+      }
       String props = params.get("properties");
       if (props == null)
       {

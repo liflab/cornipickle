@@ -97,6 +97,7 @@ public class ForAllStatement extends Statement
   
   public void resetHistory()
   {
+    m_verdict = Verdict.INCONCLUSIVE;
     m_set.resetHistory();
     m_innerStatement.resetHistory();
   }

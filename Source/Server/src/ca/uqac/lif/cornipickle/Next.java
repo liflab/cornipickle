@@ -44,6 +44,7 @@ public class Next extends TemporalStatement
 	@Override
 	public void resetHistory()
 	{
+	  m_verdict = Statement.Verdict.INCONCLUSIVE;
 		m_firstEvent = true;
 		m_innerStatement.resetHistory();
 	}

@@ -24,17 +24,17 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 public class NegationStatement extends Statement
 {
   protected Statement m_innerStatement;
-  
+
   public NegationStatement()
   {
     super();
   }
-  
+
   public void setInnerStatement(Statement s)
   {
     m_innerStatement = s;
   }
-  
+
   public Statement getStatement()
   {
     return m_innerStatement;
@@ -43,19 +43,20 @@ public class NegationStatement extends Statement
   @Override
   public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
   {
-        if (m_verdict != Statement.Verdict.INCONCLUSIVE)
+    if (m_verdict != Statement.Verdict.INCONCLUSIVE)
     {
       return m_verdict;
     }
     m_verdict = threeValuedNot(m_innerStatement.evaluate(j, d));
     return m_verdict;
   }
-  
+
   public void resetHistory()
   {
+    m_verdict = Statement.Verdict.INCONCLUSIVE;
     m_innerStatement.resetHistory();
   }
-  
+
   @Override
   public String toString(String indent)
   {
@@ -63,7 +64,7 @@ public class NegationStatement extends Statement
     out.append("Not (").append(m_innerStatement).append(")");
     return out.toString();
   }
-  
+
   @Override
   public void postfixAccept(LanguageElementVisitor visitor)
   {
@@ -71,7 +72,7 @@ public class NegationStatement extends Statement
     visitor.visit(this);
     visitor.pop();
   }
-  
+
   @Override
   public void prefixAccept(LanguageElementVisitor visitor)
   {
@@ -79,7 +80,7 @@ public class NegationStatement extends Statement
     m_innerStatement.prefixAccept(visitor);
     visitor.pop();
   }
-  
+
   @Override
   public NegationStatement getClone()
   {

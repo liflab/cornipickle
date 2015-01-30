@@ -53,6 +53,7 @@ public class PredicateCall extends Statement
   @Override
   public void resetHistory()
   {
+    m_verdict = Statement.Verdict.INCONCLUSIVE;
     m_predicate.resetHistory();
   }
 
