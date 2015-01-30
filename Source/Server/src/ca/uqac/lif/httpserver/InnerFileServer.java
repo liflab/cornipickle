@@ -26,7 +26,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class InnerFileServer extends Server
 {
-  public static String m_resourceFolder;
+  protected String m_resourceFolder;
 
   protected Class<? extends InnerFileServer> m_referenceClass;
 
@@ -57,8 +57,13 @@ public class InnerFileServer extends Server
   {
     return m_referenceClass.getResourceAsStream(path);
   }
+  
+  public String getResourceFolderName()
+  {
+    return m_resourceFolder;
+  }
 
-  public static class InnerFileCallback extends CachedRequestCallback<InnerFileServer>
+  public class InnerFileCallback extends CachedRequestCallback<InnerFileServer>
   {
     public InnerFileCallback(InnerFileServer s)
     {

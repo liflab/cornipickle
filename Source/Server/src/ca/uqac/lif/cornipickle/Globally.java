@@ -30,8 +30,6 @@ public class Globally extends TemporalStatement
 
   protected List<Statement> m_inMonitors;
 
-  protected Statement.Verdict m_verdict;
-
   public Globally()
   {
     super();

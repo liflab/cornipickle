@@ -46,8 +46,8 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
   {
     try
     {
-      String witness_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(CornipickleServer.m_resourceFolder + "/witness.js"));
-      String probe_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(CornipickleServer.m_resourceFolder + "/probe.js"));
+      String witness_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/witness.js"));
+      String probe_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/probe.js"));
       probe_code = probe_code.replace("%%WITNESS_CODE%%", CornipickleServer.escapeString(witness_code));
       probe_code = probe_code.replace("%%SERVER_NAME%%", m_server.getServerName() + ":" + CornipickleServer.s_defaultPort);
       m_server.sendResponse(t, Server.HTTP_OK, probe_code, "application/javascript");
