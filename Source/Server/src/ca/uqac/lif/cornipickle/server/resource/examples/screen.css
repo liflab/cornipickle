@@ -40,3 +40,9 @@ html, body {
   margin: 4px;
   text-align: right;
 }
+
+#cornipickle-section, #procedural-section {
+  display: inline-block;
+  margin-right: 20px;
+  vertical-align: top;
+}

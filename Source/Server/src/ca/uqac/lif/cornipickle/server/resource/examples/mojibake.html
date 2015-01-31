@@ -77,10 +77,12 @@ dÃ©tail, et autres partenaires spÃ©cialisÃ©s.</p>
 
 <p><button id="misalign-toggle">Toggle mojibake</button></p>
 
+<div id="cornipickle-section">
+
 <h2>Detect it with Cornipickle</h2>
 
 
-<div class="cornipickle-square">
+<div class="cornipickle-square no-event">
 
 <p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
 
@@ -105,6 +107,41 @@ For each $text in $(CDATA) (
     $text doesn't contain $mojibake
   )
 ).
+</div>
+
+</div>
+
+</div>
+
+<div id="procedural-section">
+
+<h2>Procedural Equivalent</h2>
+
+<div class="procedural-equivalent jquery no-event">
+<pre>
+var textnodes = $(elem)
+  .contents()
+  .filter(function() {
+    return this.nodeType === 3; //Node.TEXT_NODE
+  });
+
+var mojibake = ["Ã©", "Ã´", "Ã¨"];
+
+var contains = function(t, m) {
+  var re = new RegExp(m, "g");
+  return re.match(t);
+};
+
+for (var tn in textnodes) {
+  var elem = $(tn);
+  var text = tn.text();
+  for (var moj in mojibake) {
+    if (contains(text, moj))
+      return false;
+  }
+  return true;
+}
+</pre>
 </div>
 
 </div>
