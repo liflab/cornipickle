@@ -18,6 +18,7 @@
 package ca.uqac.lif.cornipickle;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,12 +32,14 @@ public class ForAllStatement extends Statement
 
   protected SetExpression m_set;
   
+  protected List<Statement> m_innerStatements;
+  
   protected List<JsonElement> m_domain;
   
   public ForAllStatement()
   {
     super();
-    m_domain = null;
+    m_innerStatements = null;
   }
 
   public void setInnerStatement(Statement s)
@@ -77,19 +80,28 @@ public class ForAllStatement extends Statement
   @Override
   public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    // Fetch values for set
     if (m_domain == null)
     {
+      // Fetch values for set; create one instance of the
+      // inner statement for each value
       m_domain = m_set.evaluate(j, d);
+      m_innerStatements = new LinkedList<Statement>();
+      for (JsonElement v : m_domain)
+      {
+        m_innerStatements.add(m_innerStatement.getClone());
+      }
     }
     // Iterate over values
     Verdict out = Verdict.TRUE;
+    int i = 0;
     for (JsonElement v : m_domain)
     {
+      Statement in_s = m_innerStatements.get(i);
       Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
       new_d.put(m_variable.toString(), v);
-      Verdict b = m_innerStatement.evaluate(j, new_d);
+      Verdict b = in_s.evaluate(j, new_d);
       out = threeValuedAnd(out, b);
+      i++;
       if (out == Verdict.FALSE)
         break;
     }
@@ -112,8 +124,7 @@ public class ForAllStatement extends Statement
       if (out == Verdict.FALSE)
         break;
     }
-    m_verdict = out;
-    return m_verdict;
+    return out;
   }
   
   public void resetHistory()

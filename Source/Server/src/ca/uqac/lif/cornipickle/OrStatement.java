@@ -50,7 +50,8 @@ public class OrStatement extends AndStatement
       if (out == Verdict.TRUE)
         break;
     }
-    return out;
+    m_verdict = out;
+    return m_verdict;
   }
   
   @Override

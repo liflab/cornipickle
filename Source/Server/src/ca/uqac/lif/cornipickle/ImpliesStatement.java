@@ -39,6 +39,22 @@ public class ImpliesStatement extends AndStatement
     m_verdict = threeValuedOr(threeValuedNot(v_left), v_right);
     return m_verdict;
   }
+  
+  @Override
+  public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
+  {
+    if (m_statements.size() < 2)
+    {
+      m_verdict = Verdict.FALSE;
+      return m_verdict;
+    }
+    Statement left = m_statements.get(0);
+    Statement right = m_statements.get(1);
+    Verdict v_left = left.evaluateAtemporal(j, d);
+    Verdict v_right = right.evaluateAtemporal(j, d);
+    // p -> q == !p or q
+    return threeValuedOr(threeValuedNot(v_left), v_right);
+  }
 
   @Override
   public String toString(String indent)

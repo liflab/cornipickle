@@ -53,7 +53,7 @@ public abstract class Statement extends LanguageElement
 
   public final Verdict evaluate(JsonElement j, Map<String,JsonElement> d)
   {
-    if (m_verdict != Verdict.INCONCLUSIVE && isTemporal())
+    if (m_verdict != Verdict.INCONCLUSIVE) //&& isTemporal())
     {
       return m_verdict;
     }

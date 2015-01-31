@@ -32,13 +32,16 @@ public abstract class ComparisonStatement extends Statement
   {
     JsonElement e1 = m_left.evaluate(j, d);
     JsonElement e2 = m_right.evaluate(j, d);
-    return compare(e1, e2);
+    m_verdict = compare(e1, e2);
+    return m_verdict;
   }
   
   @Override
   public final Verdict evaluateAtemporal(JsonElement j, Map<String,JsonElement> d)
   {
-    return evaluateTemporal(j, d);
+    JsonElement e1 = m_left.evaluate(j, d);
+    JsonElement e2 = m_right.evaluate(j, d);
+    return compare(e1, e2);
   }
   
   public final boolean isTemporal()

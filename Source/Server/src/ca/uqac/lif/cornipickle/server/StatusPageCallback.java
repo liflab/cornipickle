@@ -211,6 +211,7 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     page.append("<html>\n");
     page.append("<head>\n");
     page.append("<title>").append(title).append("</title>\n");
+    page.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n");
     page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css\" />\n");
     page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"screen.css\" />\n");
     page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"colouring.css\" />\n");

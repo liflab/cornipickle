@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="screen.css" />
+<link rel="stylesheet" type="text/css" href="../colouring.css" />
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="cornipickle.js"></script>
+<script type="text/javascript" src="/probe"></script>
+<title>Mojibake - Cornipickle</title>
+<script type="text/javascript">
+// <![CDATA[
+$(document).ready(function() {
+    toggled = false;
+    // Put Cornipickle codde in global var
+    cornipickle_code = $(".cornipickle-code").text();
+    // Colourize each code snippet
+    cornipickle_colourize_all();
+    // Remove onmouseup event on some elements
+    $(".no-event").mouseup(function(event) {
+      event.stopPropagation();
+    });
+    // Add handler to button
+    $("#to-cornipickle").click(function() {
+        add_to_cornipickle(cornipickle_code);
+      });
+    // Move second menu
+    $("#second-menu").css({ "margin-left": "10px"});
+    // Button code
+    $("#misalign-toggle").click(function() {
+        if (toggled)
+        {
+          var text = $("#greeting").text();
+          text = text.replace(/é/g, "Ã©");
+          text = text.replace(/ô/g, "Ã´");
+          text = text.replace(/è/g, "Ã¨");
+          $("#greeting").text(text);
+        }
+        else
+        {
+          var text = $("#greeting").text();
+          text = text.replace(/Ã©/g, "é");
+          text = text.replace(/Ã´/g, "ô");
+          text = text.replace(/Ã¨/g, "è");
+          $("#greeting").text(text);
+        }
+        toggled = !toggled;
+    });
+});
+// ]]>
+</script>
+</head>
+
+<body>
+
+<div id="contents">
+<h1>Mojibake</h1>
+
+<p class="backmenu"><a href="index.html" class="no-event">Back to example list</a></p>
+
+<div class="playground">
+
+<p id="greeting">Accumulez des milles auprÃ¨s de centaines d'hÃ´tels,
+de loueurs de voitures, d'institutions financiÃ¨res, de commerces de
+dÃ©tail, et autres partenaires spÃ©cialisÃ©s.</p>
+
+</div>
+
+<!-- Cornipickle explanation -->
+<div id="cornipickle-explanation">
+
+<h2>What's the problem?</h2>
+<p>The text contains a Mojibake.</p>
+
+<p><button id="misalign-toggle">Toggle mojibake</button></p>
+
+<h2>Detect it with Cornipickle</h2>
+
+
+<div class="cornipickle-square">
+
+<p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
+
+<div class="cornipickle-code">
+# To define a set of elements and name it, we use the construct
+# "A "name of set" is any of "list of elements". Here we define a set of
+# character strings.
+
+A Mojibake is any of "Ã©", "Ã´", "Ã¨".
+
+We say that $x doesn't contain $y when (
+  Not ($x's text matches $y's value)
+).
+  
+"""
+@description Yo
+@name Mojibake
+@severity Warning
+"""
+For each $text in $(CDATA) (
+  For each $mojibake in "Mojibake" ( 
+    $text doesn't contain $mojibake
+  )
+).
+</div>
+
+</div>
+
+</div> <!-- /explanation -->
+
+<div id="footer">
+<hr />
+&copy; 2015 LIF
+</div>
+
+</div> <!-- /contents -->
+
+</body>
+</html>

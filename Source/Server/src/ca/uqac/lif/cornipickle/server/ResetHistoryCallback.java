@@ -50,6 +50,7 @@ public class ResetHistoryCallback extends RequestCallback<CornipickleServer>
     page.append("<html>\n");
     page.append("<head>\n");
     page.append("<title>Cornipickle Properties</title>\n");
+    page.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n");
     //page.append("<script src=\"http://code.jquery.com/jquery-1.11.2.min.js\"></script>\n");
     page.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"screen.css\" />\n");
     page.append("</head>\n");

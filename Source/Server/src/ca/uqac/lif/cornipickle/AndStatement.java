@@ -51,7 +51,8 @@ public class AndStatement extends NAryStatement
       if (out == Verdict.FALSE)
         break;
     }
-    return out;
+    m_verdict = out;
+    return m_verdict;
   }
   
   @Override

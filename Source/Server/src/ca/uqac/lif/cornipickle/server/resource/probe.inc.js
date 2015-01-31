@@ -60,7 +60,7 @@ var CornipickleProbe = function()
 			else
 			{
 				output_something = true;
-				out += indent + " \"tagname\" : \"#CDATA\",\n";
+				out += indent + " \"tagname\" : \"CDATA\",\n";
 				out += indent + " \"text\" : \"" + n.nodeValue + "\"";
 			}
 		}
