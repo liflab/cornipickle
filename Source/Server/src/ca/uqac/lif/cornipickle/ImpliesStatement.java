@@ -24,12 +24,8 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 public class ImpliesStatement extends AndStatement
 {
   @Override
-  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    if (m_verdict != Statement.Verdict.INCONCLUSIVE)
-    {
-      return m_verdict;
-    }
     if (m_statements.size() < 2)
     {
       m_verdict = Verdict.FALSE;

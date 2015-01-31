@@ -28,11 +28,22 @@ public abstract class ComparisonStatement extends Statement
   protected Property m_left;
   protected Property m_right;
   
-  public final Verdict evaluate(JsonElement j, Map<String,JsonElement> d)
+  public final Verdict evaluateTemporal(JsonElement j, Map<String,JsonElement> d)
   {
     JsonElement e1 = m_left.evaluate(j, d);
     JsonElement e2 = m_right.evaluate(j, d);
     return compare(e1, e2);
+  }
+  
+  @Override
+  public final Verdict evaluateAtemporal(JsonElement j, Map<String,JsonElement> d)
+  {
+    return evaluateTemporal(j, d);
+  }
+  
+  public final boolean isTemporal()
+  {
+    return false;
   }
   
   public void resetHistory()

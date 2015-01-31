@@ -26,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
+import ca.uqac.lif.cornipickle.Statement.Verdict;
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonList;
 import ca.uqac.lif.cornipickle.json.JsonParser;
@@ -289,7 +290,15 @@ public class Interpreter
     for (StatementMetadata key : m_statements.keySet())
     {
       Statement s = m_statements.get(key);
-      Statement.Verdict b = s.evaluate(j, d);
+      Statement.Verdict b = Verdict.INCONCLUSIVE;
+      if (s.isTemporal())
+      {
+        b = s.evaluate(j, d);
+      }
+      else
+      {
+        b = s.evaluateAtemporal(j, d);
+      }
       verdicts.put(key, b);
     }
     m_verdicts = verdicts;

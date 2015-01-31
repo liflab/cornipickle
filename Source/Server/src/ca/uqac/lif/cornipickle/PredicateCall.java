@@ -58,12 +58,8 @@ public class PredicateCall extends Statement
   }
 
   @Override
-  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
-        if (m_verdict != Statement.Verdict.INCONCLUSIVE)
-    {
-      return m_verdict;
-    }
     Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
     // Put in the map the values
     for (int i = 0; i < m_captureBlocks.size(); i++)
@@ -73,6 +69,21 @@ public class PredicateCall extends Statement
       new_d.put(var_in_pred, d.get(var_in_match));
     }
     m_verdict = m_predicate.evaluate(j, new_d);
+    return m_verdict;
+  }
+  
+  @Override
+  public Verdict evaluateAtemporal(JsonElement j, Map<String,JsonElement> d)
+  {
+    Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
+    // Put in the map the values
+    for (int i = 0; i < m_captureBlocks.size(); i++)
+    {
+      String var_in_match = m_captureBlocks.get(i);
+      String var_in_pred = m_predicate.getCaptureGroup(i);
+      new_d.put(var_in_pred, d.get(var_in_match));
+    }
+    m_verdict = m_predicate.evaluateAtemporal(j, new_d);
     return m_verdict;
   }
 
@@ -101,5 +112,11 @@ public class PredicateCall extends Statement
   {
     PredicateCall out = new PredicateCall(m_predicate.getClone(), m_matchedString, m_captureBlocks);
     return out;
+  }
+
+  @Override
+  public boolean isTemporal()
+  {
+    return m_predicate.isTemporal();
   }
 }

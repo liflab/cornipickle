@@ -25,12 +25,10 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 
 public abstract class SetExpression extends LanguageElement
 {
-  protected List<JsonElement> m_result;
-  
+
   public SetExpression()
   {
     super();
-    m_result = null;
   }
   
   public final List<JsonElement> evaluate(JsonElement j)
@@ -56,9 +54,5 @@ public abstract class SetExpression extends LanguageElement
   }
   
   public abstract SetExpression getClone();
-  
-  public void resetHistory()
-  {
-    m_result = null;
-  }
+
 }

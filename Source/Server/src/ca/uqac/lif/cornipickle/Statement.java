@@ -38,8 +38,40 @@ public abstract class Statement extends LanguageElement
     Map<String,JsonElement> d = new HashMap<String,JsonElement>();
     return evaluate(j, d);
   }
+  
+  /**
+   * Evaluates a statement in an <em>atemporal</em> way
+   * @param j The page snapshot to use for the evaluation
+   * @return An evaluation verdict. Note that atemporal evaluation
+   *   is never supposed to return INCONCLUSIVE.
+   */
+  public final Verdict evaluateAtemporal(JsonElement j)
+  {
+    Map<String,JsonElement> d = new HashMap<String,JsonElement>();
+    return evaluateAtemporal(j, d);
+  }
 
-  public abstract Verdict evaluate(JsonElement j, Map<String,JsonElement> d);
+  public final Verdict evaluate(JsonElement j, Map<String,JsonElement> d)
+  {
+    if (m_verdict != Verdict.INCONCLUSIVE && isTemporal())
+    {
+      return m_verdict;
+    }
+    return evaluateTemporal(j, d);
+  }
+  
+  public abstract Verdict evaluateAtemporal(JsonElement j, Map<String,JsonElement> d);
+  
+  /**
+   * Checks whether a statement is "temporal". It is so when
+   * the statement contains at least one temporal operator.
+   * @return Temporal or not
+   */
+  public abstract boolean isTemporal();
+  
+  public abstract Verdict evaluateTemporal(JsonElement j, Map<String,JsonElement> d);
+  
+  //public abstract Verdict evaluateATemporal(JsonElement j, Map<String,JsonElement> d);
 
   public static final Verdict threeValuedAnd(Verdict x, Verdict y)
   {

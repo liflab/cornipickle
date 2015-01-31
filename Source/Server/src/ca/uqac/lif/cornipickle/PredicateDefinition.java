@@ -29,49 +29,49 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 public class PredicateDefinition extends Statement
 {
   protected StringConstant m_ruleName;
-  
+
   protected StringConstant m_pattern;
-  
+
   /**
    * What variable name is associated to each capture group
    * in the regex pattern
    */
   protected Vector<String> m_captureGroups;
-  
+
   protected BnfRule m_rule;
-  
+
   protected Statement m_predicate;
-  
+
   public PredicateDefinition(StringConstant ruleName)
   {
     super();
     m_ruleName = ruleName;
     m_captureGroups = new Vector<String>();
   }
-  
+
   @Override
   public void resetHistory()
   {
     m_verdict = Statement.Verdict.INCONCLUSIVE;
     m_predicate.resetHistory();
   }
-  
+
   public void setPattern(StringConstant pattern)
   {
     m_pattern = pattern;
     createBnfRule(pattern.toString()); 
   }
-  
+
   public String getPattern()
   {
     return m_pattern.toString();
   }
-  
+
   public Statement getPredicate()
   {
     return m_predicate;
   }
-  
+
   /**
    * Turns the pattern into a BNF rule for the grammar
    * @param pattern The pattern
@@ -107,32 +107,32 @@ public class PredicateDefinition extends Statement
     // Set the BNF rule or null if parsing failed (should not)
     return out;
   }
-  
+
   public String getCaptureGroup(int i)
   {
     return m_captureGroups.elementAt(i);
   }
-  
+
   public void setStatement(Statement st)
   {
     m_predicate = st;
   }
-  
+
   public String getRuleName()
   {
     return m_ruleName.toString();
   }
-  
+
   public BnfRule getRule()
   {
     return createBnfRule(m_pattern.toString());
   }
-  
+
   public void setRuleName(String name)
   {
     m_ruleName = new StringConstant(name);
   }
-  
+
   public Statement getStatement()
   {
     return m_predicate;
@@ -145,11 +145,17 @@ public class PredicateDefinition extends Statement
   }
 
   @Override
-  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
     return m_predicate.evaluate(j, d);
   }
   
+  @Override
+  public Verdict evaluateAtemporal(JsonElement j, Map<String,JsonElement> d)
+  {
+    return m_predicate.evaluateAtemporal(j, d);
+  }
+
   @Override
   public void prefixAccept(LanguageElementVisitor visitor)
   {
@@ -157,7 +163,7 @@ public class PredicateDefinition extends Statement
     m_predicate.prefixAccept(visitor);
     visitor.pop();
   }
-  
+
   @Override
   public void postfixAccept(LanguageElementVisitor visitor)
   {
@@ -165,7 +171,7 @@ public class PredicateDefinition extends Statement
     visitor.visit(this);
     visitor.pop();
   }
-  
+
   @Override
   public PredicateDefinition getClone()
   {
@@ -173,5 +179,11 @@ public class PredicateDefinition extends Statement
     out.m_captureGroups = m_captureGroups;
     out.m_predicate = m_predicate.getClone();
     return out;
+  }
+
+  @Override
+  public boolean isTemporal()
+  {
+    return m_predicate.isTemporal();
   }
 }

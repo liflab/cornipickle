@@ -92,5 +92,18 @@ public abstract class NAryStatement extends Statement
       n.resetHistory();
     }
   }
+  
+  @Override
+  public boolean isTemporal()
+  {
+    for (Statement s : m_statements)
+    {
+      if (s.isTemporal())
+      {
+        return true;
+      }
+    }
+    return false;
+  }
 
 }

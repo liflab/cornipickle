@@ -1,0 +1,15 @@
+"""
+@description The username must match in the title
+  and the greeting
+@name Matching username II
+@severity Error
+"""
+For each $t in $(h2) (
+  For each $g in $(p.greeting) (
+    For each $u1 in match $t's text with "Homepage for (.*)" (
+      For each $u2 in match $g's text with "Hi (.*)!" (
+        $u1's value equals $u2's value
+      )
+    )
+  )
+).

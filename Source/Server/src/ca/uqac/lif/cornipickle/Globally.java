@@ -50,12 +50,8 @@ public class Globally extends TemporalStatement
   }
 
   @Override
-  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    if (m_verdict != Verdict.INCONCLUSIVE)
-    {
-      return m_verdict;
-    }
     // Instantiate new inner statement
     Statement new_s = m_innerStatement.getClone();
     m_inMonitors.add(new_s);

@@ -23,62 +23,62 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 
 public class Next extends TemporalStatement
 {
-	protected Statement m_innerStatement;
-	
-	protected boolean m_firstEvent;
-	
-	public Next()
-	{
-		super();
-		m_firstEvent = true;
-	}
+  protected Statement m_innerStatement;
 
-	@Override
-	public Next getClone()
-	{
-		Next out = new Next();
-		out.m_innerStatement = m_innerStatement.getClone();
-		return out;
-	}
+  protected boolean m_firstEvent;
 
-	@Override
-	public void resetHistory()
-	{
-	  m_verdict = Statement.Verdict.INCONCLUSIVE;
-		m_firstEvent = true;
-		m_innerStatement.resetHistory();
-	}
+  public Next()
+  {
+    super();
+    m_firstEvent = true;
+  }
 
-	@Override
-	public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
-	{
-		if (m_firstEvent)
-		{
-			m_firstEvent = false;
-			return Verdict.INCONCLUSIVE;
-		}
-		if (m_verdict != Verdict.INCONCLUSIVE)
-		{
-			return m_verdict;
-		}
-		m_verdict = m_innerStatement.evaluate(j, d);
-		return m_verdict;
-	}
-	
-	public void setInnerStatement(Statement s)
-	{
-		m_innerStatement = s;
-	}
+  @Override
+  public Next getClone()
+  {
+    Next out = new Next();
+    out.m_innerStatement = m_innerStatement.getClone();
+    return out;
+  }
 
-	@Override
-	public String toString(String indent)
-	{
-		StringBuilder out = new StringBuilder();
-		out.append(indent).append("Next (\n");
-		out.append(m_innerStatement.toString(indent + "  "));
-		out.append("\n)");
-		return out.toString();
-	}
+  @Override
+  public void resetHistory()
+  {
+    m_verdict = Statement.Verdict.INCONCLUSIVE;
+    m_firstEvent = true;
+    m_innerStatement.resetHistory();
+  }
+
+  @Override
+  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
+  {
+    if (m_firstEvent)
+    {
+      m_firstEvent = false;
+      return Verdict.INCONCLUSIVE;
+    }
+    if (m_verdict != Verdict.INCONCLUSIVE)
+    {
+      return m_verdict;
+    }
+    m_verdict = m_innerStatement.evaluate(j, d);
+    return m_verdict;
+  }
+
+  public void setInnerStatement(Statement s)
+  {
+    m_innerStatement = s;
+  }
+
+  @Override
+  public String toString(String indent)
+  {
+    StringBuilder out = new StringBuilder();
+    out.append(indent).append("Next (\n");
+    out.append(m_innerStatement.toString(indent + "  "));
+    out.append("\n)");
+    return out.toString();
+  }
 
   @Override
   public void postfixAccept(LanguageElementVisitor visitor)
@@ -87,7 +87,7 @@ public class Next extends TemporalStatement
     visitor.visit(this);
     visitor.pop();
   }
-  
+
   @Override
   public void prefixAccept(LanguageElementVisitor visitor)
   {

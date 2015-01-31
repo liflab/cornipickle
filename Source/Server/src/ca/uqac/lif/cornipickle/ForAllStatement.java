@@ -25,16 +25,19 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 
 public class ForAllStatement extends Statement
 {
-  public ForAllStatement()
-  {
-    super();
-  }
-
   protected Statement m_innerStatement;
 
   protected StringConstant m_variable;
 
   protected SetExpression m_set;
+  
+  protected List<JsonElement> m_domain;
+  
+  public ForAllStatement()
+  {
+    super();
+    m_domain = null;
+  }
 
   public void setInnerStatement(Statement s)
   {
@@ -72,17 +75,16 @@ public class ForAllStatement extends Statement
   }
 
   @Override
-  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    if (m_verdict != Statement.Verdict.INCONCLUSIVE)
-    {
-      return m_verdict;
-    }
     // Fetch values for set
-    List<JsonElement> domain = m_set.evaluate(j, d);
+    if (m_domain == null)
+    {
+      m_domain = m_set.evaluate(j, d);
+    }
     // Iterate over values
     Verdict out = Verdict.TRUE;
-    for (JsonElement v : domain)
+    for (JsonElement v : m_domain)
     {
       Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
       new_d.put(m_variable.toString(), v);
@@ -95,10 +97,29 @@ public class ForAllStatement extends Statement
     return m_verdict;
   }
   
+  @Override
+  public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
+  {
+    List<JsonElement> domain = m_set.evaluate(j, d);
+    // Iterate over values
+    Verdict out = Verdict.TRUE;
+    for (JsonElement v : domain)
+    {
+      Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
+      new_d.put(m_variable.toString(), v);
+      Verdict b = m_innerStatement.evaluateAtemporal(j, new_d);
+      out = threeValuedAnd(out, b);
+      if (out == Verdict.FALSE)
+        break;
+    }
+    m_verdict = out;
+    return m_verdict;
+  }
+  
   public void resetHistory()
   {
     m_verdict = Verdict.INCONCLUSIVE;
-    m_set.resetHistory();
+    m_domain = null;
     m_innerStatement.resetHistory();
   }
 
@@ -138,5 +159,11 @@ public class ForAllStatement extends Statement
     out.m_variable = m_variable;
     out.m_set = m_set.getClone();
     return out;
+  }
+
+  @Override
+  public boolean isTemporal()
+  {
+    return m_innerStatement.isTemporal();
   }
 }

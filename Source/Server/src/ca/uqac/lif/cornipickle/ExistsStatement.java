@@ -20,18 +20,37 @@ package ca.uqac.lif.cornipickle;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import ca.uqac.lif.cornipickle.json.JsonElement;
 
 public class ExistsStatement extends ForAllStatement
 {
   @Override
-  public Verdict evaluate(JsonElement j, Map<String, JsonElement> d)
+  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
-        if (m_verdict != Statement.Verdict.INCONCLUSIVE)
-    {
-      return m_verdict;
-    }
     // Fetch values for set
+    if (m_domain != null)
+    {
+      m_domain = m_set.evaluate(j, d);
+    }
+    // Iterate over values
+    Verdict out = Verdict.FALSE;
+    for (JsonElement v : m_domain)
+    {
+      Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
+      new_d.put(m_variable.toString(), v);
+      Verdict b = m_innerStatement.evaluate(j, new_d);
+      out = threeValuedOr(out, b);
+      if (out == Verdict.TRUE)
+        break;
+    }
+    m_verdict = out;
+    return m_verdict;
+  }
+  
+  @Override
+  public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
+  {
     List<JsonElement> domain = m_set.evaluate(j, d);
     // Iterate over values
     Verdict out = Verdict.FALSE;
@@ -39,7 +58,7 @@ public class ExistsStatement extends ForAllStatement
     {
       Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
       new_d.put(m_variable.toString(), v);
-      Verdict b = m_innerStatement.evaluate(j, new_d);
+      Verdict b = m_innerStatement.evaluateAtemporal(j, new_d);
       out = threeValuedOr(out, b);
       if (out == Verdict.TRUE)
         break;

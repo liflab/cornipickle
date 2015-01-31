@@ -17,11 +17,29 @@
  */
 package ca.uqac.lif.cornipickle;
 
+import java.util.Map;
+
+import ca.uqac.lif.cornipickle.json.JsonElement;
+
 public abstract class TemporalStatement extends Statement
 {
-	// Force descendants to override Statement's getClone()
-	public abstract Statement getClone();
-	
-	// Force descendants to override Statement's resetHistory()
-	public abstract void resetHistory();
+  // Force descendants to override Statement's getClone()
+  public abstract Statement getClone();
+
+  // Force descendants to override Statement's resetHistory()
+  public abstract void resetHistory();
+
+  @Override
+  public final boolean isTemporal()
+  {
+    return true;
+  }
+  
+  @Override
+  public final Verdict evaluateAtemporal(JsonElement j, Map<String,JsonElement> d)
+  {
+    // Not supposed to happen!
+    System.err.println("Attempting to evaluate temporal statement with atemporal");
+    return null;
+  }
 }

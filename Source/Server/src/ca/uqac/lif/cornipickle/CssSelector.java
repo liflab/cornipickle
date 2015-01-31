@@ -64,12 +64,7 @@ public class CssSelector extends SetExpression
       assert false;
       return null; // Should not happen
     }
-    if (m_result != null)
-    {
-      return m_result;
-    }
-    m_result = fetch(m_cssSelector, (JsonMap) j);
-    return m_result;
+    return fetch(m_cssSelector, (JsonMap) j);
   }
   
   protected static List<JsonElement> fetch(String css_expression, JsonMap root)

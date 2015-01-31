@@ -10,7 +10,7 @@
 <script type="text/javascript" src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
 <script type="text/javascript" src="cornipickle.js"></script>
 <script type="text/javascript" src="/probe"></script>
-<title>Matching username, part I - Cornipickle</title>
+<title>Temporal vs. atemporal properties - Cornipickle</title>
 <script type="text/javascript">
 // <![CDATA[
 $(document).ready(function() {
@@ -49,7 +49,7 @@ $(document).ready(function() {
 <body>
 
 <div id="contents">
-<h1>Example</h1>
+<h1>Temporal vs. atemporal properties</h1>
 
 <p class="backmenu"><a href="index.html" class="no-event">Back to example list</a></p>
 
@@ -65,10 +65,14 @@ $(document).ready(function() {
 <div id="cornipickle-explanation">
 
 <h2>What's the problem?</h2>
-<p>The title says the page is Bill's, yet the next paragraph greets
-Joe.</p>
+<p>The first property is <em>atemporal</em>: it returns true or false on every
+snapshot received. The second is <em>temporal</em>.</p>
+<p>A property that does not contain any temporal operator (Always, Next, etc.)
+can be evaluated either in atemporal (default) or temporal mode. When
+evaluated in temporal mode, the assertion applies only to the first
+snapshot on which it is evaluated.</p>
 
-<p><button id="misalign-toggle">Toggle misalignment</button></p>
+<p><button id="misalign-toggle">Toggle username</button></p>
 
 <h2>Detect it with Cornipickle</h2>
 
@@ -81,12 +85,26 @@ Joe.</p>
 """
 @description The value in every "username" span 
   must be the same
-@name Matching username
+@name Matching username: atemporal
 @severity Error
 """
 For each $x in $(.username) (
   For each $y in $(.username) (
     $x's text equals $y's text
+  )
+).
+
+"""
+@description The value in every "username" span 
+  must be the same
+@name Matching username: temporal
+@severity Error
+"""
+Always (
+  For each $x in $(.username) (
+    For each $y in $(.username) (
+      $x's text equals $y's text
+    )
   )
 ).
 </div>
