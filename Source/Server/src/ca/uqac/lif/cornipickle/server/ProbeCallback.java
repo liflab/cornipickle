@@ -23,6 +23,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
+import java.util.Set;
 
 import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
 
@@ -44,14 +45,11 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
    * The processor used to minify the JavaScript code
    */
   protected static JSMinProcessor s_jsMinProcessor;
-  
-  protected final String m_probeCode;
 
   public ProbeCallback(CornipickleServer s)
   {
     super(s);
     s_jsMinProcessor = new JSMinProcessor();
-    m_probeCode = generateProbeCode();
   }
 
   public ProbeCallback(CornipickleServer s, boolean minify)
@@ -71,7 +69,8 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
   @Override
   public boolean process(HttpExchange t)
   {
-    m_server.sendResponse(t, Server.HTTP_OK, m_probeCode, "application/javascript");
+    String probe_code = generateProbeCode();
+    m_server.sendResponse(t, Server.HTTP_OK, probe_code, "application/javascript");
     return true;
   }
   
@@ -84,6 +83,13 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
       probe_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/probe.inc.js"));
       probe_code = probe_code.replace("%%WITNESS_CODE%%", CornipickleServer.escapeString(witness_code));
       probe_code = probe_code.replace("%%SERVER_NAME%%", m_server.getServerName() + ":" + CornipickleServer.s_defaultPort);
+      Set<String> attributes = m_server.m_interpreter.getAttributes();
+      StringBuilder attribute_string = new StringBuilder();
+      for (String att : attributes)
+      {
+        attribute_string.append("\"").append(att).append("\",");
+      }
+      probe_code = probe_code.replace("/*%%ATTRIBUTE_LIST%%*/", attribute_string.toString());
       if (m_minifyJavaScript)
       {
         probe_code = minifyJs(probe_code);

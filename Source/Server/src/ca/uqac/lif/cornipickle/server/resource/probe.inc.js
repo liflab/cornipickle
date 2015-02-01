@@ -12,6 +12,22 @@
 var CornipickleProbe = function()
 {
 	/**
+	 * An array of DOM attributes to include. Results in a smaller
+	 * JSON by reporting only attributes that appear in the properties
+	 * to evaluate.
+	 */
+	this.m_attributesToInclude = [/*%%ATTRIBUTE_LIST%%*/];
+	
+	/**
+	 * Sets the attributes to include in the JSON
+	 * @param list An array of DOM attribute names
+	 */
+	this.setAttributesToInclude = function(list)
+	{
+		this.m_attributesToInclude = list;
+	};
+	
+	/**
 	 * Serializes the contents of the page. This method recursively
 	 * traverses the DOM and produces a JSON structure of some of
 	 * its elements' properties
@@ -89,9 +105,14 @@ var CornipickleProbe = function()
 
 	this.addIfDefined = function(out, property_name, property)
 	{
-		if (property !== undefined && property !== "")
+		// First check if this attribute must be included in the report
+		if (array_contains(this.m_attributesToInclude, property_name))
 		{
-			out[property_name] = property;
+			// Yes, now check if it is defined 
+			if (property !== undefined && property !== "")
+			{
+				out[property_name] = property;
+			}
 		}
 		return out;
 	};
@@ -290,6 +311,24 @@ var cumulativeOffset = function(element)
 		top: top,
 		left: left
 	};
+};
+
+/**
+ * Checks if an array contains an element
+ * @param a The array
+ * @param obj The element
+ * @return True or false
+ */
+var array_contains = function(a, obj)
+{
+    for (var i = 0; i < a.length; i++)
+    {
+        if (a[i] === obj)
+        {
+            return true;
+        }
+    }
+    return false;
 };
 
 window.onload = function()

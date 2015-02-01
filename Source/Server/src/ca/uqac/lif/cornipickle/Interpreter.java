@@ -19,9 +19,11 @@ package ca.uqac.lif.cornipickle;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,6 +79,17 @@ public class Interpreter
       s.resetHistory();
       m_verdicts.put(key, Statement.Verdict.INCONCLUSIVE);
     }
+  }
+  
+  public Set<String> getAttributes()
+  {
+    Set<String> out = new HashSet<String>();
+    for (StatementMetadata m : m_statements.keySet())
+    {
+      Statement s = m_statements.get(m);
+      out.addAll(AttributeExtractor.getAttributes(s));
+    }
+    return out;
   }
   
   public void parseProperties(String properties) throws ParseException
