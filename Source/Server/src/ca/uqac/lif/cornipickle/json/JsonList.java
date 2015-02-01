@@ -33,6 +33,23 @@ public class JsonList extends JsonElement implements List<JsonElement>
     m_list = new LinkedList<JsonElement>();
   }
   
+  public static String toJsonString(Collection<String> list)
+  {
+    StringBuilder out = new StringBuilder();
+    out.append("[");
+    boolean first = true;
+    for (String s : list)
+    {
+      if (first)
+        first = false;
+      else
+        out.append(", ");
+      out.append("\"").append(s).append("\"");
+    }
+    out.append("]");
+    return out.toString();
+  }
+  
   @Override
   public String toString(String indent)
   {

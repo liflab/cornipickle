@@ -92,6 +92,17 @@ public class Interpreter
     return out;
   }
   
+  public Set<String> getTagNames()
+  {
+    Set<String> out = new HashSet<String>();
+    for (StatementMetadata m : m_statements.keySet())
+    {
+      Statement s = m_statements.get(m);
+      out.addAll(TagNameExtractor.getTags(s));
+    }
+    return out;
+  }
+  
   public void parseProperties(String properties) throws ParseException
   {
     String[] lines = properties.split("\n");

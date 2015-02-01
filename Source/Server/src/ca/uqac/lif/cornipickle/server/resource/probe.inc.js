@@ -19,12 +19,28 @@ var CornipickleProbe = function()
 	this.m_attributesToInclude = [/*%%ATTRIBUTE_LIST%%*/];
 	
 	/**
+	 * An array of tag names attributes to include. Results in a smaller
+	 * JSON by reporting only tags that appear in the properties
+	 * to evaluate.
+	 */
+	this.m_tagsToInclude = [/*%%TAG_LIST%%*/];
+	
+	/**
 	 * Sets the attributes to include in the JSON
 	 * @param list An array of DOM attribute names
 	 */
 	this.setAttributesToInclude = function(list)
 	{
 		this.m_attributesToInclude = list;
+	};
+	
+	/**
+	 * Sets the tag names to include in the JSON
+	 * @param list An array of tag names
+	 */
+	this.setTagNamesToInclude = function(list)
+	{
+		this.m_tagsToInclude = list;
 	};
 	
 	/**
@@ -70,8 +86,7 @@ var CornipickleProbe = function()
 			{
 				var child = n.childNodes[i];
 				var new_child = this.serializePageContents(child, current_path);
-				// We check if we received the empty object by looking for tagname
-				if (new_child.tagname)
+				if (!is_empty(new_child))
 				{
 					in_children.push(new_child);
 				}
@@ -87,8 +102,9 @@ var CornipickleProbe = function()
 	this.addDimensions = function(dimensions)
 	{
 		var sum = 0;
-		for (var d in dimensions)
+		for (var i = 0; i < dimensions.length; i++)
 		{
+			var d = dimensions[i];
 			sum += this.removeUnits(d);
 		}
 		return sum;
@@ -131,7 +147,35 @@ var CornipickleProbe = function()
 				return CornipickleProbe.DONT_INCLUDE_RECURSIVE;
 			}
 		}
-		return CornipickleProbe.INCLUDE;
+		for (var i = 0; i < this.m_tagsToInclude.length; i++)
+		{
+			var part = this.m_tagsToInclude[i];
+			if (part[0] === ".")
+			{
+				// This is a class
+				if (n.className && n.className.contains(part.substring(1)))
+				{
+					console.log("Including " + n.tagName + "." + n.className);
+					return CornipickleProbe.INCLUDE;
+				}
+			}
+			else if (part[0] === "#")
+			{
+				// This is an id
+				if (n.id && n.id === part.substring(1))
+				{
+					return CornipickleProbe.INCLUDE;
+				}				
+			}
+			else
+			{
+				if (n.tagName && n.tagName === part)
+				{
+					return CornipickleProbe.INCLUDE;
+				}
+			}
+		}
+		return CornipickleProbe.DONT_INCLUDE;
 	};
 
 	this.serializeWindow = function(page_contents)
@@ -329,6 +373,18 @@ var array_contains = function(a, obj)
         }
     }
     return false;
+};
+
+/**
+ * Checks if an object is empty
+ */
+var is_empty = function(object)
+{
+	for (var i in object)
+	{
+		return false;
+	}
+	return true;
 };
 
 window.onload = function()

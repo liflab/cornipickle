@@ -20,48 +20,40 @@ package ca.uqac.lif.cornipickle;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AttributeExtractor implements LanguageElementVisitor
+public class TagNameExtractor implements LanguageElementVisitor
 {
-  protected Set<String> m_attributes;
+  protected Set<String> m_tags;
   
-  public AttributeExtractor()
+  public TagNameExtractor()
   {
     super();
-    m_attributes = new HashSet<String>();
+    m_tags = new HashSet<String>();
   }
   
-  public static Set<String> getAttributes(LanguageElement le)
+  public static Set<String> getTags(LanguageElement le)
   {
-    AttributeExtractor ae = new AttributeExtractor();
+    TagNameExtractor ae = new TagNameExtractor();
     le.prefixAccept(ae);
-    return ae.m_attributes;
+    return ae.m_tags;
   }
 
   @Override
   public void visit(LanguageElement element)
   {
-    if (element instanceof ElementProperty)
+    if (element instanceof CssSelector)
     {
-      ElementProperty prop = (ElementProperty) element;
-      m_attributes.add(prop.getPropertyName());
+      CssSelector css = (CssSelector) element;
+      String selector = css.getSelector();
+      String[] parts = selector.split(" ");
+      for (String part : parts)
+      {
+        m_tags.add(part);
+      }
     }
     else if (element instanceof PredicateCall)
     {
       PredicateCall pc = (PredicateCall) element;
-      m_attributes.addAll(AttributeExtractor.getAttributes(pc.getPredicateDefinition()));
-    }
-    else if (element instanceof CssSelector)
-    {
-      CssSelector css = (CssSelector) element;
-      String selector = css.getSelector();
-      if (selector.contains("."))
-      {
-        m_attributes.add("class");
-      }
-      if (selector.contains("#"))
-      {
-        m_attributes.add("id");
-      }
+      m_tags.addAll(TagNameExtractor.getTags(pc.getPredicateDefinition()));
     }
   }
 
@@ -70,5 +62,4 @@ public class AttributeExtractor implements LanguageElementVisitor
   {
     // Do nothing
   }
-
 }

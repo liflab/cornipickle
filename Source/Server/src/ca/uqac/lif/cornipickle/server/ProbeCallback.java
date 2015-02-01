@@ -83,6 +83,7 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
       probe_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/probe.inc.js"));
       probe_code = probe_code.replace("%%WITNESS_CODE%%", CornipickleServer.escapeString(witness_code));
       probe_code = probe_code.replace("%%SERVER_NAME%%", m_server.getServerName() + ":" + CornipickleServer.s_defaultPort);
+      // Add attributes to include
       Set<String> attributes = m_server.m_interpreter.getAttributes();
       StringBuilder attribute_string = new StringBuilder();
       for (String att : attributes)
@@ -90,6 +91,13 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
         attribute_string.append("\"").append(att).append("\",");
       }
       probe_code = probe_code.replace("/*%%ATTRIBUTE_LIST%%*/", attribute_string.toString());
+      Set<String> tags = m_server.m_interpreter.getTagNames();
+      StringBuilder tag_string = new StringBuilder();
+      for (String tag : tags)
+      {
+        tag_string.append("\"").append(tag).append("\",");
+      }
+      probe_code = probe_code.replace("/*%%TAG_LIST%%*/", tag_string.toString());
       if (m_minifyJavaScript)
       {
         probe_code = minifyJs(probe_code);

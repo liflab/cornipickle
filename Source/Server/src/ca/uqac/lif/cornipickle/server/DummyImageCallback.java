@@ -88,7 +88,7 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
         String json_decoded = URLDecoder.decode(json_encoded, "UTF-8");
         j = s_jsonParser.parse(json_decoded);
         System.out.println("JSON received");
-        //System.out.println(json_decoded);
+        System.out.println(json_decoded);
       }
       catch (JsonParseException e)
       {
