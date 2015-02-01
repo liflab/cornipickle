@@ -5,107 +5,81 @@
 /* This code found on http://stackoverflow.com/questions/1480133/how-can-i-get-an-objects-absolute-position-on-the-page-in-javascript
    ----------------- */
 
-var cumulativeOffset = function(element)
-{
-	var top = 0, left = 0;
-	do
-	{
-		top += element.offsetTop  || 0;
-		left += element.offsetLeft || 0;
-		element = element.offsetParent;
-	} while(element);
 
-	return {
-		top: top,
-		left: left
-	};
-};
 
 /* ----------------- */
 
 var CornipickleProbe = function()
 {
-	this.handleXhrResponse = function()
+	/**
+	 * Serializes the contents of the page. This method recursively
+	 * traverses the DOM and produces a JSON structure of some of
+	 * its elements' properties
+	 * @param n The DOM node to analyze
+	 * @param path The path from the root of the DOM, expressed as
+	 *   an array of tag names 
+	 */
+	this.serializePageContents = function(n, path)
 	{
-		// Update notification icon to indicate that the transmission is over
-		CornipickleProbe.updateTransmitIcon(false);
-	};
-
-	this.serializePageContents = function(n, path, indent)
-	{
-		var n_indent = indent + " ";
 		var current_path = path;
 		current_path.push(n.tagName);
-		var output_something = false;
-		var out = "";
-		out += indent + "{\n";
+		var out = {};
 		if (this.includeInResult(n, path) === CornipickleProbe.INCLUDE)
 		{
-
 			if (n.tagName)
 			{
-				output_something = true;
 				var pos = cumulativeOffset(n);
-				out += indent + " \"tagname\" : \"" + n.tagName.toLowerCase() + "\"\n";
-				out += this.outputStringIfDefined("class", n.className, n_indent);
-				out += this.outputStringIfDefined("id", n.id, n_indent);
-				out += this.outputNumberIfDefined("height", n.clientHeight, n_indent);
-				out += this.outputNumberIfDefined("width", n.clientWidth, n_indent);
-				out += this.outputStringIfDefined("border", CornipickleProbe.formatBorderString(n), n_indent);
-				out += this.outputNumberIfDefined("top", pos.top, n_indent);
-				out += this.outputNumberIfDefined("left", pos.left, n_indent);
-				out += this.outputNumberIfDefined("bottom", pos.top + n.clientHeight, n_indent);
-				out += this.outputNumberIfDefined("right", pos.left + n.clientWidth, n_indent);
+				out.tagname = n.tagName.toLowerCase();
+				out = this.addIfDefined(out, "class", n.className);
+				out = this.addIfDefined(out, "id", n.id);
+				out = this.addIfDefined(out, "height", n.clientHeight);
+				out = this.addIfDefined(out, "width", n.clientWidth);
+				out = this.addIfDefined(out, "border", CornipickleProbe.formatBorderString(n));
+				out = this.addIfDefined(out, "top", pos.top);
+				out = this.addIfDefined(out, "left", pos.left);
+				out = this.addIfDefined(out, "bottom", this.addDimensions([pos.top, n.clientHeight]));
+				out = this.addIfDefined(out, "right", this.addDimensions([pos.left,  n.clientWidth]));
 			}
 			else
 			{
-				output_something = true;
-				out += indent + " \"tagname\" : \"CDATA\",\n";
-				out += indent + " \"text\" : \"" + n.nodeValue + "\"";
+				out.tagname = "CDATA";
+				out.text = n.nodeValue;
+				return out;
 			}
 		}
 		if (this.includeInResult(n, path) !== CornipickleProbe.DONT_INCLUDE_RECURSIVE)
 		{
-			var in_children = "";
-			var first = true;
+			var in_children = [];
 			for (var i = 0; i < n.childNodes.length; i++)
 			{
 				var child = n.childNodes[i];
-				new_child = this.serializePageContents(child, current_path, n_indent + " ");
-				if (new_child.trim() !== "")
+				var new_child = this.serializePageContents(child, current_path);
+				// We check if we received the empty object by looking for tagname
+				if (new_child.tagname)
 				{
-					if (first)
-					{
-						first = false;
-					}
-					else
-					{
-						in_children += ",\n";
-					}
-					in_children += new_child;
+					in_children.push(new_child);
 				}
 			}
-			if (in_children.trim() === "")
+			if (in_children.length > 0)
 			{
-				//out += indent + "  \"children\" : [ ]\n";
+				out.children = in_children;
 			}
-			else
-			{
-				output_something = true;
-				out += ",\n" + indent + " \"children\" : [\n" + in_children + indent + "\n" + indent + " ]\n";
-			}
-		}
-		out += indent + "}";
-		if (!output_something)
-		{
-			return "";
 		}
 		return out;
 	};
-
-	this.ru = function(s)
+	
+	this.addDimensions = function(dimensions)
 	{
-		// ru as in remove units
+		var sum = 0;
+		for (var d in dimensions)
+		{
+			sum += this.removeUnits(d);
+		}
+		return sum;
+	};
+
+	this.removeUnits = function(s)
+	{
 		if (typeof s == "string" || s instanceof String)
 		{
 			s = s.replace("px", "");
@@ -113,31 +87,18 @@ var CornipickleProbe = function()
 		return Number(s);
 	};
 
-	this.outputStringIfDefined = function(property_name, property, indent)
+	this.addIfDefined = function(out, property_name, property)
 	{
 		if (property !== undefined && property !== "")
 		{
-			return ",\n" + indent + "\"" + property_name + "\" : \"" + property + "\"";
+			out[property_name] = property;
 		}
-		return "";
-	};
-
-	this.outputNumberIfDefined = function(property_name, property, indent)
-	{
-		if (property !== undefined && property !== "")
-		{
-			return ",\n" + indent + "\"" + property_name + "\" : " + property;
-		}
-		return "";
+		return out;
 	};
 
 	this.includeInResult = function(n, path)
 	{
-		if (n.id == "cp-witness") // This is the probe itself
-		{
-			return CornipickleProbe.DONT_INCLUDE_RECURSIVE;
-		}
-		if (n.id == "cornipickle-explanation") // Special page
+		if (n.className && n.className.contains("nocornipickle")) // This is the probe itself
 		{
 			return CornipickleProbe.DONT_INCLUDE_RECURSIVE;
 		}
@@ -154,14 +115,18 @@ var CornipickleProbe = function()
 
 	this.serializeWindow = function(page_contents)
 	{
-		out = "{\n";
-		out += " \"tagname\" : \"window\"";
-		out += ",\n \"width\" : " + window.innerWidth;
-		out += ",\n \"height\" : " + window.innerHeight;
-		out += ",\n \"children\" : [\n";
-		out += page_contents;
-		out += " ]\n";
-		out += "}";
+		return {
+			"tagname" : "window",
+			"width" : window.innerWidth,
+			"height" : window.innerHeight,
+			"children" : [ page_contents ]
+		};
+	};
+
+	this.serializeEvent = function(event)
+	{
+		out = {};
+		// TODO
 		return out;
 	};
 
@@ -170,9 +135,9 @@ var CornipickleProbe = function()
 		console.log("Click");
 		CornipickleProbe.updateTransmitIcon(true);
 		// Serialize page contents
-		var json = cp_probe.serializePageContents(document.body, [], "  ");
+		var json = cp_probe.serializePageContents(document.body, []);
 		json = cp_probe.serializeWindow(json);
-		var json_url = encodeURIComponent(json);
+		var json_url = encodeURIComponent(JSON.stringify(json, function(key, value) { return value; }));
 		var url = "http://%%SERVER_NAME%%/image?rand=" + Math.round(Math.random() * 1000);
 		document.getElementById("cp-image").src = url + "&contents=" + json_url;
 		window.setTimeout(CornipickleProbe.handleResponse, 1500);
@@ -247,6 +212,7 @@ CornipickleProbe.handleResponse = function()
 {
 	// Decode 
 	var cookie_string = CornipickleProbe.getCookie("cornipickle");
+	// eval is evil, but we can't assume JSON.parse is available
 	eval("var response = " + decodeURI(cookie_string)); // jshint ignore:line
 	if (response["global-verdict"] === "TRUE")
 	{
@@ -279,6 +245,8 @@ CornipickleProbe.formatBorderString = function(elem)
 /**
  * Retrieves the value of a cookie in a cookie string.
  * Found from <a href="http://stackoverflow.com/a/22852843">Stack Overflow</a>
+ * @param c_name The cookie's name
+ * @return The cookie's value
  */
 CornipickleProbe.getCookie = function(c_name)
 {
@@ -299,6 +267,29 @@ CornipickleProbe.getCookie = function(c_name)
 		c_value = unescape(c_value.substring(c_start,c_end));
 	}
 	return c_value;
+};
+
+/**
+ * Computes the absolute coordinates of an element
+ * with respect to the document
+ * @param element The element to get the position
+ * @return A JSON structure giving the cumulative top and left
+ *   properties
+ */
+var cumulativeOffset = function(element)
+{
+	var top = 0, left = 0;
+	do
+	{
+		top += element.offsetTop  || 0;
+		left += element.offsetLeft || 0;
+		element = element.offsetParent;
+	} while(element);
+
+	return {
+		top: top,
+		left: left
+	};
 };
 
 window.onload = function()
