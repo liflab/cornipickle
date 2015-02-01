@@ -29,7 +29,7 @@ import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.Statement.Verdict;
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonList;
-import ca.uqac.lif.cornipickle.json.JsonParser;
+import ca.uqac.lif.cornipickle.json.JsonSlowParser;
 import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
 import ca.uqac.lif.util.FileReadWrite;
 
@@ -60,7 +60,7 @@ public class Interpreter
     String json_filename = args[1];
     String corni_file_contents = FileReadWrite.readFile(corni_filename);
     String json_file_contents = FileReadWrite.readFile(json_filename);
-    JsonElement jse = JsonParser.parse(json_file_contents);
+    JsonElement jse = new JsonSlowParser().parse(json_file_contents);
     
     Interpreter interpreter = new Interpreter();
     interpreter.parseProperties(corni_file_contents);

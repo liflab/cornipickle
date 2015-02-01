@@ -1,0 +1,212 @@
+{
+ "tagname" : "window",
+ "width" : 1194,
+ "height" : 397,
+ "children" : [
+  {
+   "tagname" : "body"
+,
+   "height" : 1031,
+   "width" : 1165,
+   "border" : "none rgb(0, 0, 0) 0px",
+   "top" : 0,
+   "left" : 0,
+   "bottom" : 1031,
+   "right" : 1165,
+   "children" : [
+    {
+     "tagname" : "div"
+,
+     "id" : "contents",
+     "height" : 1031,
+     "width" : 1165,
+     "border" : "none rgb(0, 0, 0) 0px",
+     "top" : 21,
+     "left" : 8,
+     "bottom" : 1052,
+     "right" : 1173,
+     "children" : [
+      {
+       "tagname" : "h1"
+,
+       "height" : 38,
+       "width" : 1165,
+       "border" : "none rgb(0, 0, 0) 0px",
+       "top" : 21,
+       "left" : 8,
+       "bottom" : 59,
+       "right" : 1173,
+       "children" : [
+        {
+         "tagname" : "CDATA",
+         "text" : "Example"        }      
+       ]
+      },
+      {
+       "tagname" : "p"
+,
+       "class" : "backmenu",
+       "height" : 19,
+       "width" : 1165,
+       "border" : "none rgb(0, 0, 0) 0px",
+       "top" : 81,
+       "left" : 8,
+       "bottom" : 100,
+       "right" : 1173,
+       "children" : [
+        {
+         "tagname" : "a"
+,
+         "class" : "no-event",
+         "height" : 0,
+         "width" : 0,
+         "border" : "none rgb(0, 0, 238) 0px",
+         "top" : 81,
+         "left" : 8,
+         "bottom" : 81,
+         "right" : 8,
+         "children" : [
+          {
+           "tagname" : "CDATA",
+           "text" : "Back to example list"          }        
+         ]
+        }      
+       ]
+      },
+      {
+       "tagname" : "div"
+,
+       "class" : "playground",
+       "height" : 148,
+       "width" : 914,
+       "border" : "solid rgb(169, 169, 169) 1px",
+       "top" : 116,
+       "left" : 8,
+       "bottom" : 264,
+       "right" : 922,
+       "children" : [
+        {
+         "tagname" : "ul"
+,
+         "class" : "menu",
+         "height" : 76,
+         "width" : 874,
+         "border" : "none rgb(0, 0, 0) 0px",
+         "top" : 153,
+         "left" : 29,
+         "bottom" : 229,
+         "right" : 903,
+         "children" : [
+          {
+           "tagname" : "li"
+,
+           "height" : 19,
+           "width" : 834,
+           "border" : "none rgb(0, 0, 0) 0px",
+           "top" : 153,
+           "left" : 69,
+           "bottom" : 172,
+           "right" : 903,
+           "children" : [
+            {
+             "tagname" : "CDATA",
+             "text" : "First menu item"            }          
+           ]
+          },
+          {
+           "tagname" : "li"
+,
+           "id" : "second-menu",
+           "height" : 19,
+           "width" : 824,
+           "border" : "none rgb(0, 0, 0) 0px",
+           "top" : 172,
+           "left" : 79,
+           "bottom" : 191,
+           "right" : 903,
+           "children" : [
+            {
+             "tagname" : "CDATA",
+             "text" : "Second menu item"            }          
+           ]
+          },
+          {
+           "tagname" : "li"
+,
+           "height" : 19,
+           "width" : 834,
+           "border" : "none rgb(0, 0, 0) 0px",
+           "top" : 191,
+           "left" : 69,
+           "bottom" : 210,
+           "right" : 903,
+           "children" : [
+            {
+             "tagname" : "CDATA",
+             "text" : "Another menu item"            }          
+           ]
+          },
+          {
+           "tagname" : "li"
+,
+           "height" : 19,
+           "width" : 834,
+           "border" : "none rgb(0, 0, 0) 0px",
+           "top" : 210,
+           "left" : 69,
+           "bottom" : 229,
+           "right" : 903,
+           "children" : [
+            {
+             "tagname" : "CDATA",
+             "text" : "Final menu item"            }          
+           ]
+          }        
+         ]
+        }      
+       ]
+      },
+      {
+       "tagname" : "CDATA",
+       "text" : " Cornipickle explanation "      },
+      {
+       "tagname" : "CDATA",
+       "text" : " /explanation "      },
+      {
+       "tagname" : "div"
+,
+       "class" : "nocornipickle",
+       "id" : "footer",
+       "height" : 29,
+       "width" : 1165,
+       "border" : "none rgb(0, 0, 0) 0px",
+       "top" : 1024,
+       "left" : 8,
+       "bottom" : 1053,
+       "right" : 1173,
+       "children" : [
+        {
+         "tagname" : "hr"
+,
+         "height" : 0,
+         "width" : 1163,
+         "border" : "inset rgb(128, 128, 128) 1px",
+         "top" : 1024,
+         "left" : 8,
+         "bottom" : 1024,
+         "right" : 1171        },
+        {
+         "tagname" : "CDATA",
+         "text" : "
+© 2015 LIF
+"        }      
+       ]
+      }    
+     ]
+    },
+    {
+     "tagname" : "CDATA",
+     "text" : " /contents "    }  
+   ]
+  } ]
+}

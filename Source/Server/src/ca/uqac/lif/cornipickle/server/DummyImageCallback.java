@@ -25,6 +25,7 @@ import java.util.Map;
 import ca.uqac.lif.cornipickle.Statement;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.cornipickle.json.JsonFastParser;
 import ca.uqac.lif.cornipickle.json.JsonParser;
 import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
 import ca.uqac.lif.httpserver.Cookie;
@@ -53,10 +54,13 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
    */  
   static final byte[] s_dummyImageGreen = InnerFileServer.readBytes(
       CornipickleServer.class.getResourceAsStream("resource/dummy-image-green.png"));
+  
+  static JsonParser s_jsonParser;
 
   public DummyImageCallback(CornipickleServer s)
   {
     super(s);
+    s_jsonParser = new JsonFastParser();
   }
 
   @Override
@@ -82,7 +86,7 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
       try
       {
         String json_decoded = URLDecoder.decode(json_encoded, "UTF-8");
-        j = JsonParser.parse(json_decoded);
+        j = s_jsonParser.parse(json_decoded);
         System.out.println("JSON received");
         //System.out.println(json_decoded);
       }

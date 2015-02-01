@@ -20,13 +20,15 @@ import ca.uqac.lif.util.FileReadWrite;
 public class JsonTest
 {
   BnfParser parser;
+  JsonParser j_parser;
   
   @Before
   public void setUp() throws Exception
   {
     parser = new BnfParser();
-    String grammar = PackageFileReader.readPackageFile(JsonParser.getGrammarStream());
+    String grammar = PackageFileReader.readPackageFile(JsonSlowParser.getGrammarStream());
     parser.setGrammar(grammar);
+    j_parser = new JsonFastParser();
   }
 
   @Test
@@ -92,7 +94,7 @@ public class JsonTest
   public void testParser1() throws IOException, JsonParseException
   {
     String json = FileReadWrite.readFile("data/sample.json");
-    JsonElement jse = JsonParser.parse(json);
+    JsonElement jse = j_parser.parse(json);
     if (jse == null)
     {
       fail("Element is null");
@@ -103,7 +105,7 @@ public class JsonTest
   public void testParser4() throws IOException, JsonParseException
   {
     String json = FileReadWrite.readFile("data/sample-5.json");
-    JsonElement jse = JsonParser.parse(json);
+    JsonElement jse = j_parser.parse(json);
     if (jse == null)
     {
       fail("Element is null");
@@ -114,7 +116,7 @@ public class JsonTest
   public void testParser2() throws IOException, JsonParseException
   {
     String json = FileReadWrite.readFile("data/sample-2.json");
-    JsonElement jse = JsonParser.parse(json);
+    JsonElement jse = j_parser.parse(json);
     if (jse == null)
     {
       fail("Element is null");
@@ -124,7 +126,7 @@ public class JsonTest
   @Test
   public void testParser3() throws IOException, JsonParseException
   {
-    JsonElement jse = JsonParser.parse("[ ]");
+    JsonElement jse = j_parser.parse("[ ]");
     if (jse == null)
     {
       fail("Element is null");
@@ -132,10 +134,48 @@ public class JsonTest
   }
   
   @Test
+  public void testParserLarge1() throws IOException, JsonParseException
+  {
+    int threshold_time_ms = 500;
+    String json = FileReadWrite.readFile("data/sample-7.json");
+    long mil_start = System.currentTimeMillis();
+    JsonElement jse = j_parser.parse(json);
+    long mil_end = System.currentTimeMillis();
+    long total_time_ms = mil_end - mil_start;
+    if (jse == null)
+    {
+      fail("Element is null");
+    }
+    if (total_time_ms > 500)
+    {
+      fail("Parsing took " + total_time_ms + " ms, expected less than " + threshold_time_ms + " ms");
+    }
+  }
+  
+  @Test
+  public void testParserLarge2() throws IOException, JsonParseException
+  {
+    int threshold_time_ms = 500;
+    String json = FileReadWrite.readFile("data/sample-8.json");
+    long mil_start = System.currentTimeMillis();
+    JsonElement jse = j_parser.parse(json);
+    long mil_end = System.currentTimeMillis();
+    long total_time_ms = mil_end - mil_start;
+    if (jse == null)
+    {
+      fail("Element is null");
+    }
+    if (total_time_ms > 500)
+    {
+      fail("Parsing took " + total_time_ms + " ms, expected less than " + threshold_time_ms + " ms");
+    }
+  }
+  
+  @Test
   public void testGet1() throws IOException, JsonParseException
   {
     String json = FileReadWrite.readFile("data/sample.json");
-    JsonElement jse = JsonParser.parse(json);
+    JsonElement jse = j_parser.parse(json);
     JsonElement answer = JsonPath.get(jse, "children[0].tagname");
     if (!(answer instanceof JsonString))
     {
@@ -152,7 +192,7 @@ public class JsonTest
   public void testGet2() throws IOException, JsonParseException
   {
     String json = FileReadWrite.readFile("data/sample-4.json");
-    JsonElement jse = JsonParser.parse(json);
+    JsonElement jse = j_parser.parse(json);
     JsonElement answer = JsonPath.get(jse, "children[0].children[1].children[0].children[0].tagname");
     if (!(answer instanceof JsonString))
     {
