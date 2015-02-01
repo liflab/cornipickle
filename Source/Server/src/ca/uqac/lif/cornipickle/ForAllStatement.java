@@ -17,121 +17,18 @@
  */
 package ca.uqac.lif.cornipickle;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import ca.uqac.lif.cornipickle.json.JsonElement;
-
-public class ForAllStatement extends Statement
+public class ForAllStatement extends Quantifier
 {
-  protected Statement m_innerStatement;
-
-  protected StringConstant m_variable;
-
-  protected SetExpression m_set;
-  
-  protected List<Statement> m_innerStatements;
-  
-  protected List<JsonElement> m_domain;
-  
   public ForAllStatement()
   {
     super();
-    m_innerStatements = null;
+    s_startVerdict = Verdict.TRUE;
+    s_cutoffVerdict = Verdict.FALSE;
   }
 
-  public void setInnerStatement(Statement s)
+  protected Verdict evaluationFunction(Verdict x, Verdict y)
   {
-    m_innerStatement = s;
-  }
-
-  public String getVariable()
-  {
-    return m_variable.toString();
-  }
-
-  public Statement getStatement()
-  {
-    return m_innerStatement;
-  }
-
-  public SetExpression getSet()
-  {
-    return m_set;
-  }
-
-  public void setVariable(StringConstant s)
-  {
-    m_variable = s;
-  }
-
-  public void setVariable(String s)
-  {
-    m_variable = new StringConstant(s);
-  }
-
-  public void setDomain(SetExpression s)
-  {
-    m_set = s;
-  }
-
-  @Override
-  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
-  {
-    if (m_domain == null)
-    {
-      // Fetch values for set; create one instance of the
-      // inner statement for each value
-      m_domain = m_set.evaluate(j, d);
-      m_innerStatements = new LinkedList<Statement>();
-      for (JsonElement v : m_domain)
-      {
-        m_innerStatements.add(m_innerStatement.getClone());
-      }
-    }
-    // Iterate over values
-    Verdict out = Verdict.TRUE;
-    int i = 0;
-    for (JsonElement v : m_domain)
-    {
-      Statement in_s = m_innerStatements.get(i);
-      Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
-      new_d.put(m_variable.toString(), v);
-      Verdict b = in_s.evaluate(j, new_d);
-      out = threeValuedAnd(out, b);
-      i++;
-      if (out == Verdict.FALSE)
-        break;
-    }
-    m_verdict = out;
-    return m_verdict;
-  }
-  
-  @Override
-  public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
-  {
-    List<JsonElement> domain = m_set.evaluate(j, d);
-    // Iterate over values
-    Verdict out = Verdict.TRUE;
-    for (JsonElement v : domain)
-    {
-      Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
-      new_d.put(m_variable.toString(), v);
-      Verdict b = m_innerStatement.evaluateAtemporal(j, new_d);
-      out = threeValuedAnd(out, b);
-      if (out == Verdict.FALSE)
-        break;
-    }
-    return out;
-  }
-  
-  public void resetHistory()
-  {
-    m_verdict = Verdict.INCONCLUSIVE;
-    m_domain = null;
-    m_innerStatement.resetHistory();
+    return threeValuedAnd(x, y);
   }
 
   @Override
@@ -144,25 +41,6 @@ public class ForAllStatement extends Statement
   }
 
   @Override
-  public void postfixAccept(LanguageElementVisitor visitor)
-  {
-    //m_variable.prefixAccept(visitor);
-    m_innerStatement.postfixAccept(visitor);
-    m_set.prefixAccept(visitor);
-    visitor.visit(this);
-    visitor.pop();
-  }
-
-  @Override
-  public void prefixAccept(LanguageElementVisitor visitor)
-  {
-    visitor.visit(this);
-    m_innerStatement.prefixAccept(visitor);
-    m_set.prefixAccept(visitor);
-    visitor.pop();
-  }
-
-  @Override
   public ForAllStatement getClone()
   {
     ForAllStatement out = new ForAllStatement();
@@ -170,11 +48,5 @@ public class ForAllStatement extends Statement
     out.m_variable = m_variable;
     out.m_set = m_set.getClone();
     return out;
-  }
-
-  @Override
-  public boolean isTemporal()
-  {
-    return m_innerStatement.isTemporal();
   }
 }

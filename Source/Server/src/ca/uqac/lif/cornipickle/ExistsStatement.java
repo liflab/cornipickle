@@ -17,64 +17,19 @@
  */
 package ca.uqac.lif.cornipickle;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import ca.uqac.lif.cornipickle.Statement.Verdict;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-
-public class ExistsStatement extends ForAllStatement
+public class ExistsStatement extends Quantifier
 {
-  @Override
-  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
+  public ExistsStatement()
   {
-    if (m_domain == null)
-    {
-      // Fetch values for set; create one instance of the
-      // inner statement for each value
-      m_domain = m_set.evaluate(j, d);
-      m_innerStatements = new LinkedList<Statement>();
-      for (JsonElement v : m_domain)
-      {
-        m_innerStatements.add(m_innerStatement.getClone());
-      }
-    }
-    // Iterate over values
-    Verdict out = Verdict.FALSE;
-    int i = 0;
-    for (JsonElement v : m_domain)
-    {
-      Statement in_s = m_innerStatements.get(i);
-      Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
-      new_d.put(m_variable.toString(), v);
-      Verdict b = in_s.evaluate(j, new_d);
-      out = threeValuedOr(out, b);
-      i++;
-      if (out == Verdict.TRUE)
-        break;
-    }
-    m_verdict = out;
-    return m_verdict;
+    super();
+    s_startVerdict = Verdict.FALSE;
+    s_cutoffVerdict = Verdict.TRUE;
   }
   
   @Override
-  public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
+  protected Verdict evaluationFunction(Verdict x, Verdict y)
   {
-    List<JsonElement> domain = m_set.evaluate(j, d);
-    // Iterate over values
-    Verdict out = Verdict.FALSE;
-    for (JsonElement v : domain)
-    {
-      Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
-      new_d.put(m_variable.toString(), v);
-      Verdict b = m_innerStatement.evaluateAtemporal(j, new_d);
-      out = threeValuedOr(out, b);
-      if (out == Verdict.TRUE)
-        break;
-    }
-    return out;
+    return threeValuedOr(x, y);
   }
   
   @Override
