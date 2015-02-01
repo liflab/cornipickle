@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.cornipickle.json.JsonFastParser;
 import ca.uqac.lif.cornipickle.json.JsonMap;
 import ca.uqac.lif.cornipickle.json.JsonParser;
 import ca.uqac.lif.cornipickle.json.JsonSlowParser;
@@ -27,7 +28,7 @@ public class CssTest
   public void setUp() throws Exception
   {
     parser = new CornipickleParser();
-    m_jsonParser = new JsonSlowParser();
+    m_jsonParser = new JsonFastParser();
   }
 
   @Test
@@ -73,6 +74,22 @@ public class CssTest
       fail("Expected list, got null");
     }
     if (list.size() != 2)
+    {
+      fail("Expected size 2, got " + list.size());
+    }
+  }
+  
+  @Test
+  public void testCssFetch4() throws Exception
+  {
+    String json = FileReadWrite.readFile("data/sample-9.json");
+    JsonElement jse = m_jsonParser.parse(json);
+    List<JsonElement> list = CssSelector.fetch(".square", (JsonMap) jse);
+    if (list == null)
+    {
+      fail("Expected list, got null");
+    }
+    if (list.size() != 3)
     {
       fail("Expected size 2, got " + list.size());
     }

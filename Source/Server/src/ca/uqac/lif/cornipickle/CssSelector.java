@@ -87,27 +87,13 @@ public class CssSelector extends SetExpression
       return out;
     }
     assert !css_expression.isEmpty();
-
-    // Some of these may be null
     String el_tag_name = JsonPath.getString(root, "tagname");
     String el_class_name = JsonPath.getString(root, "class");
     String el_id_name = JsonPath.getString(root, "id");
-
     LinkedList<String> new_css_expression = null;
     String first_part = css_expression.get(0);
-    // Split CSS part into tag, class and id
-    Pattern pat = Pattern.compile("([\\w\\d]+){0,1}(\\.([\\w\\d]+)){0,1}(#([\\w\\d]+)){0,1}");
-    Matcher mat = pat.matcher(first_part);
-    if (!mat.find())
-    {
-      assert false; // Invalid CSS selector
-    }
-    String sel_tag_name = mat.group(1);
-    String sel_class_name = mat.group(3);
-    String sel_id_name = mat.group(5);
-    if ((sel_tag_name == null || (el_tag_name != null && el_tag_name.compareTo(sel_tag_name) == 0))
-        && (sel_class_name == null || (el_class_name != null && containsClass(el_class_name, sel_class_name)))
-        && (sel_id_name == null || (el_id_name != null && el_id_name.compareTo(sel_id_name) == 0)))
+    CssPathElement cpe = new CssPathElement(first_part);
+    if (cpe.matches(el_tag_name, el_class_name, el_id_name))
     {
       if (css_expression.size() == 1)
       {
@@ -137,6 +123,79 @@ public class CssSelector extends SetExpression
       }
     }
     return out;
+  }
+  
+  protected static class CssPathElement
+  {
+    protected String m_tagName;
+    protected String m_className;
+    protected String m_idName;
+    
+    public CssPathElement(String s)
+    {
+      super();  
+      parseFromString(s);
+    }
+    
+    protected void parseFromString(String first_part)
+    {
+      // Split CSS part into tag, class and id
+      Pattern pat = Pattern.compile("([\\w\\d]+){0,1}(\\.([\\w\\d]+)){0,1}(#([\\w\\d]+)){0,1}");
+      Matcher mat = pat.matcher(first_part);
+      if (!mat.find())
+      {
+        assert false; // Invalid CSS selector
+      }
+      m_tagName = mat.group(1);
+      m_className = mat.group(3);
+      m_idName = mat.group(5);          
+    }
+    
+    /**
+     * Checks whether an element's tag, class and ID name match the
+     * CSS selector element.
+     * @param tagName The tag name
+     * @param className The class name
+     * @param idName The ID name
+     * @return True if element matches the selector, false otherwise
+     */
+    public boolean matches(String tagName, String className, String idName)
+    {
+      if (m_tagName != null)
+      {
+        if (tagName == null)
+        {
+          return false;
+        }
+        if (m_tagName.compareTo(tagName) != 0)
+        {
+          return false;
+        }
+      }
+      if (m_className != null)
+      {
+        if (className == null)
+        {
+          return false;
+        }
+        if (!containsClass(className, m_className))
+        {
+          return false;
+        }
+      }
+      if (m_idName != null)
+      {
+        if (idName == null)
+        {
+          return false;
+        }
+        if (m_idName.compareTo(idName) != 0)
+        {
+          return false;
+        }
+      }
+      return true;
+    }
   }
   
   protected static boolean containsClass(String element_classes, String target_class)
