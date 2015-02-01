@@ -18,7 +18,13 @@
 package ca.uqac.lif.cornipickle.server;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URI;
+
+import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
 
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.httpserver.RequestCallback;
@@ -28,9 +34,30 @@ import com.sun.net.httpserver.HttpExchange;
 
 class ProbeCallback extends RequestCallback<CornipickleServer>
 {
+  /**
+   * Whether to minify the probe's code before sending it to the
+   * server. Defaults to false in development mode.
+   */
+  protected boolean m_minifyJavaScript = false;
+  
+  /**
+   * The processor used to minify the JavaScript code
+   */
+  protected static JSMinProcessor s_jsMinProcessor;
+  
+  protected final String m_probeCode;
+
   public ProbeCallback(CornipickleServer s)
   {
     super(s);
+    s_jsMinProcessor = new JSMinProcessor();
+    m_probeCode = generateProbeCode();
+  }
+
+  public ProbeCallback(CornipickleServer s, boolean minify)
+  {
+    this(s);
+    m_minifyJavaScript = minify;
   }
 
   @Override
@@ -44,18 +71,36 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
   @Override
   public boolean process(HttpExchange t)
   {
+    m_server.sendResponse(t, Server.HTTP_OK, m_probeCode, "application/javascript");
+    return true;
+  }
+  
+  protected String generateProbeCode()
+  {
+    String probe_code = null;
     try
     {
       String witness_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/witness.inc.html"));
-      String probe_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/probe.inc.js"));
+      probe_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/probe.inc.js"));
       probe_code = probe_code.replace("%%WITNESS_CODE%%", CornipickleServer.escapeString(witness_code));
       probe_code = probe_code.replace("%%SERVER_NAME%%", m_server.getServerName() + ":" + CornipickleServer.s_defaultPort);
-      m_server.sendResponse(t, Server.HTTP_OK, probe_code, "application/javascript");
+      if (m_minifyJavaScript)
+      {
+        probe_code = minifyJs(probe_code);
+      }
     }
     catch (IOException e)
     {
       e.printStackTrace();
     }
-    return true;
+    return probe_code;    
+  }
+  
+  protected static String minifyJs(String code) throws IOException
+  {
+    Reader reader = new StringReader(code);
+    Writer writer = new StringWriter();
+    s_jsMinProcessor.process(reader, writer);
+    return writer.toString();    
   }
 }
