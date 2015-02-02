@@ -23,10 +23,10 @@ First make sure you have the following installed:
 - The [Apache Commons CLI](http://commons.apache.org/proper/commons-cli/)
   to handle command-line parameters *(tested with version 1.2)*
 - The [json-simple](https://code.google.com/p/json-simple/) library for
-  fast JSON parsing
+  fast JSON parsing *(tested with version 1.1.1)*
 - The [Web Resource Optimizer for Java](https://code.google.com/p/wro4j/)
   (wro4j) for minification of JavaScript files. Make sure to retrieve a JAR
-  called "with dependencies".
+  called "with dependencies". *(tested with version 1.6.3)*
 
 The last libraries should be put in Java's extension folder. This location
 varies according to the operating system you use:
@@ -66,5 +66,5 @@ TODO. Run with `--help` to see what's available.
 About the author                                                   {#about}
 ----------------
 
-Cornipickle was written by Sylvain Hallé, assistant professor at Université
+Cornipickle was written by Sylvain Hallé, associate professor at Université
 du Québec à Chicoutimi, Canada.
