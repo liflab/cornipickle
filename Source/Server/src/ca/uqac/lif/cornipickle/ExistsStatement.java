@@ -22,8 +22,8 @@ public class ExistsStatement extends Quantifier
   public ExistsStatement()
   {
     super();
-    s_startVerdict = Verdict.FALSE;
-    s_cutoffVerdict = Verdict.TRUE;
+    m_startVerdict = Verdict.FALSE;
+    m_cutoffVerdict = Verdict.TRUE;
   }
   
   @Override

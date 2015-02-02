@@ -19,9 +19,9 @@ public abstract class Quantifier extends Statement
   
   protected List<JsonElement> m_domain;
   
-  protected static Verdict s_startVerdict;
+  protected Verdict m_startVerdict;
   
-  protected static Verdict s_cutoffVerdict;
+  protected Verdict m_cutoffVerdict;
   
   public Quantifier()
   {
@@ -108,7 +108,7 @@ public abstract class Quantifier extends Statement
       }
     }
     // Iterate over values
-    Verdict out = s_startVerdict;
+    Verdict out = m_startVerdict;
     int i = 0;
     for (JsonElement v : m_domain)
     {
@@ -118,7 +118,7 @@ public abstract class Quantifier extends Statement
       Verdict b = in_s.evaluate(j, new_d);
       out = evaluationFunction(out, b);
       i++;
-      if (out == s_cutoffVerdict)
+      if (out == m_cutoffVerdict)
         break;
     }
     m_verdict = out;
@@ -130,14 +130,14 @@ public abstract class Quantifier extends Statement
   {
     List<JsonElement> domain = m_set.evaluate(j, d);
     // Iterate over values
-    Verdict out = s_startVerdict;
+    Verdict out = m_startVerdict;
     for (JsonElement v : domain)
     {
       Map<String,JsonElement> new_d = new HashMap<String,JsonElement>(d);
       new_d.put(m_variable.toString(), v);
       Verdict b = m_innerStatement.evaluateAtemporal(j, new_d);
       out = evaluationFunction(out, b);
-      if (out == s_cutoffVerdict)
+      if (out == m_cutoffVerdict)
         break;
     }
     return out;

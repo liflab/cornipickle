@@ -22,8 +22,8 @@ public class ForAllStatement extends Quantifier
   public ForAllStatement()
   {
     super();
-    s_startVerdict = Verdict.TRUE;
-    s_cutoffVerdict = Verdict.FALSE;
+    m_startVerdict = Verdict.TRUE;
+    m_cutoffVerdict = Verdict.FALSE;
   }
 
   protected Verdict evaluationFunction(Verdict x, Verdict y)
