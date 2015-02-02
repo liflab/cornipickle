@@ -7,6 +7,7 @@ import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonList;
 import ca.uqac.lif.cornipickle.json.JsonMap;
@@ -179,6 +180,84 @@ public class EvaluationTest
     if (answer != Statement.Verdict.FALSE)
     {
       fail("Expected false, got something else");
+    }
+  }
+  
+  @Test
+  public void testNextTime1() throws ParseException
+  {
+    String expression = "The next time ($x's value equals 0) Then ($y's value equals 0)";
+    CornipickleParser cp = new CornipickleParser();
+    Statement st = cp.parseStatement(expression);
+    Statement.Verdict answer;
+    int event_nb = 0;
+    // Evaluate formula on document 
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    d.put("$x", new JsonNumber(1));
+    d.put("$y", new JsonNumber(1));
+    answer = st.evaluate(null, d); event_nb++;
+    if (answer != Statement.Verdict.INCONCLUSIVE)
+    {
+      fail("Wrong verdict at event " + event_nb);
+    }
+    d.put("$x", new JsonNumber(0));
+    d.put("$y", new JsonNumber(1));
+    answer = st.evaluate(null, d); event_nb++;
+    if (answer != Statement.Verdict.FALSE)
+    {
+      fail("Wrong verdict at event " + event_nb);
+    }
+  }
+  
+  @Test
+  public void testNextTime2() throws ParseException
+  {
+    String expression = "The next time ($x's value equals 0) Then ($y's value equals 0)";
+    CornipickleParser cp = new CornipickleParser();
+    Statement st = cp.parseStatement(expression);
+    Statement.Verdict answer;
+    int event_nb = 0;
+    // Evaluate formula on document 
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    d.put("$x", new JsonNumber(1));
+    d.put("$y", new JsonNumber(1));
+    answer = st.evaluate(null, d); event_nb++;
+    if (answer != Statement.Verdict.INCONCLUSIVE)
+    {
+      fail("Wrong verdict at event " + event_nb);
+    }
+    d.put("$x", new JsonNumber(1));
+    d.put("$y", new JsonNumber(0));
+    answer = st.evaluate(null, d); event_nb++;
+    if (answer != Statement.Verdict.INCONCLUSIVE)
+    {
+      fail("Wrong verdict at event " + event_nb);
+    }
+  }
+  
+  @Test
+  public void testNextTime3() throws ParseException
+  {
+    String expression = "The next time ($x's value equals 0) Then ($y's value equals 0)";
+    CornipickleParser cp = new CornipickleParser();
+    Statement st = cp.parseStatement(expression);
+    Statement.Verdict answer;
+    int event_nb = 0;
+    // Evaluate formula on document 
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    d.put("$x", new JsonNumber(1));
+    d.put("$y", new JsonNumber(1));
+    answer = st.evaluate(null, d); event_nb++;
+    if (answer != Statement.Verdict.INCONCLUSIVE)
+    {
+      fail("Wrong verdict at event " + event_nb);
+    }
+    d.put("$x", new JsonNumber(0));
+    d.put("$y", new JsonNumber(0));
+    answer = st.evaluate(null, d); event_nb++;
+    if (answer != Statement.Verdict.TRUE)
+    {
+      fail("Wrong verdict at event " + event_nb);
     }
   }
 

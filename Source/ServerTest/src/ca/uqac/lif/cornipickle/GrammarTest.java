@@ -91,6 +91,13 @@ public class GrammarTest
   } 
   
   @Test
+  public void testNextTime1() throws ParseException
+  {
+    String line = "The next time (0 equals 0) Then (0 equals 0)";
+    ParseNode pn = shouldParseAndNotNull(line, "<next_time>", false);
+  } 
+  
+  @Test
   public void testCssSelector1() throws ParseException
   {
     String line = "$(p1.menu)";

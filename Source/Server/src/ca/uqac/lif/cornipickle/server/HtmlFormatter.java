@@ -36,6 +36,7 @@ import ca.uqac.lif.cornipickle.NAryStatement;
 import ca.uqac.lif.cornipickle.NegationStatement;
 import ca.uqac.lif.cornipickle.Never;
 import ca.uqac.lif.cornipickle.Next;
+import ca.uqac.lif.cornipickle.NextTime;
 import ca.uqac.lif.cornipickle.NumberConstant;
 import ca.uqac.lif.cornipickle.PredicateCall;
 import ca.uqac.lif.cornipickle.PredicateDefinition;
@@ -157,6 +158,16 @@ public class HtmlFormatter implements LanguageElementVisitor
     else if (element instanceof ImpliesStatement)
     {
       out.append("<span class=\"implies\">If (<br />\n");
+      StringBuilder right = m_elements.pop(); // Inner statement
+      StringBuilder left = m_elements.pop(); // Inner statement
+      out.append(StringUtils.prepend("&nbsp;", left));
+      out.append("<br />\n)<br/>\nThen (<br />\n");
+      out.append(StringUtils.prepend("&nbsp;", right));
+      out.append("<br />\n)");
+    }
+    else if (element instanceof NextTime)
+    {
+      out.append("<span class=\"temporal-operator\">The next time (<br />\n");
       StringBuilder right = m_elements.pop(); // Inner statement
       StringBuilder left = m_elements.pop(); // Inner statement
       out.append(StringUtils.prepend("&nbsp;", left));

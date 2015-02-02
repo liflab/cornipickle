@@ -226,6 +226,22 @@ public class CornipickleParserTest
     }  
   }
   
+  @Test
+  public void testNextTime1() throws ParseException
+  {
+    String line = "The next time (0 equals 0) Then (0 equals 0)";
+    ParseNode pn = shouldParseAndNotNull(line, "<next_time>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof NextTime))
+    {
+      fail("Got wrong type of object");
+    }
+  } 
+  
   public ParseNode shouldParseAndNotNull(String line, String start_symbol)
   {
     BnfParser p = parser.getParser();

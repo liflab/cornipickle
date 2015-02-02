@@ -33,12 +33,13 @@
 # Cornichon statements
 
 <statement>          := <foreach> | <exists> | <binary_stmt> | <negation>
-                        | <temporal_stmt> | <userdef_stmt> ;
+                        | <temporal_stmt> | <userdef_stmt> | <let> ;
 <binary_stmt>        := <equality> | <gt> | <lt> | <regex_match> 
                         | <and> | <or> | <implies> ;
-<temporal_stmt>      := <globally> | <eventually> | <never> | <next>;
+<temporal_stmt>      := <globally> | <eventually> | <never> | <next> | <next_time> ;
 <foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
 <exists>             := There exists <var_name> in <set_name> such that ( <statement> ) ;
+<let>                := Let <var_name> be <property_or_const> ( <statement> ) ;
 <and>                := ( <statement> ) And ( <statement> ) ;
 <or>                 := ( <statement> ) Or ( <statement> ) ;
 <implies>            := If ( <statement> ) Then ( <statement> ) ;
@@ -47,6 +48,7 @@
 <never>              := Never ( <statement> ) ;
 <next>               := Next ( <statement> ) ;
 <eventually>         := Eventually ( <statement> ) ;
+<next_time>         :=  The next time ( <statement> ) Then ( <statement> ) ;
 <property_or_const>  := <elem_property> | <constant> ;
 <equality>           := <property_or_const> equals <property_or_const> ;
 <gt>                 := <property_or_const> is greater than <property_or_const> ;
