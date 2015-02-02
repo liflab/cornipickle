@@ -175,6 +175,10 @@ var CornipickleProbe = function()
 				// Don't include nodes containing only whitespace
 				return CornipickleProbe.DONT_INCLUDE_RECURSIVE;
 			}
+			else
+			{
+				return CornipickleProbe.INCLUDE;
+			}
 		}
 		for (var i = 0; i < this.m_tagsToInclude.length; i++)
 		{
@@ -233,7 +237,7 @@ var CornipickleProbe = function()
 		// Serialize page contents
 		var json = cp_probe.serializePageContents(document.body, [], event);
 		json = cp_probe.serializeWindow(json);
-		var json_url = encodeURIComponent(JSON.stringify(json, function(key, value) { return value; }));
+		var json_url = encodeURIComponent(JSON.stringify(json, escape_json_string));
 		var url = "http://%%SERVER_NAME%%/image?rand=" + Math.round(Math.random() * 1000);
 		document.getElementById("cp-image").src = url + "&contents=" + json_url;
 		window.setTimeout(CornipickleProbe.handleResponse, CornipickleProbe.refreshDelay);
@@ -427,6 +431,16 @@ var is_empty = function(object)
 		return false;
 	}
 	return true;
+};
+
+var escape_json_string = function(key, value)
+{
+	if (typeof value === "string" || value instanceof String)
+	{
+		// Escape ampersands
+		return value.replace(/&/g, "%26");
+	}
+	return value;
 };
 
 window.onload = function()
