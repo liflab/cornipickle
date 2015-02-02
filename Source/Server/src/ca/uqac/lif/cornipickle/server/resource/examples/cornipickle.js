@@ -96,6 +96,7 @@ add_to_cornipickle = function(text)
       $("#to-cornipickle").prop('disabled', true);
       cp_probe.setAttributesToInclude(result.attributes);
       cp_probe.setTagNamesToInclude(result.tagnames);
+      //cp_probe.handleEvent();
     },
   });
 };

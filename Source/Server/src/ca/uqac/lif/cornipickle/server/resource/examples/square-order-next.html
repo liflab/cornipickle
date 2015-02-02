@@ -10,7 +10,7 @@
 <script type="text/javascript" src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
 <script type="text/javascript" src="cornipickle.js"></script>
 <script type="text/javascript" src="/probe"></script>
-<title>Elements outside window - Cornipickle</title>
+<title>Pick elements in the right order, part II - Cornipickle</title>
 <script type="text/javascript">
 // <![CDATA[
 $(document).ready(function() {
@@ -27,7 +27,15 @@ $(document).ready(function() {
     $("#to-cornipickle").click(function() {
         add_to_cornipickle(cornipickle_code);
       });
+    // Remove onmouseup event on some elements
+    $(".no-event").mouseup(function(event) {
+      event.stopPropagation();
+    });
     $(".square").draggable();
+    $(".square").click(function () {
+      $(".square").removeClass("selected");
+      $(this).addClass("selected");
+    });
 });
 // ]]>
 </script>
@@ -38,6 +46,11 @@ $(document).ready(function() {
   width: 100px;
   height: 100px;
   opacity: 0.8;
+  border: solid 3px;
+}
+
+.selected {
+  border: solid 3px green;
 }
 
 #red {
@@ -54,7 +67,7 @@ $(document).ready(function() {
 
 #blue {
   background: blue;
-  right: 60px;
+  left: 215px;
   top: 5px;
 }
 
@@ -69,14 +82,14 @@ $(document).ready(function() {
 <body>
 
 <div id="contents">
-<h1>Overlapping elements</h1>
+<h1 class="no-event">Pick elements in the right order, part II</h1>
 
 <p class="backmenu"><a href="index.html" class="no-event">Back to example list</a></p>
 
 <div class="playground">
 
 <div class="square" id="red"></div>
-<div class="square" id="yellow"></div> 
+<div class="square" id="yellow"></div>
 <div class="square" id="blue"></div>
 
 </div>
@@ -85,8 +98,8 @@ $(document).ready(function() {
 <div id="cornipickle-explanation">
 
 <h2>What's the problem?</h2>
-<p>Two squares overlap (let's pretend they shouldn't). Try moving the
-squares around and re-evaluate the property.</p>
+<p>Click on a square to highlight it. This time, once the blue square
+is selected, the red square <em>must</em> be selected next.</p>
 
 <div id="cornipickle-section">
 
@@ -97,50 +110,43 @@ squares around and re-evaluate the property.</p>
 <p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
 
 <div class="cornipickle-code">
-# x-y coordinates of all elements are relative to window
-We say that $x extends outside $y when (
- (
-  ($x's right is greater than $y's right)
-  Or
-  ($x's left is less than $y's left)
- )
- Or
- (
-  ($x's bottom is greater than $y's bottom)
-  Or
-  ($x's top is less than $y's top)
- )
+# Define what it means to be selected
+We say that $x is highlighted when (
+  $x's border matches "green"
 ).
 
-# We define the negation to increase readability
-We say that $x doesn't extend outside $y when (
-  Not ($x extends outside $y)
-).
-
-"""
-  @name Outside playground
-  @description Coloured squares should not extend outside
-    the checkered div
-  @severity Error
-"""
-For each $x in $(.square) (
-  For each $y in $(.playground) (
-    $x doesn't extend outside $y
+We say that the red square is highlighted when (
+  There exists $x in $(.square) such that (
+    ($x's id equals "red")
+    And
+    ($x is highlighted)
   )
 ).
 
-"""
-  @name Outside window
-  @description Coloured squares should not extend outside
-    the browser's window
-  @severity Error
-
-For each $x in $(.square) (
-  For each $y in $(window) (
-    $x doesn't extend outside $y
+We say that the blue square is highlighted when (
+  There exists $x in $(.square) such that (
+    ($x's id equals "blue")
+    And
+    ($x is highlighted)
   )
 ).
+
+
 """
+  @name No red after blue
+  @description Once the blue square is highlighted, the red
+    square cannot be highlighted again
+  @severity Error
+"""
+Always (
+  If (
+    the blue square is highlighted )
+  Then (
+    Next (
+      the red square is highlighted
+    )
+  )
+).
 </div>
 
 </div>
@@ -153,23 +159,24 @@ For each $x in $(.square) (
 
 <div class="procedural-equivalent jquery no-event">
 <pre>
-extends_outside = function(x, y) {
-  return ((x.clientLeft + x.width) &gt; (y.clientLeft + y.width)
-  || x.clientLeft &lt; y.clientLeft
-  || x.clientTop &lt; y.clientTop
-  || (x.clientTop + x.height) &gt; (y.clientTop + y.height));
+highlighted = function(x) {
+  $(x).css("border-color") === "rgb(0, 128, 0)";
 };
 
-doesnt_extend_outside = function(x, y) {
-  return !extends_outside(x, y);
+highlighted_square = function(colour) {
+  return highlighted($("#" + colour));
 };
 
-for (var x in $(".square")) {
-  doesnt_extend_outside(x, $(".playground"));
-};
+blue_highlighted = false;
 
-for (var x in $(".square")) {
-  doesnt_extend_outside(x, window);
+evaluate = function() {
+  if (highlighted_square("blue") === true) {
+    blue_highlighted = true;
+    return;
+  }
+  if (highlighted_square("red") === false && blue_highlighted == true)
+    console.log("Error");
+  blue_highlighted = false;
 };
 </pre>
 </div>

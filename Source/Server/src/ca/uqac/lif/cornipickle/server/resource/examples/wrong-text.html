@@ -70,8 +70,9 @@ Joe.</p>
 
 <p><button id="misalign-toggle">Toggle misalignment</button></p>
 
-<h2>Detect it with Cornipickle</h2>
+<div id="cornipickle-section">
 
+<h2>Detect it with Cornipickle</h2>
 
 <div class="cornipickle-square">
 
@@ -89,6 +90,27 @@ For each $x in $(.username) (
     $x's text equals $y's text
   )
 ).
+</div>
+
+</div>
+
+</div>
+
+<div id="procedural-section">
+
+<h2>Procedural Equivalent</h2>
+
+<div class="procedural-equivalent jquery no-event">
+<pre>
+var val = null;
+for (var s in $(".username")) {
+  if (val === null)
+    val = s.text();
+  else if (val !== s.text()) {
+    console.log("Error");
+  }
+}
+</pre>
 </div>
 
 </div>

@@ -88,6 +88,8 @@ $(document).ready(function() {
 <p>Two squares overlap (let's pretend they shouldn't). Try moving the
 squares around and re-evaluate the property.</p>
 
+<div id="cornipickle-section">
+
 <h2>Detect it with Cornipickle</h2>
 
 <div class="cornipickle-square">
@@ -134,6 +136,39 @@ For each $x in $(.square) (
    ( $x and $y don't overlap )
   )
 ).
+</div>
+
+</div>
+
+</div>
+
+<div id="procedural-section">
+
+<h2>Procedural Equivalent</h2>
+
+<div class="procedural-equivalent jquery no-event">
+<pre>
+x_intersects = function(x, y) {
+  return (y.clientLeft + y.width) > x.left
+  &amp;&amp; x.clientLeft + x.width > y.left;
+};
+
+y_intersects = function(x, y) {
+  return (y.clientTop + y.height) > x.top
+  &amp;&amp; x.clientTop + x.height > y.top;
+};
+
+overlap = function(x, y) {
+  return x_intersects(x, y) &amp;&amp; y_intersects(x, y);
+};
+
+for (var x in $(".square")) {
+  for (var x in $(".square")) {
+    if (!(x.id === y.id || !overlap(x, y)))
+      console.log("Error");
+  }
+};
+</pre>
 </div>
 
 </div>

@@ -24,7 +24,7 @@ var CornipickleProbe = function()
 	 * to evaluate.
 	 */
 	this.m_tagsToInclude = [/*%%TAG_LIST%%*/];
-	
+		
 	/**
 	 * Sets the attributes to include in the JSON
 	 * @param list An array of DOM attribute names
@@ -155,7 +155,6 @@ var CornipickleProbe = function()
 				// This is a class
 				if (n.className && n.className.contains(part.substring(1)))
 				{
-					console.log("Including " + n.tagName + "." + n.className);
 					return CornipickleProbe.INCLUDE;
 				}
 			}
@@ -205,9 +204,7 @@ var CornipickleProbe = function()
 		var json_url = encodeURIComponent(JSON.stringify(json, function(key, value) { return value; }));
 		var url = "http://%%SERVER_NAME%%/image?rand=" + Math.round(Math.random() * 1000);
 		document.getElementById("cp-image").src = url + "&contents=" + json_url;
-		window.setTimeout(CornipickleProbe.handleResponse, 1500);
-		// The timeout here is 1.5 sec. If set too low, the witness
-		// processes the cookie before the server has had the time to update it
+		window.setTimeout(CornipickleProbe.handleResponse, CornipickleProbe.refreshDelay);
 	};
 };
 
@@ -306,6 +303,13 @@ CornipickleProbe.formatBorderString = function(elem)
 	var out = s_top_style + " " + s_top_colour + " " + s_top_width;
 	return out.trim();
 };
+
+/**
+ * The delay in ms before the probe refreshes its status,
+ * after a JSON has been sent to the server. If set too low, the witness
+ * processes the cookie before the server has had the time to update it
+ */
+CornipickleProbe.refreshDelay = 500;
 
 /**
  * Retrieves the value of a cookie in a cookie string.

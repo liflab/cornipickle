@@ -65,7 +65,7 @@ $(document).ready(function() {
 </div>
 
 <!-- Cornipickle explanation -->
-<div id="cornipickle-explanation">
+<div id="cornipickle-explanation" class="nocornipickle">
 
 <h2>What's the problem?</h2>
 <p>An element in the menu is misaligned with respect to the others. This
@@ -74,8 +74,9 @@ by analyzing the HTML or CSS declarations.</p>
 
 <p><button id="misalign-toggle">Toggle misalignment</button></p>
 
-<h2>Detect it with Cornipickle</h2>
+<div id="cornipickle-section">
 
+<h2>Detect it with Cornipickle</h2>
 
 <div class="cornipickle-square">
 
@@ -112,9 +113,36 @@ For each $z in $(.menu li) (
 
 </div>
 
+</div>
+
+<div id="procedural-section">
+
+<h2>Procedural Equivalent</h2>
+
+<div class="procedural-equivalent jquery no-event">
+<pre>
+left_aligned = function(x, y) {
+  return x.clientLeft == y.clientLeft;
+};
+
+top_aligned = function(x, y) {
+  return x.clientTop == y.clientTop;
+};
+
+for (var z in $(".menu li")) {
+  for (var t in $(".menu li")) {
+    if (!(left_aligned(z, t) || top_aligned(z, t)))
+      console.log("Error");
+  }
+}
+</pre>
+</div>
+
+</div>
+
 </div> <!-- /explanation -->
 
-<div id="footer">
+<div id="footer" class="nocornipickle">
 <hr />
 &copy; 2015 LIF
 </div>

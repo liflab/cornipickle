@@ -67,8 +67,9 @@ see what the interpreter does.</p>
 <input type="button" class="set-value" value="4" />
 <input type="button" class="set-value" value="5" /></p>
 
-<h2>Detect it with Cornipickle</h2>
+<div id="cornipickle-section">
 
+<h2>Detect it with Cornipickle</h2>
 
 <div class="cornipickle-square">
 
@@ -89,6 +90,29 @@ Always (
     )
   )
 ).
+</div>
+
+</div>
+
+</div>
+
+<div id="procedural-section">
+
+<h2>Procedural Equivalent</h2>
+
+<div class="procedural-equivalent jquery no-event">
+<pre>
+evaluate = function() {
+  if (evaluate.last_value === undefined) {
+    evaluate.last_value = $("#value").text();
+    return;
+  }
+  var temp_value = $("#value").text();
+  if (evaluate.last_value > temp_value)
+    console.log("Error");
+  evaluate.last_value = temp_value;
+};
+</pre>
 </div>
 
 </div>

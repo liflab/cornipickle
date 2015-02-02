@@ -132,15 +132,16 @@ var contains = function(t, m) {
   return re.match(t);
 };
 
-for (var tn in textnodes) {
-  var elem = $(tn);
-  var text = tn.text();
-  for (var moj in mojibake) {
-    if (contains(text, moj))
-      return false;
+evaluate = function() {
+  for (var tn in textnodes) {
+    var elem = $(tn);
+    var text = tn.text();
+    for (var moj in mojibake) {
+      if (contains(text, moj))
+        console.log("Error");
+    }
   }
-  return true;
-}
+};
 </pre>
 </div>
 

@@ -17,7 +17,7 @@ html, body {
   overflow: hidden;
 }
 
-.cornipickle-square {
+.cornipickle-square, .procedural-equivalent {
   border-radius: 6px;
   background: #ccc;
   display: inline-block;
@@ -25,7 +25,7 @@ html, body {
   border: solid 1px darkgrey;
 }
 
-.cornipickle-code {
+.cornipickle-code, .procedural-equivalent pre {
   background: #f0f0ff;
   padding: 10px;
   border-radius: 6px;
