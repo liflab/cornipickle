@@ -1,0 +1,26 @@
+# The event is attached to its target through the
+# attribute "event". Its value is the event's type
+
+We say that I click on Go when (
+  There exists $b in $(button) such that (
+  	($b's text equals "Go")
+  	And
+  	($b's event equals "mouseup")
+  )
+).
+
+We say that the textbox is empty when (
+  For each $t in $(#textbox) (
+    $t's text equals ""
+  )
+).
+
+"""
+  @name No empty box when Go
+  @description When clicking on Go, the textbox must not
+    be empty. This will return true when clicking on anything
+    else.
+  @severity Error
+"""
+If (I click on Go)
+Then (the textbox is empty).

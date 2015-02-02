@@ -20,7 +20,7 @@
 # CSS attributes
 
 <css_attribute>      := value | height | width | top | left | right
-                        | bottom | color | id | text | border;
+                        | bottom | color | id | text | border | event ;
 
 # Element property
 
