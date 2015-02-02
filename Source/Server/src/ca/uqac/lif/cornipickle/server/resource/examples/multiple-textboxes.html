@@ -31,10 +31,13 @@ $(document).ready(function() {
     $(".no-event").mouseup(function(event) {
       event.stopPropagation();
     });
-    $(".square").draggable();
-    $(".square").click(function () {
-      $(".square").removeClass("selected");
-      $(this).addClass("selected");
+    $(".increment").click(function() {
+    	var e = $(this).parent().children(".value");
+    	e.text(e.text() - 0 + 1);
+    });
+    $(".decrement").click(function() {
+    	var e = $(this).parent().children(".value");
+    	e.text(e.text() - 1);
     });
 });
 // ]]>
@@ -88,20 +91,22 @@ $(document).ready(function() {
 
 <div class="playground">
 
-<div class="square" id="red"></div>
-<div class="square" id="yellow"></div>
-<div class="square" id="blue"></div>
+<ul>
+<li><span class="value">3</span> <button class="decrement">-</button><button class="increment">+</button></li>
+</ul>
+
+<button id="go">Go</button>
 
 </div>
 
 <!-- Cornipickle explanation -->
-<div id="cornipickle-explanation">
+<div id="cornipickle-explanation" class="nocornipickle">
 
 <h2>What's the problem?</h2>
 <p>At least one textbox should increment every time the "Go" button
 is pressed.</p>
 
-<div id="cornipickle-section">
+<div id="cornipickle-section" class="nocornipickle">
 
 <h2>Detect it with Cornipickle</h2>
 
@@ -110,34 +115,13 @@ is pressed.</p>
 <p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
 
 <div class="cornipickle-code">
-# Define what it means to be selected
-We say that $x is highlighted when (
-  $x's border matches "green"
-).
-
-We say that the red square is highlighted when (
-  There exists $x in $(.square) such that (
-    ($x's id equals "red")
-    And
-    ($x is highlighted)
-  )
-).
-
-We say that the blue square is highlighted when (
-  There exists $x in $(.square) such that (
-    ($x's id equals "blue")
-    And
-    ($x is highlighted)
-  )
-).
-
 We say that I click on Go when (
-  For each $e in $(event) (
-    ($e's name equals "click")
-    And
-    ($e's target equals "Go")
+  There exists $b in $(button) such that (
+  	($b's text equals "Go")
+  	And
+  	($b's event equals "mouseup")
   )
-)
+).
 
 """
   @name No red after blue
@@ -146,10 +130,15 @@ We say that I click on Go when (
   @severity Error
 """
 Always (
-  There exists an $x in $(.boxes) such that (
-    If (I click on Go)
-    Then (
-      
+  If (I click on Go)
+  Then (
+    There exists $x in $(.value) such that (
+      The next time (I click on Go)
+      Then (
+        There exists $y in $(.value) such that (
+          $x's text equals $y's text
+        )
+      )
     )
   )
 ).
@@ -159,30 +148,36 @@ Always (
 
 </div>
 
-<div id="procedural-section">
+<div id="procedural-section" class="nocornipickle">
 
 <h2>Procedural Equivalent</h2>
 
 <div class="procedural-equivalent jquery no-event">
 <pre>
-highlighted = function(x) {
-  $(x).css("border-color") === "rgb(0, 128, 0)";
-};
+click_on_go = function(event) {
+  return event.type === 'mouseup' &amp;&amp;
+    $(event.target).text() === "Go";
+}
 
-highlighted_square = function(colour) {
-  return highlighted($("#" + colour));
-};
-
-blue_highlighted = false;
-
-evaluate = function() {
-  if (highlighted_square("blue") === true) {
-    blue_highlighted = true;
-    return;
+evaluate = function(event) {
+  if (click_on_go(event)) {
+    var current_values = [];
+    $(".value").each(
+      evaluate.lastValues.push($(this).text());
+    );
+    if (evaluate.lastValues !== undefined) {
+      var found = false;
+      for (var v in current_values) {
+        if ($.inArray(v, evaluate.lastValues)) {
+          found = true;
+          break;
+        }
+      }
+    }
+    if (!found)
+      console.log("Error");
+    evaluate.lastValues = current_values;
   }
-  if (highlighted_square("red") === false && blue_highlighted == true)
-    console.log("Error");
-  blue_highlighted = false;
 };
 </pre>
 </div>
