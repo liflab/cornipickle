@@ -34,6 +34,12 @@ public class ImpliesStatement extends AndStatement
     Statement left = m_statements.get(0);
     Statement right = m_statements.get(1);
     Verdict v_left = left.evaluate(j, d);
+    if (v_left == Verdict.FALSE)
+    {
+      // Shortcut
+      m_verdict = Verdict.TRUE;
+      return m_verdict;
+    }
     Verdict v_right = right.evaluate(j, d);
     // p -> q == !p or q
     m_verdict = threeValuedOr(threeValuedNot(v_left), v_right);
