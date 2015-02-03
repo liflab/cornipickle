@@ -24,8 +24,11 @@ $(document).ready(function() {
       event.stopPropagation();
     });
     // Add handler to button
-    $("#to-cornipickle").click(function() {
+    $("#to-cornipickle").click(function(event) {
         add_to_cornipickle(cornipickle_code);
+        event.stopPropagation(); // To avoid a call to Cornipickle
+      }).mouseup(function(event) {
+        event.stopPropagation(); // To avoid a call to Cornipickle
       });
     // Move second menu
     $("#second-menu").css({ "margin-left": "10px"});
@@ -62,7 +65,7 @@ $(document).ready(function() {
 </div>
 
 <!-- Cornipickle explanation -->
-<div id="cornipickle-explanation">
+<div id="cornipickle-explanation" class="nocornipickle">
 
 <h2>What's the problem?</h2>
 <p>The title says the page is Bill's, yet the next paragraph greets
@@ -70,11 +73,11 @@ Joe.</p>
 
 <p><button id="misalign-toggle">Toggle misalignment</button></p>
 
-<div id="cornipickle-section">
+<div id="cornipickle-section" class="nocornipickle">
 
 <h2>Detect it with Cornipickle</h2>
 
-<div class="cornipickle-square">
+<div class="cornipickle-square no-event">
 
 <p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
 
@@ -96,7 +99,7 @@ For each $x in $(.username) (
 
 </div>
 
-<div id="procedural-section">
+<div id="procedural-section" class="nocornipickle no-event">
 
 <h2>Procedural Equivalent</h2>
 
@@ -117,7 +120,7 @@ for (var s in $(".username")) {
 
 </div> <!-- /explanation -->
 
-<div id="footer">
+<div id="footer" class="nocornipickle">
 <hr />
 &copy; 2015 LIF
 </div>

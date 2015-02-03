@@ -24,8 +24,11 @@ $(document).ready(function() {
       event.stopPropagation();
     });
     // Add handler to button
-    $("#to-cornipickle").click(function() {
+    $("#to-cornipickle").click(function(event) {
         add_to_cornipickle(cornipickle_code);
+        event.stopPropagation(); // To avoid a call to Cornipickle
+      }).mouseup(function(event) {
+        event.stopPropagation(); // To avoid a call to Cornipickle
       });
     // Remove onmouseup event on some elements
     $(".no-event").mouseup(function(event) {
@@ -101,18 +104,18 @@ $(document).ready(function() {
 <p>Click on a square to highlight it. This time, once the blue square
 is selected, the red square <em>must</em> be selected next.</p>
 
-<div id="cornipickle-section">
+<div id="cornipickle-section" class="nocornipickle">
 
 <h2>Detect it with Cornipickle</h2>
 
-<div class="cornipickle-square">
+<div class="cornipickle-square no-event">
 
 <p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
 
 <div class="cornipickle-code">
 # Define what it means to be selected
 We say that $x is highlighted when (
-  $x's border matches "green"
+  $x's border matches "rgb\(0, 128, 0\)"
 ).
 
 We say that the red square is highlighted when (
@@ -153,7 +156,7 @@ Always (
 
 </div>
 
-<div id="procedural-section">
+<div id="procedural-section" class="nocornipickle no-event">
 
 <h2>Procedural Equivalent</h2>
 

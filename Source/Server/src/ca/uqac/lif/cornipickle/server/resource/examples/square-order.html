@@ -24,8 +24,11 @@ $(document).ready(function() {
       event.stopPropagation();
     });
     // Add handler to button
-    $("#to-cornipickle").click(function() {
+    $("#to-cornipickle").click(function(event) {
         add_to_cornipickle(cornipickle_code);
+        event.stopPropagation(); // To avoid a call to Cornipickle
+      }).mouseup(function(event) {
+        event.stopPropagation(); // To avoid a call to Cornipickle
       });
     // Remove onmouseup event on some elements
     $(".no-event").mouseup(function(event) {
@@ -101,18 +104,18 @@ $(document).ready(function() {
 <p>Click on a square to highlight it. However, once the blue square
 is selected, the red square should never be selected again.</p>
 
-<div id="cornipickle-section">
+<div id="cornipickle-section" class="nocornipickle">
 
 <h2>Detect it with Cornipickle</h2>
 
-<div class="cornipickle-square">
+<div class="cornipickle-square no-event">
 
 <p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
 
 <div class="cornipickle-code">
 # Define what it means to be selected
 We say that $x is highlighted when (
-  $x's border matches "green"
+  $x's border matches "rgb\(0, 128, 0\)"
 ).
 
 We say that the red square is highlighted when (
@@ -153,12 +156,12 @@ Always (
 
 </div>
 
-<div id="procedural-section">
+<div id="procedural-section" class="nocornipickle no-event">
 
 <h2>Procedural Equivalent</h2>
 
 <div class="procedural-equivalent jquery no-event">
-<pre><![CDATA[
+<pre>
 highlighted = function(x) {
   $(x).css("border-color") === "rgb(0, 128, 0)";
 };
@@ -170,11 +173,14 @@ highlighted_square = function(colour) {
 blue_highlighted = false;
 
 evaluate = function() {
-  if (highlighted_square("blue") === true)
+  if (highlighted_square("blue") === true) {
     blue_highlighted = true;
-  if (highlighted_square("red") === true && blue_highlighted == true)
+    return;
+  }
+  if (highlighted_square("red") === false &amp;&amp; blue_highlighted == true)
     console.log("Error");
-};]]>
+  blue_highlighted = false;
+};
 </pre>
 </div>
 

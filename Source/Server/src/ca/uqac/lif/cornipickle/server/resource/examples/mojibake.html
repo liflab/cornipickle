@@ -24,8 +24,11 @@ $(document).ready(function() {
       event.stopPropagation();
     });
     // Add handler to button
-    $("#to-cornipickle").click(function() {
+    $("#to-cornipickle").click(function(event) {
         add_to_cornipickle(cornipickle_code);
+        event.stopPropagation(); // To avoid a call to Cornipickle
+      }).mouseup(function(event) {
+        event.stopPropagation(); // To avoid a call to Cornipickle
       });
     // Move second menu
     $("#second-menu").css({ "margin-left": "10px"});
@@ -77,7 +80,7 @@ dÃ©tail, et autres partenaires spÃ©cialisÃ©s.</p>
 
 <p><button id="misalign-toggle">Toggle mojibake</button></p>
 
-<div id="cornipickle-section">
+<div id="cornipickle-section" class="nocornipickle">
 
 <h2>Detect it with Cornipickle</h2>
 
@@ -113,7 +116,7 @@ For each $text in $(CDATA) (
 
 </div>
 
-<div id="procedural-section">
+<div id="procedural-section" class="nocornipickle no-event">
 
 <h2>Procedural Equivalent</h2>
 

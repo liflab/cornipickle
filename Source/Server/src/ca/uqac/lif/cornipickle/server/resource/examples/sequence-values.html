@@ -23,8 +23,11 @@ $(document).ready(function() {
       event.stopPropagation();
     });
     // Add handler to button
-    $("#to-cornipickle").click(function() {
+    $("#to-cornipickle").click(function(event) {
         add_to_cornipickle(cornipickle_code);
+        event.stopPropagation(); // To avoid a call to Cornipickle
+      }).mouseup(function(event) {
+        event.stopPropagation(); // To avoid a call to Cornipickle
       });
     // Move second menu
     $("#second-menu").css({ "margin-left": "10px"});
@@ -67,11 +70,11 @@ see what the interpreter does.</p>
 <input type="button" class="set-value" value="4" />
 <input type="button" class="set-value" value="5" /></p>
 
-<div id="cornipickle-section">
+<div id="cornipickle-section" class="nocornipickle">
 
 <h2>Detect it with Cornipickle</h2>
 
-<div class="cornipickle-square">
+<div class="cornipickle-square no-event">
 
 <p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
 
@@ -96,7 +99,7 @@ Always (
 
 </div>
 
-<div id="procedural-section">
+<div id="procedural-section" class="nocornipickle no-event">
 
 <h2>Procedural Equivalent</h2>
 

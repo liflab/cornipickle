@@ -24,8 +24,11 @@ $(document).ready(function() {
       event.stopPropagation();
     });
     // Add handler to button
-    $("#to-cornipickle").click(function() {
+    $("#to-cornipickle").click(function(event) {
         add_to_cornipickle(cornipickle_code);
+        event.stopPropagation(); // To avoid a call to Cornipickle
+      }).mouseup(function(event) {
+        event.stopPropagation(); // To avoid a call to Cornipickle
       });
     // Remove onmouseup event on some elements
     $(".no-event").mouseup(function(event) {
@@ -97,11 +100,11 @@ $(document).ready(function() {
 <p>The textbox must be empty when the "Go" button is clicked.
 Its content does not matter when anything else is clicked. </p>
 
-<div id="cornipickle-section">
+<div id="cornipickle-section" class="nocornipickle">
 
 <h2>Detect it with Cornipickle</h2>
 
-<div class="cornipickle-square">
+<div class="cornipickle-square no-event">
 
 <p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
 
@@ -111,15 +114,15 @@ Its content does not matter when anything else is clicked. </p>
 
 We say that I click on Go when (
   There exists $b in $(button) such that (
-  	($b's text equals "Go")
+  	($b's text is "Go")
   	And
-  	($b's event equals "mouseup")
+  	($b's event is "mouseup")
   )
 ).
 
 We say that the textbox is empty when (
   For each $t in $(#textbox) (
-    $t's text equals ""
+    $t's text is ""
   )
 ).
 
@@ -138,31 +141,13 @@ Then (the textbox is empty).
 
 </div>
 
-<div id="procedural-section">
+<div id="procedural-section" class="nocornipickle no-event">
 
 <h2>Procedural Equivalent</h2>
 
 <div class="procedural-equivalent jquery no-event">
 <pre>
-highlighted = function(x) {
-  $(x).css("border-color") === "rgb(0, 128, 0)";
-};
-
-highlighted_square = function(colour) {
-  return highlighted($("#" + colour));
-};
-
-blue_highlighted = false;
-
-evaluate = function() {
-  if (highlighted_square("blue") === true) {
-    blue_highlighted = true;
-    return;
-  }
-  if (highlighted_square("red") === false &amp;&amp; blue_highlighted == true)
-    console.log("Error");
-  blue_highlighted = false;
-};
+TODO
 </pre>
 </div>
 

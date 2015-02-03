@@ -24,8 +24,11 @@ $(document).ready(function() {
       event.stopPropagation();
     });
     // Add handler to button
-    $("#to-cornipickle").click(function() {
+    $("#to-cornipickle").click(function(event) {
         add_to_cornipickle(cornipickle_code);
+        event.stopPropagation(); // To avoid a call to Cornipickle
+      }).mouseup(function(event) {
+        event.stopPropagation(); // To avoid a call to Cornipickle
       });
     // Remove onmouseup event on some elements
     $(".no-event").mouseup(function(event) {
@@ -93,6 +96,8 @@ $(document).ready(function() {
 
 <ul>
 <li><span class="value">3</span> <button class="decrement">-</button><button class="increment">+</button></li>
+<li><span class="value">5</span> <button class="decrement">-</button><button class="increment">+</button></li>
+<li><span class="value">7</span> <button class="decrement">-</button><button class="increment">+</button></li>
 </ul>
 
 <button id="go">Go</button>
@@ -103,14 +108,15 @@ $(document).ready(function() {
 <div id="cornipickle-explanation" class="nocornipickle">
 
 <h2>What's the problem?</h2>
-<p>At least one textbox should increment every time the "Go" button
-is pressed.</p>
+<p>Every time the "Go" button is pressed, at least one list item must have
+the same value as a list item the last time "Go" was pressed. It doesn't
+need to be the <em>same</em> item, only have the same value.</p>
 
 <div id="cornipickle-section" class="nocornipickle">
 
 <h2>Detect it with Cornipickle</h2>
 
-<div class="cornipickle-square">
+<div class="cornipickle-square no-event">
 
 <p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
 
@@ -148,7 +154,7 @@ Always (
 
 </div>
 
-<div id="procedural-section" class="nocornipickle">
+<div id="procedural-section" class="nocornipickle no-event">
 
 <h2>Procedural Equivalent</h2>
 
