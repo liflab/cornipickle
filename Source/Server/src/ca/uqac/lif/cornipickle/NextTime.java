@@ -33,11 +33,14 @@ public class NextTime extends TemporalStatement
   
   protected List<Statement> m_rightStatements;
   
+  boolean m_firstEvent;
+  
   public NextTime()
   {
     super();
     m_leftStatements = new LinkedList<Statement>();
     m_rightStatements = new LinkedList<Statement>();
+    m_firstEvent = true;
   }
   
   public void setLeft(Statement s)
@@ -70,6 +73,12 @@ public class NextTime extends TemporalStatement
   @Override
   public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
+    // Discard first event. The next time really means, the *next* time
+    if (m_firstEvent == true)
+    {
+      m_firstEvent = false;
+      return m_verdict;
+    }
     m_leftStatements.add(m_left.getClone());
     m_rightStatements.add(m_right.getClone());
     int i = 0;
