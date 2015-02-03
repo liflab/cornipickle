@@ -207,20 +207,20 @@ public class CornipickleServer extends InnerFileServer
             .create("h");
     options.addOption(opt);
     opt = OptionBuilder
-        .withLongOpt("format")
+        .withLongOpt("servername")
         .withArgName("x")
         .hasArg()
         .withDescription(
-            "Output parse tree in format x (dot, xml, txt or json). Default: xml")
-            .create("f");
+            "Set server name or IP address x (default: " + s_defaultServerName + ")")
+            .create("s");
     options.addOption(opt);
     opt = OptionBuilder
-        .withLongOpt("verbosity")
+        .withLongOpt("port")
         .withArgName("x")
         .hasArg()
         .withDescription(
-            "Verbose messages with level x")
-            .create();
+            "Listen on port x (default: " + s_defaultPort + ")")
+            .create("p");
     options.addOption(opt);
     return options;
   }
@@ -232,7 +232,7 @@ public class CornipickleServer extends InnerFileServer
   private static void showUsage(Options options)
   {
     HelpFormatter hf = new HelpFormatter();
-    hf.printHelp("java -jar BullwinkleParser.jar [options] grammar [inputfile]", options);
+    hf.printHelp("java -jar Cornipickle.jar [options] [file1 [file2 ...]]", options);
   }
   /**
    * Sets up the command line parser

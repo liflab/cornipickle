@@ -27,6 +27,8 @@ First make sure you have the following installed:
 - The [Web Resource Optimizer for Java](https://code.google.com/p/wro4j/)
   (wro4j) for minification of JavaScript files. Make sure to retrieve a JAR
   called "with dependencies". *(tested with version 1.6.3)*
+- The [Bullwinkle parser](https://github.com/sylvainhalle/Bullwinkle),
+  an on-the-fly parser for BNF grammars
 
 The last libraries should be put in Java's extension folder. This location
 varies according to the operating system you use:
@@ -48,9 +50,10 @@ Compile the sources by simply typing:
 
     ant
 
-This will produce a file called `CornipickleServer.jar` in the folder. This
-file is runnable and stand-alone, or can be used as a library, so it can be
-moved around to the location of your choice.
+This will produce a file called `Cornipickle.jar` in the folder. (Ignore the
+slew of Javadoc warnings, which will be fixed some day but have no impact on
+the build process.) This file is runnable and stand-alone, or can be used as
+a library, so it can be moved around to the location of your choice.
 
 In addition, the script generates in the `doc` folder the Javadoc
 documentation for using Cornipickle. This documentation is also embedded in
@@ -61,7 +64,35 @@ itself).
 Command-line Usage                                                   {#cli}
 ------------------
 
-TODO. Run with `--help` to see what's available.
+Cornipickle works as a server. You start it on the command line with:
+
+    java -jar Cornipickle.jar [options] [file1 [file2 ...]]
+
+where `file1`, `file2`, etc. are optional filenames containing Cornipickle
+specifications that the server can pre-load. Available options are:
+
+`-h`, `--help`
+:  Display command line usage
+`-p`,`--port <x>` 
+:  Listen on port x (default: 10101)
+`-s`,`--servername <x>`
+:  Set server name or IP address x (default: localhost)
+
+### Built-in Examples
+
+Cornipickle contains a few examples. Using the default settings, you can
+try these examples by starting the server and visiting
+[http://localhost:10101/examples/index.html](http://localhost:10101/examples/index.html)
+in your browser.
+
+### Status page
+
+You can have more detailed status on the specifications that Cornipickle is
+watching through a simple web interface. Using the default settings, you can
+try these examples by starting the server and visiting
+[http://localhost:10101/status](http://localhost:10101/status)
+in your browser. Refresh the page to get updated info.
+
 
 About the author                                                   {#about}
 ----------------
