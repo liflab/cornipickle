@@ -50,7 +50,8 @@
 <eventually>         := Eventually ( <statement> ) ;
 <next_time>         :=  The next time ( <statement> ) Then ( <statement> ) ;
 <property_or_const>  := <elem_property> | <constant> ;
-<equality>           := <property_or_const> equals <property_or_const> ;
+<equality>           := <property_or_const> equals <property_or_const>
+                        | <property_or_const> is <property_or_const> ;
 <gt>                 := <property_or_const> is greater than <property_or_const> ;
 <lt>                 := <property_or_const> is less than <property_or_const> ;
 <regex_match>        := <property_or_const> matches <property_or_const> ;

@@ -325,7 +325,7 @@ public class CornipickleParser implements ParseNodeVisitor
     else if (node_token.compareTo("<equality>") == 0)
     {
       Property right = (Property) m_nodes.pop();
-      m_nodes.pop(); // equals
+      m_nodes.pop(); // equals / is
       Property left = (Property) m_nodes.pop();
       EqualsStatement out = new EqualsStatement();
       out.setLeft(left);
