@@ -44,8 +44,8 @@
 	  </manifest>
 	  <fileset dir="Source/Server/bin"/>
 	  <fileset dir="Source/Server/src"/>
-	  <fileset dir="Source/Server/lib"/>
-	  <zipfileset excludes="META-INF/*.SF" src="Source/Server/lib/BullwinkleParser.jar"/>
+	  <!-- <fileset dir="Source/Server/lib"/>
+	  <zipfileset excludes="META-INF/*.SF" src="Source/Server/lib/BullwinkleParser.jar"/> -->
 	  <fileset dir="doc"/>
       </jar>
   </target>
