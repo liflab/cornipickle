@@ -183,31 +183,47 @@ var CornipickleProbe = function()
 		for (var i = 0; i < this.m_tagsToInclude.length; i++)
 		{
 			var part = this.m_tagsToInclude[i];
-			if (part[0] === ".")
+			if (this.matchesSelector(part, n))
 			{
-				// This is a class
-				if (n.className && n.className.contains(part.substring(1)))
-				{
-					return CornipickleProbe.INCLUDE;
-				}
-			}
-			else if (part[0] === "#")
-			{
-				// This is an id
-				if (n.id && n.id === part.substring(1))
-				{
-					return CornipickleProbe.INCLUDE;
-				}				
-			}
-			else
-			{
-				if (n.tagName && n.tagName.toLowerCase() === part.toLowerCase())
-				{
-					return CornipickleProbe.INCLUDE;
-				}
+				return CornipickleProbe.INCLUDE;
 			}
 		}
 		return CornipickleProbe.DONT_INCLUDE;
+	};
+	
+	/**
+	 * Checks whether an element's tag, class and ID name match the
+     * CSS selector element.
+	 */
+	this.matchesSelector = function(selector, n)
+	{
+		var pat = new RegExp("([\\w\\d]+){0,1}(\\.([\\w\\d]+)){0,1}(#([\\w\\d]+)){0,1}");
+		var mat = pat.exec(selector);
+		var tag_name = mat[1];
+		var class_name = mat[3];
+		var id_name = mat[5];
+		if (tag_name !== undefined)
+		{
+			if (!n.tagName || n.tagName.toLowerCase() !== tag_name.toLowerCase())
+			{
+				return false;
+			}
+		}
+		if (class_name !== undefined)
+		{
+			if (!n.className || n.className !== class_name)
+			{
+				return false;
+			}
+		}
+		if (id_name !== undefined)
+		{
+			if (!n.id || n.id !== id_name)
+			{
+				return false;
+			}
+		}
+		return true;
 	};
 
 	this.serializeWindow = function(page_contents)
@@ -437,8 +453,9 @@ var escape_json_string = function(key, value)
 {
 	if (typeof value === "string" || value instanceof String)
 	{
-		// Escape ampersands
-		return value.replace(/&/g, "%26");
+		// Escape some characters left of by encodeURI
+		value = value.replace(/&/g, "%26");
+		value = value.replace(/=/g, "%3D");
 	}
 	return value;
 };
