@@ -1,3 +1,20 @@
+/*
+    Cornipickle, validation of layout bugs in web applications
+    Copyright (C) 2015 Sylvain Hallé
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ca.uqac.lif.httpserver;
 
 import java.io.BufferedReader;
@@ -36,6 +53,11 @@ public class Server implements HttpHandler
    * Server name, either an IP address or a domain name
    */
   protected String m_serverName = "localhost";
+  
+  /**
+   * Port number
+   */
+  protected int m_port = 80;
 
   protected Vector<RequestCallback<? extends Server>> m_callbacks;
 
@@ -47,18 +69,18 @@ public class Server implements HttpHandler
     m_callbacks = new Vector<RequestCallback<? extends Server>>();
   }
 
-  public void startServer(int port)
+  public void startServer()
   {
     try
     {
-      m_server = HttpServer.create(new InetSocketAddress(port), 0);
+      m_server = HttpServer.create(new InetSocketAddress(m_port), 0);
       m_server.createContext("/", this);
       m_server.setExecutor(null); // creates a default executor
       m_server.start();
     }
     catch (IOException e)
     {
-      System.err.println("ERROR: cannot instantiate REST interface on port " + port);
+      System.err.println("ERROR: cannot instantiate REST interface on port " + m_port);
       e.printStackTrace();
     } 
   }
@@ -76,6 +98,16 @@ public class Server implements HttpHandler
   public String getServerName()
   {
     return m_serverName;
+  }
+  
+  public int getServerPort()
+  {
+    return m_port;
+  }
+  
+  public void setServerPort(int port)
+  {
+    m_port = port;
   }
 
   public void setUserAgent(String ua)

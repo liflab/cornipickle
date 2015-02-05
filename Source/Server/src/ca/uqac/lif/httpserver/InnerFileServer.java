@@ -20,9 +20,6 @@ package ca.uqac.lif.httpserver;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-
-import com.sun.net.httpserver.HttpExchange;
 
 public class InnerFileServer extends Server
 {
@@ -61,40 +58,6 @@ public class InnerFileServer extends Server
   public String getResourceFolderName()
   {
     return m_resourceFolder;
-  }
-
-  public class InnerFileCallback extends CachedRequestCallback<InnerFileServer>
-  {
-    public InnerFileCallback(InnerFileServer s)
-    {
-      super(s);
-    }
-
-    @Override
-    public boolean fire(HttpExchange t)
-    {
-      return true;
-    }
-
-    @Override
-    public boolean serve(HttpExchange t)
-    {
-      URI uri = t.getRequestURI();
-      int response_code = HTTP_OK;
-      // Get file
-      InputStream is = m_server.getResourceAsStream(m_resourceFolder + uri.getPath());
-      if (is != null)
-      {
-        byte[] file_contents = readBytes(is);
-        m_server.sendResponse(t, response_code, file_contents);
-      }
-      else
-      {
-        // Resource not found: send 404
-        m_server.sendResponse(t, HTTP_NOT_FOUND);
-      }
-      return true;
-    }
   }
 
   public static byte[] readBytes(InputStream is)
