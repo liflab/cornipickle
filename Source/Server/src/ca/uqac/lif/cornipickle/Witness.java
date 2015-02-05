@@ -17,37 +17,34 @@
  */
 package ca.uqac.lif.cornipickle;
 
-public class ForAllStatement extends Quantifier
+import java.util.LinkedList;
+import java.util.List;
+
+import ca.uqac.lif.cornipickle.json.JsonElement;
+
+/**
+ * Pointer to an element "explaining" why a statement is not fulfilled
+ * @author sylvain
+ */
+public class Witness
 {
-  public ForAllStatement()
+  protected List<Witness> m_children;
+  
+  protected JsonElement m_element;
+  
+  public Witness()
   {
     super();
-    m_startVerdict = new Verdict(Verdict.Value.TRUE);
-    m_cutoffVerdict = new Verdict(Verdict.Value.FALSE);
+    m_children = new LinkedList<Witness>();
   }
-
-  protected Verdict evaluationFunction(Verdict x, Verdict y)
+  
+  public void add(Witness w)
   {
-    x.conjoin(y);
-    return x;
+    m_children.add(w);
   }
-
-  @Override
-  public String toString(String indent)
+  
+  public void setElement(JsonElement e)
   {
-    StringBuilder out = new StringBuilder();
-    out.append(indent).append("For each ").append(m_variable).append(" in ").append(m_set).append("\n");
-    out.append(m_innerStatement.toString(indent + "  "));
-    return out.toString();
-  }
-
-  @Override
-  public ForAllStatement getClone()
-  {
-    ForAllStatement out = new ForAllStatement();
-    out.m_innerStatement = m_innerStatement.getClone();
-    out.m_variable = m_variable;
-    out.m_set = m_set.getClone();
-    return out;
+    m_element = e;
   }
 }

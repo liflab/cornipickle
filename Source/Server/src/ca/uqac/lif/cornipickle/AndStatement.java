@@ -38,17 +38,12 @@ public class AndStatement extends NAryStatement
   @Override
   public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    if (m_statements.isEmpty())
-    {
-      m_verdict = Verdict.FALSE;
-      return m_verdict;
-    }
-    Verdict out = Verdict.TRUE;
+    Verdict out = new Verdict(Verdict.Value.TRUE);
     for (Statement s : m_statements)
     {
       Verdict b = s.evaluate(j, d);
-      out = threeValuedAnd(out, b);
-      if (out == Verdict.FALSE)
+      out.conjoin(b);
+      if (out.is(Verdict.Value.FALSE))
         break;
     }
     m_verdict = out;
@@ -58,17 +53,12 @@ public class AndStatement extends NAryStatement
   @Override
   public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    if (m_statements.isEmpty())
-    {
-      m_verdict = Verdict.FALSE;
-      return m_verdict;
-    }
-    Verdict out = Verdict.TRUE;
+    Verdict out = new Verdict(Verdict.Value.TRUE);
     for (Statement s : m_statements)
     {
       Verdict b = s.evaluateAtemporal(j, d);
-      out = threeValuedAnd(out, b);
-      if (out == Verdict.FALSE)
+      out.conjoin(b);
+      if (out.is(Verdict.Value.FALSE))
         break;
     }
     return out;

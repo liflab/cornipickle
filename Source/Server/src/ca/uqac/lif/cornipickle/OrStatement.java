@@ -37,17 +37,12 @@ public class OrStatement extends AndStatement
   @Override
   public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    if (m_statements.isEmpty())
-    {
-      m_verdict = Verdict.FALSE;
-      return m_verdict;
-    }
-    Verdict out = Verdict.FALSE;
+    Verdict out = new Verdict(Verdict.Value.FALSE);
     for (Statement s : m_statements)
     {
       Verdict b = s.evaluate(j, d);
-      out = threeValuedOr(out, b);
-      if (out == Verdict.TRUE)
+      out.conjoin(b);
+      if (out.is(Verdict.Value.TRUE))
         break;
     }
     m_verdict = out;
@@ -57,17 +52,12 @@ public class OrStatement extends AndStatement
   @Override
   public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    if (m_statements.isEmpty())
-    {
-      m_verdict = Verdict.FALSE;
-      return m_verdict;
-    }
-    Verdict out = Verdict.FALSE;
+    Verdict out = new Verdict(Verdict.Value.FALSE);
     for (Statement s : m_statements)
     {
       Verdict b = s.evaluateAtemporal(j, d);
-      out = threeValuedOr(out, b);
-      if (out == Verdict.TRUE)
+      out.conjoin(b);
+      if (out.is(Verdict.Value.TRUE))
         break;
     }
     return out;

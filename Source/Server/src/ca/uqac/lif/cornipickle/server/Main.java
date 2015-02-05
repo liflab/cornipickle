@@ -71,6 +71,7 @@ public class Main
     // https://www.securecoding.cert.org/confluence/display/java/FIO14-J.+Perform+proper+cleanup+at+program+termination
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
     {
+      @Override
       public void run()
       {
         stderr.close();

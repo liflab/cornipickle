@@ -29,8 +29,8 @@ public class EvaluationTest
     eq.setLeft(new NumberConstant(1));
     eq.setRight(new NumberConstant(1));
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
-    Statement.Verdict answer = eq.evaluate(null, d);
-    if (answer != Statement.Verdict.TRUE)
+    Verdict answer = eq.evaluate(null, d);
+    if (!answer.is(Verdict.Value.TRUE))
     {
       fail("Expected true, got something else");
     }
@@ -48,8 +48,8 @@ public class EvaluationTest
     ns.setInnerStatement(eq);
     as.addOperand(ns);
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
-    Statement.Verdict answer = as.evaluate(null, d);
-    if (answer != Statement.Verdict.FALSE)
+    Verdict answer = as.evaluate(null, d);
+    if (!answer.is(Verdict.Value.FALSE))
     {
       fail("Expected false, got something else");
     }
@@ -66,8 +66,8 @@ public class EvaluationTest
     eq.setRight(new NumberConstant(100));
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
     d.put("$x", x);
-    Statement.Verdict answer = eq.evaluate(null, d);
-    if (answer != Statement.Verdict.TRUE)
+    Verdict answer = eq.evaluate(null, d);
+    if (!answer.is(Verdict.Value.TRUE))
     {
       fail("Expected true, got something else");
     }
@@ -84,8 +84,8 @@ public class EvaluationTest
     eq.setRight(new NumberConstant(100));
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
     d.put("$x", x);
-    Statement.Verdict answer = eq.evaluate(null, d);
-    if (answer != Statement.Verdict.FALSE)
+    Verdict answer = eq.evaluate(null, d);
+    if (!answer.is(Verdict.Value.FALSE))
     {
       fail("Expected false, got something else");
     }
@@ -130,8 +130,8 @@ public class EvaluationTest
     
     // Evaluate formula on document 
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
-    Statement.Verdict answer = foa.evaluate(main, d);
-    if (answer != Statement.Verdict.TRUE)
+    Verdict answer = foa.evaluate(main, d);
+    if (!answer.is(Verdict.Value.TRUE))
     {
       fail("Expected true, got something else");
     }
@@ -176,8 +176,8 @@ public class EvaluationTest
     
     // Evaluate formula on document 
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
-    Statement.Verdict answer = foa.evaluate(main, d);
-    if (answer != Statement.Verdict.FALSE)
+    Verdict answer = foa.evaluate(main, d);
+    if (!answer.is(Verdict.Value.FALSE))
     {
       fail("Expected false, got something else");
     }
@@ -189,21 +189,21 @@ public class EvaluationTest
     String expression = "The next time ($x's value equals 0) Then ($y's value equals 0)";
     CornipickleParser cp = new CornipickleParser();
     Statement st = cp.parseStatement(expression);
-    Statement.Verdict answer;
+    Verdict answer;
     int event_nb = 0;
     // Evaluate formula on document 
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
     d.put("$x", new JsonNumber(1));
     d.put("$y", new JsonNumber(1));
     answer = st.evaluate(null, d); event_nb++;
-    if (answer != Statement.Verdict.INCONCLUSIVE)
+    if (!answer.is(Verdict.Value.INCONCLUSIVE))
     {
       fail("Wrong verdict at event " + event_nb);
     }
     d.put("$x", new JsonNumber(0));
     d.put("$y", new JsonNumber(1));
     answer = st.evaluate(null, d); event_nb++;
-    if (answer != Statement.Verdict.FALSE)
+    if (!answer.is(Verdict.Value.FALSE))
     {
       fail("Wrong verdict at event " + event_nb);
     }
@@ -215,21 +215,21 @@ public class EvaluationTest
     String expression = "The next time ($x's value equals 0) Then ($y's value equals 0)";
     CornipickleParser cp = new CornipickleParser();
     Statement st = cp.parseStatement(expression);
-    Statement.Verdict answer;
+    Verdict answer;
     int event_nb = 0;
     // Evaluate formula on document 
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
     d.put("$x", new JsonNumber(1));
     d.put("$y", new JsonNumber(1));
     answer = st.evaluate(null, d); event_nb++;
-    if (answer != Statement.Verdict.INCONCLUSIVE)
+    if (!answer.is(Verdict.Value.INCONCLUSIVE))
     {
       fail("Wrong verdict at event " + event_nb);
     }
     d.put("$x", new JsonNumber(1));
     d.put("$y", new JsonNumber(0));
     answer = st.evaluate(null, d); event_nb++;
-    if (answer != Statement.Verdict.INCONCLUSIVE)
+    if (!answer.is(Verdict.Value.INCONCLUSIVE))
     {
       fail("Wrong verdict at event " + event_nb);
     }
@@ -241,21 +241,21 @@ public class EvaluationTest
     String expression = "The next time ($x's value equals 0) Then ($y's value equals 0)";
     CornipickleParser cp = new CornipickleParser();
     Statement st = cp.parseStatement(expression);
-    Statement.Verdict answer;
+    Verdict answer;
     int event_nb = 0;
     // Evaluate formula on document 
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
     d.put("$x", new JsonNumber(1));
     d.put("$y", new JsonNumber(1));
     answer = st.evaluate(null, d); event_nb++;
-    if (answer != Statement.Verdict.INCONCLUSIVE)
+    if (!answer.is(Verdict.Value.INCONCLUSIVE))
     {
       fail("Wrong verdict at event " + event_nb);
     }
     d.put("$x", new JsonNumber(0));
     d.put("$y", new JsonNumber(0));
     answer = st.evaluate(null, d); event_nb++;
-    if (answer != Statement.Verdict.TRUE)
+    if (!answer.is(Verdict.Value.TRUE))
     {
       fail("Wrong verdict at event " + event_nb);
     }

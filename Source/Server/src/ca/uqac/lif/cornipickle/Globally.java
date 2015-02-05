@@ -34,14 +34,14 @@ public class Globally extends TemporalStatement
   {
     super();
     m_inMonitors = new LinkedList<Statement>();
-    m_verdict = Statement.Verdict.INCONCLUSIVE;
+    m_verdict = new Verdict(Verdict.Value.INCONCLUSIVE);
   }
 
   @Override
   public void resetHistory()
   {
     m_inMonitors.clear();
-    m_verdict = Statement.Verdict.INCONCLUSIVE;
+    m_verdict = new Verdict(Verdict.Value.INCONCLUSIVE);
   }
 
   public void setInnerStatement(Statement s)
@@ -61,17 +61,17 @@ public class Globally extends TemporalStatement
     {
       Statement st = it.next();
       Verdict st_v = st.evaluate(j, d);
-      if (st_v == Verdict.TRUE)
+      if (st_v.is(Verdict.Value.TRUE))
       {
         it.remove();
       }
-      if (st_v == Verdict.FALSE)
+      if (st_v.is(Verdict.Value.FALSE))
       {
-        m_verdict = Verdict.FALSE;
-        return m_verdict;
+        m_verdict.setValue(Verdict.Value.FALSE);
+        break;
       }
     }
-    return Verdict.INCONCLUSIVE;
+    return m_verdict;
   }
 
   @Override

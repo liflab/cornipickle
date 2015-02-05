@@ -24,13 +24,11 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 
 public abstract class Statement extends LanguageElement
 { 
-  public static enum Verdict {TRUE, FALSE, INCONCLUSIVE};
-
-  protected Statement.Verdict m_verdict;
+  protected Verdict m_verdict;
   
   public Statement()
   {
-    m_verdict = Verdict.INCONCLUSIVE;
+    m_verdict = new Verdict(Verdict.Value.INCONCLUSIVE);
   }
 
   public final Verdict evaluate(JsonElement j)
@@ -53,7 +51,7 @@ public abstract class Statement extends LanguageElement
 
   public final Verdict evaluate(JsonElement j, Map<String,JsonElement> d)
   {
-    if (m_verdict != Verdict.INCONCLUSIVE) //&& isTemporal())
+    if (!m_verdict.is(Verdict.Value.INCONCLUSIVE)) //&& isTemporal())
     {
       return m_verdict;
     }
@@ -73,46 +71,9 @@ public abstract class Statement extends LanguageElement
   
   //public abstract Verdict evaluateATemporal(JsonElement j, Map<String,JsonElement> d);
 
-  public static final Verdict threeValuedAnd(Verdict x, Verdict y)
-  {
-    if (x == Verdict.FALSE || y == Verdict.FALSE)
-    {
-      return Verdict.FALSE;
-    }
-    if (x == Verdict.TRUE && y == Verdict.TRUE)
-    {
-      return Verdict.TRUE;
-    }
-    return Verdict.INCONCLUSIVE;
-  }
-
   public abstract Statement getClone();
 
   public abstract void resetHistory();
 
-  public static final Verdict threeValuedOr(Verdict x, Verdict y)
-  {
-    if (x == Verdict.TRUE || y == Verdict.TRUE)
-    {
-      return Verdict.TRUE;
-    }
-    if (x == Verdict.FALSE && y == Verdict.FALSE)
-    {
-      return Verdict.FALSE;
-    }
-    return Verdict.INCONCLUSIVE;
-  }
 
-  public static final Verdict threeValuedNot(Verdict x)
-  {
-    if (x == Verdict.FALSE)
-    {
-      return Verdict.TRUE;
-    }
-    if (x == Verdict.TRUE)
-    {
-      return Verdict.FALSE;
-    }
-    return Verdict.INCONCLUSIVE;
-  }
 }

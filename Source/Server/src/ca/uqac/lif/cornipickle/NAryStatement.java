@@ -86,7 +86,7 @@ public abstract class NAryStatement extends Statement
   @Override
   public void resetHistory()
   {
-    m_verdict = Statement.Verdict.INCONCLUSIVE;
+    m_verdict = new Verdict(Verdict.Value.INCONCLUSIVE);
     for (Statement n : m_statements)
     {
       n.resetHistory();

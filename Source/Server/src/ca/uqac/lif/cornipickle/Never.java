@@ -41,17 +41,17 @@ public class Never extends Globally
     {
       Statement st = it.next();
       Verdict st_v = st.evaluate(j, d);
-      if (st_v == Verdict.FALSE)
+      if (st_v.is(Verdict.Value.FALSE))
       {
         it.remove();
       }
-      if (st_v == Verdict.TRUE)
+      if (st_v.is(Verdict.Value.TRUE))
       {
-        m_verdict = Verdict.FALSE;
-        return m_verdict;
+        m_verdict.setValue(Verdict.Value.FALSE);
+        break;
       }
     }
-    return Verdict.INCONCLUSIVE;
+    return m_verdict;
   }
 
   @Override

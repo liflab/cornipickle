@@ -51,7 +51,7 @@ public abstract class ComparisonStatement extends Statement
   
   public void resetHistory()
   {
-    m_verdict = Statement.Verdict.INCONCLUSIVE;
+    m_verdict = new Verdict(Verdict.Value.INCONCLUSIVE);
   }
   
   public void setLeft(final Property p)
@@ -74,7 +74,7 @@ public abstract class ComparisonStatement extends Statement
     {
       return compare((JsonNumber) e1, (JsonNumber) e2);
     }
-    return Verdict.FALSE;
+    return new Verdict(Verdict.Value.FALSE);
   }
   
   protected abstract Verdict compare(JsonString e1, JsonString e2);

@@ -28,21 +28,24 @@ public class ImpliesStatement extends AndStatement
   {
     if (m_statements.size() < 2)
     {
-      m_verdict = Verdict.FALSE;
+      m_verdict = new Verdict(Verdict.Value.FALSE);
       return m_verdict;
     }
     Statement left = m_statements.get(0);
     Statement right = m_statements.get(1);
     Verdict v_left = left.evaluate(j, d);
-    if (v_left == Verdict.FALSE)
+    /*if (v_left == Verdict.FALSE)
     {
       // Shortcut
       m_verdict = Verdict.TRUE;
       return m_verdict;
-    }
+    }*/
     Verdict v_right = right.evaluate(j, d);
     // p -> q == !p or q
-    m_verdict = threeValuedOr(threeValuedNot(v_left), v_right);
+    Verdict n_v_left = new Verdict();
+    n_v_left.negate(v_left);
+    n_v_left.disjoin(v_right);
+    m_verdict = n_v_left;
     return m_verdict;
   }
   
@@ -51,15 +54,25 @@ public class ImpliesStatement extends AndStatement
   {
     if (m_statements.size() < 2)
     {
-      m_verdict = Verdict.FALSE;
+      m_verdict = new Verdict(Verdict.Value.FALSE);
       return m_verdict;
     }
     Statement left = m_statements.get(0);
     Statement right = m_statements.get(1);
     Verdict v_left = left.evaluateAtemporal(j, d);
+    /*if (v_left == Verdict.FALSE)
+    {
+      // Shortcut
+      m_verdict = Verdict.TRUE;
+      return m_verdict;
+    }*/
     Verdict v_right = right.evaluateAtemporal(j, d);
     // p -> q == !p or q
-    return threeValuedOr(threeValuedNot(v_left), v_right);
+    Verdict n_v_left = new Verdict();
+    n_v_left.negate(v_left);
+    n_v_left.disjoin(v_right);
+    m_verdict = n_v_left;
+    return m_verdict;
   }
 
   @Override

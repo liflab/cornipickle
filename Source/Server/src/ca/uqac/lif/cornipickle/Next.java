@@ -44,7 +44,7 @@ public class Next extends TemporalStatement
   @Override
   public void resetHistory()
   {
-    m_verdict = Statement.Verdict.INCONCLUSIVE;
+    m_verdict = new Verdict(Verdict.Value.INCONCLUSIVE);
     m_firstEvent = true;
     m_innerStatement.resetHistory();
   }
@@ -55,9 +55,9 @@ public class Next extends TemporalStatement
     if (m_firstEvent)
     {
       m_firstEvent = false;
-      return Verdict.INCONCLUSIVE;
+      return m_verdict;
     }
-    if (m_verdict != Verdict.INCONCLUSIVE)
+    if (!m_verdict.is(Verdict.Value.INCONCLUSIVE))
     {
       return m_verdict;
     }

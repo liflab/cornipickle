@@ -22,14 +22,15 @@ public class ExistsStatement extends Quantifier
   public ExistsStatement()
   {
     super();
-    m_startVerdict = Verdict.FALSE;
-    m_cutoffVerdict = Verdict.TRUE;
+    m_startVerdict = new Verdict(Verdict.Value.FALSE);
+    m_cutoffVerdict = new Verdict(Verdict.Value.TRUE);
   }
   
   @Override
   protected Verdict evaluationFunction(Verdict x, Verdict y)
   {
-    return threeValuedOr(x, y);
+    x.disjoin(y);
+    return x;
   }
   
   @Override

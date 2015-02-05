@@ -33,21 +33,39 @@ public class GreaterThanStatement extends ComparisonStatement
       JsonNumber n2 = new JsonNumber(Integer.parseInt(e2.stringValue()));
       return compare(n1, n2);
     }
+    Verdict out = new Verdict();
+    Witness w = new Witness();
+    w.setElement(e1);
     if (e1.stringValue().compareTo(e2.stringValue()) == 0)
     {
-    	return Verdict.TRUE;
+      out.setValue(Verdict.Value.TRUE);
+      out.setWitnessTrue(w);
     }
-    return Verdict.FALSE;
+    else
+    {
+      out.setValue(Verdict.Value.FALSE);
+      out.setWitnessFalse(w);
+    }
+    return out;
   }
   
   @Override
   protected Verdict compare(JsonNumber e1, JsonNumber e2)
   {
+    Verdict out = new Verdict();
+    Witness w = new Witness();
+    w.setElement(e1);
     if (e1.numberValue().floatValue() > e2.numberValue().floatValue())
     {
-    	return Verdict.TRUE;
+      out.setValue(Verdict.Value.TRUE);
+      out.setWitnessTrue(w);
     }
-    return Verdict.FALSE;
+    else
+    {
+      out.setValue(Verdict.Value.FALSE);
+      out.setWitnessFalse(w);
+    }
+    return out;
   }
   
   @Override

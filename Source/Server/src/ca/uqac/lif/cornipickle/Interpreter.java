@@ -28,7 +28,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
-import ca.uqac.lif.cornipickle.Statement.Verdict;
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonList;
 import ca.uqac.lif.cornipickle.json.JsonSlowParser;
@@ -44,7 +43,7 @@ public class Interpreter
   
   protected CornipickleParser m_parser;
   
-  protected Map<StatementMetadata,Statement.Verdict> m_verdicts;
+  protected Map<StatementMetadata,Verdict> m_verdicts;
   
   public Interpreter()
   {
@@ -52,7 +51,7 @@ public class Interpreter
     m_statements = new HashMap<StatementMetadata,Statement>();
     m_setDefs = new HashMap<String,SetDefinition>();
     m_parser = new CornipickleParser();
-    m_verdicts = new HashMap<StatementMetadata,Statement.Verdict>();
+    m_verdicts = new HashMap<StatementMetadata,Verdict>();
   }
   
   public static void main(String[] args) throws IOException, JsonParseException, ParseException
@@ -67,7 +66,7 @@ public class Interpreter
     Interpreter interpreter = new Interpreter();
     interpreter.parseProperties(corni_file_contents);
     interpreter.evaluateAll(jse);
-    Map<StatementMetadata,Statement.Verdict> verdicts = interpreter.getVerdicts();
+    Map<StatementMetadata,Verdict> verdicts = interpreter.getVerdicts();
     System.out.println(verdicts);
   }
   
@@ -77,7 +76,7 @@ public class Interpreter
     {
       Statement s = m_statements.get(key);
       s.resetHistory();
-      m_verdicts.put(key, Statement.Verdict.INCONCLUSIVE);
+      m_verdicts.put(key, new Verdict(Verdict.Value.INCONCLUSIVE));
     }
   }
   
@@ -170,7 +169,7 @@ public class Interpreter
             Statement s = (Statement) le;
             meta.put("uniqueid", Integer.toString(i));
             m_statements.put(meta, s);
-            m_verdicts.put(meta, Statement.Verdict.INCONCLUSIVE);
+            m_verdicts.put(meta, new Verdict(Verdict.Value.INCONCLUSIVE));
             meta = new StatementMetadata();
             le_string = new StringBuilder();
           }
@@ -294,14 +293,14 @@ public class Interpreter
     return out.toString();
   }
   
-  public Map<StatementMetadata,Statement.Verdict> getVerdicts()
+  public Map<StatementMetadata,Verdict> getVerdicts()
   {
   	return m_verdicts;
   }
 
   public void evaluateAll(JsonElement j)
   {
-    Map<StatementMetadata,Statement.Verdict> verdicts = new HashMap<StatementMetadata,Statement.Verdict>();
+    Map<StatementMetadata,Verdict> verdicts = new HashMap<StatementMetadata,Verdict>();
     Map<String,JsonElement> d = new HashMap<String,JsonElement>();
     // Fill dictionary with user-defined sets
     for (String set_name : m_setDefs.keySet())
@@ -314,7 +313,7 @@ public class Interpreter
     for (StatementMetadata key : m_statements.keySet())
     {
       Statement s = m_statements.get(key);
-      Statement.Verdict b = Verdict.INCONCLUSIVE;
+      Verdict b = new Verdict(Verdict.Value.INCONCLUSIVE);
       if (s.isTemporal())
       {
         b = s.evaluate(j, d);

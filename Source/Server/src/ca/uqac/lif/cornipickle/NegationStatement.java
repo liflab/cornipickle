@@ -43,20 +43,20 @@ public class NegationStatement extends Statement
   @Override
   public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    m_verdict = threeValuedNot(m_innerStatement.evaluate(j, d));
+    m_verdict.negate(m_innerStatement.evaluate(j, d));
     return m_verdict;
   }
   
   @Override
   public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    m_verdict = threeValuedNot(m_innerStatement.evaluateAtemporal(j, d));
+    m_verdict.negate(m_innerStatement.evaluateAtemporal(j, d));
     return m_verdict;
   }
 
   public void resetHistory()
   {
-    m_verdict = Statement.Verdict.INCONCLUSIVE;
+    m_verdict = new Verdict(Verdict.Value.INCONCLUSIVE);
     m_innerStatement.resetHistory();
   }
 

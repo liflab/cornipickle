@@ -85,7 +85,7 @@ public abstract class Quantifier extends Statement
   
   public void resetHistory()
   {
-    m_verdict = Verdict.INCONCLUSIVE;
+    m_verdict = new Verdict(Verdict.Value.INCONCLUSIVE);
     m_domain = null;
     m_innerStatement.resetHistory();
   }

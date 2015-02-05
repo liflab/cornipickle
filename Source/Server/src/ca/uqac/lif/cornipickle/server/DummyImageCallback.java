@@ -22,7 +22,7 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.util.Map;
 
-import ca.uqac.lif.cornipickle.Statement;
+import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonFastParser;
@@ -105,7 +105,7 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
       }
     }
     // Select the dummy image to send back
-    Map<StatementMetadata,Statement.Verdict> verdicts = m_server.m_interpreter.getVerdicts();
+    Map<StatementMetadata,Verdict> verdicts = m_server.m_interpreter.getVerdicts();
     byte[] image_to_return = selectImage(verdicts);
     // Create cookie response
     String cookie_json_string = createResponseCookie(verdicts);
@@ -114,14 +114,14 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
     return true;
   }
 
-  protected static byte[] selectImage(Map<StatementMetadata,Statement.Verdict> verdicts)
+  protected static byte[] selectImage(Map<StatementMetadata,Verdict> verdicts)
   {
     int num_errors = 0;
     byte[] image_out = s_dummyImage;
     for (StatementMetadata key : verdicts.keySet())
     {
-      Statement.Verdict v = verdicts.get(key);
-      if (v == Statement.Verdict.FALSE)
+      Verdict v = verdicts.get(key);
+      if (v.is(Verdict.Value.FALSE))
       {
         num_errors++;
       }
@@ -145,23 +145,23 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
     return image_out;
   }
   
-  protected static String createResponseCookie(Map<StatementMetadata,Statement.Verdict> verdicts)
+  protected static String createResponseCookie(Map<StatementMetadata,Verdict> verdicts)
   {
     StringBuilder out = new StringBuilder();
     int num_false = 0;
     int num_true = 0;
     int num_inconclusive = 0;
-    Statement.Verdict outcome = Statement.Verdict.TRUE;
+    Verdict outcome = new Verdict(Verdict.Value.TRUE);
     out.append("{");
     for (StatementMetadata key : verdicts.keySet())
     {
-      Statement.Verdict v = verdicts.get(key);
-      outcome = Statement.threeValuedAnd(outcome, v);
-      if (v == Statement.Verdict.FALSE)
+      Verdict v = verdicts.get(key);
+      outcome.conjoin(v);
+      if (v.is(Verdict.Value.FALSE))
       {
         num_false++;
       }
-      else if (v == Statement.Verdict.TRUE)
+      else if (v.is(Verdict.Value.TRUE))
       {
         num_true++;
       } 

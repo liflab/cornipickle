@@ -29,22 +29,31 @@ public class RegexMatch extends ComparisonStatement
   @Override
   protected Verdict compare(JsonString e1, JsonString e2)
   {
+    Verdict out = new Verdict();
+    Witness w = new Witness();
+    w.setElement(e1);
     String subject = e1.stringValue();
     String pattern = e2.stringValue();
     Pattern pat = Pattern.compile(pattern);
     Matcher mat = pat.matcher(subject);
     if (mat.find())
     {
-      return Verdict.TRUE;
+      out.setValue(Verdict.Value.TRUE);
+      out.setWitnessTrue(w);
     }
-    return Verdict.FALSE;
+    else
+    {
+      out.setValue(Verdict.Value.FALSE);
+      out.setWitnessFalse(w);
+    }
+    return out;
   }
 
   @Override
   protected Verdict compare(JsonNumber e1, JsonNumber e2)
   {
     // Regexes don't apply to numbers
-    return Verdict.FALSE;
+    return new Verdict(Verdict.Value.FALSE);
   }
 
   @Override

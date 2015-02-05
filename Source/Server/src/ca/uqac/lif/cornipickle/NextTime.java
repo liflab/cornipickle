@@ -67,7 +67,7 @@ public class NextTime extends TemporalStatement
   {
     m_left.resetHistory();
     m_right.resetHistory();
-    m_verdict = Verdict.INCONCLUSIVE;
+    m_verdict = new Verdict(Verdict.Value.INCONCLUSIVE);
   }
 
   @Override
@@ -88,19 +88,19 @@ public class NextTime extends TemporalStatement
       Statement right = m_rightStatements.get(i);
       Verdict v_left = left.evaluateTemporal(j, d);
       Verdict v_right = right.evaluateTemporal(j, d);
-      if (v_left == Verdict.FALSE)
+      if (v_left.is(Verdict.Value.FALSE))
       {
         m_leftStatements.remove(i);
         m_rightStatements.remove(i);
         i--;
       }
-      else if (v_left == Verdict.TRUE && v_right == Verdict.FALSE)
+      else if (v_left.is(Verdict.Value.TRUE) && v_right.is(Verdict.Value.FALSE))
       {
-        m_verdict = Verdict.FALSE;
+        m_verdict.setValue(Verdict.Value.FALSE);
       }
-      else if (v_right == Verdict.TRUE)
+      else if (v_right.is(Verdict.Value.TRUE))
       {
-        m_verdict = Verdict.TRUE;
+        m_verdict.setValue(Verdict.Value.TRUE);
       }
       i++;
     }
