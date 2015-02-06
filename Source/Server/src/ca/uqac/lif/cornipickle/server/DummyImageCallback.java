@@ -20,12 +20,17 @@ package ca.uqac.lif.cornipickle.server;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonFastParser;
+import ca.uqac.lif.cornipickle.json.JsonMap;
+import ca.uqac.lif.cornipickle.json.JsonNumber;
 import ca.uqac.lif.cornipickle.json.JsonParser;
 import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
 import ca.uqac.lif.httpserver.Cookie;
@@ -152,7 +157,7 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
     int num_true = 0;
     int num_inconclusive = 0;
     Verdict outcome = new Verdict(Verdict.Value.TRUE);
-    out.append("{");
+    LinkedList<List<Number>> id_to_highlight = new LinkedList<List<Number>>();
     for (StatementMetadata key : verdicts.keySet())
     {
       Verdict v = verdicts.get(key);
@@ -160,6 +165,7 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
       if (v.is(Verdict.Value.FALSE))
       {
         num_false++;
+        id_to_highlight.add(getIdsToHighlight(v));
       }
       else if (v.is(Verdict.Value.TRUE))
       {
@@ -170,12 +176,40 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
         num_inconclusive++;
       }
     }
-    out.append("\"global-verdict\" : \"").append(outcome).append("\",");
+    out.append("{");
+    out.append("\"global-verdict\" : \"").append(outcome.getValue()).append("\",");
     out.append("\"num-true\" : ").append(num_true).append(",");
     out.append("\"num-false\" : ").append(num_false).append(",");
-    out.append("\"num-inconclusive\" : ").append(num_inconclusive);
+    out.append("\"num-inconclusive\" : ").append(num_inconclusive).append(",");
+    out.append("\"highlight-ids\" : ").append(id_to_highlight.toString());
     out.append("}");
     return out.toString();
+  }
+  
+  protected static List<Number> getIdsToHighlight(Verdict v)
+  {
+    LinkedList<Number> out = new LinkedList<Number>();
+    Set<Set<JsonElement>> tuples = v.getWitness().flatten();
+    for (Set<JsonElement> tuple : tuples)
+    {
+      for (JsonElement e : tuple)
+      {
+        if (!(e instanceof JsonMap))
+        {
+          continue;
+        }
+        JsonMap m = (JsonMap) e;
+        JsonElement id = m.get("cornipickleid");
+        if (id == null || !(id instanceof JsonNumber))
+        {
+          continue;
+        }
+        JsonNumber n_id = (JsonNumber) id;
+        out.add(n_id.numberValue());
+      }
+      break; // We return only the first tuple
+    }
+    return out;
   }
 
 }

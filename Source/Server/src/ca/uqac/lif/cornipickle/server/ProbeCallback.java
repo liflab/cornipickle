@@ -39,7 +39,7 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
    * Whether to minify the probe's code before sending it to the
    * server. Defaults to false in development mode.
    */
-  protected boolean m_minifyJavaScript = true;
+  protected boolean m_minifyJavaScript = false;
   
   /**
    * The processor used to minify the JavaScript code

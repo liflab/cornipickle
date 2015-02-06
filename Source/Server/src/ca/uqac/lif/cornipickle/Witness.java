@@ -17,8 +17,10 @@
  */
 package ca.uqac.lif.cornipickle;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import ca.uqac.lif.cornipickle.json.JsonElement;
 
@@ -38,13 +40,91 @@ public class Witness
     m_children = new LinkedList<Witness>();
   }
   
+  public Witness(JsonElement e)
+  {
+    this();
+    m_element = e;
+  }
+  
   public void add(Witness w)
   {
-    m_children.add(w);
+    if (!w.isEmpty())
+    {
+      // Avoid filling witness with nested empty lists
+      m_children.add(w);
+    }
   }
   
   public void setElement(JsonElement e)
   {
     m_element = e;
+  }
+  
+  public int childrenCount()
+  {
+    return m_children.size();
+  }
+  
+  public boolean isEmpty()
+  {
+    return m_children.isEmpty() && m_element == null;
+  }
+  
+  @Override
+  public final String toString()
+  {
+    return toString("");
+  }
+  
+  protected String toString(String indent)
+  {
+    StringBuilder out = new StringBuilder();
+    out.append(indent);
+    if (m_element != null)
+    {
+      out.append(m_element).append(":");
+    }
+    out.append("{\n");
+    boolean first = true;
+    for (Witness child : m_children)
+    {
+      if (first)
+      {
+        first = false;
+      }
+      else
+      {
+        out.append(",\n");
+      }
+      out.append(child.toString(indent + " "));
+    }
+    out.append("\n").append(indent).append("}");
+    return out.toString();
+  }
+  
+  public Set<Set<JsonElement>> flatten()
+  {
+    return flatten(new HashSet<JsonElement>());
+  }
+  
+  protected Set<Set<JsonElement>> flatten(Set<JsonElement> current)
+  {
+    HashSet<Set<JsonElement>> out = new HashSet<Set<JsonElement>>();
+    if (m_element != null)
+    {
+      current.add(m_element);
+    }
+    if (m_children.isEmpty())
+    {
+      out.add(current);
+      return out;
+    }
+    for (Witness child : m_children)
+    {
+      Set<JsonElement> new_current = new HashSet<JsonElement>();
+      new_current.addAll(current);
+      out.addAll(child.flatten(new_current));
+    }
+    return out;
   }
 }

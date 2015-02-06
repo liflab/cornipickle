@@ -17,18 +17,20 @@
  */
 package ca.uqac.lif.cornipickle;
 
+import ca.uqac.lif.cornipickle.json.JsonElement;
+
 public class ForAllStatement extends Quantifier
 {
   public ForAllStatement()
   {
     super();
-    m_startVerdict = new Verdict(Verdict.Value.TRUE);
-    m_cutoffVerdict = new Verdict(Verdict.Value.FALSE);
+    m_startValue = Verdict.Value.TRUE;
+    m_cutoffValue = Verdict.Value.FALSE;
   }
 
-  protected Verdict evaluationFunction(Verdict x, Verdict y)
+  protected Verdict evaluationFunction(Verdict x, Verdict y, JsonElement e)
   {
-    x.conjoin(y);
+    x.conjoin(y, e);
     return x;
   }
 

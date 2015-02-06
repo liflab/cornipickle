@@ -41,7 +41,7 @@ public class OrStatement extends AndStatement
     for (Statement s : m_statements)
     {
       Verdict b = s.evaluate(j, d);
-      out.conjoin(b);
+      out.disjoin(b);
       if (out.is(Verdict.Value.TRUE))
         break;
     }
@@ -56,7 +56,7 @@ public class OrStatement extends AndStatement
     for (Statement s : m_statements)
     {
       Verdict b = s.evaluateAtemporal(j, d);
-      out.conjoin(b);
+      out.disjoin(b);
       if (out.is(Verdict.Value.TRUE))
         break;
     }

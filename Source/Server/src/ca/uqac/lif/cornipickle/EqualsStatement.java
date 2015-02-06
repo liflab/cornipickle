@@ -35,7 +35,8 @@ public class EqualsStatement extends ComparisonStatement
     }
     Verdict out = new Verdict();
     Witness w = new Witness();
-    w.setElement(e1);
+    w.add(new Witness(e1));
+    w.add(new Witness(e2));
     if (e1.stringValue().compareTo(e2.stringValue()) == 0)
     {
       out.setValue(Verdict.Value.TRUE);
@@ -48,13 +49,14 @@ public class EqualsStatement extends ComparisonStatement
     }
     return out;
   }
-  
+
   @Override
   protected Verdict compare(JsonNumber e1, JsonNumber e2)
   {
     Verdict out = new Verdict();
     Witness w = new Witness();
-    w.setElement(e1);
+    w.add(new Witness(e1));
+    w.add(new Witness(e2));
     if (e1.numberValue().floatValue() == e2.numberValue().floatValue())
     {
       out.setValue(Verdict.Value.TRUE);
@@ -67,7 +69,7 @@ public class EqualsStatement extends ComparisonStatement
     }
     return out;
   }
-  
+
   @Override
   public String toString(String indent)
   {
@@ -75,13 +77,13 @@ public class EqualsStatement extends ComparisonStatement
     out.append(m_left).append(" equals ").append(m_right);
     return out.toString();
   }
-  
+
   @Override
   public String getKeyword()
   {
     return "equals";
   }
-  
+
   @Override
   public EqualsStatement getClone()
   {

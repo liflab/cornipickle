@@ -35,7 +35,8 @@ public class GreaterThanStatement extends ComparisonStatement
     }
     Verdict out = new Verdict();
     Witness w = new Witness();
-    w.setElement(e1);
+    w.add(new Witness(e1));
+    w.add(new Witness(e2));
     if (e1.stringValue().compareTo(e2.stringValue()) == 0)
     {
       out.setValue(Verdict.Value.TRUE);
@@ -54,7 +55,8 @@ public class GreaterThanStatement extends ComparisonStatement
   {
     Verdict out = new Verdict();
     Witness w = new Witness();
-    w.setElement(e1);
+    w.add(new Witness(e1));
+    w.add(new Witness(e2));
     if (e1.numberValue().floatValue() > e2.numberValue().floatValue())
     {
       out.setValue(Verdict.Value.TRUE);

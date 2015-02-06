@@ -35,6 +35,11 @@ var CornipickleProbe = function()
 	{
 		this.m_tagsToInclude = list;
 	};
+	
+	/**
+	 * Map from unique IDs to element references
+	 */
+	this.m_idMap = {};
 
 	/**
 	 * Serializes the contents of the page. This method recursively
@@ -57,11 +62,7 @@ var CornipickleProbe = function()
 			if (n.tagName)
 			{
 				// Gives the element a unique ID, if it doesn't have one
-				if (!n.cornipickleid)
-				{
-					n.cornipickleid = CornipickleProbe.elementCounter;
-					CornipickleProbe.elementCounter++;
-				}
+				this.registerNewElement(n);
 				var pos = cumulativeOffset(n);
 				out.tagname = n.tagName.toLowerCase();
 				out.cornipickleid = n.cornipickleid;
@@ -72,8 +73,8 @@ var CornipickleProbe = function()
 				out = this.addIfDefined(out, "border", CornipickleProbe.formatBorderString(n));
 				out = this.addIfDefined(out, "top", pos.top);
 				out = this.addIfDefined(out, "left", pos.left);
-				out = this.addIfDefined(out, "bottom", this.addDimensions([pos.top, n.clientHeight]));
-				out = this.addIfDefined(out, "right", this.addDimensions([pos.left,  n.clientWidth]));
+				out = this.addIfDefined(out, "bottom", add_dimensions([pos.top, n.clientHeight]));
+				out = this.addIfDefined(out, "right", add_dimensions([pos.left,  n.clientWidth]));
 				if (n === event.target)
 				{
 					out.event = this.serializeEvent(event);
@@ -126,26 +127,6 @@ var CornipickleProbe = function()
 			}
 		}
 		return out;
-	};
-
-	this.addDimensions = function(dimensions)
-	{
-		var sum = 0;
-		for (var i = 0; i < dimensions.length; i++)
-		{
-			var d = dimensions[i];
-			sum += this.removeUnits(d);
-		}
-		return sum;
-	};
-
-	this.removeUnits = function(s)
-	{
-		if (typeof s == "string" || s instanceof String)
-		{
-			s = s.replace("px", "");
-		}
-		return Number(s);
 	};
 
 	this.addIfDefined = function(out, property_name, property)
@@ -211,7 +192,12 @@ var CornipickleProbe = function()
 		}
 		if (class_name !== undefined)
 		{
-			if (!n.className || n.className !== class_name)
+			if (!n.className)
+			{
+				return false;
+			}
+			var class_parts = n.className.split(" ");
+			if (!array_contains(class_parts, class_name))
 			{
 				return false;
 			}
@@ -250,6 +236,8 @@ var CornipickleProbe = function()
 	{
 		console.log("Click");
 		CornipickleProbe.updateTransmitIcon(true);
+		// Un-highlight previously highlighted elements
+		CornipickleProbe.unHighlightElements();
 		// Serialize page contents
 		var json = cp_probe.serializePageContents(document.body, [], event);
 		json = cp_probe.serializeWindow(json);
@@ -257,6 +245,20 @@ var CornipickleProbe = function()
 		var url = "http://%%SERVER_NAME%%/image?rand=" + Math.round(Math.random() * 1000);
 		document.getElementById("cp-image").src = url + "&contents=" + json_url;
 		window.setTimeout(CornipickleProbe.handleResponse, CornipickleProbe.refreshDelay);
+	};
+	
+	this.registerNewElement = function(n)
+	{
+		if (n.cornipickleid !== undefined)
+		{
+			return;
+		}
+		n.cornipickleid = CornipickleProbe.elementCounter;
+		this.m_idMap[CornipickleProbe.elementCounter] = {
+			"element" : n,
+			"style" : {}
+		};
+		CornipickleProbe.elementCounter++;
 	};
 };
 
@@ -340,7 +342,34 @@ CornipickleProbe.handleResponse = function()
 	{
 		document.getElementById("bp_witness").style.backgroundColor = "white";
 	}
+	// Highlight elements, if any
+	for (var i = 0; i < response["highlight-ids"].length; i++)
+	{
+		var list_of_ids = response["highlight-ids"][i];
+		for (var j = 0; j < list_of_ids.length; j++)
+		{
+			var el_id = list_of_ids[j];
+			CornipickleProbe.highlightElement(el_id);
+		}
+	}
 	CornipickleProbe.updateTransmitIcon(false);
+};
+
+CornipickleProbe.unHighlightElements = function()
+{
+	document.getElementById("cp-highlight").innerHTML = "";
+};
+
+/**
+ * Highlights an element that violates a property
+ */
+CornipickleProbe.highlightElement = function(id)
+{
+	var el = cp_probe.m_idMap[id].element;
+	var offset = cumulativeOffset(el);
+	var in_html = document.getElementById("cp-highlight").innerHTML;
+	in_html += "<div class=\"cp-highlight-zone\" style=\"pointer-events:none;position:absolute;border:4px solid red;left:" + add_dimensions([offset.left, "-4px"]) + "px;top:" + add_dimensions([offset.top, "-4px"]) + "px;width:" + add_dimensions([el.clientWidth, "4px"]) + "px;height:" + add_dimensions([el.clientHeight, "4px"]) + "px\"></div>";
+	document.getElementById("cp-highlight").innerHTML = in_html;
 };
 
 /**
@@ -459,6 +488,27 @@ var escape_json_string = function(key, value)
 	}
 	return value;
 };
+
+var add_dimensions = function(dimensions)
+{
+	var sum = 0;
+	for (var i = 0; i < dimensions.length; i++)
+	{
+		var d = dimensions[i];
+		sum += remove_units(d);
+	}
+	return sum;
+};
+
+var remove_units = function(s)
+{
+	if (typeof s == "string" || s instanceof String)
+	{
+		s = s.replace("px", "");
+	}
+	return Number(s);
+};
+
 
 window.onload = function()
 {

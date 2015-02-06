@@ -72,6 +72,16 @@ public class ImpliesStatement extends AndStatement
     n_v_left.negate(v_left);
     n_v_left.disjoin(v_right);
     m_verdict = n_v_left;
+    if (m_verdict.is(Verdict.Value.FALSE))
+    {
+      m_verdict.m_witnessFalse.add(v_left.m_witnessTrue);
+      m_verdict.m_witnessFalse.add(v_right.m_witnessFalse);
+    }
+    else if (m_verdict.is(Verdict.Value.TRUE))
+    {
+      m_verdict.m_witnessTrue.add(v_left.m_witnessFalse);
+      m_verdict.m_witnessTrue.add(v_right.m_witnessTrue);
+    }
     return m_verdict;
   }
 

@@ -17,19 +17,21 @@
  */
 package ca.uqac.lif.cornipickle;
 
+import ca.uqac.lif.cornipickle.json.JsonElement;
+
 public class ExistsStatement extends Quantifier
 {
   public ExistsStatement()
   {
     super();
-    m_startVerdict = new Verdict(Verdict.Value.FALSE);
-    m_cutoffVerdict = new Verdict(Verdict.Value.TRUE);
+    m_startValue = Verdict.Value.FALSE;
+    m_cutoffValue = Verdict.Value.TRUE;
   }
   
   @Override
-  protected Verdict evaluationFunction(Verdict x, Verdict y)
+  protected Verdict evaluationFunction(Verdict x, Verdict y, JsonElement e)
   {
-    x.disjoin(y);
+    x.disjoin(y, e);
     return x;
   }
   
