@@ -13,7 +13,7 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonParser;
 import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
 import ca.uqac.lif.cornipickle.json.JsonSlowParser;
-import ca.uqac.lif.util.FileReadWrite;
+import ca.uqac.lif.cornipickle.util.PackageFileReader;
 
 public class WitnessTest
 {
@@ -37,7 +37,7 @@ public class WitnessTest
     {
       fail("Parsed statement is null");
     }
-    JsonElement document = j_parser.parse(FileReadWrite.readFile("data/witness-1.json"));
+    JsonElement document = j_parser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/witness-1.json"));
     if (document == null)
     {
       fail("JSON document is null");
@@ -48,7 +48,7 @@ public class WitnessTest
       fail("Wrong verdict");
     }
     Witness w_true = verdict.getWitnessTrue();
-    if (w_true.childrenCount() != 3)
+    if (w_true.childrenCount() != 0)
     {
       fail("Incorrect number of witnesses");
     }
@@ -68,7 +68,7 @@ public class WitnessTest
     {
       fail("Parsed statement is null");
     }
-    JsonElement document = j_parser.parse(FileReadWrite.readFile("data/witness-1.json"));
+    JsonElement document = j_parser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/witness-1.json"));
     if (document == null)
     {
       fail("JSON document is null");
@@ -79,7 +79,7 @@ public class WitnessTest
       fail("Wrong verdict");
     }
     Witness w = verdict.getWitness();
-    if (w.childrenCount() != 3)
+    if (w.childrenCount() != 0)
     {
       fail("Incorrect number of witnesses");
     }
@@ -94,7 +94,8 @@ public class WitnessTest
     {
       fail("Parsed statement is null");
     }
-    JsonElement document = j_parser.parse(FileReadWrite.readFile("data/witness-1.json"));
+    
+    JsonElement document = j_parser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/witness-1.json"));
     if (document == null)
     {
       fail("JSON document is null");
@@ -105,14 +106,14 @@ public class WitnessTest
       fail("Wrong verdict");
     }
     Witness w = verdict.getWitness();
-    if (w.childrenCount() != 3)
+    if (w.childrenCount() != 1)
     {
-      //fail("Incorrect number of witnesses");
+      fail("Incorrect number of witnesses");
     }
     Set<Set<JsonElement>> tuples = w.flatten();
-    if (tuples.size() != 3)
+    if (tuples.size() != 2)
     {
-      //fail("Incorrect number of witnesses");
+      fail("Incorrect number of witnesses");
     }
   }
 }

@@ -22,6 +22,27 @@
       srcdir="Source/Server/src"
       destdir="Source/Server/bin"
       includeantruntime="false" />
+    <copy todir="Source/Server/bin" includeemptydirs="false">
+      <fileset dir="Source/Server/src" excludes="**/*.java" />
+    </copy>
+  </target>
+  
+  <target name="compile-tests" depends="init,compile,junit-download" description="Compile the tests">
+    <!-- Compile the java code for each project -->
+    <javac
+      srcdir="Source/ServerTest/src"
+      destdir="Source/ServerTest/bin"
+      includeantruntime="false">
+      <classpath>
+        <pathelement location="Source/Server/bin"/>
+        <pathelement path="${java.class.path}"/>
+        <pathelement location="test/${junit.jarname}"/>
+        <pathelement location="test/${junit.hamcrest}"/>
+      </classpath>
+    </javac>
+    <copy todir="Source/ServerTest/bin" includeemptydirs="false">
+      <fileset dir="Source/ServerTest/src" excludes="**/*.java" />
+    </copy>
   </target>
   
   <target name="javadoc" depends="init" description="Generate the documentation">
@@ -58,6 +79,41 @@
     <!-- Do nothing -->
   </target>
   
+  <!-- Download jUnit JARs if not present -->
+  <property name="junit.jarname" value="junit-4.12.jar"/>
+  <property name="junit.hamcrest" value="hamcrest-core-1.3.jar"/>
+  <condition property="junit.absent" value="false" else="true">
+    <and>
+      <available file="test/${junit.jarname}"/>
+      <available file="test/${junit.hamcrest}"/>
+    </and>
+  </condition>
+  <target name="junit-download" if="${junit.absent}">
+    <get src="http://search.maven.org/remotecontent?filepath=junit/junit/4.12/${junit.jarname}" dest="test/${junit.jarname}"/>
+    <get src="http://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/${junit.hamcrest}" dest="test/${junit.hamcrest}"/>
+  </target>
+  
+  <!-- Tests with jUnit-->
+  <target name="junit-test" depends="junit-download,compile">
+    <mkdir dir="test"/>
+    <junit printsummary="yes" haltonfailure="yes">
+      <classpath>
+        <pathelement location="Source/Server/bin"/>
+        <pathelement location="Source/ServerTest/bin"/>
+        <pathelement path="${java.class.path}"/>
+        <pathelement location="test/${junit.jarname}"/>
+        <pathelement location="test/${junit.hamcrest}"/>
+      </classpath>
+      <formatter type="plain"/>
+      <formatter type="xml"/>
+      <batchtest fork="yes" todir="test">
+        <fileset dir="Source/ServerTest/src">
+          <include name="**/*.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+  
   <!-- Check dependencies and download them if required -->
   <target name="deps-targetdir">
     <property name="deps.targetdir" value="lib" />
@@ -69,7 +125,6 @@
   <condition property="Bullwinkle.absent" value="false" else="true">
     <available classname="ca.uqac.lif.bullwinkle.BnfParser"/>
   </condition>
-  <echo message="Property: ${Bullwinkle.absent}"/>
   <target name="deps-bullwinkle" if="${Bullwinkle.absent}" depends="deps-targetdir">
     <echo message="Bullwinkle not present in classpath. Downloading..." level="info"/>
     <get src="https://github.com/sylvainhalle/Bullwinkle/raw/master/BullwinkleParser.jar" dest="${deps.targetdir}"/>

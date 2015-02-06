@@ -22,6 +22,22 @@ import java.io.InputStream;
 
 public class PackageFileReader
 {
+  public static String readPackageFile(Class<?> c, String path)
+  {
+    InputStream in = c.getResourceAsStream(path);
+    String out;
+    try
+    {
+      out = readPackageFile(in);
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+      return null;
+    }
+    return out;
+  }
+  
   /**
    * Reads a file and puts its contents in a string
    * @param in The input stream to read

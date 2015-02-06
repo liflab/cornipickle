@@ -1,4 +1,4 @@
-package ca.uqac.lif.cornipickle.json;
+package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.*;
 
@@ -12,6 +12,12 @@ import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.NodePath;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
+import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.cornipickle.json.JsonFastParser;
+import ca.uqac.lif.cornipickle.json.JsonParser;
+import ca.uqac.lif.cornipickle.json.JsonPath;
+import ca.uqac.lif.cornipickle.json.JsonSlowParser;
+import ca.uqac.lif.cornipickle.json.JsonString;
 import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.util.FileReadWrite;
@@ -86,14 +92,14 @@ public class JsonTest
   @Test
   public void testSample() throws IOException
   {
-    String json = FileReadWrite.readFile("data/sample.json");
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample.json");
     ParseNode pn = shouldParseAndNotNull(json, "<S>");
   }
   
   @Test
   public void testParser1() throws IOException, JsonParseException
   {
-    String json = FileReadWrite.readFile("data/sample.json");
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample.json");
     JsonElement jse = j_parser.parse(json);
     if (jse == null)
     {
@@ -104,7 +110,7 @@ public class JsonTest
   @Test
   public void testParser4() throws IOException, JsonParseException
   {
-    String json = FileReadWrite.readFile("data/sample-5.json");
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-5.json");
     JsonElement jse = j_parser.parse(json);
     if (jse == null)
     {
@@ -115,7 +121,7 @@ public class JsonTest
   @Test
   public void testParser2() throws IOException, JsonParseException
   {
-    String json = FileReadWrite.readFile("data/sample-2.json");
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-2.json");
     JsonElement jse = j_parser.parse(json);
     if (jse == null)
     {
@@ -137,7 +143,7 @@ public class JsonTest
   public void testParserLarge1() throws IOException, JsonParseException
   {
     int threshold_time_ms = 500;
-    String json = FileReadWrite.readFile("data/sample-7.json");
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-7.json");
     long mil_start = System.currentTimeMillis();
     JsonElement jse = j_parser.parse(json);
     long mil_end = System.currentTimeMillis();
@@ -156,7 +162,7 @@ public class JsonTest
   public void testParserLarge2() throws IOException, JsonParseException
   {
     int threshold_time_ms = 500;
-    String json = FileReadWrite.readFile("data/sample-8.json");
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-8.json");
     long mil_start = System.currentTimeMillis();
     JsonElement jse = j_parser.parse(json);
     long mil_end = System.currentTimeMillis();
@@ -174,7 +180,7 @@ public class JsonTest
   @Test
   public void testGet1() throws IOException, JsonParseException
   {
-    String json = FileReadWrite.readFile("data/sample.json");
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample.json");
     JsonElement jse = j_parser.parse(json);
     JsonElement answer = JsonPath.get(jse, "children[0].tagname");
     if (!(answer instanceof JsonString))
@@ -191,7 +197,7 @@ public class JsonTest
   @Test
   public void testGet2() throws IOException, JsonParseException
   {
-    String json = FileReadWrite.readFile("data/sample-4.json");
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-4.json");
     JsonElement jse = j_parser.parse(json);
     JsonElement answer = JsonPath.get(jse, "children[0].children[1].children[0].children[0].tagname");
     if (!(answer instanceof JsonString))

@@ -12,7 +12,7 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonParser;
 import ca.uqac.lif.cornipickle.json.JsonSlowParser;
 import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
-import ca.uqac.lif.util.FileReadWrite;
+import ca.uqac.lif.cornipickle.util.PackageFileReader;
 
 public class FullLoop
 {
@@ -35,7 +35,7 @@ public class FullLoop
     {
       fail("Parsed statement is null");
     }
-    JsonElement document = j_parser.parse(FileReadWrite.readFile("data/sample-4.json"));
+    JsonElement document = j_parser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/sample-4.json"));
     if (document == null)
     {
       fail("JSON document is null");
@@ -56,7 +56,7 @@ public class FullLoop
     {
       fail("Parsed statement is null");
     }
-    JsonElement document = j_parser.parse(FileReadWrite.readFile("data/sample-4.json"));
+    JsonElement document = j_parser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/sample-4.json"));
     if (document == null)
     {
       fail("JSON document is null");
