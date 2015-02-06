@@ -22,6 +22,17 @@ First make sure you have the following installed:
   later version. Moreover, it most probably compiles on the JDK 5, although
   this was not tested.
 - [Ant](http://ant.apache.org) to automate the compilation and build process
+
+Download the sources for Cornipickle from
+[Bitbucket](http://bitbucket.org.com/sylvainhalle/cornipickle) or clone the
+repository using Git:
+
+    git@bitbucket.org:sylvainhalle/cornipickle.git
+
+### Installing dependencies
+
+The project requires the following libraries to be present in the system:
+
 - The [Apache Commons CLI](http://commons.apache.org/proper/commons-cli/)
   to handle command-line parameters *(tested with version 1.2)*
 - The [json-simple](https://code.google.com/p/json-simple/) library for
@@ -32,8 +43,15 @@ First make sure you have the following installed:
 - The [Bullwinkle parser](https://github.com/sylvainhalle/Bullwinkle),
   an on-the-fly parser for BNF grammars
 
-The last libraries should be put in Java's extension folder. This location
-varies according to the operating system you use:
+Using Ant, you can automatically download any libraries missing from your
+system by typing:
+
+    ant deps
+
+This will put the missing JAR files in the `lib` folder in the project's
+root. These libraries should then be put somewhere in the classpath, such as
+in Java's extension folder (don't leave them there, it won't work). This
+location varies according to the operating system you use:
 
 - Solaris™ Operating System: `/usr/jdk/packages/lib/ext`
 - Linux: `/usr/java/packages/lib/ext`
@@ -42,11 +60,11 @@ varies according to the operating system you use:
 Do **not** create subfolders there (i.e. put the archive directly in that
 folder).
 
-Download the sources for Cornipickle from
-[Bitbucket](http://bitbucket.org.com/sylvainhalle/cornipickle) or clone the
-repository using Git:
+If you are using Linux, you can type `ant deps-install` to copy the JARs in
+the extension folder (you probably need administrator rights, so call the
+command with `sudo`).
 
-    git@bitbucket.org:sylvainhalle/cornipickle.git
+### Compiling
 
 Compile the sources by simply typing:
 
@@ -75,8 +93,10 @@ specifications that the server can pre-load. Available options are:
 
 `-h`, `--help`
 :  Display command line usage
+
 `-p`,`--port <x>` 
 :  Listen on port x (default: 10101)
+
 `-s`,`--servername <x>`
 :  Set server name or IP address x (default: localhost)
 

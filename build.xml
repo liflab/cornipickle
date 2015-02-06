@@ -3,6 +3,10 @@
 
   <description>Build file for Cornipickle</description>
   
+  <!-- Get location of temp dir -->
+  <property environment="env"/>
+  <property name="tempdir" value="${java.io.tmpdir}"/>
+  
   <target name="init">
     <!-- Create the time stamp -->
     <tstamp/>
@@ -52,6 +56,81 @@
   
   <target name="dist" depends="create_run_jar" description="Create distribution">
     <!-- Do nothing -->
+  </target>
+  
+  <!-- Check dependencies and download them if required -->
+  <target name="deps-targetdir">
+    <property name="deps.targetdir" value="lib" />
+    <mkdir dir="${deps.targetdir}"/>
+    <echo level="info">Creating folder ${deps.targetdir}. Note that libraries downloaded there (if any) must then be moved to a location within the Java classpath. See the readme file for more info.</echo>
+  </target>
+  
+  <!-- Bullwinkle -->
+  <condition property="Bullwinkle.absent" value="false" else="true">
+    <available classname="ca.uqac.lif.bullwinkle.BnfParser"/>
+  </condition>
+  <echo message="Property: ${Bullwinkle.absent}"/>
+  <target name="deps-bullwinkle" if="${Bullwinkle.absent}" depends="deps-targetdir">
+    <echo message="Bullwinkle not present in classpath. Downloading..." level="info"/>
+    <get src="https://github.com/sylvainhalle/Bullwinkle/raw/master/BullwinkleParser.jar" dest="${deps.targetdir}"/>
+  </target>
+  <!-- wro4j -->
+  <condition property="wro4j.absent" value="false" else="true">
+    <available classname="ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor"/>
+  </condition>
+  <target name="deps-wro4j" if="${wro4j.absent}" depends="deps-targetdir">
+    <echo message="wro4j not present in classpath. Downloading..." level="info"/>
+    <get src="https://wro4j.googlecode.com/files/wro4j-core-1.6.3.jar" dest="${deps.targetdir}"/>
+    <get src="https://wro4j.googlecode.com/files/wro4j-runner-1.6.3-jar-with-dependencies.jar" dest="${deps.targetdir}"/>
+  </target>
+  <!-- json-simple -->
+  <condition property="json.absent" value="false" else="true">
+    <available classname="org.json.simple.parser.JSONParser"/>
+  </condition>
+  <target name="deps-json" if="${json.absent}" depends="deps-targetdir">
+    <echo message="json-simple not present in classpath. Downloading..." level="info"/>
+    <get src="https://json-simple.googlecode.com/files/json-simple-1.1.1.jar" dest="${deps.targetdir}"/>
+  </target>
+  <!-- Commons CLI -->
+  <condition property="cli.absent" value="false" else="true">
+    <available classname="org.apache.commons.cli.CommandLinee"/>
+  </condition>
+  <target name="deps-cli" if="${cli.absent}" depends="deps-targetdir">
+    <echo message="Commons CLI not present in classpath. Downloading..." level="info"/>
+    <get src="http://mirror.its.dal.ca/apache//commons/cli/binaries/commons-cli-1.2-bin.zip" dest="${deps.targetdir}"/>
+    <unzip src="${deps.targetdir}/commons-cli-1.2-bin.zip" dest="${deps.targetdir}">
+      <patternset>
+        <include name="**/*.jar"/>
+      </patternset>
+      <mapper type="flatten"/>
+    </unzip>
+  </target>
+  
+  <!-- All there? -->
+  <condition property="all.present" value="true" else="false">
+    <and>
+      <isfalse value="${Bullwinkle.absent}"/>
+      <isfalse value="${wro4j.absent}"/>
+      <isfalse value="${json.absent}"/>
+      <isfalse value="${cli.absent}"/>
+    </and>
+  </condition>
+  <target name="deps-present" if="all.present" depends="deps-bullwinkle,deps-wro4j,deps-json,deps-cli">
+    <echo message="All dependencies were found in the classpath. Good!" level="info"/>
+  </target>
+  <!-- Main task: download dependencies -->
+  <target name="deps" depends="deps-present">
+  </target>
+  
+  <!-- Install dependencies -->
+  <target name="deps-install" depends="deps">
+    <property name="deps.installdir" value="/usr/java/packages/lib/ext"/>
+    <mkdir dir="${deps.installdir}"/>
+    <copy todir="${deps.installdir}">
+      <fileset dir="${deps.targetdir}">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
   </target>
 
 </project>
