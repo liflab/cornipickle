@@ -89,7 +89,7 @@
     </and>
   </condition>
   <target name="junit-download" if="${junit.absent}">
-    <get src="http://search.maven.org/remotecontent?filepath=junit/junit/4.12/${junit.jarname}" dest="test/${junit.jarname}"/>
+    <get src="https://repo1.maven.org/maven2/junit/junit/4.12/${junit.jarname}" dest="test/${junit.jarname}"/>
     <get src="http://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/${junit.hamcrest}" dest="test/${junit.hamcrest}"/>
   </target>
   
