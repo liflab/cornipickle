@@ -7,6 +7,8 @@
   <property environment="env"/>
   <property name="tempdir" value="${java.io.tmpdir}"/>
   
+  <property name="jar.filename" value="Cornipickle.jar"/>
+  
   <target name="init">
     <!-- Create the time stamp -->
     <tstamp/>
@@ -62,7 +64,7 @@
   </target>
   
   <target name="create_run_jar" depends="compile,javadoc" description="Create the runnable JAR">
-      <jar destfile="Cornipickle.jar" filesetmanifest="mergewithoutmain">
+      <jar destfile="${jar.filename}" filesetmanifest="mergewithoutmain">
 	  <manifest>
 	      <attribute name="Main-Class" value="ca.uqac.lif.cornipickle.server.CornipickleServer"/>
 	      <attribute name="Class-Path" value="."/>
@@ -89,12 +91,13 @@
     </and>
   </condition>
   <target name="junit-download" if="${junit.absent}">
-    <get src="https://repo1.maven.org/maven2/junit/junit/4.12/${junit.jarname}" dest="test/${junit.jarname}"/>
+    <mkdir dir="test"/>
+    <get src="http://search.maven.org/remotecontent?filepath=junit/junit/4.12/${junit.jarname}" dest="test/${junit.jarname}"/>
     <get src="http://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/${junit.hamcrest}" dest="test/${junit.hamcrest}"/>
   </target>
   
   <!-- Tests with jUnit-->
-  <target name="junit-test" depends="junit-download,compile">
+  <target name="test" depends="junit-download,compile-tests">
     <mkdir dir="test"/>
     <junit printsummary="yes" haltonfailure="yes">
       <classpath>
@@ -186,6 +189,20 @@
         <include name="*.jar"/>
       </fileset>
     </copy>
+  </target>
+  
+  <!-- Clean -->
+  <target name="clean">
+    <delete dir="Source/Server/bin"/>
+    <delete dir="Source/ServerTest/bin"/>
+    <delete dir="test"/>
+    <delete dir="lib"/>
+    <delete dir="doc"/>
+  </target>
+  
+  <!-- Run -->
+  <target name="run">
+    <java jar="${jar.filename}" fork="true"/>
   </target>
 
 </project>

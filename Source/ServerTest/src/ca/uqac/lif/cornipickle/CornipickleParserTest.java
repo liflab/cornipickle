@@ -245,6 +245,7 @@ public class CornipickleParserTest
   public ParseNode shouldParseAndNotNull(String line, String start_symbol)
   {
     BnfParser p = parser.getParser();
+    p.setDebugMode(true);
     p.setStartRule(start_symbol);
     ParseNode pn = null;
     try
