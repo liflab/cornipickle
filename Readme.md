@@ -70,10 +70,9 @@ Compile the sources by simply typing:
 
     ant
 
-This will produce a file called `Cornipickle.jar` in the folder. (Ignore the
-slew of Javadoc warnings, which will be fixed some day but have no impact on
-the build process.) This file is runnable and stand-alone, or can be used as
-a library, so it can be moved around to the location of your choice.
+This will produce a file called `Cornipickle.jar` in the folder. This file
+is runnable and stand-alone, or can be used as a library, so it can be moved
+around to the location of your choice.
 
 In addition, the script generates in the `doc` folder the Javadoc
 documentation for using Cornipickle. This documentation is also embedded in

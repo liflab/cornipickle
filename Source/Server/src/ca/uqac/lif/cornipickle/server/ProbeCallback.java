@@ -81,7 +81,7 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
     {
       String witness_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/witness.inc.html"));
       probe_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/probe.inc.js"));
-      probe_code = probe_code.replace("%%WITNESS_CODE%%", Main.escapeString(witness_code));
+      probe_code = probe_code.replace("%%WITNESS_CODE%%", escapeString(witness_code));
       probe_code = probe_code.replace("%%SERVER_NAME%%", m_server.getServerName() + ":" + m_server.getServerPort());
       // Add attributes to include
       Set<String> attributes = m_server.m_interpreter.getAttributes();
@@ -116,5 +116,18 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
     Writer writer = new StringWriter();
     s_jsMinProcessor.process(reader, writer);
     return writer.toString();    
+  }
+  
+  /**
+   * Escapes a string for JavaScript
+   * @param s The string
+   * @return The escaped String
+   */
+  protected static String escapeString(String s)
+  {
+    s = s.replaceAll("\"", "\\\\\"");
+    s = s.replaceAll("\n", "\\\\n");
+    s = s.replaceAll("\r", "\\\\r");
+    return s;
   }
 }

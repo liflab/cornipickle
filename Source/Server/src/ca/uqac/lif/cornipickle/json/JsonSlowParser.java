@@ -39,7 +39,7 @@ public class JsonSlowParser extends JsonParser
 
   /**
    * Initializes the BNF parser
-   * @return
+   * @return The initialized Bullwinkle parser
    */
   public static BnfParser initializeParser()
   {

@@ -28,6 +28,10 @@ import ca.uqac.lif.cornipickle.json.JsonElement;
 
 public class PredicateDefinition extends Statement
 {
+  /**
+   * The non-terminal symbol associated to
+   * that predicate definition in the interpreter's grammar
+   */
   protected StringConstant m_ruleName;
 
   protected StringConstant m_pattern;
@@ -38,10 +42,22 @@ public class PredicateDefinition extends Statement
    */
   protected Vector<String> m_captureGroups;
 
+  /**
+   * The BNF rule associated to this predicate in the interpreter's
+   * grammar
+   */
   protected BnfRule m_rule;
 
+  /**
+   * The definition of the predicate
+   */
   protected Statement m_predicate;
 
+  /**
+   * Instantiates a predicate definition
+   * @param ruleName The non-terminal symbol associated to
+   *   that predicate definition in the interpreter's grammar
+   */
   public PredicateDefinition(StringConstant ruleName)
   {
     super();
@@ -75,7 +91,7 @@ public class PredicateDefinition extends Statement
   /**
    * Turns the pattern into a BNF rule for the grammar
    * @param pattern The pattern
-   * @return
+   * @return A regex rule with capture groups
    */
   protected BnfRule createBnfRule(String pattern)
   {

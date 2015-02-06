@@ -211,43 +211,13 @@ public class Interpreter
   	return m_statements.get(m);
   }
   
-  /*
-  public void parseProperties(String properties) throws ParseException
-  {
-    // Split properties: dot followed by a new line
-    String[] property_list = properties.split("\\.\n");
-    int i = 0;
-    for (String property : property_list)
-    {
-      if (property.trim().isEmpty())
-      {
-        continue;
-      }
-      LanguageElement le = m_parser.parseLanguage(property);
-      if (le instanceof PredicateDefinition)
-      {
-        // A user-defined predicate; we add it to the grammar
-        PredicateDefinition pd = (PredicateDefinition) le;
-        m_parser.addPredicateDefinition(pd);
-      }
-      else if (le instanceof Statement)
-      {
-        Statement s = (Statement) le; 
-        m_statements.put(Integer.toString(i), s);
-        i++;
-      }
-      else if (le instanceof SetDefinitionExtension)
-      {
-        SetDefinitionExtension s = (SetDefinitionExtension) le;
-        m_setDefs.put(s.getSetName(), s);
-      }
-      else if (le == null)
-      {
-        System.err.println("Error parsing the following statement\n" + property);
-      }
-    }
-  }*/
-  
+  /**
+   * Object containing all the metadata associated to a
+   * Cornipickle statement. This metadata is generally declared
+   * through a "python-doc" comment block just before the
+   * statement's declaration. 
+   * @author sylvain
+   */
   public static class StatementMetadata extends HashMap<String,String>
   {
     /**
@@ -268,29 +238,6 @@ public class Interpreter
       }
       return out.toString();
     }
-  }
-
-  /**
-   * Remove comments from property
-   * @param property
-   * @return
-   */
-  protected static String sanitizeProperty(String property)
-  {
-    // Remove Python-like comments (triple quotes)
-    property = property.replaceAll("(?s)\"\"\".*?\"\"\"", "");
-    property = property.trim();
-    String[] lines = property.split("\n");
-    StringBuilder out = new StringBuilder();
-    for (String line : lines)
-    {
-      line = line.trim();
-      if (!line.startsWith("#")) // Comment
-      {
-        out.append(line).append("\n");
-      }
-    }
-    return out.toString();
   }
   
   public Map<StatementMetadata,Verdict> getVerdicts()

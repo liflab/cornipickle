@@ -33,7 +33,7 @@ public class StringUtils
   }
   
   /**
-   * Same as {@link wordWrap(String, int)} for a StringBuilder
+   * Same as {@link #wordWrap(String, int)} for a StringBuilder
    * @param sb The string to wrap
    * @param num_chars The number of characters
    * @param newline_char The string representing what to put for a
@@ -51,8 +51,8 @@ public class StringUtils
   }
   
   /**
-   * Same as {@link wordWrap(String, int)} for a StringBuilder
-   * @param s The string to wrap
+   * Same as {@link #wordWrap(String, int)} for a StringBuilder
+   * @param sb The string builder to wrap
    * @param num_chars The number of characters
    * @return The wrapped string
    */

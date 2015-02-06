@@ -84,7 +84,7 @@ public class CornipickleParser implements ParseNodeVisitor
 
   /**
    * Initializes the BNF parser
-   * @return
+   * @return The initialized BNF parser
    */
   public static BnfParser initializeParser()
   {

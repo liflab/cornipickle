@@ -57,8 +57,8 @@ public class JsonFastParser extends JsonParser
    * Converts a JSONObject to a JsonElement. This is but an
    * inelegant bridge between Cornipickle's own objects for
    * handling JSON, and the ones produced by the JSONParser.
-   * @param obj
-   * @return
+   * @param obj The JSONObject
+   * @return The corresponding JsonElement
    */
   protected static JsonElement wrap(Object obj)
   {

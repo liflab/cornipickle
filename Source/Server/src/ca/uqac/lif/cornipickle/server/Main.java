@@ -49,8 +49,14 @@ public class Main
   protected static final String VERSION_STRING = "0.0";
   protected static final String BUILD_STRING = "20150126";
   
+  /**
+   * Default server name
+   */
   protected static String s_defaultServerName = "localhost";
 
+  /**
+   * Default port to listen to
+   */
   protected static int s_defaultPort = 10101;
   
   /**
@@ -58,6 +64,10 @@ public class Main
    */
   protected static int s_verbosity = 1;
   
+  /**
+   * Main method
+   * @param args Command-line arguments
+   */
   public static void main(String[] args)
   {
     String server_name = s_defaultServerName;
@@ -137,19 +147,6 @@ public class Main
     {
       out.println(message);
     }
-  }
-
-  /**
-   * Escapes a string for JavaScript
-   * @param s The string
-   * @return
-   */
-  protected static String escapeString(String s)
-  {
-    s = s.replaceAll("\"", "\\\\\"");
-    s = s.replaceAll("\n", "\\\\n");
-    s = s.replaceAll("\r", "\\\\r");
-    return s;
   }
 
   /**

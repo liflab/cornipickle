@@ -24,7 +24,7 @@ public class PackageFileReader
 {
   /**
    * Reads a file and puts its contents in a string
-   * @param f The file to read
+   * @param in The input stream to read
    * @return The file's contents, and empty string if the file
    * does not exist
    */

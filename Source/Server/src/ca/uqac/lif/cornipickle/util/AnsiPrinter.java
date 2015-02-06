@@ -21,33 +21,57 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+/**
+ * Print stream with facilities for producing colored text using
+ * ANSI escape codes.
+ * @author sylvain
+ */
 public class AnsiPrinter extends PrintStream
 {
+  /**
+   * Default 16-color scheme for foreground and background text
+   */
   public static enum Color {BLACK, BLUE, GREEN, CYAN, RED, PURPLE, BROWN,
     LIGHT_GRAY, DARK_GRAY, LIGHT_BLUE, LIGHT_GREEN, LIGHT_CYAN, LIGHT_RED,
     LIGHT_PURPLE, YELLOW, WHITE};
     
   /**
    * Whether ANSI codes are enabled. If set to false (with
-   * {@link disableColors}), behaves like a normal PrintStream
+   * {@link #disableColors()}), behaves like a normal PrintStream
    */
   protected boolean m_enabled = true;
   
+  /**
+   * Instantiates an AnsiPrinter.
+   * @param out The OutputStream where the printer will send its output
+   */
   public AnsiPrinter(OutputStream out)
   {
     super(out);
   }
   
+  /**
+   * Enables the output of ANSI codes in the output stream
+   */
   public void enableColors()
   {
     m_enabled = true;
   }
   
+  /**
+   * Disables the output of ANSI codes in the output stream
+   */
   public void disableColors()
   {
     m_enabled = false;
   }
   
+  /**
+   * Sets the foreground color for printed text.
+   * Until this color is changed, the text will be printed using
+   * that color.
+   * @param c The color
+   */
   public void setForegroundColor(AnsiPrinter.Color c)
   {
     if (!m_enabled)
@@ -119,6 +143,9 @@ public class AnsiPrinter extends PrintStream
     }
   }
   
+  /**
+   * Resets the colors to their default values
+   */
   public void resetColors()
   {
     setForegroundColor(Color.LIGHT_GRAY);
