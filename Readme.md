@@ -1,6 +1,8 @@
 Cornipickle: a runtime monitor for layout constraints
 =====================================================
 
+[![Build Status](https://semaphoreapp.com/api/v1/projects/3f990e53-7e43-4198-941f-db77aa637459/344315/badge.png)](https://semaphoreapp.com/sylvainhalle/cornipickle)
+
 Todo: describe.
 
 Table of Contents                                                    {#toc}
