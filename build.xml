@@ -66,7 +66,7 @@
   <target name="create_run_jar" depends="compile,javadoc" description="Create the runnable JAR">
       <jar destfile="${jar.filename}" filesetmanifest="mergewithoutmain">
 	  <manifest>
-	      <attribute name="Main-Class" value="ca.uqac.lif.cornipickle.server.CornipickleServer"/>
+	      <attribute name="Main-Class" value="ca.uqac.lif.cornipickle.server.Main"/>
 	      <attribute name="Class-Path" value="."/>
 	  </manifest>
 	  <fileset dir="Source/Server/bin"/>
