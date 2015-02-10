@@ -368,7 +368,7 @@ CornipickleProbe.highlightElement = function(id)
 	var el = cp_probe.m_idMap[id].element;
 	var offset = cumulativeOffset(el);
 	var in_html = document.getElementById("cp-highlight").innerHTML;
-	in_html += "<div class=\"cp-highlight-zone\" style=\"pointer-events:none;position:absolute;border:4px solid red;left:" + add_dimensions([offset.left, "-4px"]) + "px;top:" + add_dimensions([offset.top, "-4px"]) + "px;width:" + add_dimensions([el.clientWidth, "4px"]) + "px;height:" + add_dimensions([el.clientHeight, "4px"]) + "px\"></div>";
+	in_html += "<div class=\"cp-highlight-zone\" style=\"pointer-events:none;position:absolute;border:4px solid red;left:" + add_dimensions([offset.left, "-4px"]) + "px;top:" + add_dimensions([offset.top, "-4px"]) + "px;width:" + add_dimensions([el.offsetWidth, "4px"]) + "px;height:" + add_dimensions([el.offsetHeight, "4px"]) + "px\"></div>";
 	document.getElementById("cp-highlight").innerHTML = in_html;
 };
 

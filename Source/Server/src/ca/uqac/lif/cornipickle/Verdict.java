@@ -80,10 +80,13 @@ public class Verdict
         m_witnessTrue.add(w);
       }
     }
-    else if (!is(Value.TRUE) && x.is(Value.INCONCLUSIVE))
+    else if (!is(Value.TRUE))
     {
-      m_value = Value.INCONCLUSIVE;
-      if (!x.m_witnessFalse.isEmpty())
+      if (x.is(Value.INCONCLUSIVE))
+      {
+        m_value = Value.INCONCLUSIVE;
+      }
+      //if (!x.m_witnessFalse.isEmpty())
       {
         Witness w = new Witness(e);
         w.add(x.m_witnessFalse);
@@ -110,10 +113,13 @@ public class Verdict
         m_witnessFalse.add(w);
       }
     }
-    else if (!is(Value.FALSE) && x.is(Value.INCONCLUSIVE))
+    else if (!is(Value.FALSE))
     {
-      m_value = Value.INCONCLUSIVE;
-      if (!x.m_witnessTrue.isEmpty())
+      if (x.is(Value.INCONCLUSIVE))
+      {
+        m_value = Value.INCONCLUSIVE;        
+      }
+      //if (!x.m_witnessTrue.isEmpty())
       {
         Witness w = new Witness(e);
         w.add(x.m_witnessTrue);

@@ -47,13 +47,9 @@ public class WitnessTest
     {
       fail("Wrong verdict");
     }
-    Witness w_true = verdict.getWitnessTrue();
-    if (w_true.childrenCount() != 0)
-    {
-      fail("Incorrect number of witnesses");
-    }
-    Witness w_false = verdict.getWitnessFalse();
-    if (w_false.childrenCount() != 0)
+    Witness w = verdict.getWitnessFalse();
+    int ch_count = w.childrenCount();
+    if (ch_count != 0)
     {
       fail("Incorrect number of witnesses");
     }
@@ -79,7 +75,8 @@ public class WitnessTest
       fail("Wrong verdict");
     }
     Witness w = verdict.getWitness();
-    if (w.childrenCount() != 0)
+    int ch_count = w.childrenCount();
+    if (ch_count != 3)
     {
       fail("Incorrect number of witnesses");
     }
