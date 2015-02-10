@@ -43,6 +43,7 @@ public class Eventually extends Globally
       if (st_v.is(Verdict.Value.TRUE))
       {
         m_verdict.setValue(Verdict.Value.TRUE);
+        m_verdict.setWitnessTrue(st_v.getWitnessTrue());
         break;
       }
     }

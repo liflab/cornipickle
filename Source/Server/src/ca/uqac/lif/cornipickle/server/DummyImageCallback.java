@@ -157,15 +157,18 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
     int num_true = 0;
     int num_inconclusive = 0;
     Verdict outcome = new Verdict(Verdict.Value.TRUE);
-    LinkedList<List<Number>> id_to_highlight = new LinkedList<List<Number>>();
+    StringBuilder id_struct = new StringBuilder();
+    id_struct.append("[");
     for (StatementMetadata key : verdicts.keySet())
     {
+      id_struct.append("{");
+      LinkedList<List<Number>> id_to_highlight = new LinkedList<List<Number>>();
       Verdict v = verdicts.get(key);
       outcome.conjoin(v);
       if (v.is(Verdict.Value.FALSE))
       {
         num_false++;
-        id_to_highlight.add(getIdsToHighlight(v));
+        id_to_highlight.addAll(getIdsToHighlight(v));
       }
       else if (v.is(Verdict.Value.TRUE))
       {
@@ -175,23 +178,28 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
       {
         num_inconclusive++;
       }
+      id_struct.append("\"ids\" : ").append(id_to_highlight);
+      id_struct.append(",\"caption\" : \"").append(CornipickleServer.escapeQuotes(key.get("description"))).append("\"");
+      id_struct.append("},");
     }
+    id_struct.append("]");
     out.append("{");
     out.append("\"global-verdict\" : \"").append(outcome.getValue()).append("\",");
     out.append("\"num-true\" : ").append(num_true).append(",");
     out.append("\"num-false\" : ").append(num_false).append(",");
     out.append("\"num-inconclusive\" : ").append(num_inconclusive).append(",");
-    out.append("\"highlight-ids\" : ").append(id_to_highlight.toString());
+    out.append("\"highlight-ids\" : ").append(id_struct);
     out.append("}");
     return out.toString();
   }
   
-  protected static List<Number> getIdsToHighlight(Verdict v)
+  protected static List<List<Number>> getIdsToHighlight(Verdict v)
   {
-    LinkedList<Number> out = new LinkedList<Number>();
+    List<List<Number>> ids = new LinkedList<List<Number>>();
     Set<Set<JsonElement>> tuples = v.getWitness().flatten();
     for (Set<JsonElement> tuple : tuples)
     {
+      LinkedList<Number> out = new LinkedList<Number>();
       for (JsonElement e : tuple)
       {
         if (!(e instanceof JsonMap))
@@ -207,9 +215,9 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
         JsonNumber n_id = (JsonNumber) id;
         out.add(n_id.numberValue());
       }
-      break; // We return only the first tuple
+      ids.add(out);
     }
-    return out;
+    return ids;
   }
 
 }

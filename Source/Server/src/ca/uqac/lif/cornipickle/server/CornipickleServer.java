@@ -81,4 +81,9 @@ public class CornipickleServer extends InnerFileServer
       e.printStackTrace();
     }
   }
+  
+  public static String escapeQuotes(String s)
+  {
+    return s.replaceAll("\"", "\\\\\"");
+  }
 }

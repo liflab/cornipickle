@@ -68,6 +68,7 @@ public class Globally extends TemporalStatement
       if (st_v.is(Verdict.Value.FALSE))
       {
         m_verdict.setValue(Verdict.Value.FALSE);
+        m_verdict.setWitnessFalse(st_v.getWitnessFalse());
         break;
       }
     }

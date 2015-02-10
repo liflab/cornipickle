@@ -345,12 +345,23 @@ CornipickleProbe.handleResponse = function()
 	// Highlight elements, if any
 	for (var i = 0; i < response["highlight-ids"].length; i++)
 	{
-		var list_of_ids = response["highlight-ids"][i];
-		for (var j = 0; j < list_of_ids.length; j++)
+		var set_of_tuples = response["highlight-ids"][i].ids;
+		for (var j = 0; j < set_of_tuples.length; j++)
 		{
-			var el_id = list_of_ids[j];
-			CornipickleProbe.highlightElement(el_id);
+			var tuple = set_of_tuples[j];
+			for (var k = 0; k < tuple.length; k++)
+			{
+				var el_id = tuple[k];
+				CornipickleProbe.highlightElement(el_id, i);				
+			}
 		}
+		// Show explanation
+		var in_html = document.getElementById("bp_witness_explanation").innerHTML;
+		in_html += "<div class=\"cp-highlight-text\" id=\"highlight-zone-id-"+ i + "\" style=\"display:none;";
+		in_html += "position:absolute;cursor:help;width:186px;height:96px;padding:17px;background:url('http://%%SERVER_NAME%%/speech-bubble.png') no-repeat;color:black;";
+		in_html += "bottom:10px;right:10px;";
+		in_html += "\">" + response["highlight-ids"][i].caption + "</div>";
+		document.getElementById("bp_witness_explanation").innerHTML = in_html;
 	}
 	CornipickleProbe.updateTransmitIcon(false);
 };
@@ -363,12 +374,18 @@ CornipickleProbe.unHighlightElements = function()
 /**
  * Highlights an element that violates a property
  */
-CornipickleProbe.highlightElement = function(id)
+CornipickleProbe.highlightElement = function(id, tuple_id)
 {
 	var el = cp_probe.m_idMap[id].element;
 	var offset = cumulativeOffset(el);
 	var in_html = document.getElementById("cp-highlight").innerHTML;
-	in_html += "<div class=\"cp-highlight-zone\" style=\"pointer-events:none;position:absolute;border:4px solid red;left:" + add_dimensions([offset.left, "-4px"]) + "px;top:" + add_dimensions([offset.top, "-4px"]) + "px;width:" + add_dimensions([el.offsetWidth, "4px"]) + "px;height:" + add_dimensions([el.offsetHeight, "4px"]) + "px\"></div>";
+	in_html += "<div class=\"cp-highlight-zone\" ";
+	in_html += "onmouseover=\"CornipickleProbe.toggleExplanationBox(" + tuple_id + ",true)\" ";
+	in_html += "onmouseout=\"CornipickleProbe.toggleExplanationBox(" + tuple_id + ",false)\" ";
+	in_html += "style=\"pointer-events:none;opacity:0.1;border-radius:3px;cursor:help;position:absolute;border:4px solid red;";
+	in_html += "left:" + add_dimensions([offset.left, "-4px"]) + "px;top:" + add_dimensions([offset.top, "-4px"]) + "px;";
+	in_html += "width:" + add_dimensions([el.offsetWidth, "4px"]) + "px;height:" + add_dimensions([el.offsetHeight, "4px"]) + "px\">";
+	in_html += "</div>";
 	document.getElementById("cp-highlight").innerHTML = in_html;
 };
 
@@ -399,6 +416,37 @@ CornipickleProbe.refreshDelay = 500;
 CornipickleProbe.elementCounter = 0;
 
 /**
+ * Whether highlighted elements are let mouse events through
+ */
+CornipickleProbe.clickThrough = false;
+
+CornipickleProbe.toggleClickThrough = function()
+{
+	CornipickleProbe.clickThrough = !CornipickleProbe.clickThrough;
+	CornipickleProbe.setClickThrough(CornipickleProbe.clickThrough);
+	return false; // Prevent bubbling of click event
+};
+
+CornipickleProbe.setClickThrough = function(b)
+{
+	var list = document.getElementsByClassName("cp-highlight-zone");
+	for (var i = 0; i < list.length; i++)
+	{
+		var e = list[i];
+		if (b === true)
+		{
+			e.style.pointerEvents = "none";
+			e.style.opacity = 0.1;
+		}
+		else
+		{
+			e.style.pointerEvents = "auto";
+			e.style.opacity = 1;			
+		}
+	}
+};
+
+/**
  * Retrieves the value of a cookie in a cookie string.
  * Found from <a href="http://stackoverflow.com/a/22852843">Stack Overflow</a>
  * @param c_name The cookie's name
@@ -423,6 +471,19 @@ CornipickleProbe.getCookie = function(c_name)
 		c_value = unescape(c_value.substring(c_start,c_end));
 	}
 	return c_value;
+};
+
+CornipickleProbe.toggleExplanationBox = function(id, b)
+{
+	var e = document.getElementById("highlight-zone-id-" + id);
+	if (b === true)
+	{
+		e.style.display = "block";
+	}
+	else
+	{
+		e.style.display = "none";
+	}
 };
 
 /**
@@ -519,6 +580,11 @@ window.onload = function()
 	document.getElementById("cp-witness").innerHTML = "%%WITNESS_CODE%%";
 	//document.getElementById("cp-witness").onclick = cp_probe.handleEvent;
 	document.body.onmouseup = function(event) {
+		var target_id = event.target.id;
+		if (target_id.match(/bp_witness/) !== null) {
+			// If we clicked on the probe status panel, do nothing
+			return;
+		} 
 		// Wait .25 sec, so that the browser has time to process the click
 		window.setTimeout(function() {
 			cp_probe.handleEvent(event);

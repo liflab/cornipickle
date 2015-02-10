@@ -25,7 +25,7 @@ html, body {
   border: solid 1px darkgrey;
 }
 
-.cornipickle-code, .procedural-equivalent pre {
+.cornipickle-code, .procedural-equivalent {
   background: #f0f0ff;
   padding: 10px;
   border-radius: 6px;

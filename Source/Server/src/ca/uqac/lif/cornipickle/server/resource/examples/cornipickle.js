@@ -86,6 +86,64 @@ cornipickle_colourize_all = function()
     });
 };
 
+javascript_colourize_all = function()
+{
+  $(".procedural-equivalent").each(function(index) {
+        $(this).html(javascript_colourize($(this).text()));
+    });
+};
+
+javascript_colourize = function(text)
+{
+  var out = "";
+  var lines = text.split("\n");
+  var in_comment = false;
+  for (var i = 0; i < lines.length; i++)
+  {
+    var line = lines[i];
+    line = html_entities(line);
+    if (line === '/*')
+    {
+      in_comment = true;
+    }
+    if (line === '*/')
+    {
+      in_comment = false;
+    }
+    if (in_comment === true)
+    {
+      out += javascript_colourize_comment(line);
+      continue;
+    }
+    if (line.trim()[0] === "/" && line.trim()[1] === "/")
+    {
+      // One-line comment
+      line = remove_spaces(line);
+      line = '<span class="line-comment">' + line + '</span><br />\n';
+      out += line;
+      continue;
+    }
+    out += javascript_colourize_code(line);
+  }
+  return out;
+};
+
+javascript_colourize_code = function(line)
+{
+  line = remove_spaces(line);
+  line = line.replace(/\b([^\s\);]+?)\(/g, '<span class="javascript-fct">$1</span>(');
+  line = line.replace(/\b(function|for|in|if|else|elseif)\b/g, '<span class="javascript-keyword">$1</span>');
+  line += "<br />\n";
+  return line;
+};
+
+cornipickle_colourize_comment = function(line)
+{
+  line = remove_spaces(line);
+  line = '<span class="comment">' + line + "</span><br />\n";
+  return line;
+};
+
 add_to_cornipickle = function(text)
 {
   $.ajax({
@@ -93,7 +151,7 @@ add_to_cornipickle = function(text)
     type : "PUT",
     data : text,
     success : function(result) {
-      $("#to-cornipickle").prop('disabled', true);
+      //$("#to-cornipickle").prop('disabled', true);
       cp_probe.setAttributesToInclude(result.attributes);
       cp_probe.setTagNamesToInclude(result.tagnames);
       //cp_probe.handleEvent();

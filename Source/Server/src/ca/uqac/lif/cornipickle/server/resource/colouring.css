@@ -63,3 +63,11 @@
 .temporal-operator {
   color: #0aa;
 }
+
+.javascript-keyword {
+	color: #c6f;
+}
+
+.javascript-fct {
+  color: #0aa;
+}

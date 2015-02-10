@@ -48,6 +48,7 @@ public class Never extends Globally
       if (st_v.is(Verdict.Value.TRUE))
       {
         m_verdict.setValue(Verdict.Value.FALSE);
+        m_verdict.setWitnessFalse(st_v.getWitnessFalse());
         break;
       }
     }
