@@ -10,7 +10,7 @@
 <script type="text/javascript" src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
 <script type="text/javascript" src="cornipickle.js"></script>
 <script type="text/javascript" src="/probe"></script>
-<title>Temporal vs. atemporal properties - Cornipickle</title>
+<title>Immobile elements - Cornipickle</title>
 <script type="text/javascript">
 // <![CDATA[
 $(document).ready(function() {
@@ -31,37 +31,45 @@ $(document).ready(function() {
       }).mouseup(function(event) {
         event.stopPropagation(); // To avoid a call to Cornipickle
       });
-    // Move second menu
-    $("#second-menu").css({ "margin-left": "10px"});
-    // Button code
-    $("#misalign-toggle").click(function() {
-        if (toggled)
-        {
-          $("#greeting").html("Hi <span class=\"username\">Joe</span>!");
-        }
-        else
-        {
-          $("#greeting").html("Hi <span class=\"username\">Bill</span>!");
-        }
-        toggled = !toggled;
+    // Remove onmouseup event on some elements
+    $(".no-event").mouseup(function(event) {
+      event.stopPropagation();
+    });
+    $("#menulist li").click(function () {
+      $(this).toggleClass("selected");
     });
 });
 // ]]>
 </script>
+<style type="text/css">
+/* <![CDATA[ */
+li.selected {
+  font-size: 125%;
+}
+
+.playground {
+  position: relative;
+  height: 150px;
+}
+/* ]]> */
+</style>
 </head>
 
 <body>
 
 <div id="contents">
-<h1>Temporal vs. atemporal properties</h1>
+<h1 class="no-event">Immobile elements</h1>
 
 <p class="backmenu"><a href="index.html" class="no-event">Back to example list</a></p>
 
 <div class="playground">
 
-<h2>Homepage for <span class="username">Bill</span></h2>
-
-<p id="greeting" class="greeting">Hi <span class="username">Joe</span>!</p>
+<ul id="menulist">
+<li>Item 1</li>
+<li>Item 2</li>
+<li>Item 3</li>
+<li>Item 4</li>
+</ul>
 
 </div>
 
@@ -69,14 +77,8 @@ $(document).ready(function() {
 <div id="cornipickle-explanation">
 
 <h2>What's the problem?</h2>
-<p>The first property is <em>atemporal</em>: it returns true or false on every
-snapshot received. The second is <em>temporal</em>.</p>
-<p>A property that does not contain any temporal operator (Always, Next, etc.)
-can be evaluated either in atemporal (default) or temporal mode. When
-evaluated in temporal mode, the assertion applies only to the first
-snapshot on which it is evaluated.</p>
-
-<p><button id="misalign-toggle">Toggle username</button></p>
+<p>Clicking on an item changes its CSS class; this causes the item's bounding
+box to change, possibly moving other elements that should not move.</p>
 
 <div id="cornipickle-section" class="nocornipickle">
 
@@ -87,30 +89,27 @@ snapshot on which it is evaluated.</p>
 <p class="button"><button id="to-cornipickle">Add to Cornipickle</button></p>
 
 <div class="cornipickle-code">
-"""
-@description The value in every "username" span 
-  must be the same
-@name Matching username: atemporal
-@severity Error
-"""
-For each $x in $(.username) (
-  For each $y in $(.username) (
-    $x's text equals $y's text
+# Define what it means to be immobile. The "when $x is now $y"
+# allows us to compare properties of the same element in two
+# different snapshots of the page, even if the element's relative
+# positioning in the DOM has changed.
+We say that $x is immobile when (
+  Always (
+    When $x is now $y (
+      ($x's left equals $y's left)
+      And
+      ($x's top equals $y's top)
+    )
   )
 ).
 
 """
-@description The value in every "username" span 
-  must be the same
-@name Matching username: temporal
-@severity Error
+  @name Immobile items
+  @description List items should never change position
+  @severity Error
 """
-Always (
-  For each $x in $(.username) (
-    For each $y in $(.username) (
-      $x's text equals $y's text
-    )
-  )
+For each $item in $(li) (
+  $item is immobile
 ).
 </div>
 
@@ -123,7 +122,27 @@ Always (
 <h2>Procedural Equivalent</h2>
 
 <div class="procedural-equivalent jquery no-event">
-TODO
+evaluate = function() {
+  if (!evaluate.positions) {
+    evaluate.positions = [];
+    evaluate.positionindex = 0;
+    $("li").each(function() {
+      evaluate.positions.push({
+        "top" : $(this).offsetTop,
+        "left" : $(this).offsetLeft
+        });
+      $(this).uniqueid = evaluate.positionindex;
+      evaluate.positionindex++;
+    });
+  }
+  $("li").each(function(index) {
+    var uniqueid  = $(this).uniqueid;
+    if (uniqueid && (evaluate.positions[uniqueid].top != $(this).offsetTop ||
+      evaluate.positions[uniqueid].left != $(this).Left)
+    )
+      console.log("Error");
+  });
+};
 
 </div>
 

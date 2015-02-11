@@ -514,6 +514,20 @@ public class CornipickleParser implements ParseNodeVisitor
       s = s.replaceAll("\"", "");
       m_nodes.push(new StringConstant(s));
     }
+    else if (node_token.compareTo("<when>") == 0)
+    {
+      m_nodes.pop(); // (
+      Statement in_statement = (Statement) m_nodes.pop();
+      m_nodes.pop(); // )
+      StringConstant var_after = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // now
+      m_nodes.pop(); // is
+      StringConstant var_before = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // When
+      WhenIsNow out = new WhenIsNow(var_before, var_after);
+      out.setStatement(in_statement);
+      m_nodes.push(out);
+    }
     else
     {
       // This is a node that does not contain a label

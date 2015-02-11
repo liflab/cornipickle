@@ -19,6 +19,7 @@ $(document).ready(function() {
     cornipickle_code = $(".cornipickle-code").text();
     // Colourize each code snippet
     cornipickle_colourize_all();
+    javascript_colourize_all();
     // Remove onmouseup event on some elements
     $(".no-event").mouseup(function(event) {
       event.stopPropagation();
@@ -150,7 +151,6 @@ For each $x in $(.square) (
 <h2>Procedural Equivalent</h2>
 
 <div class="procedural-equivalent jquery no-event">
-<pre>
 x_intersects = function(x, y) {
   return (y.clientLeft + y.width) > x.left
   &amp;&amp; x.clientLeft + x.width > y.left;
@@ -171,7 +171,6 @@ for (var x in $(".square")) {
       console.log("Error");
   }
 };
-</pre>
 </div>
 
 </div>

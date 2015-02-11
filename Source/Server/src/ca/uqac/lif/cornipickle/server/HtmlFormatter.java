@@ -43,6 +43,7 @@ import ca.uqac.lif.cornipickle.PredicateDefinition;
 import ca.uqac.lif.cornipickle.RegexCapture;
 import ca.uqac.lif.cornipickle.SetDefinitionExtension;
 import ca.uqac.lif.cornipickle.StringConstant;
+import ca.uqac.lif.cornipickle.WhenIsNow;
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.util.StringUtils;
 
@@ -283,6 +284,17 @@ public class HtmlFormatter implements LanguageElementVisitor
     else if (element instanceof Globally)
     {
       out.append("<span><span class=\"temporal-operator\">Always</span> (<br />\n");
+      StringBuilder inner_exp = m_elements.pop(); // Inner statement
+      out.append(StringUtils.prepend("&nbsp;", inner_exp));
+      out.append("<br/>\n)");
+    }
+    else if (element instanceof WhenIsNow)
+    {
+      WhenIsNow e = (WhenIsNow) element;
+      out.append("<span class=\"forall\">When ");
+      out.append("<span class=\"element-name\">").append(e.getVariableBefore()).append("</span> is now ");
+      out.append("<span class=\"element-name\">").append(e.getVariableAfter()).append("</span>");
+      out.append(" (<br/>\n");
       StringBuilder inner_exp = m_elements.pop(); // Inner statement
       out.append(StringUtils.prepend("&nbsp;", inner_exp));
       out.append("<br/>\n)");

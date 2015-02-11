@@ -20,7 +20,8 @@
 # CSS attributes
 
 <css_attribute>      := value | height | width | top | left | right
-                        | bottom | color | id | text | border | event ;
+                        | bottom | color | id | text | border | event
+                        | cornipickleid ;
 
 # Element property
 
@@ -33,12 +34,13 @@
 # Cornichon statements
 
 <statement>          := <foreach> | <exists> | <binary_stmt> | <negation>
-                        | <temporal_stmt> | <userdef_stmt> | <let> ;
+                        | <temporal_stmt> | <userdef_stmt> | <let> | <when> ;
 <binary_stmt>        := <equality> | <gt> | <lt> | <regex_match> 
                         | <and> | <or> | <implies> ;
 <temporal_stmt>      := <globally> | <eventually> | <never> | <next> | <next_time> ;
 <foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
 <exists>             := There exists <var_name> in <set_name> such that ( <statement> ) ;
+<when>               := When <var_name> is now <var_name> ( <statement> ) ;
 <let>                := Let <var_name> be <property_or_const> ( <statement> ) ;
 <and>                := ( <statement> ) And ( <statement> ) ;
 <or>                 := ( <statement> ) Or ( <statement> ) ;

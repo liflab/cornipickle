@@ -19,6 +19,7 @@ $(document).ready(function() {
     cornipickle_code = $(".cornipickle-code").text();
     // Colourize each code snippet
     cornipickle_colourize_all();
+    javascript_colourize_all();
     // Remove onmouseup event on some elements
     $(".no-event").mouseup(function(event) {
       event.stopPropagation();
@@ -161,7 +162,6 @@ Always (
 <h2>Procedural Equivalent</h2>
 
 <div class="procedural-equivalent jquery no-event">
-<pre>
 highlighted = function(x) {
   $(x).css("border-color") === "rgb(0, 128, 0)";
 };
@@ -181,7 +181,7 @@ evaluate = function() {
     console.log("Error");
   blue_highlighted = false;
 };
-</pre>
+
 </div>
 
 </div>

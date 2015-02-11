@@ -19,6 +19,7 @@ $(document).ready(function() {
     cornipickle_code = $(".cornipickle-code").text();
     // Colourize each code snippet
     cornipickle_colourize_all();
+    javascript_colourize_all();
     // Remove onmouseup event on some elements
     $(".no-event").mouseup(function(event) {
       event.stopPropagation();
@@ -111,14 +112,13 @@ For each $t in $(h2) (
 <h2>Procedural Equivalent</h2>
 
 <div class="procedural-equivalent jquery no-event">
-<pre>
 var t = new RegExp("Homepage for (.*)");
 var g = new RegExp("Hi (.*)!");
 var u1 = t.match($("h2").text())[0];
 var u2 = t.match($("p.greeting").text())[0];
 if (u1 !=== u2)
   console.log("Error");
-</pre>
+
 </div>
 
 </div>
