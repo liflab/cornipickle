@@ -70,6 +70,22 @@ public class CornipickleParserTest
   }
   
   @Test
+  public void testLet1() throws ParseException
+  {
+    String line = "Let $arf be $x's height (\"3\" equals \"3\")";
+    ParseNode pn = shouldParseAndNotNull(line, "<let>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof LetStatement))
+    {
+      fail("Got wrong type of object");
+    }
+  }
+  
+  @Test
   public void testForEach1() throws ParseException
   {
     String line = "For each $x in $(p.menu) (\"3\" equals \"3\")";
@@ -242,10 +258,42 @@ public class CornipickleParserTest
     }
   } 
   
+  @Test
+  public void testProperty1() throws ParseException
+  {
+    String line = "the height of $x";
+    ParseNode pn = shouldParseAndNotNull(line, "<elem_property>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof ElementPropertyComplement))
+    {
+      fail("Got wrong type of object");
+    }
+  } 
+  
+  @Test
+  public void testProperty2() throws ParseException
+  {
+    String line = "$x's height";
+    ParseNode pn = shouldParseAndNotNull(line, "<elem_property>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof ElementPropertyPossessive))
+    {
+      fail("Got wrong type of object");
+    }
+  } 
+  
   public ParseNode shouldParseAndNotNull(String line, String start_symbol)
   {
     BnfParser p = parser.getParser();
-    p.setDebugMode(true);
+    //p.setDebugMode(true);
     p.setStartRule(start_symbol);
     ParseNode pn = null;
     try

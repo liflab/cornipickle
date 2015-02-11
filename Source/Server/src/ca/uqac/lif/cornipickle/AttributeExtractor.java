@@ -40,9 +40,9 @@ public class AttributeExtractor implements LanguageElementVisitor
   @Override
   public void visit(LanguageElement element)
   {
-    if (element instanceof ElementProperty)
+    if (element instanceof ElementPropertyPossessive)
     {
-      ElementProperty prop = (ElementProperty) element;
+      ElementPropertyPossessive prop = (ElementPropertyPossessive) element;
       m_attributes.add(prop.getPropertyName());
     }
     else if (element instanceof PredicateCall)

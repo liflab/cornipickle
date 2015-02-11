@@ -1,4 +1,22 @@
+/*
+    Cornipickle, validation of layout bugs in web applications
+    Copyright (C) 2015 Sylvain Hallé
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ca.uqac.lif.cornipickle;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -28,6 +46,20 @@ public class GrammarTest
   }  
   
   @Test
+  public void testElementProperty1() throws ParseException
+  {
+    String line = "the height of $x";
+    ParseNode pn = shouldParseAndNotNull(line, "<elem_property>", false);
+  }
+  
+  @Test
+  public void testElementProperty2() throws ParseException
+  {
+    String line = "$x's height";
+    ParseNode pn = shouldParseAndNotNull(line, "<elem_property>", false);
+  }
+  
+  @Test
   public void testUserDefinedSet2() throws ParseException
   {
     String line = "A tomato is any of \"abc\", \"def\", \"h1f\"";
@@ -53,6 +85,13 @@ public class GrammarTest
   {
     String line = "$x's height equals \"3\"";
     ParseNode pn = shouldParseAndNotNull(line, "<equality>", false);
+  }
+  
+  @Test
+  public void testLet1() throws ParseException
+  {
+    String line = "Let $arf be $x's height (\"3\" equals \"3\")";
+    ParseNode pn = shouldParseAndNotNull(line, "<let>", false);
   }
   
   @Test

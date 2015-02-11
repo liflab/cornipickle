@@ -28,7 +28,7 @@ import ca.uqac.lif.cornipickle.json.JsonString;
 
 public class RegexCapture extends SetExpression
 {
-  protected ElementProperty m_variable;
+  protected ElementPropertyPossessive m_variable;
   
   protected Pattern m_pattern;
   
@@ -47,7 +47,7 @@ public class RegexCapture extends SetExpression
     return m_pattern.toString();
   }
   
-  public void setProperty(ElementProperty v)
+  public void setProperty(ElementPropertyPossessive v)
   {
     m_variable = v;
   }

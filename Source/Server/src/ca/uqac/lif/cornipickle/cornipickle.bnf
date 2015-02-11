@@ -25,7 +25,9 @@
 
 # Element property
 
-<elem_property>      := <var_name> 's <css_attribute> ;
+<elem_property>      := <elem_property_pos> | <elem_property_com> ;
+<elem_property_pos>  := <var_name> 's <css_attribute> ;
+<elem_property_com>  := the <css_attribute> of <var_name> ;
 
 # Regular expression capture
 

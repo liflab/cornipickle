@@ -23,7 +23,8 @@ import java.util.Stack;
 
 import ca.uqac.lif.cornipickle.ComparisonStatement;
 import ca.uqac.lif.cornipickle.CssSelector;
-import ca.uqac.lif.cornipickle.ElementProperty;
+import ca.uqac.lif.cornipickle.ElementPropertyComplement;
+import ca.uqac.lif.cornipickle.ElementPropertyPossessive;
 import ca.uqac.lif.cornipickle.Eventually;
 import ca.uqac.lif.cornipickle.ExistsStatement;
 import ca.uqac.lif.cornipickle.ForAllStatement;
@@ -32,6 +33,7 @@ import ca.uqac.lif.cornipickle.ImpliesStatement;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.LanguageElement;
 import ca.uqac.lif.cornipickle.LanguageElementVisitor;
+import ca.uqac.lif.cornipickle.LetStatement;
 import ca.uqac.lif.cornipickle.NAryStatement;
 import ca.uqac.lif.cornipickle.NegationStatement;
 import ca.uqac.lif.cornipickle.Never;
@@ -140,13 +142,21 @@ public class HtmlFormatter implements LanguageElementVisitor
       NumberConstant e = (NumberConstant) element;
       out.append("<span class=\"number-constant\">").append(e.toString());
     }
-    else if (element instanceof ElementProperty)
+    else if (element instanceof ElementPropertyPossessive)
     {
-      ElementProperty e = (ElementProperty) element;
+      ElementPropertyPossessive e = (ElementPropertyPossessive) element;
       out.append("<span class=\"element-property\">");
       out.append("<span class=\"element-name\">").append(e.getElementName()).append("</span>");
       out.append("'s ");
       out.append("<span class=\"property-name\">").append(e.getPropertyName()).append("</span>");
+    }
+    else if (element instanceof ElementPropertyComplement)
+    {
+      ElementPropertyComplement e = (ElementPropertyComplement) element;
+      out.append("<span class=\"element-property\">");
+      out.append("the <span class=\"property-name\">").append(e.getPropertyName()).append("</span>");
+      out.append(" of ");
+      out.append("<span class=\"element-name\">").append(e.getElementName()).append("</span>");
     }
     else if (element instanceof ComparisonStatement)
     {
@@ -164,6 +174,16 @@ public class HtmlFormatter implements LanguageElementVisitor
       out.append(StringUtils.prepend("&nbsp;", left));
       out.append("<br />\n)<br/>\nThen (<br />\n");
       out.append(StringUtils.prepend("&nbsp;", right));
+      out.append("<br />\n)");
+    }
+    else if (element instanceof LetStatement)
+    {
+      LetStatement e = (LetStatement) element;
+      out.append("<span class=\"let\">Let <span class=\"element-name\">").append(e.getVariable()).append("</span> be ");//(<br />\n");
+      StringBuilder left = m_elements.pop(); // Inner statement
+      StringBuilder right = m_elements.pop(); // Property
+      out.append(right).append(" (<br/>\n");
+      out.append(StringUtils.prepend("&nbsp;", left));
       out.append("<br />\n)");
     }
     else if (element instanceof NextTime)

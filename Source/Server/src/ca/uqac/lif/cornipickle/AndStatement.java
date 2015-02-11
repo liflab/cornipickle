@@ -58,8 +58,8 @@ public class AndStatement extends NAryStatement
     {
       Verdict b = s.evaluateAtemporal(j, d);
       out.conjoin(b);
-      if (out.is(Verdict.Value.FALSE))
-        break;
+      //if (out.is(Verdict.Value.FALSE))
+        //break;
     }
     return out;
   }

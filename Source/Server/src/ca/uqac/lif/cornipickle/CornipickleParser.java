@@ -175,6 +175,7 @@ public class CornipickleParser implements ParseNodeVisitor
     else if (node_token.compareTo("<constant>") == 0) { }
     else if (node_token.compareTo("<css_attribute>") == 0) { }
     else if (node_token.compareTo("<el_or_not>") == 0) { }
+    else if (node_token.compareTo("<elem_property>") == 0) { }
     else if (node_token.compareTo("<number>") == 0) { }
     else if (node_token.compareTo("<pred_pattern>") == 0) { }
     else if (node_token.compareTo("<property_or_const>") == 0) { }
@@ -332,12 +333,21 @@ public class CornipickleParser implements ParseNodeVisitor
       out.setRight(right);
       m_nodes.push(out);
     }
-    else if (node_token.compareTo("<elem_property>") == 0)
+    else if (node_token.compareTo("<elem_property_pos>") == 0)
     {
       StringConstant sel = (StringConstant) m_nodes.pop();
       m_nodes.pop(); // 's
       StringConstant var = (StringConstant) m_nodes.pop();
-      ElementProperty out = new ElementProperty(var, sel);
+      ElementPropertyPossessive out = new ElementPropertyPossessive(var, sel);
+      m_nodes.push(out);
+    }
+    else if (node_token.compareTo("<elem_property_com>") == 0)
+    {
+      StringConstant var = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // of
+      StringConstant sel = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // the
+      ElementPropertyComplement out = new ElementPropertyComplement(var, sel);
       m_nodes.push(out);
     }
     else if (node_token.compareTo("<globally>") == 0)
@@ -387,6 +397,19 @@ public class CornipickleParser implements ParseNodeVisitor
       LessThanStatement out = new LessThanStatement();
       out.setLeft(left);
       out.setRight(right);
+      m_nodes.push(out);
+    }
+    else if (node_token.compareTo("<let>") == 0)
+    {
+      m_nodes.pop(); // )
+      Statement inner = (Statement) m_nodes.pop();
+      m_nodes.pop(); // (
+      Property prop = (Property) m_nodes.pop();
+      m_nodes.pop(); // be
+      StringConstant var = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // let
+      LetStatement out = new LetStatement(var, prop);
+      out.setStatement(inner);
       m_nodes.push(out);
     }
     else if (node_token.compareTo("<negation>") == 0)
@@ -470,7 +493,7 @@ public class CornipickleParser implements ParseNodeVisitor
     {
       StringConstant pattern = (StringConstant) m_nodes.pop();
       m_nodes.pop(); // with
-      ElementProperty variable = (ElementProperty) m_nodes.pop();
+      ElementPropertyPossessive variable = (ElementPropertyPossessive) m_nodes.pop();
       m_nodes.pop(); // match
       RegexCapture out = new RegexCapture();
       out.setProperty(variable);

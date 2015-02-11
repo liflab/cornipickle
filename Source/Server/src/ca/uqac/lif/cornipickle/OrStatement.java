@@ -57,8 +57,8 @@ public class OrStatement extends AndStatement
     {
       Verdict b = s.evaluateAtemporal(j, d);
       out.disjoin(b);
-      if (out.is(Verdict.Value.TRUE))
-        break;
+      //if (out.is(Verdict.Value.TRUE))
+        //break;
     }
     return out;
   }

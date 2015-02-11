@@ -25,7 +25,7 @@ import ca.uqac.lif.cornipickle.json.JsonMap;
 import ca.uqac.lif.cornipickle.json.JsonPath;
 import ca.uqac.lif.cornipickle.json.JsonString;
 
-public class ElementProperty extends Property
+public abstract class ElementProperty extends Property
 {
   protected String m_elementName;
   
@@ -122,21 +122,6 @@ public class ElementProperty extends Property
         }
       }
     }
-    return out;
-  }
-  
-  @Override
-  public String toString(String indent)
-  {
-    StringBuilder out = new StringBuilder();
-    out.append(m_elementName).append("'s ").append(m_propertyName);
-    return out.toString();
-  }
-  
-  @Override
-  public ElementProperty getClone()
-  {
-    ElementProperty out = new ElementProperty(m_elementName, m_propertyName);
     return out;
   }
 

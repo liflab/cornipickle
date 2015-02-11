@@ -1,3 +1,20 @@
+/*
+    Cornipickle, validation of layout bugs in web applications
+    Copyright (C) 2015 Sylvain Hallé
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.*;
@@ -58,7 +75,7 @@ public class EvaluationTest
   @Test
   public void testProperty1()
   {
-    ElementProperty p = new ElementProperty("$x", "height");
+    ElementPropertyPossessive p = new ElementPropertyPossessive("$x", "height");
     JsonMap x = new JsonMap();
     x.put("height", new JsonNumber(100));
     EqualsStatement eq = new EqualsStatement();
@@ -76,7 +93,7 @@ public class EvaluationTest
   @Test
   public void testProperty2()
   {
-    ElementProperty p = new ElementProperty("$x", "height");
+    ElementPropertyPossessive p = new ElementPropertyPossessive("$x", "height");
     JsonMap x = new JsonMap();
     x.put("width", new JsonNumber(100));
     EqualsStatement eq = new EqualsStatement();
@@ -119,7 +136,7 @@ public class EvaluationTest
     main.put("tagname", new JsonString("h1"));
     
     // Create formula
-    ElementProperty prop = new ElementProperty("$x", "width");
+    ElementPropertyPossessive prop = new ElementPropertyPossessive("$x", "width");
     EqualsStatement eq = new EqualsStatement();
     eq.setLeft(prop);
     eq.setRight(new NumberConstant(100));
@@ -165,7 +182,7 @@ public class EvaluationTest
     main.put("tagname", new JsonString("h1"));
     
     // Create formula
-    ElementProperty prop = new ElementProperty("$x", "width");
+    ElementPropertyPossessive prop = new ElementPropertyPossessive("$x", "width");
     EqualsStatement eq = new EqualsStatement();
     eq.setLeft(prop);
     eq.setRight(new NumberConstant(100));
@@ -258,6 +275,48 @@ public class EvaluationTest
     if (!answer.is(Verdict.Value.TRUE))
     {
       fail("Wrong verdict at event " + event_nb);
+    }
+  }
+  
+  @Test
+  public void testLet1() throws ParseException
+  {
+    // Create "document"
+    JsonList el = new JsonList();
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("tagname", new JsonString("p"));
+      el.add(x);
+    }
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(101));
+      x.put("tagname", new JsonString("q"));
+      el.add(x);
+    }
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("tagname", new JsonString("p"));
+      el.add(x);
+    }
+    JsonMap main = new JsonMap();
+    main.put("children", el);
+    main.put("tagname", new JsonString("h1"));
+    
+    // Create formula
+    String expression = "For each $x in $(p) (Let $w be $x's width ($w's value is greater than 50))";
+    CornipickleParser cp = new CornipickleParser();
+    Statement st = cp.parseStatement(expression);
+    Verdict answer;
+    
+    // Evaluate formula on document 
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    answer = st.evaluate(main, d);
+    if (!answer.is(Verdict.Value.TRUE))
+    {
+      fail("Expected true, got something else");
     }
   }
 
