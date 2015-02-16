@@ -3,7 +3,11 @@ Cornipickle: a runtime monitor for layout constraints
 
 [![Build Status](https://semaphoreapp.com/api/v1/projects/3f990e53-7e43-4198-941f-db77aa637459/344315/badge.png)](https://semaphoreapp.com/sylvainhalle/cornipickle)
 
-Todo: describe.
+Cornichon is a declarative language that can express desirable properties of
+a web application as a set of human-readable assertions on the page’s HTML
+and CSS data. Cornipickle, an automated testing tool that can verify
+Cornichon properties on-the-fly as a user interacts with an application.
+
 
 Table of Contents                                                    {#toc}
 -----------------
