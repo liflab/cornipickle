@@ -60,6 +60,7 @@ location varies according to the operating system you use:
 - Solaris™ Operating System: `/usr/jdk/packages/lib/ext`
 - Linux: `/usr/java/packages/lib/ext`
 - Microsoft Windows: `%SystemRoot%\Sun\Java\lib\ext`
+- MacOS: `/Library/Java/Extensions`
 
 Do **not** create subfolders there (i.e. put the archive directly in that
 folder).
