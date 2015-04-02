@@ -12,8 +12,6 @@ public class Verdict
   
   protected Witness m_witnessFalse;
   
-  protected Value m_polarity;
-  
   public Verdict()
   {
     this(Value.INCONCLUSIVE);
@@ -25,16 +23,6 @@ public class Verdict
     m_witnessTrue = new Witness();
     m_witnessFalse = new Witness();
     m_value = v;
-  }
-  
-  public void setPolarity(Value v)
-  {
-    m_polarity = v;
-  }
-  
-  public Value getPolarity()
-  {
-    return m_polarity;
   }
   
   public boolean is(Value v)
