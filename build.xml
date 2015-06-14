@@ -155,8 +155,8 @@
   </condition>
   <target name="deps-cli" if="${cli.absent}" depends="deps-targetdir">
     <echo message="Commons CLI not present in classpath. Downloading..." level="info"/>
-    <get src="http://mirror.its.dal.ca/apache//commons/cli/binaries/commons-cli-1.2-bin.zip" dest="${deps.targetdir}"/>
-    <unzip src="${deps.targetdir}/commons-cli-1.2-bin.zip" dest="${deps.targetdir}">
+    <get src="http://apache.parentingamerica.com//commons/cli/binaries/commons-cli-1.3-bin.zip" dest="${deps.targetdir}"/>
+    <unzip src="${deps.targetdir}/commons-cli-1.3-bin.zip" dest="${deps.targetdir}">
       <patternset>
         <include name="**/*.jar"/>
       </patternset>
