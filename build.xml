@@ -10,9 +10,6 @@
   <!-- Target jar file -->
   <property name="jar.filename" value="Cornipickle.jar"/>
   
-  <!-- Location of extension dir -->
-  <getLastDir dir="${java.ext.dirs}" propertyName="deps.installdir" />
-  
   <target name="init">
     <!-- Create the time stamp -->
     <tstamp/>
@@ -25,6 +22,7 @@
   <target name="compile" depends="init" description="Compile the source">
     <!-- Compile the java code for each project -->
     <javac
+      target="1.6"
       srcdir="Source/Server/src"
       destdir="Source/Server/bin"
       includeantruntime="false" />
@@ -36,6 +34,7 @@
   <target name="compile-tests" depends="init,compile,junit-download" description="Compile the tests">
     <!-- Compile the java code for each project -->
     <javac
+      target="1.6"
       srcdir="Source/ServerTest/src"
       destdir="Source/ServerTest/bin"
       includeantruntime="false">
@@ -123,19 +122,20 @@
   
   <!-- Check dependencies and download them if required -->
   <target name="deps-targetdir">
+    <getLastDir dir="${java.ext.dirs}" propertyName="deps.installdir" />
     <property name="deps.targetdir" value="lib" />
+    <mkdir dir="${deps.installdir}"/>
     <mkdir dir="${deps.targetdir}"/>
     <echo level="info">Creating folder ${deps.targetdir}. Note that libraries downloaded there (if any) must then be moved to a location within the Java classpath. See the readme file for more info.</echo>
   </target>
   
   <!-- Bullwinkle -->
-  <download-install-dependencies 
   <condition property="Bullwinkle.absent" value="false" else="true">
     <available classname="ca.uqac.lif.bullwinkle.BnfParser"/>
   </condition>
   <target name="deps-bullwinkle" if="${Bullwinkle.absent}" depends="deps-targetdir">
     <echo message="Bullwinkle not present in classpath. Downloading..." level="info"/>
-    <get src="http://sylvainhalle.github.io/Bullwinkle/releases/bullwinkle-1.1.1.jar" dest="${deps.targetdir}"/>
+    <get src="http://sylvainhalle.github.io/Bullwinkle/releases/bullwinkle-1.1.1.jar" dest="${deps.installdir}"/>
   </target>
   <!-- wro4j -->
   <condition property="wro4j.absent" value="false" else="true">
@@ -143,8 +143,8 @@
   </condition>
   <target name="deps-wro4j" if="${wro4j.absent}" depends="deps-targetdir">
     <echo message="wro4j not present in classpath. Downloading..." level="info"/>
-    <get src="https://wro4j.googlecode.com/files/wro4j-core-1.6.3.jar" dest="${deps.targetdir}"/>
-    <get src="https://wro4j.googlecode.com/files/wro4j-runner-1.6.3-jar-with-dependencies.jar" dest="${deps.targetdir}"/>
+    <get src="https://wro4j.googlecode.com/files/wro4j-core-1.6.3.jar" dest="${deps.installdir}"/>
+    <get src="https://wro4j.googlecode.com/files/wro4j-runner-1.6.3-jar-with-dependencies.jar" dest="${deps.installdir}"/>
   </target>
   <!-- json-simple -->
   <condition property="json.absent" value="false" else="true">
@@ -152,7 +152,7 @@
   </condition>
   <target name="deps-json" if="${json.absent}" depends="deps-targetdir">
     <echo message="json-simple not present in classpath. Downloading..." level="info"/>
-    <get src="https://json-simple.googlecode.com/files/json-simple-1.1.1.jar" dest="${deps.targetdir}"/>
+    <get src="https://json-simple.googlecode.com/files/json-simple-1.1.1.jar" dest="${deps.installdir}"/>
   </target>
   <!-- Commons CLI -->
   <condition property="cli.absent" value="false" else="true">
@@ -160,8 +160,8 @@
   </condition>
   <target name="deps-cli" if="${cli.absent}" depends="deps-targetdir">
     <echo message="Commons CLI not present in classpath. Downloading..." level="info"/>
-    <get src="http://apache.parentingamerica.com//commons/cli/binaries/commons-cli-1.3-bin.zip" dest="${deps.targetdir}"/>
-    <unzip src="${deps.targetdir}/commons-cli-1.3-bin.zip" dest="${deps.targetdir}">
+    <get src="http://apache.parentingamerica.com//commons/cli/binaries/commons-cli-1.3-bin.zip" dest="${deps.installdir}"/>
+    <unzip src="${deps.targetdir}/commons-cli-1.3-bin.zip" dest="${deps.installdir}">
       <patternset>
         <include name="**/*.jar"/>
       </patternset>
