@@ -122,6 +122,7 @@
   
   <!-- Check dependencies and download them if required -->
   <target name="deps-targetdir">
+    <property name="deps.installdir" value="/usr/java/packages/lib/ext" /> <!-- Default -->
     <getLastDir dir="${java.ext.dirs}" propertyName="deps.installdir" />
     <property name="deps.targetdir" value="lib" />
     <mkdir dir="${deps.installdir}"/>
