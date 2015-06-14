@@ -7,7 +7,11 @@
   <property environment="env"/>
   <property name="tempdir" value="${java.io.tmpdir}"/>
   
+  <!-- Target jar file -->
   <property name="jar.filename" value="Cornipickle.jar"/>
+  
+  <!-- Location of extension dir -->
+  <getLastDir dir="${java.ext.dirs}" propertyName="deps.installdir" />
   
   <target name="init">
     <!-- Create the time stamp -->
@@ -125,12 +129,13 @@
   </target>
   
   <!-- Bullwinkle -->
+  <download-install-dependencies 
   <condition property="Bullwinkle.absent" value="false" else="true">
     <available classname="ca.uqac.lif.bullwinkle.BnfParser"/>
   </condition>
   <target name="deps-bullwinkle" if="${Bullwinkle.absent}" depends="deps-targetdir">
     <echo message="Bullwinkle not present in classpath. Downloading..." level="info"/>
-    <get src="https://github.com/sylvainhalle/Bullwinkle/raw/master/BullwinkleParser.jar" dest="${deps.targetdir}"/>
+    <get src="http://sylvainhalle.github.io/Bullwinkle/releases/bullwinkle-1.1.1.jar" dest="${deps.targetdir}"/>
   </target>
   <!-- wro4j -->
   <condition property="wro4j.absent" value="false" else="true">
@@ -182,7 +187,6 @@
   
   <!-- Install dependencies -->
   <target name="deps-install" depends="deps">
-    <property name="deps.installdir" value="/usr/java/packages/lib/ext"/>
     <mkdir dir="${deps.installdir}"/>
     <copy todir="${deps.installdir}">
       <fileset dir="${deps.targetdir}">
@@ -204,5 +208,34 @@
   <target name="run">
     <java jar="${jar.filename}" fork="true"/>
   </target>
+  
+<!-- Macro-definition to check for dependencies,
+     download them and install them -->
+<macrodef name="download-install-dependencies">
+  <attribute name="depName" /> <!-- Dependency name -->
+  <attribute name="classToCheck" /> <!-- Class to check for existence -->
+  <attribute name="fileToDownload" /> <!-- File to download -->
+  <sequential>
+    <echo level="info">@{depName}?</echo>
+    <condition property="@{depName}.present" value="false" else="true">
+	  <available classname="@{classToCheck}" />
+    </condition>
+    <target name="@{depName}-install" if="@{depName}.present">
+      <echo level="info">@{depName} is not present in the classpath</echo>
+      <echo level="info">Downloading @{filetoDownload} to @{installDir}</echo>
+      <get src="@{fileToDownload}" dest="@{deps.installdir}" />
+    </target>
+  </sequential>
+</macrodef>
+
+<!-- Get the last entry of a semicolon-separated string -->
+<scriptdef name="getLastDir" language="javascript">
+  <attribute name="dir" />
+  <attribute name="propertyName" />
+  <![CDATA[
+    var dirs = attributes.get("dir").split(";");
+    project.setNewProperty(attributes.get("propertyName"), dirs[dirs.length - 1]);
+  ]]>
+</scriptdef>
 
 </project>
