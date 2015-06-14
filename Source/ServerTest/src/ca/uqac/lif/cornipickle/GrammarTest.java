@@ -111,7 +111,7 @@ public class GrammarTest
   @Test
   public void testForEach3() throws ParseException
   {
-    String line = "For each $x in match $y's text with \"yo man (.*?)\"";
+    String line = "For each $x in match $y's text with \"yo man (.*?)\" ($x's value equals 100)";
     ParseNode pn = shouldParseAndNotNull(line, "<foreach>", false);
   }
   
