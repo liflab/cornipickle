@@ -20,8 +20,8 @@
 # CSS attributes
 
 <css_attribute>      := value | height | width | top | left | right
-                        | bottom | color | id | text | border | event
-                        | cornipickleid ;
+                        | bottom | color | id | text | background | border 
+                        | event | cornipickleid ;
 
 # Element property
 
