@@ -71,6 +71,8 @@ public class EvaluationTest
       fail("Expected false, got something else");
     }
   }
+
+  
   
   @Test
   public void testProperty1()
@@ -99,6 +101,24 @@ public class EvaluationTest
     EqualsStatement eq = new EqualsStatement();
     eq.setLeft(p);
     eq.setRight(new NumberConstant(100));
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    d.put("$x", x);
+    Verdict answer = eq.evaluate(null, d);
+    if (!answer.is(Verdict.Value.FALSE))
+    {
+      fail("Expected false, got something else");
+    }
+  }
+
+  @Test
+  public void testProperty3()
+  {
+    ElementPropertyPossessive p = new ElementPropertyPossessive("$x", "height");
+    JsonMap x = new JsonMap();
+    x.put("height", new JsonNumber(100));
+    EqualsStatement eq = new EqualsStatement();
+    eq.setLeft(p);
+    eq.setRight(new AddOperation(new JsonNumber(49), new JsonNumber(50)));
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
     d.put("$x", x);
     Verdict answer = eq.evaluate(null, d);
@@ -197,6 +217,52 @@ public class EvaluationTest
     if (!answer.is(Verdict.Value.FALSE))
     {
       fail("Expected false, got something else");
+    }
+  }
+
+  @Test
+  public void testForAll3()
+  {
+    // Create "document"
+    JsonList el = new JsonList();
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("tagname", new JsonString("d"));
+      el.add(x);
+    }
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(101));
+      x.put("tagname", new JsonString("p"));
+      el.add(x);
+    }
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("tagname", new JsonString("d"));
+      el.add(x);
+    }
+    JsonMap main = new JsonMap();
+    main.put("children", el);
+    main.put("tagname", new JsonString("div"));
+    
+    // Create formula
+    ElementPropertyPossessive prop = new ElementPropertyPossessive("$x", "width");
+    EqualsStatement eq = new EqualsStatement();
+    eq.setLeft(prop);
+    eq.setRight(new AddOperation(new JsonNumber(49), new JsonNumber(51)));
+    ForAllStatement foa = new ForAllStatement();
+    foa.setVariable("$x");
+    foa.setInnerStatement(eq);
+    foa.setDomain(new CssSelector("d"));
+    
+    // Evaluate formula on document 
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    Verdict answer = foa.evaluate(main, d);
+    if (!answer.is(Verdict.Value.TRUE))
+    {
+      fail("Expected true, got something else");
     }
   }
   

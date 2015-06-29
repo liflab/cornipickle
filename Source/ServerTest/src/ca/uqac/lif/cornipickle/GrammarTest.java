@@ -121,6 +121,13 @@ public class GrammarTest
     String line = "For each $u1 in match $x's text with \"Homepage for (.*)\" (\n      For each $u2 in match $g's text with \"Hello (.*)!\" (\n        $u1's value equals $u2's value\n      )\n    )";
     ParseNode pn = shouldParseAndNotNull(line, "<foreach>", false);
   } 
+
+  @Test
+  public void testExists1() throws ParseException
+  {
+    String line = "There exists $x in $(#d) such that ($x's width equals 100 + 200 )";
+    ParseNode pn = shouldParseAndNotNull(line, "<exists>", false);
+  }
   
   @Test
   public void testIfThen1() throws ParseException

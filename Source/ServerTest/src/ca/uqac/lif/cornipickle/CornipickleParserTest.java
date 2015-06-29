@@ -38,6 +38,60 @@ public class CornipickleParserTest
   }
 
   @Test
+  public void testAddition1() throws ParseException
+  {
+    String line = "[200 + 100]";
+    ParseNode pn = shouldParseAndNotNull(line, "<add>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof AddOperation))
+    {
+      fail("Got wrong type of object");
+    }
+  }
+
+  @Test
+  public void testAddition2() throws ParseException
+  {
+    String line1 = "[200 + 100]";
+    ParseNode pn1 = shouldParseAndNotNull(line1, "<add>");
+    LanguageElement e1 = parser.parseStatement(pn1);
+    if (e1 == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e1 instanceof AddOperation))
+    {
+      fail("Got wrong type of object");
+    }
+    String line2 = "$d's width";
+    ParseNode pn2 = shouldParseAndNotNull(line2, "<elem_property_pos>");
+    LanguageElement e2 = parser.parseStatement(pn2);
+    if (e2 == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e2 instanceof ElementPropertyPossessive))
+    {
+      fail("Got wrong type of object");
+    }
+    String line3 = line2 + " equals " + line1;
+    ParseNode pn3 = shouldParseAndNotNull(line3, "<equality>");
+    LanguageElement e3 = parser.parseStatement(pn3);
+    if (e3 == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e3 instanceof EqualsStatement))
+    {
+      fail("Got wrong type of object");
+    }
+  }
+
+  @Test
   public void testEquality1() throws ParseException
   {
     String line = "\"3\" equals \"3\"";
@@ -57,6 +111,22 @@ public class CornipickleParserTest
   public void testEquality2() throws ParseException
   {
     String line = "$x's height equals \"3\"";
+    ParseNode pn = shouldParseAndNotNull(line, "<equality>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof EqualsStatement))
+    {
+      fail("Got wrong type of object");
+    }
+  }
+
+  @Test
+  public void testEquality3() throws ParseException
+  {
+    String line = "$x's height equals [250 + 50]";
     ParseNode pn = shouldParseAndNotNull(line, "<equality>");
     LanguageElement e = parser.parseStatement(pn);
     if (e == null)
@@ -112,6 +182,22 @@ public class CornipickleParserTest
       fail("Parsing returned null");
     }
     if (!(e instanceof ForAllStatement))
+    {
+      fail("Got wrong type of object");
+    }
+  }
+
+  @Test
+  public void testExists() throws ParseException
+  {
+    String line = "There exists $d in $(#d) such that ( $d's width equals 200 + 100 )";
+    ParseNode pn = shouldParseAndNotNull(line, "<exists>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof ExistsStatement))
     {
       fail("Got wrong type of object");
     }

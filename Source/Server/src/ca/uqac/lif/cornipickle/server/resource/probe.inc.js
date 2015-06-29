@@ -71,11 +71,15 @@ var CornipickleProbe = function()
 				out = this.addIfDefined(out, "height", n.clientHeight);
 				out = this.addIfDefined(out, "width", n.clientWidth);
 				out = this.addIfDefined(out, "background", CornipickleProbe.formatBackgroundString(n));
+				out = this.addIfDefined(out, "color", CornipickleProbe.getStyle(n, "color"));
 				out = this.addIfDefined(out, "border", CornipickleProbe.formatBorderString(n));
 				out = this.addIfDefined(out, "top", pos.top);
 				out = this.addIfDefined(out, "left", pos.left);
 				out = this.addIfDefined(out, "bottom", add_dimensions([pos.top, n.clientHeight]));
 				out = this.addIfDefined(out, "right", add_dimensions([pos.left,  n.clientWidth]));
+				out = this.addIfDefined(out, "display", CornipickleProbe.getStyle(n, "display"));
+				out = this.addIfDefined(out, "size", n.size);
+				out = this.addIfDefined(out, "checked ", n.checked);
 				if (n === event.target)
 				{
 					out.event = this.serializeEvent(event);

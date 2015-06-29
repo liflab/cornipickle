@@ -185,6 +185,17 @@ public class CornipickleParser implements ParseNodeVisitor
     else if (node_token.compareTo("<userdef_set>") == 0) { }
     else if (node_token.compareTo("<userdef_stmt>") == 0) { }
     else if (node_token.compareTo("<var_name>") == 0) { }
+    else if (node_token.compareTo("<math>") == 0) { }
+    else if (node_token.compareTo("<add>") == 0) 
+    { 
+      m_nodes.pop(); //(
+      NumberConstant right = (NumberConstant) m_nodes.pop();
+      m_nodes.pop(); // plus
+      NumberConstant left = (NumberConstant) m_nodes.pop();
+      m_nodes.pop(); //)
+      AddOperation out = new AddOperation(left, right);
+      m_nodes.push(out);
+    }
     else if (node_token.compareTo("<and>") == 0)
     {
       m_nodes.pop(); // (
