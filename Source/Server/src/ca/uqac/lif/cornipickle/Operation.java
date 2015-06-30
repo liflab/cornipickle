@@ -21,29 +21,22 @@ import ca.uqac.lif.cornipickle.json.JsonNumber;
 
 public abstract class Operation extends Property
 {
-  protected NumberConstant m_left;
-  protected NumberConstant m_right;
+  protected Property m_left;
+  protected Property m_right;
   
-  public Operation(NumberConstant n1, NumberConstant n2) 
+  public Operation(Property p1, Property p2) 
   {
     super();
-    setLeft(n1);
-    setRight(n2);
-  }
-
-  public Operation(JsonNumber n1, JsonNumber n2) 
-  {
-    super();
-    setLeft(new NumberConstant(n1));
-    setRight(new NumberConstant(n2));
+    setLeft(p1);
+    setRight(p2);
   }
   
-  public void setLeft(NumberConstant p)
+  public void setLeft(Property p)
   {
     m_left = p;
   }
   
-  public void setRight(NumberConstant p)
+  public void setRight(Property p)
   {
     m_right = p;
   }

@@ -189,9 +189,9 @@ public class CornipickleParser implements ParseNodeVisitor
     else if (node_token.compareTo("<add>") == 0) 
     { 
       m_nodes.pop(); //(
-      NumberConstant right = (NumberConstant) m_nodes.pop();
+      Property right = (Property) m_nodes.pop();
       m_nodes.pop(); // plus
-      NumberConstant left = (NumberConstant) m_nodes.pop();
+      Property left = (Property) m_nodes.pop();
       m_nodes.pop(); //)
       AddOperation out = new AddOperation(left, right);
       m_nodes.push(out);

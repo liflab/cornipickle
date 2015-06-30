@@ -118,7 +118,7 @@ public class EvaluationTest
     x.put("height", new JsonNumber(100));
     EqualsStatement eq = new EqualsStatement();
     eq.setLeft(p);
-    eq.setRight(new AddOperation(new JsonNumber(49), new JsonNumber(50)));
+    eq.setRight(new AddOperation(new NumberConstant(49), new NumberConstant(50)));
     HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
     d.put("$x", x);
     Verdict answer = eq.evaluate(null, d);
@@ -251,7 +251,7 @@ public class EvaluationTest
     ElementPropertyPossessive prop = new ElementPropertyPossessive("$x", "width");
     EqualsStatement eq = new EqualsStatement();
     eq.setLeft(prop);
-    eq.setRight(new AddOperation(new JsonNumber(49), new JsonNumber(51)));
+    eq.setRight(new AddOperation(new NumberConstant(49), new NumberConstant(51)));
     ForAllStatement foa = new ForAllStatement();
     foa.setVariable("$x");
     foa.setInnerStatement(eq);
