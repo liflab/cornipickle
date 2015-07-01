@@ -22,10 +22,10 @@ import java.util.Map;
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonNumber;
 
-public class AddOperation extends Operation
+public class DivOperation extends Operation
 {
 
-  public AddOperation(Property p1, Property p2)
+  public DivOperation(Property p1, Property p2)
   {
     super(p1, p2);
   }
@@ -37,7 +37,7 @@ public class AddOperation extends Operation
     JsonNumber right = (JsonNumber) m_right.evaluate(t, d);
     Number intLeft = left.numberValue();
     Number intRight = right.numberValue();
-    int ret = intLeft.intValue() + intRight.intValue();
+    int ret = intLeft.intValue() / intRight.intValue();
     return new JsonNumber(new Integer(ret));
   }
 
@@ -45,14 +45,14 @@ public class AddOperation extends Operation
   public String toString(String indent)
   {
     StringBuilder out = new StringBuilder();
-    out.append(m_left.toString()).append(" plus ").append(m_right.toString());
+    out.append(m_left.toString()).append(" / ").append(m_right.toString());
     return out.toString();
   }
 
   @Override
-  public AddOperation getClone()
+  public DivOperation getClone()
   {
-    AddOperation out = new AddOperation(m_left, m_right);
+    DivOperation out = new DivOperation(m_left, m_right);
     return out;
   }
 

@@ -40,7 +40,7 @@
                         | <temporal_stmt> | <userdef_stmt> | <let> | <when> ;
 <binary_stmt>        := <equality> | <gt> | <lt> | <regex_match> 
                         | <and> | <or> | <implies> ;
-<math>               := <add> ;
+<math>               := <add> | <sub> | <div> | <mult> ;
 <temporal_stmt>      := <globally> | <eventually> | <never> | <next> | <next_time> ;
 <foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
 <exists>             := There exists <var_name> in <set_name> such that ( <statement> ) ;
@@ -63,6 +63,9 @@
 <regex_match>        := <property_or_const> matches <property_or_const> ;
 
 <add>                := ( <property_or_const> plus <property_or_const> ) ;
+<sub>                := ( <property_or_const> - <property_or_const> ) ;
+<mult>               := ( <property_or_const> \u002a <property_or_const> ) ; # \u002a is the * symbol
+<div>                := ( <property_or_const> / <property_or_const> ) ;
 
 <constant>           := <number> | <string> ;
 <number>             := ^\d+;

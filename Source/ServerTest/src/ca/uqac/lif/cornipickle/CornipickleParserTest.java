@@ -92,6 +92,22 @@ public class CornipickleParserTest
   }
 
   @Test
+  public void testMult1() throws ParseException
+  {
+    String line = "(200 * 100)";
+    ParseNode pn = shouldParseAndNotNull(line, "<mult>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof MultOperation))
+    {
+      fail("Got wrong type of object");
+    }
+  }
+
+  @Test
   public void testEquality1() throws ParseException
   {
     String line = "\"3\" equals \"3\"";
