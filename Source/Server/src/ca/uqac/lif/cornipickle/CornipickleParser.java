@@ -185,6 +185,17 @@ public class CornipickleParser implements ParseNodeVisitor
     else if (node_token.compareTo("<userdef_set>") == 0) { }
     else if (node_token.compareTo("<userdef_stmt>") == 0) { }
     else if (node_token.compareTo("<var_name>") == 0) { }
+    else if (node_token.compareTo("<math>") == 0) { }
+    else if (node_token.compareTo("<add>") == 0) 
+    { 
+      m_nodes.pop(); //(
+      Property right = (Property) m_nodes.pop();
+      m_nodes.pop(); // plus
+      Property left = (Property) m_nodes.pop();
+      m_nodes.pop(); //)
+      AddOperation out = new AddOperation(left, right);
+      m_nodes.push(out);
+    }
     else if (node_token.compareTo("<and>") == 0)
     {
       m_nodes.pop(); // (
@@ -278,6 +289,16 @@ public class CornipickleParser implements ParseNodeVisitor
       String s = sc.toString();
       s = s.trim();
       m_nodes.push(new StringConstant(s));
+    }
+    else if (node_token.compareTo("<div>") == 0) 
+    { 
+      m_nodes.pop(); //(
+      Property right = (Property) m_nodes.pop();
+      m_nodes.pop(); // /
+      Property left = (Property) m_nodes.pop();
+      m_nodes.pop(); //)
+      DivOperation out = new DivOperation(left, right);
+      m_nodes.push(out);
     }
     else if (node_token.compareTo("<eventually>") == 0)
     {
@@ -412,6 +433,16 @@ public class CornipickleParser implements ParseNodeVisitor
       out.setStatement(inner);
       m_nodes.push(out);
     }
+    else if (node_token.compareTo("<mult>") == 0) 
+    { 
+      m_nodes.pop(); //(
+      Property right = (Property) m_nodes.pop();
+      m_nodes.pop(); // *
+      Property left = (Property) m_nodes.pop();
+      m_nodes.pop(); //)
+      MultOperation out = new MultOperation(left, right);
+      m_nodes.push(out);
+    }
     else if (node_token.compareTo("<negation>") == 0)
     {
       m_nodes.pop(); // (
@@ -536,6 +567,16 @@ public class CornipickleParser implements ParseNodeVisitor
       String s = sc.toString();
       s = s.replaceAll("\"", "");
       m_nodes.push(new StringConstant(s));
+    }
+    else if (node_token.compareTo("<sub>") == 0) 
+    { 
+      m_nodes.pop(); //(
+      Property right = (Property) m_nodes.pop();
+      m_nodes.pop(); // -
+      Property left = (Property) m_nodes.pop();
+      m_nodes.pop(); //)
+      SubOperation out = new SubOperation(left, right);
+      m_nodes.push(out);
     }
     else if (node_token.compareTo("<when>") == 0)
     {

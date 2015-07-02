@@ -22,9 +22,8 @@ Compiling and Installing Cornipickle                             {#install}
 First make sure you have the following installed:
 
 - The Java Development Kit (JDK) to compile. Cornipickle was developed and
-  tested on version 6 of the JDK, but it is probably safe to use any
-  later version. Moreover, it most probably compiles on the JDK 5, although
-  this was not tested.
+  tested on version 7 of the JDK, but it is probably safe to use either
+  version 6 or 8.
 - [Ant](http://ant.apache.org) to automate the compilation and build process
 
 Download the sources for Cornipickle from
@@ -50,24 +49,20 @@ The project requires the following libraries to be present in the system:
 Using Ant, you can automatically download any libraries missing from your
 system by typing:
 
-    ant deps
+    ant download-deps
 
-This will put the missing JAR files in the `lib` folder in the project's
+This will put the missing JAR files in the `deps` folder in the project's
 root. These libraries should then be put somewhere in the classpath, such as
-in Java's extension folder (don't leave them there, it won't work). This
-location varies according to the operating system you use:
+in Java's extension folder (don't leave them there, it won't work). You can
+do that by typing (**with administrator rights**):
 
-- Solaris™ Operating System: `/usr/jdk/packages/lib/ext`
-- Linux: `/usr/java/packages/lib/ext`
-- Microsoft Windows: `%SystemRoot%\Sun\Java\lib\ext`
-- MacOS: `/Library/Java/Extensions`
+    ant install-deps
+
+or by putting them manually in the extension folder. Type `ant init` and it
+will print out what that folder is for your system.
 
 Do **not** create subfolders there (i.e. put the archive directly in that
 folder).
-
-If you are using Linux, you can type `ant deps-install` to copy the JARs in
-the extension folder (you probably need administrator rights, so call the
-command with `sudo`).
 
 ### Compiling
 
@@ -84,6 +79,18 @@ documentation for using Cornipickle. This documentation is also embedded in
 the JAR file. To show documentation in Eclipse, right-click on the jar,
 click "Properties", then fill the Javadoc location (which is the JAR
 itself).
+
+### Testing
+
+Cornipickle can test itself by running:
+
+    ant test
+
+Unit tests are run with [jUnit](http://junit.org); a detailed report of
+these tests in HTML format is availble in the folder `tests/junit`, which
+is automatically created. Code coverage is also computed with
+[JaCoCo](http://www.eclemma.org/jacoco/); a detailed report is available
+in the folder `tests/coverage`.
 
 Command-line Usage                                                   {#cli}
 ------------------

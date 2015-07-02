@@ -70,11 +70,16 @@ var CornipickleProbe = function()
 				out = this.addIfDefined(out, "id", n.id);
 				out = this.addIfDefined(out, "height", n.clientHeight);
 				out = this.addIfDefined(out, "width", n.clientWidth);
+				out = this.addIfDefined(out, "background", CornipickleProbe.formatBackgroundString(n));
+				out = this.addIfDefined(out, "color", CornipickleProbe.getStyle(n, "color"));
 				out = this.addIfDefined(out, "border", CornipickleProbe.formatBorderString(n));
 				out = this.addIfDefined(out, "top", pos.top);
 				out = this.addIfDefined(out, "left", pos.left);
 				out = this.addIfDefined(out, "bottom", add_dimensions([pos.top, n.clientHeight]));
 				out = this.addIfDefined(out, "right", add_dimensions([pos.left,  n.clientWidth]));
+				out = this.addIfDefined(out, "display", CornipickleProbe.getStyle(n, "display"));
+				out = this.addIfDefined(out, "size", n.size);
+				out = this.addIfDefined(out, "checked ", n.checked);
 				if (n === event.target)
 				{
 					out.event = this.serializeEvent(event);
@@ -308,7 +313,7 @@ CornipickleProbe.getStyle = function(elem, prop)
 	var res = null;
 	if (elem.currentStyle)
 	{
-		res = elem.currentStyle.margin;
+		res = elem.currentStyle[prop];
 	}
 	else if (window.getComputedStyle)
 	{
@@ -401,6 +406,12 @@ CornipickleProbe.formatBorderString = function(elem)
 	var out = s_top_style + " " + s_top_colour + " " + s_top_width;
 	return out.trim();
 };
+
+CornipickleProbe.formatBackgroundString = function(elem)
+{
+	var s_background_color = CornipickleProbe.getStyle(elem, "background-color");
+	return s_background_color.trim();
+}
 
 /**
  * The delay in ms before the probe refreshes its status,
