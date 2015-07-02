@@ -38,7 +38,7 @@ repository using Git:
 The project requires the following libraries to be present in the system:
 
 - The [Apache Commons CLI](http://commons.apache.org/proper/commons-cli/)
-  to handle command-line parameters *(tested with version 1.2)*
+  to handle command-line parameters *(tested with version 1.3)*
 - The [json-simple](https://code.google.com/p/json-simple/) library for
   fast JSON parsing *(tested with version 1.1.1)*
 - The [Web Resource Optimizer for Java](https://code.google.com/p/wro4j/)
