@@ -17,83 +17,45 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLDecoder;
 import java.util.Map;
 import java.util.Set;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.json.JsonList;
-import ca.uqac.lif.cornipickle.Interpreter;
-import ca.uqac.lif.httpserver.RequestCallback;
+import ca.uqac.lif.httpserver.RestCallback;
 import ca.uqac.lif.httpserver.Server;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
-class PropertyAddCallback extends RequestCallback<CornipickleServer>
+class PropertyAddCallback extends RestCallback<CornipickleServer>
 {
   public PropertyAddCallback(CornipickleServer s)
   {
-    super(s);
-  }
-
-  @Override
-  public boolean fire(HttpExchange t)
-  {
-    URI u = t.getRequestURI();
-    String path = u.getPath();
-    String method = t.getRequestMethod();
-    return (method.compareToIgnoreCase("post") == 0 || method.compareToIgnoreCase("put") == 0) 
-        && path.compareTo("/add") == 0;
+    super(s, Method.POST, "/add");
   }
 
   @Override
   public boolean process(HttpExchange t)
   {
-    String method = t.getRequestMethod();
     StringBuilder page = new StringBuilder();
     
     // Disable caching on the client
-    Headers h = t.getResponseHeaders();
-    h.add("Pragma", "no-cache");
-    h.add("Cache-Control", "no-cache, no-store, must-revalidate");
-    h.add("Expires", "0"); 
+    disableCaching(t);
 
-    // Read POST data
-    InputStream is_post = t.getRequestBody();
-    String post_data = Server.streamToString(is_post);
-
+    // Read request parameters
+    Map<String,String> params = getParameters(t);
+    
     // Try to decode and parse it
     boolean success = true;
+    String props = params.get("");
     try
     {
-      post_data = URLDecoder.decode(post_data, "UTF-8");
-      Map<String,String> params = Server.queryToMap(post_data);
-      if (method.compareToIgnoreCase("put") == 0)
-      {
-        // First, reset the interpreter
-        m_server.m_interpreter = new Interpreter();
-      }
-      String props = params.get("properties");
-      if (props == null)
-      {
-        // Try to get POST payload instead
-        props = params.get("");
-      }
       if (props != null)
       {
         m_server.m_interpreter.parseProperties(props);
       }
     } 
     catch (ParseException e)
-    {
-      e.printStackTrace();
-      success = false;
-    }
-    catch (UnsupportedEncodingException e)
     {
       e.printStackTrace();
       success = false;

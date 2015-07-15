@@ -17,10 +17,18 @@
  */
 package ca.uqac.lif.httpserver;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 public abstract class RequestCallback<T extends Server>
 {
+	/**
+	 * The me
+	 * @author Sylvain
+	 *
+	 */
+	public static enum Method {GET, POST, PUT, DELETE};
+	
   public RequestCallback(T s)
   {
     super();
@@ -32,4 +40,38 @@ public abstract class RequestCallback<T extends Server>
   public abstract boolean process(HttpExchange t);
 
   protected T m_server;
+  
+  /**
+   * Creates a string out of a method
+   * @param m The method
+   * @return The method in string
+   */
+  public static final String methodToString(Method m)
+  {
+  	switch (m)
+  	{
+  	case GET:
+  		return "GET";
+  	case POST:
+  		return "POST";
+  	case PUT:
+  		return "PUT";
+  	case DELETE:
+  		return "DELETE";
+  	}
+  	return "";
+  }
+  
+  /**
+   * Disables the client-side caching in the HTTP response to be sent 
+   * @param t
+   */
+  public static void disableCaching(HttpExchange t)
+  {
+    // Disable caching on the client
+    Headers h = t.getResponseHeaders();
+    h.add("Pragma", "no-cache");
+    h.add("Cache-Control", "no-cache, no-store, must-revalidate");
+    h.add("Expires", "0"); 
+  }
 }
