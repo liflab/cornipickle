@@ -18,13 +18,13 @@
 package ca.uqac.lif.cornipickle.server;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URLDecoder;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.json.JsonElement;
@@ -33,14 +33,14 @@ import ca.uqac.lif.cornipickle.json.JsonMap;
 import ca.uqac.lif.cornipickle.json.JsonNumber;
 import ca.uqac.lif.cornipickle.json.JsonParser;
 import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
+import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.Cookie;
 import ca.uqac.lif.httpserver.InnerFileServer;
 import ca.uqac.lif.httpserver.RequestCallback;
-import ca.uqac.lif.httpserver.Server;
 
 import com.sun.net.httpserver.HttpExchange;
 
-class DummyImageCallback extends RequestCallback<CornipickleServer>
+class DummyImage extends InterpreterCallback
 {
   /**
    * Dummy image made of one white pixel
@@ -62,25 +62,16 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
   
   static JsonParser s_jsonParser;
 
-  public DummyImageCallback(CornipickleServer s)
+  public DummyImage(Interpreter i)
   {
-    super(s);
+    super(i, RequestCallback.Method.GET, "/image");
     s_jsonParser = new JsonFastParser();
   }
 
   @Override
-  public boolean fire(HttpExchange t)
+  public CallbackResponse process(HttpExchange t)
   {
-    URI u = t.getRequestURI();
-    String path = u.getPath();
-    return path.compareTo("/image") == 0;
-  }
-
-  @Override
-  public boolean process(HttpExchange t)
-  {
-    URI uri = t.getRequestURI();
-    Map<String,String> attributes = Server.uriToMap(uri); 
+    Map<String,String> attributes = getParameters(t); 
 
     // Extract JSON from URL string
     String json_encoded = attributes.get("contents");
@@ -105,18 +96,20 @@ class DummyImageCallback extends RequestCallback<CornipickleServer>
       }
       if (j != null)
       {
-        m_server.m_interpreter.evaluateAll(j);
-        m_server.setLastProbeContact();
+        m_interpreter.evaluateAll(j);
+        //m_server.setLastProbeContact();
       }
     }
     // Select the dummy image to send back
-    Map<StatementMetadata,Verdict> verdicts = m_server.m_interpreter.getVerdicts();
+    Map<StatementMetadata,Verdict> verdicts = m_interpreter.getVerdicts();
     byte[] image_to_return = selectImage(verdicts);
     // Create cookie response
+    CallbackResponse cbr = new CallbackResponse(t);
     String cookie_json_string = createResponseCookie(verdicts);
-    m_server.addResponseCookie(t, new Cookie("cornipickle", cookie_json_string));
-    m_server.sendResponse(t, Server.HTTP_OK, image_to_return, "image/png");
-    return true;
+    cbr.addResponseCookie(new Cookie("cornipickle", cookie_json_string));
+    cbr.setContents(image_to_return);
+    cbr.setContentType(CallbackResponse.ContentType.PNG);
+    return cbr;
   }
 
   protected static byte[] selectImage(Map<StatementMetadata,Verdict> verdicts)

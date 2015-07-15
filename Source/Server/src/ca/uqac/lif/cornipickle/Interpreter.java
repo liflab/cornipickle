@@ -48,10 +48,7 @@ public class Interpreter
   public Interpreter()
   {
     super();
-    m_statements = new HashMap<StatementMetadata,Statement>();
-    m_setDefs = new HashMap<String,SetDefinition>();
-    m_parser = new CornipickleParser();
-    m_verdicts = new HashMap<StatementMetadata,Verdict>();
+    clear();
   }
   
   public static void main(String[] args) throws IOException, JsonParseException, ParseException
@@ -78,6 +75,17 @@ public class Interpreter
       s.resetHistory();
       m_verdicts.put(key, new Verdict(Verdict.Value.INCONCLUSIVE));
     }
+  }
+  
+  /**
+   * Clears all data from this interpreter
+   */
+  public void clear()
+  {
+    m_statements = new HashMap<StatementMetadata,Statement>();
+    m_setDefs = new HashMap<String,SetDefinition>();
+    m_parser = new CornipickleParser();
+    m_verdicts = new HashMap<StatementMetadata,Verdict>();  	
   }
   
   public Set<String> getAttributes()

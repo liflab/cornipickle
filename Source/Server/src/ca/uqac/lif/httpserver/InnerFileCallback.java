@@ -17,16 +17,23 @@
  */
 package ca.uqac.lif.httpserver;
 
-import java.io.InputStream;
 import java.net.URI;
+
+import ca.uqac.lif.cornipickle.util.PackageFileReader;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class InnerFileCallback extends CachedRequestCallback<InnerFileServer>
+public class InnerFileCallback extends CachedRequestCallback
 {
-  public InnerFileCallback(InnerFileServer s)
+	protected String m_path;
+	
+	protected Class<?> m_context;
+	
+  public InnerFileCallback(String path, Class<?> context)
   {
-    super(s);
+    super();
+    m_path = path;
+    m_context = context;
   }
 
   @Override
@@ -36,30 +43,29 @@ public class InnerFileCallback extends CachedRequestCallback<InnerFileServer>
   }
 
   @Override
-  public boolean serve(HttpExchange t)
+  public CallbackResponse serve(HttpExchange t)
   {
     URI uri = t.getRequestURI();
-    int response_code = Server.HTTP_OK;
+    CallbackResponse response = new CallbackResponse(t);
     String path = uri.getPath();
     if (path.contains(".."))
     {
       // We try to move up in the structure, and possibly access
       // resources outside the resource folder: deny it
-      m_server.sendResponse(t, Server.HTTP_BAD_REQUEST);
-      return true;
+    	response.setCode(CallbackResponse.HTTP_BAD_REQUEST);
+      return response;
     }
     // Get file
-    InputStream is = m_server.getResourceAsStream(m_server.getResourceFolderName() + path);
-    if (is != null)
+    byte[] file_contents = PackageFileReader.readPackageFileToBytes(m_context, m_path + path);
+    if (file_contents != null)
     {
-      byte[] file_contents = InnerFileServer.readBytes(is);
-      m_server.sendResponse(t, response_code, file_contents);
+    	response.setContents(file_contents);
     }
     else
     {
       // Resource not found: send 404
-      m_server.sendResponse(t, Server.HTTP_NOT_FOUND);
+    	response.setCode(CallbackResponse.HTTP_NOT_FOUND);
     }
-    return true;
+    return response;
   }
 }

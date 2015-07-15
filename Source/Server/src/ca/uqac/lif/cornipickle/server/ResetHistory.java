@@ -17,34 +17,25 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
-import java.net.URI;
 import java.util.Date;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
+import ca.uqac.lif.cornipickle.Interpreter;
+import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.RequestCallback;
-import ca.uqac.lif.httpserver.Server;
 
-public class ResetHistoryCallback extends RequestCallback<CornipickleServer>
+public class ResetHistory extends InterpreterCallback
 {
-  public ResetHistoryCallback(CornipickleServer s)
+  public ResetHistory(Interpreter i)
   {
-    super(s);
+    super(i, RequestCallback.Method.GET, "/reset");
   }
 
   @Override
-  public boolean fire(HttpExchange t)
+  public CallbackResponse process(HttpExchange t)
   {
-    URI u = t.getRequestURI();
-    String path = u.getPath();
-    return path.compareTo("/reset") == 0;
-  }
-
-  @Override
-  public boolean process(HttpExchange t)
-  {
-    m_server.m_interpreter.resetHistory();
+    m_interpreter.resetHistory();
     StringBuilder page = new StringBuilder();
     page.append("<!DOCTYPE html>\n");
     page.append("<html>\n");
@@ -63,13 +54,9 @@ public class ResetHistoryCallback extends RequestCallback<CornipickleServer>
     page.append(d);
     page.append("</body>\n</html>\n");
     String page_string = page.toString();
-    // Disable caching on the client
-    Headers h = t.getResponseHeaders();
-    h.add("Pragma", "no-cache");
-    h.add("Cache-Control", "no-cache, no-store, must-revalidate");
-    h.add("Expires", "0"); 
-    m_server.sendResponse(t, Server.HTTP_OK, page_string, "text/html");
-    return true;
+    CallbackResponse out = new CallbackResponse(t, CallbackResponse.HTTP_OK, page_string, CallbackResponse.ContentType.HTML);
+    out.disableCaching();
+    return out;
   }
 
 }

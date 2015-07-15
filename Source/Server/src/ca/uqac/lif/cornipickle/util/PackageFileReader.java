@@ -20,6 +20,8 @@ package ca.uqac.lif.cornipickle.util;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ca.uqac.lif.httpserver.InnerFileServer;
+
 public class PackageFileReader
 {
   public static String readPackageFile(Class<?> c, String path)
@@ -36,6 +38,23 @@ public class PackageFileReader
       return null;
     }
     return out;
+  }
+  
+  public static byte[] readPackageFileToBytes(Class<?> c, String path)
+  {
+    InputStream in = getResourceAsStream(c, path);
+    byte[] file_contents = null;
+    if (in != null)
+    {
+      file_contents = InnerFileServer.readBytes(in);
+    }
+    return file_contents;
+  }
+  
+  public static InputStream getResourceAsStream(Class<?> c, String path)
+  {
+    InputStream in = c.getResourceAsStream(path);
+    return in;
   }
   
   /**

@@ -17,8 +17,6 @@
  */
 package ca.uqac.lif.cornipickle;
 
-import ca.uqac.lif.cornipickle.json.JsonNumber;
-
 public abstract class Operation extends Property
 {
   protected Property m_left;

@@ -21,8 +21,8 @@ import java.net.URI;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.InnerFileCallback;
-import ca.uqac.lif.httpserver.Server;
 
 /**
  * Inner file callback that excludes some files following a pattern
@@ -33,19 +33,19 @@ public class FileCallback extends InnerFileCallback
 {
   public FileCallback(CornipickleServer s)
   {
-    super(s);
+    super("resource/", s.getClass());
   }
   
   @Override
-  public boolean serve(HttpExchange t)
+  public CallbackResponse serve(HttpExchange t)
   {
     URI u = t.getRequestURI();
     String path = u.getPath();
     if (path.endsWith("~"))
     {
       // We don't serve backup files
-      m_server.sendResponse(t, Server.HTTP_NOT_FOUND);
-      return true;
+    	CallbackResponse cbr = new CallbackResponse(t, CallbackResponse.HTTP_NOT_FOUND, "", "");
+      return cbr;
     }
     return super.serve(t);
   }

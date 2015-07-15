@@ -36,7 +36,7 @@ public class InnerFileServer extends Server
   {
     super();
     m_resourceFolder = "resource";
-    InnerFileCallback ifc = new InnerFileCallback(this);
+    InnerFileCallback ifc = new InnerFileCallback("", this.getClass());
     ifc.setEnabled(caching_enabled);
     registerCallback(0, ifc);
     m_referenceClass = this.getClass();    
@@ -46,7 +46,7 @@ public class InnerFileServer extends Server
   {
     super();
     m_resourceFolder = "resource";
-    registerCallback(0, new InnerFileCallback(this));
+    registerCallback(0, new InnerFileCallback("", this.getClass()));
     m_referenceClass = c;
   }
   

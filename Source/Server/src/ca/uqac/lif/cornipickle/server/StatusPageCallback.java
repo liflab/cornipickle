@@ -17,50 +17,41 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
-import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.PredicateDefinition;
 import ca.uqac.lif.cornipickle.SetDefinition;
 import ca.uqac.lif.cornipickle.Verdict;
+import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.RequestCallback;
-import ca.uqac.lif.httpserver.Server;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
-class StatusPageCallback extends RequestCallback<CornipickleServer>
+class StatusPageCallback extends InterpreterCallback
 {
   
-  public StatusPageCallback(CornipickleServer s)
+  public StatusPageCallback(Interpreter i)
   {
-    super(s);
+    super(i, RequestCallback.Method.GET, "/status");
   }
 
   @Override
-  public boolean fire(HttpExchange t)
-  {
-    URI u = t.getRequestURI();
-    String path = u.getPath();
-    return path.compareTo("/status") == 0;
-  }
-
-  @Override
-  public boolean process(HttpExchange t)
+  public CallbackResponse process(HttpExchange t)
   {
     StringBuilder page = new StringBuilder();
     page.append(pageHead("Cornipickle status"));
     page.append("<h1>Cornipickle Status</h1>");
     
     // Show last contact with probe
-    createProbeContactMessage(m_server.getLastProbeContact(), page);
+    //createProbeContactMessage(getLastProbeContact(), page);
     
     // Compute verdicts
-    Map<StatementMetadata,Verdict> verdicts = m_server.m_interpreter.getVerdicts();
+    Map<StatementMetadata,Verdict> verdicts = m_interpreter.getVerdicts();
     createStatusMessage(verdicts, page);
     
     //page.append("<div id=\"main-accordion\" class=\"ui-accordion\">\n");
@@ -76,14 +67,14 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     // Show predicates
     page.append("<h2 class=\"ui-accordion-header\">Predicates</h2>\n");
     //page.append("<div class=\"ui-accordion-content\">\n");
-    createPredicateList(m_server.m_interpreter.getPredicates(), page);
+    createPredicateList(m_interpreter.getPredicates(), page);
     //page.append("</div>\n");
     page.append("<div class=\"clearer\"></div>\n");
     
     // Show sets
     page.append("<h2 class=\"ui-accordion-header\">Sets</h2>\n");
     //page.append("<div class=\"ui-accordion-content\">\n");
-    createSetList(m_server.m_interpreter.getSetDefinitions(), page);
+    createSetList(m_interpreter.getSetDefinitions(), page);
     //page.append("</div>\n");
     page.append("<div class=\"clearer\"></div>\n");
     
@@ -100,13 +91,9 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     page.append("</div>\n");
     page.append(pageFoot());
     String page_string = page.toString();
-    // Disable caching on the client
-    Headers h = t.getResponseHeaders();
-    h.add("Pragma", "no-cache");
-    h.add("Cache-Control", "no-cache, no-store, must-revalidate");
-    h.add("Expires", "0"); 
-    m_server.sendResponse(t, Server.HTTP_OK, page_string, "text/html");
-    return true;
+    CallbackResponse out = new CallbackResponse(t, CallbackResponse.HTTP_OK, page_string, CallbackResponse.ContentType.HTML);
+    out.disableCaching();
+    return out;
   }
 
   protected void createSetList(List<SetDefinition> sets, StringBuilder page)
@@ -197,7 +184,7 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
       verdict_string.append("<li class=\"").append(class_name).append("\">");
       verdict_string.append("<div class=\"property-metadata\">").append(HtmlFormatter.format(key, ignored_attributes)).append("</div>\n");
       verdict_string.append("<div class=\"property-contents\">\n");
-      verdict_string.append(HtmlFormatter.format(m_server.m_interpreter.getProperty(key)));
+      verdict_string.append(HtmlFormatter.format(m_interpreter.getProperty(key)));
       verdict_string.append("</div>\n");
       verdict_string.append("</li>");
     }
@@ -218,8 +205,8 @@ class StatusPageCallback extends RequestCallback<CornipickleServer>
     page.append("<script src=\"https://code.jquery.com/jquery-1.11.2.min.js\"></script>\n");
     page.append("<script src=\"https://code.jquery.com/ui/1.11.1/jquery-ui.min.js\"></script>\n");
     page.append("<script src=\"highlight.js\"></script>\n");
-    page.append("<script type=\"text/javascript\">\n//<![CDATA[\nprobe_last_contact = new Date(\"");
-    page.append(m_server.getLastProbeContact()).append("\");\n//]]>\n</script>\n");
+    //page.append("<script type=\"text/javascript\">\n//<![CDATA[\nprobe_last_contact = new Date(\"");
+    //page.append(getLastProbeContact()).append("\");\n//]]>\n</script>\n");
     page.append("</head>\n<body>\n");
     return page;
   }

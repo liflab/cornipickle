@@ -30,7 +30,7 @@ import org.apache.commons.cli.Options;
 import ca.uqac.lif.cornipickle.util.AnsiPrinter;
 
 public class Main
-{  
+{
 	/**
 	 * Return codes
 	 */
@@ -119,7 +119,7 @@ public class Main
 		}
 
 		// The remaining arguments are the Cornipickle files to read
-		CornipickleServer server = new CornipickleServer();
+		CornipickleServer server = new CornipickleServer(server_name, server_port);
 		List<String> remaining_args = c_line.getArgList();
 		for (String filename : remaining_args)
 		{
@@ -129,8 +129,6 @@ public class Main
 		}
 
 		// Start server
-		server.setServerName(server_name);
-		server.setServerPort(server_port);
 		server.startServer();
 		stdout.setForegroundColor(AnsiPrinter.Color.BLUE);
 		println(stdout, "Server started on " + server_name + ":" + server_port, 1);

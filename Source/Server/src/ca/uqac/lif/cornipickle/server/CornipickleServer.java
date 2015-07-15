@@ -18,34 +18,35 @@
 package ca.uqac.lif.cornipickle.server;
 
 import java.io.IOException;
-
 import java.util.Date;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.Interpreter;
-import ca.uqac.lif.httpserver.InnerFileServer;
+import ca.uqac.lif.httpserver.Server;
 import ca.uqac.lif.util.FileReadWrite;
 
-public class CornipickleServer extends InnerFileServer
+public class CornipickleServer extends Server
 {
   protected Interpreter m_interpreter;
  
   protected Date m_lastProbeContact;
 
-  public CornipickleServer()
+  public CornipickleServer(String server_name, int port)
   {
-    super(false); // false: at the moment we disable sending HTTP 304 responses
+    super(); // false: at the moment we disable sending HTTP 304 responses
+    setServerName(server_name);
+    setServerPort(port);
     // Instantiate Cornipickle interpreter
     m_interpreter = new Interpreter();
     // Update class reference
-    m_referenceClass = this.getClass();
+    //m_referenceClass = this.getClass();
     // Register callbacks
-    registerCallback(0, new ResetHistoryCallback(this));
-    registerCallback(0, new PropertyAddCallback(this));
-    registerCallback(0, new StatusPageCallback(this));
-    registerCallback(0, new ProbeCallback(this));
-    registerCallback(0, new DummyImageCallback(this));
-    registerCallback(6, new FileCallback(this));
+    registerCallback(new ResetHistory(m_interpreter));
+    registerCallback(new AddProperty(m_interpreter));
+    registerCallback(new StatusPageCallback(m_interpreter));
+    registerCallback(new GetProbe(m_interpreter, m_serverName, m_port));
+    registerCallback(new DummyImage(m_interpreter));
+    registerCallback(new FileCallback(this));
   }
   
   /**

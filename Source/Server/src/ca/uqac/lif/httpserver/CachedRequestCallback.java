@@ -30,7 +30,7 @@ import com.sun.net.httpserver.HttpExchange;
  * @author sylvain
  *
  */
-public abstract class CachedRequestCallback<T extends Server> extends RequestCallback<T>
+public abstract class CachedRequestCallback extends RequestCallback
 {
   /**
    * Whether the page has been already served
@@ -42,9 +42,9 @@ public abstract class CachedRequestCallback<T extends Server> extends RequestCal
    */
   protected boolean m_cachingEnabled;
   
-  public CachedRequestCallback(T s)
+  public CachedRequestCallback()
   {
-    super(s);
+    super();
     m_served = new HashSet<String>();
   }
   
@@ -54,7 +54,7 @@ public abstract class CachedRequestCallback<T extends Server> extends RequestCal
   }
 
   @Override
-  public boolean process(HttpExchange t)
+  public CallbackResponse process(HttpExchange t)
   {
     URI u = t.getRequestURI();
     String path = u.getPath();
@@ -63,12 +63,8 @@ public abstract class CachedRequestCallback<T extends Server> extends RequestCal
       m_served.add(path);
       return serve(t);
     }
-    else
-    {
-      m_server.sendResponse(t, Server.HTTP_NOT_MODIFIED);
-      System.out.println(path + ": not modified");
-    }
-    return true;
+    CallbackResponse out = new CallbackResponse(t, CallbackResponse.HTTP_NOT_MODIFIED, "", "");
+    return out;
   }
   
   public void reset()
@@ -76,6 +72,6 @@ public abstract class CachedRequestCallback<T extends Server> extends RequestCal
     m_served.clear();
   }
   
-  protected abstract boolean serve(HttpExchange t);
+  protected abstract CallbackResponse serve(HttpExchange t);
 
 }

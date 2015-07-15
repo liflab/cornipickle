@@ -17,10 +17,9 @@
  */
 package ca.uqac.lif.httpserver;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
-public abstract class RequestCallback<T extends Server>
+public abstract class RequestCallback
 {
 	/**
 	 * The me
@@ -29,17 +28,29 @@ public abstract class RequestCallback<T extends Server>
 	 */
 	public static enum Method {GET, POST, PUT, DELETE};
 	
-  public RequestCallback(T s)
+	/**
+	 * Creates a callback
+	 */
+  public RequestCallback()
   {
     super();
-    m_server = s;
   }
   
+  /**
+   * Determines whether the request contained in the argument should
+   * be handled by this callback
+   * @param t The exchange
+   * @return true if this request is for this callback, false if it
+   *   should be passed on to another callback
+   */
   public abstract boolean fire(final HttpExchange t);
 
-  public abstract boolean process(HttpExchange t);
-
-  protected T m_server;
+  /**
+   * Process an HTTP request and prepare an HTTP response
+   * @param t The exchange
+   * @return A callback response, or null if nothing can be sent
+   */
+  public abstract CallbackResponse process(HttpExchange t);
   
   /**
    * Creates a string out of a method
@@ -60,18 +71,5 @@ public abstract class RequestCallback<T extends Server>
   		return "DELETE";
   	}
   	return "";
-  }
-  
-  /**
-   * Disables the client-side caching in the HTTP response to be sent 
-   * @param t
-   */
-  public static void disableCaching(HttpExchange t)
-  {
-    // Disable caching on the client
-    Headers h = t.getResponseHeaders();
-    h.add("Pragma", "no-cache");
-    h.add("Cache-Control", "no-cache, no-store, must-revalidate");
-    h.add("Expires", "0"); 
-  }
+  }  
 }

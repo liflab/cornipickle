@@ -22,18 +22,17 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URI;
 import java.util.Set;
 
 import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
-
+import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
+import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.RequestCallback;
-import ca.uqac.lif.httpserver.Server;
 
 import com.sun.net.httpserver.HttpExchange;
 
-class ProbeCallback extends RequestCallback<CornipickleServer>
+class GetProbe extends InterpreterCallback
 {
   /**
    * Whether to minify the probe's code before sending it to the
@@ -45,33 +44,46 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
    * The processor used to minify the JavaScript code
    */
   protected static JSMinProcessor s_jsMinProcessor;
+  
+  /**
+   * The template code for the JavaScript probe
+   */
+  protected static final String s_probeCode = readProbeCode();
+  
+  /**
+   * The template code for the witness
+   */
+  protected static final String s_witnessCode = readWitnessCode();
+  
+  /**
+   * The server name to generate the probe
+   */
+  protected String m_serverName;
+  
+  /**
+   * The server port to generate the probe
+   */
+  protected int m_serverPort;
 
-  public ProbeCallback(CornipickleServer s)
+  public GetProbe(Interpreter i, String server_name, int server_port)
   {
-    super(s);
-    s_jsMinProcessor = new JSMinProcessor();
+  	this(i, server_name, server_port, false);
   }
 
-  public ProbeCallback(CornipickleServer s, boolean minify)
+  public GetProbe(Interpreter i, String server_name, int server_port, boolean minify)
   {
-    this(s);
+    super(i, RequestCallback.Method.GET, "/probe");
+    s_jsMinProcessor = new JSMinProcessor();
+    m_serverName = server_name;
+    m_serverPort = server_port;
     m_minifyJavaScript = minify;
   }
 
   @Override
-  public boolean fire(HttpExchange t)
-  {
-    URI u = t.getRequestURI();
-    String path = u.getPath();
-    return path.compareTo("/probe") == 0;
-  }
-
-  @Override
-  public boolean process(HttpExchange t)
+  public CallbackResponse process(HttpExchange t)
   {
     String probe_code = generateProbeCode();
-    m_server.sendResponse(t, Server.HTTP_OK, probe_code, "application/javascript");
-    return true;
+    return new CallbackResponse(t, CallbackResponse.HTTP_OK, probe_code, CallbackResponse.ContentType.JS);
   }
   
   protected String generateProbeCode()
@@ -79,19 +91,19 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
     String probe_code = null;
     try
     {
-      String witness_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/witness.inc.html"));
-      probe_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/probe.inc.js"));
-      probe_code = probe_code.replace("%%WITNESS_CODE%%", escapeString(witness_code));
-      probe_code = probe_code.replace("%%SERVER_NAME%%", m_server.getServerName() + ":" + m_server.getServerPort());
+      //String witness_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/witness.inc.html"));
+      probe_code = new String(s_probeCode);
+      probe_code = probe_code.replace("%%WITNESS_CODE%%", escapeString(s_witnessCode));
+      probe_code = probe_code.replace("%%SERVER_NAME%%", m_serverName + ":" + m_serverPort);
       // Add attributes to include
-      Set<String> attributes = m_server.m_interpreter.getAttributes();
+      Set<String> attributes = m_interpreter.getAttributes();
       StringBuilder attribute_string = new StringBuilder();
       for (String att : attributes)
       {
         attribute_string.append("\"").append(att).append("\",");
       }
       probe_code = probe_code.replace("/*%%ATTRIBUTE_LIST%%*/", attribute_string.toString());
-      Set<String> tags = m_server.m_interpreter.getTagNames();
+      Set<String> tags = m_interpreter.getTagNames();
       StringBuilder tag_string = new StringBuilder();
       for (String tag : tags)
       {
@@ -130,4 +142,14 @@ class ProbeCallback extends RequestCallback<CornipickleServer>
     s = s.replaceAll("\r", "\\\\r");
     return s;
   }
+  
+  protected static String readProbeCode()
+  {
+  	return PackageFileReader.readPackageFile(CornipickleServer.class, "resource/probe.inc.js");
+  }
+  
+  protected static String readWitnessCode()
+  {
+  	return PackageFileReader.readPackageFile(CornipickleServer.class, "resource/witness.inc.html");
+  }  
 }

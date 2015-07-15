@@ -24,7 +24,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -36,14 +35,6 @@ import com.sun.net.httpserver.HttpServer;
 
 public class Server implements HttpHandler
 {
-  /**
-   * Common HTTP response codes
-   */
-  public static final int HTTP_OK = 200;
-  public static final int HTTP_NOT_MODIFIED = 304;
-  public static final int HTTP_BAD_REQUEST = 400;
-  public static final int HTTP_NOT_FOUND = 404;
-
   /**
    * User-agent string
    */
@@ -59,16 +50,28 @@ public class Server implements HttpHandler
    */
   protected int m_port = 80;
 
-  protected Vector<RequestCallback<? extends Server>> m_callbacks;
+  /**
+   * The list of callbacks to answer HTTP requests
+   */
+  protected Vector<RequestCallback> m_callbacks;
 
+  /**
+   * The underlying Java HTTP server
+   */
   HttpServer m_server;
 
+  /**
+   * Instantiates an empty server
+   */
   public Server()
   {
     super();
-    m_callbacks = new Vector<RequestCallback<? extends Server>>();
+    m_callbacks = new Vector<RequestCallback>();
   }
 
+  /**
+   * Starts the server
+   */
   public void startServer()
   {
     try
@@ -85,107 +88,126 @@ public class Server implements HttpHandler
     } 
   }
 
+  /**
+   * Stops the server
+   */
   public void stopServer()
   {
-    m_server.stop(HTTP_OK);
+    m_server.stop(CallbackResponse.HTTP_OK);
   }
 
+  /**
+   * Sets the server's name. This is either an IP address or a string
+   * like "localhost"
+   * @param name The name
+   */
   public void setServerName(String name)
   {
     m_serverName = name;
   }
 
+  /**
+   * Retrieves the server's current name
+   * @return The name
+   */
   public String getServerName()
   {
     return m_serverName;
   }
   
+  /**
+   * Retrieves the TCP port number the server is currently
+   * listening to
+   * @return The port number
+   */
   public int getServerPort()
   {
     return m_port;
   }
-  
+
+  /**
+   * Sets the TCP port number the server will listen to
+   * @param port The port number
+   */
   public void setServerPort(int port)
   {
     m_port = port;
   }
 
+  /**
+   * Sets the server's name. This name will be used as the value for
+   * parameter "User-Agent" in every HTTP response sent.
+   * @param name The name
+   */
   public void setUserAgent(String ua)
   {
     m_userAgent = ua;
   }
 
-  public void registerCallback(int index, RequestCallback<? extends Server> cb)
+  /**
+   * Adds a new callback to the list of callbacks handled by
+   * the server.
+   * @param index The position in the list where to insert the callback
+   * @param cb The callback to add
+   */
+  public void registerCallback(int index, RequestCallback cb)
   {
     m_callbacks.add(index, cb);
+  }
+  
+  /**
+   * Adds a new callback to the list of callbacks handled by
+   * the server. The callback is added at the end of the current list.
+   * @param cb The callback to add
+   */
+  public void registerCallback(RequestCallback cb)
+  {
+    m_callbacks.add(cb);
   }
 
   @Override
   public void handle(HttpExchange t) throws IOException
   {
     // Go through registered callbacks
-    boolean has_fired = false;
-    for (RequestCallback<? extends Server> cb : m_callbacks)
+    CallbackResponse cbr = null;
+    for (RequestCallback cb : m_callbacks)
     {
       if (cb.fire(t))
       {
-        has_fired = cb.process(t);
-        if (has_fired)
+      	cbr = cb.process(t);
+        if (cbr != null)
         {
           System.out.println(t.getRequestURI().getPath());
           break;
         }
       }
     }
-    // No callback was triggered: bad request
-    if (!has_fired)
+    if (cbr != null)
     {
-      sendResponse(t, HTTP_BAD_REQUEST);
+    	sendResponse(cbr);
     }
+    else
+    {
+      // No callback was triggered: bad request
+    	cbr = new CallbackResponse(t, CallbackResponse.HTTP_BAD_REQUEST, "", "");
+      sendResponse(cbr);
+    }
+    
+    
   }
   
-  public void addResponseCookie(HttpExchange t, Cookie c)
+  public void sendResponse(CallbackResponse cbr)
   {
-    Headers h = t.getResponseHeaders();
-    h.add("Set-Cookie", c.getName() + "=" + c.getValue());
-  }
-  
-  public void addResponseCookies(HttpExchange t, Collection<Cookie> cookies)
-  {
-    for (Cookie c : cookies)
-    {
-      addResponseCookie(t, c);
-    }
-  }
-
-  public void sendResponse(HttpExchange t, int response_code)
-  {
-    sendResponse(t, response_code, "");
-  }
-
-  public void sendResponse(HttpExchange t, int response_code, String contents)
-  {
-    sendResponse(t, response_code, contents.getBytes());
-  }
-
-  public void sendResponse(HttpExchange t, int response_code, String contents, String content_type)
-  {
-    sendResponse(t, response_code, contents.getBytes(), content_type);
-  }
-
-  public void sendResponse(HttpExchange t, int response_code, byte[] contents)
-  {
-    sendResponse(t, response_code, contents, "");
-  }
-
-  public void sendResponse(HttpExchange t, int response_code, byte[] contents, String content_type)
-  {
+  	HttpExchange t = cbr.getExchange();
     Headers h = t.getResponseHeaders();
     h.add("User-agent", m_userAgent);
-    if (content_type != null && !content_type.isEmpty())
+    String content_type = cbr.getContentType();
+    if (!content_type.isEmpty())
     {
-      h.add("Content-Type", content_type);
+    	h.add("Content-Type", content_type);
     }
+    byte[] contents = cbr.getContents();
+    int response_code = cbr.getCode();
     try
     {
       if (contents == null)
@@ -205,7 +227,6 @@ public class Server implements HttpHandler
     } 
     catch (IOException e)
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -224,6 +245,14 @@ public class Server implements HttpHandler
     return queryToMap(query);
   }
 
+  /**
+   * Convenience method to transform a GET query into a map of
+   * attribute-value pairs. For example, given an URI object
+   * representing the URL "http://abc.com/xyz?a=1&b=2", the method
+   * will return an object mapping "a" to "1" and "b" to "2".
+   * @param u The URI to process
+   * @return A map of attribute-value pairs
+   */
   public static Map<String,String> queryToMap(String query)
   {
     Map<String,String> out = new HashMap<String,String>();

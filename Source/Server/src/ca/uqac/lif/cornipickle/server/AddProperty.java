@@ -21,26 +21,27 @@ import java.util.Map;
 import java.util.Set;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
+import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.json.JsonList;
-import ca.uqac.lif.httpserver.RestCallback;
-import ca.uqac.lif.httpserver.Server;
+import ca.uqac.lif.httpserver.CallbackResponse;
 
 import com.sun.net.httpserver.HttpExchange;
 
-class PropertyAddCallback extends RestCallback<CornipickleServer>
+class AddProperty extends InterpreterCallback
 {
-  public PropertyAddCallback(CornipickleServer s)
+  public AddProperty(Interpreter i)
   {
-    super(s, Method.POST, "/add");
+    super(i, Method.PUT, "/add");
   }
 
   @Override
-  public boolean process(HttpExchange t)
+  public CallbackResponse process(HttpExchange t)
   {
+  	CallbackResponse response = new CallbackResponse(t);
     StringBuilder page = new StringBuilder();
-    
+
     // Disable caching on the client
-    disableCaching(t);
+    response.disableCaching();
 
     // Read request parameters
     Map<String,String> params = getParameters(t);
@@ -52,7 +53,9 @@ class PropertyAddCallback extends RestCallback<CornipickleServer>
     {
       if (props != null)
       {
-        m_server.m_interpreter.parseProperties(props);
+      	// Wipe the status of the interpreter first
+      	m_interpreter.clear();
+      	m_interpreter.parseProperties(props);
       }
     } 
     catch (ParseException e)
@@ -63,18 +66,19 @@ class PropertyAddCallback extends RestCallback<CornipickleServer>
     if (!success)
     {
       // Baaad request
-      m_server.sendResponse(t, Server.HTTP_BAD_REQUEST);
-      return true;
+    	response.setCode(CallbackResponse.HTTP_BAD_REQUEST);
+      return response;
     }
     // It worked; obtain new attributes and tag names for the probe
-    Set<String> attribute_set = m_server.m_interpreter.getAttributes();
-    Set<String> tagname_set = m_server.m_interpreter.getTagNames();
+    Set<String> attribute_set = m_interpreter.getAttributes();
+    Set<String> tagname_set = m_interpreter.getTagNames();
     page.append("{\n \"attributes\" : ");
     page.append(JsonList.toJsonString(attribute_set));
     page.append(",\n \"tagnames\" : ");
     page.append(JsonList.toJsonString(tagname_set));
     page.append("\n}");
-    m_server.sendResponse(t, Server.HTTP_OK, page.toString(), "application/json");
-    return true;
+    response.setContents(page.toString());
+    response.setContentType(CallbackResponse.ContentType.JSON);
+    return response;
   }    
 }
