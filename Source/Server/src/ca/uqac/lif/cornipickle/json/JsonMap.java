@@ -33,23 +33,50 @@ public class JsonMap extends JsonElement implements Map<String,JsonElement>
   }
   
   @Override
-  public String toString(String indent)
+  public String toString(String indent, boolean compact)
   {
     StringBuilder out = new StringBuilder();
-    out.append(indent).append("{\n");
+    out.append(indent).append("{");
+    if (!compact)
+    	out.append("\n");
     boolean first = true;
     for (String k : keySet())
     {
       if (first)
         first = false;
       else
-        out.append(",\n");
+      {
+        out.append(",");
+        if (!compact)
+        {
+        	out.append("\n");
+        }
+      }
       JsonElement v = get(k);
-      out.append(indent).append("  ").append("\"").append(k).append("\" : ");
-      out.append(v.toString(indent + "    "));
+      if (!compact)
+      {
+      	out.append(indent).append("  ").append("\"").append(k).append("\" : ");
+      	out.append(v.toString(indent + "    ", compact));
+      	out.append("\n").append(indent);
+      }
+      else
+      {
+      	out.append("\"").append(k).append("\":");
+      	out.append(v.toString("", compact));
+      }
     }
-    out.append("\n").append(indent).append("}");
+    out.append("}");
     return out.toString();
+  }
+  
+  public JsonElement put(String arg0, Number arg1)
+  {
+  	return put(arg0, new JsonNumber(arg1));
+  }
+  
+  public JsonElement put(String arg0, String arg1)
+  {
+  	return put(arg0, new JsonString(arg1));
   }
 
   @Override

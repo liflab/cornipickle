@@ -33,7 +33,7 @@ public class JsonNumber extends JsonElement
   }
   
   @Override
-  public String toString(String indent)
+  public String toString(String indent, boolean compact)
   {
     return m_number.toString();
   }

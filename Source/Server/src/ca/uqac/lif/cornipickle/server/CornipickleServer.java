@@ -27,19 +27,20 @@ import ca.uqac.lif.util.FileReadWrite;
 
 public class CornipickleServer extends Server
 {
+	/**
+	 * The Cornipickle interpreter used by this server
+	 */
   protected Interpreter m_interpreter;
  
   protected Date m_lastProbeContact;
 
   public CornipickleServer(String server_name, int port)
   {
-    super(); // false: at the moment we disable sending HTTP 304 responses
+    super();
     setServerName(server_name);
     setServerPort(port);
     // Instantiate Cornipickle interpreter
     m_interpreter = new Interpreter();
-    // Update class reference
-    //m_referenceClass = this.getClass();
     // Register callbacks
     registerCallback(new ResetHistory(m_interpreter));
     registerCallback(new AddProperty(m_interpreter));

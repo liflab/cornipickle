@@ -25,5 +25,10 @@ public abstract class JsonElement
     return toString("");
   }
   
-  protected abstract String toString(String indent);
+  protected String toString(String indent)
+  {
+  	return toString(indent, false);
+  }
+  
+  protected abstract String toString(String indent, boolean compact);
 }

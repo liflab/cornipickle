@@ -19,8 +19,6 @@ package ca.uqac.lif.cornipickle.server;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,10 +27,12 @@ import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonFastParser;
+import ca.uqac.lif.cornipickle.json.JsonList;
 import ca.uqac.lif.cornipickle.json.JsonMap;
 import ca.uqac.lif.cornipickle.json.JsonNumber;
 import ca.uqac.lif.cornipickle.json.JsonParser;
 import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
+import ca.uqac.lif.cornipickle.json.JsonString;
 import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.Cookie;
 import ca.uqac.lif.httpserver.InnerFileServer;
@@ -112,6 +112,18 @@ class DummyImage extends InterpreterCallback
     return cbr;
   }
 
+  /**
+   * Determines which of the three images (red, white, blue) to send back
+   *   to the browser. The image is chosen as follows:
+   *   <ul>
+   *   <li>All properties evaluate to true: green</li>
+   *   <li>No property to evaluate: white</li>
+   *   <li>At least one property evaluates to false: red</li>
+   *   </ul>
+   * @param verdicts A map from the metadata for each property to
+   *   its current verdict
+   * @return The byte array with the contents of the selected image
+   */
   protected static byte[] selectImage(Map<StatementMetadata,Verdict> verdicts)
   {
     int num_errors = 0;
@@ -143,19 +155,27 @@ class DummyImage extends InterpreterCallback
     return image_out;
   }
   
+  /**
+   * Creates a cookie out of the verdict of each property handled by the
+   * interpreter. This cookie contains, for each property, its caption,
+   * a list of element IDs to highlight (if any), as well as the total
+   * number of true/false/inconclusive properties.
+   * @param verdicts A map from the metadata for each property to
+   *   its current verdict
+   * @return A JSON string to be passed as a cookie in the response to
+   *   the browser
+   */
   protected static String createResponseCookie(Map<StatementMetadata,Verdict> verdicts)
   {
-    StringBuilder out = new StringBuilder();
     int num_false = 0;
     int num_true = 0;
     int num_inconclusive = 0;
     Verdict outcome = new Verdict(Verdict.Value.TRUE);
-    StringBuilder id_struct = new StringBuilder();
-    id_struct.append("[");
+    JsonList highlight_ids = new JsonList();
     for (StatementMetadata key : verdicts.keySet())
     {
-      id_struct.append("{");
-      LinkedList<List<Number>> id_to_highlight = new LinkedList<List<Number>>();
+    	JsonMap element = new JsonMap();
+    	JsonList id_to_highlight = new JsonList();
       Verdict v = verdicts.get(key);
       outcome.conjoin(v);
       if (v.is(Verdict.Value.FALSE))
@@ -171,28 +191,28 @@ class DummyImage extends InterpreterCallback
       {
         num_inconclusive++;
       }
-      id_struct.append("\"ids\" : ").append(id_to_highlight);
-      id_struct.append(",\"caption\" : \"").append(CornipickleServer.escapeQuotes(key.get("description"))).append("\"");
-      id_struct.append("},");
+      element.put("ids", id_to_highlight);
+      element.put("caption", new JsonString(CornipickleServer.escapeQuotes(key.get("description"))));
+      highlight_ids.add(element);
     }
-    id_struct.append("]");
-    out.append("{");
-    out.append("\"global-verdict\" : \"").append(outcome.getValue()).append("\",");
-    out.append("\"num-true\" : ").append(num_true).append(",");
-    out.append("\"num-false\" : ").append(num_false).append(",");
-    out.append("\"num-inconclusive\" : ").append(num_inconclusive).append(",");
-    out.append("\"highlight-ids\" : ").append(id_struct);
-    out.append("}");
-    return out.toString();
+    JsonMap result = new JsonMap();
+    result.put("global-verdict", outcome.toPlainString());
+    result.put("num-true", num_true);
+    result.put("num-false", num_false);
+    result.put("num-inconclusive", num_inconclusive);
+    result.put("highlight-ids", highlight_ids);
+    // Below, we use true to get a compact JSON string without CF/LF
+    // (otherwise the cookie won't be passed correctly to the browser)
+    return result.toString("", true); 
   }
   
-  protected static List<List<Number>> getIdsToHighlight(Verdict v)
+  protected static JsonList getIdsToHighlight(Verdict v)
   {
-    List<List<Number>> ids = new LinkedList<List<Number>>();
+    JsonList ids = new JsonList();
     Set<Set<JsonElement>> tuples = v.getWitness().flatten();
     for (Set<JsonElement> tuple : tuples)
     {
-      LinkedList<Number> out = new LinkedList<Number>();
+      JsonList out = new JsonList();
       for (JsonElement e : tuple)
       {
         if (!(e instanceof JsonMap))
@@ -205,8 +225,7 @@ class DummyImage extends InterpreterCallback
         {
           continue;
         }
-        JsonNumber n_id = (JsonNumber) id;
-        out.add(n_id.numberValue());
+        out.add((JsonNumber) id);
       }
       ids.add(out);
     }

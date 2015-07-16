@@ -23,6 +23,7 @@ import java.util.Set;
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.json.JsonList;
+import ca.uqac.lif.cornipickle.json.JsonMap;
 import ca.uqac.lif.httpserver.CallbackResponse;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -38,7 +39,6 @@ class AddProperty extends InterpreterCallback
   public CallbackResponse process(HttpExchange t)
   {
   	CallbackResponse response = new CallbackResponse(t);
-    StringBuilder page = new StringBuilder();
 
     // Disable caching on the client
     response.disableCaching();
@@ -70,14 +70,22 @@ class AddProperty extends InterpreterCallback
       return response;
     }
     // It worked; obtain new attributes and tag names for the probe
+    JsonMap output = new JsonMap();
     Set<String> attribute_set = m_interpreter.getAttributes();
+    JsonList attributes = new JsonList();
+    for (String att : attribute_set)
+    {
+    	attributes.add(att);
+    }
+    output.put("attributes", attributes);
     Set<String> tagname_set = m_interpreter.getTagNames();
-    page.append("{\n \"attributes\" : ");
-    page.append(JsonList.toJsonString(attribute_set));
-    page.append(",\n \"tagnames\" : ");
-    page.append(JsonList.toJsonString(tagname_set));
-    page.append("\n}");
-    response.setContents(page.toString());
+    JsonList tagnames = new JsonList();
+    for (String att : tagname_set)
+    {
+    	tagnames.add(att);
+    }
+    output.put("tagnames", tagnames);    
+    response.setContents(output.toString());
     response.setContentType(CallbackResponse.ContentType.JSON);
     return response;
   }    

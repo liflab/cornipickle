@@ -33,7 +33,7 @@ public class JsonString extends JsonElement
   }
   
   @Override
-  public String toString(String indent)
+  public String toString(String indent, boolean compact)
   {
     StringBuilder out = new StringBuilder();
     out.append("\"").append(m_string).append("\"");

@@ -51,20 +51,36 @@ public class JsonList extends JsonElement implements List<JsonElement>
   }
   
   @Override
-  public String toString(String indent)
+  public String toString(String indent, boolean compact)
   {
     StringBuilder out = new StringBuilder();
-    out.append(indent).append("[\n");
+    out.append(indent).append("[");
+    if (!compact)
+    	out.append("\n");
     boolean first = true;
     for (JsonElement e : this)
     {
       if (first)
         first = false;
       else
-        out.append(",\n");
-      out.append(e.toString(indent + "  "));
+      {
+        out.append(",");
+        if (!compact)
+        {
+        	out.append("\n");
+        }
+      }
+      if (!compact)
+      {
+      	out.append(e.toString(indent + "  ", compact));
+      	out.append("\n").append(indent);
+      }
+      else
+      {
+      	out.append(e.toString("", compact));
+      }
     }
-    out.append("\n").append(indent).append("]");
+    out.append("]");
     return out.toString();
   }
 
@@ -73,11 +89,26 @@ public class JsonList extends JsonElement implements List<JsonElement>
   {
     return m_list.add(e);
   }
+  
+  public boolean add(String s)
+  {
+    return m_list.add(new JsonString(s));
+  }
+  
+  public boolean add(Number n)
+  {
+    return m_list.add(new JsonNumber(n));
+  }
 
   @Override
   public void add(int index, JsonElement element)
   {
     m_list.add(index, element);
+  }
+  
+  public void add(int index, String element)
+  {
+    m_list.add(index, new JsonString(element));
   }
 
   @Override

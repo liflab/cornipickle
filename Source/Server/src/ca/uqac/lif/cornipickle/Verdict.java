@@ -199,6 +199,19 @@ public class Verdict
     return null;
   }
   
+  public String toPlainString()
+  {
+    if (m_value == Value.FALSE)
+    {
+      return "FALSE";
+    }
+    else if (m_value == Value.TRUE)
+    {
+      return "TRUE";
+    }
+    return "INCONCLUSIVE";
+  }
+  
   @Override
   public String toString()
   {
