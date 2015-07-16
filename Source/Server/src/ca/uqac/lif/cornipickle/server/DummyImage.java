@@ -40,8 +40,79 @@ import ca.uqac.lif.httpserver.RequestCallback;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Returns a dummy one-pixel image. This request is used as a means of
+ * communication between the JavaScript probe and the interpreter. The
+ * request passes as GET parameters an URL-encoded JSON object containing
+ * information about the current state of the page. The response is made
+ * of a one-pixel PNG image, and a cookie containing a JSON object. This
+ * object is retrieved by the JS probe, which uses it to determine whether
+ * any elements of the page should be highlighted.
+ * <ul>
+ * <li>Method: <b>GET</b></li>
+ * <li>Name: <tt>/image</tt></li>
+ * <li>Input:
+ * <ul>
+ * <li>A parameter named <tt>contents</tt>, which contains a urlencoded
+ * JSON string of the following form:
+ * <pre>
+ * {
+ *   TODO
+ * }
+ * </pre>
+ * </li>
+ * </ul>
+ * </li>
+ * <li>Response: 
+ * <ul>
+ * <li>Binary data for a one-pixel PNG image</li>
+ * <li>Into a cookie named <tt>cornipickle</tt>, a JSON string of the form:
+ * <pre>
+ * {
+ *   "num-true"           : 0,
+ *   "num-false"          : 0,
+ *   "num-inconclusive"   : 0,
+ *   "global-verdict"     : "TRUE",
+ *   "highlight-ids"     : [
+ *      {
+ *        "ids"     : [[0, 1, 2, ...], [3, 4], ...],
+ *        "caption" : "Some text"
+ *      },
+ *      ...   
+ *   ]
+ * }
+ * </pre>
+ * The attributes <tt>num-true</tt>, <tt>num-false</tt> and
+ * <tt>num-inconclusive</tt> give the number of Cornipickle statements that
+ * evaluate to true, false and inconclusive respectively. The attribute
+ * <tt>global-verdict</tt> is either "TRUE", "FALSE" or "INCONCLUSIVE",
+ * depending on the verdict of each statement.
+ * <p>
+ * The property <tt>highlight-ids</tt> is a list of structures, each correpsonding
+ * to one Cornipickle statement, and having two attributes. Attribute
+ * <tt>ids</tt> is a list, each element of which is a list of ids. These
+ * represents the groups of elements that could be highlighted in the browser
+ * to signal an error. For example, the group <tt>[0, 1, 2, ...]</tt> is
+ * a first group of element IDs involved in one error instance of the property.
+ * The group <tt>[3, 4]</tt> represents a second group of element IDs involved
+ * in another error instance of the same property. Finally, the attribute
+ * <tt>caption</tt> corresponds to the metadata <tt>@caption</tt> associated with
+ * the property, if any. Note that properties that are not violated will not
+ * create such a structure in the response cookie.
+ * </li>
+ * </ul>
+ * </li>
+ * </ul>
+ * @author Sylvain
+ *
+ */
 class DummyImage extends InterpreterCallback
 {
+	/**
+	 * The name of the cookie used to pass info back to the probe
+	 */
+	protected static final String s_cookieName = "cornipickle";
+	
   /**
    * Dummy image made of one white pixel
    */
@@ -106,7 +177,7 @@ class DummyImage extends InterpreterCallback
     // Create cookie response
     CallbackResponse cbr = new CallbackResponse(t);
     String cookie_json_string = createResponseCookie(verdicts);
-    cbr.addResponseCookie(new Cookie("cornipickle", cookie_json_string));
+    cbr.addResponseCookie(new Cookie(s_cookieName, cookie_json_string));
     cbr.setContents(image_to_return);
     cbr.setContentType(CallbackResponse.ContentType.PNG);
     return cbr;

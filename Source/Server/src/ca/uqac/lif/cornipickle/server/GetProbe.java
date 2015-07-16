@@ -32,6 +32,18 @@ import ca.uqac.lif.httpserver.RequestCallback;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Retrieves the JavaScript probe associated with the current state of
+ * the interpreter
+ * <ul>
+ * <li>Method: <b>GET</b></li>
+ * <li>Name: <tt>/probe</tt></li>
+ * <li>Input: nothing</li>
+ * <li>Response: JavaScript. Returns a JS file with the code for the
+ *   probe to inject in the page.
+ * </li>
+ * </ul>
+ */
 class GetProbe extends InterpreterCallback
 {
   /**

@@ -28,6 +28,36 @@ import ca.uqac.lif.httpserver.CallbackResponse;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Adds a set of properties to the interpreter.
+ * <ul>
+ * <li>Method: <b>PUT</b></li>
+ * <li>Name: <tt>/add</tt></li>
+ * <li>Input:
+ * <ul>
+ * <li>An unnamed string containing valid Cornipickle statements</li>
+ * </ul>
+ * </li>
+ * <li>Response: JSON
+ * <ul>
+ * <li>A JSON structure of the form:
+ * <pre>
+ * {
+ *   "tagnames"   : ["tag1", "tag2", ...],
+ *   "attributes" : ["att1", "att2", ...]
+ * }
+ * </pre>
+ * where <tt>tagnames</tt> is a list of tagnames (e.g. "a", "p", "h1") that
+ * must be observed by the probe, and 
+ * <tt>attributes</tt> is a list of strings representing the attributes of
+ * these elements that must be reported by the probe (e.g. "width", "top", etc.).
+ * </li>
+ * </ul>
+ * </li>
+ * </ul>
+ * @author Sylvain
+ *
+ */
 class AddProperty extends InterpreterCallback
 {
   public AddProperty(Interpreter i)

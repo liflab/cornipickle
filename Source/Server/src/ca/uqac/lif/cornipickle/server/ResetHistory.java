@@ -25,6 +25,21 @@ import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.RequestCallback;
 
+/**
+ * Resets the interpreter. This wipes any data about past events the
+ * interpreter may have received, but does not erase the properties
+ * themselves.
+ * <ul>
+ * <li>Method: <b>GET</b></li>
+ * <li>Name: <tt>/reset</tt></li>
+ * <li>Input: nothing</li>
+ * </li>
+ * <li>Response: An empty HTTP 200 OK</li>
+ * </ul>
+ * 
+ * @author Sylvain
+ *
+ */
 public class ResetHistory extends InterpreterCallback
 {
   public ResetHistory(Interpreter i)
