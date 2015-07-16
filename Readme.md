@@ -111,6 +111,13 @@ specifications that the server can pre-load. Available options are:
 `-s`,`--servername <x>`
 :  Set server name or IP address x (default: localhost)
 
+`--serve-as <path>`
+:  Serve local folder as remote folder <path>. For example, with the default
+   settings, when launching Cornipickle with `--serve-as myfolder/` (note the
+   trailing slash), the URL `http://localhost:10101/myfolder/foo.bar` will
+   refer to `foo.bar` from the local folder where Cornipickle is launched.
+   This also works for nested folders.
+
 ### Built-in Examples
 
 Cornipickle contains a few examples. Using the default settings, you can

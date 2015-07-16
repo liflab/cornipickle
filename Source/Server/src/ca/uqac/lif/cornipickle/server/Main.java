@@ -71,6 +71,7 @@ public class Main
 	{
 		String server_name = s_defaultServerName;
 		int server_port = s_defaultPort;
+		String serve_path = null;
 		final AnsiPrinter stderr = new AnsiPrinter(System.err);
 		final AnsiPrinter stdout = new AnsiPrinter(System.out);
 		stdout.setForegroundColor(AnsiPrinter.Color.BLACK);
@@ -117,6 +118,10 @@ public class Main
 		{
 			server_port = Integer.parseInt(c_line.getOptionValue("p"));
 		}
+		if (c_line.hasOption("serve-as"))
+		{
+			serve_path = c_line.getOptionValue("serve-as");
+		}
 
 		// The remaining arguments are the Cornipickle files to read
 		CornipickleServer server = new CornipickleServer(server_name, server_port);
@@ -126,6 +131,11 @@ public class Main
 			stdout.setForegroundColor(AnsiPrinter.Color.BROWN);
 			println(stdout, "Reading properties in " + filename, 1);
 			server.readProperties(filename);
+		}
+		if (serve_path != null)
+		{
+			server.registerCallback(0, new PassthroughCallback(serve_path, "./"));
+			println(stdout, "Serving local folder as " + serve_path, 1);
 		}
 
 		// Start server
@@ -170,6 +180,13 @@ public class Main
 				.argName("x")
 				.hasArg()
 				.desc("Listen on port x (default: " + s_defaultPort + ")")
+				.build();
+		options.addOption(opt);
+		opt = Option.builder()
+				.longOpt("serve-as")
+				.argName("path")
+				.hasArg()
+				.desc("Serve local folder as path")
 				.build();
 		options.addOption(opt);
 		return options;
