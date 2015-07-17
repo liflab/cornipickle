@@ -22,7 +22,7 @@
 <css_attribute>      := value | height | width | top | left | right
                         | bottom | color | id | text | background | border 
                         | event | cornipickleid | display | size | accesskey 
-                        | checked ;
+                        | checked | disabled ;
 
 # Element property
 
@@ -67,7 +67,7 @@
 <mult>               := ( <property_or_const> \u002a <property_or_const> ) ; # \u002a is the * symbol
 <div>                := ( <property_or_const> / <property_or_const> ) ;
 
-<constant>           := <number> | <string> ;
+<constant>           := <number> | <string>;
 <number>             := ^\d+;
 <string>             := ^"[^"]*";
 
