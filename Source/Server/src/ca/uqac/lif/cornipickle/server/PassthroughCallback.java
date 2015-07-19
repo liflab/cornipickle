@@ -25,10 +25,10 @@ import java.net.URI;
 import com.sun.net.httpserver.HttpExchange;
 
 import ca.uqac.lif.httpserver.CallbackResponse;
+import ca.uqac.lif.httpserver.InnerFileCallback;
 import ca.uqac.lif.httpserver.InnerFileServer;
-import ca.uqac.lif.httpserver.RequestCallback;
 
-public class PassthroughCallback extends RequestCallback
+public class PassthroughCallback extends InnerFileCallback
 {
 	/**
 	 * The remote folder exposing the files
@@ -48,7 +48,7 @@ public class PassthroughCallback extends RequestCallback
 	
 	public PassthroughCallback(String server_folder, String local_folder)
 	{
-		super();
+		super(local_folder, PassthroughCallback.class);
 		if (!server_folder.startsWith(s_slash))
 		{
 			server_folder = s_slash + server_folder;

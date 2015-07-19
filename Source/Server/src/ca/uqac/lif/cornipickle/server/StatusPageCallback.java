@@ -34,10 +34,16 @@ import com.sun.net.httpserver.HttpExchange;
 
 class StatusPageCallback extends InterpreterCallback
 {
+	/**
+	 * A reference to the server. This is needed as the callback
+	 * queries information about the server's state.
+	 */
+	protected CornipickleServer m_server;
   
-  public StatusPageCallback(Interpreter i)
+  public StatusPageCallback(Interpreter i, CornipickleServer s)
   {
     super(i, RequestCallback.Method.GET, "/status");
+    m_server = s;
   }
 
   @Override
@@ -48,7 +54,7 @@ class StatusPageCallback extends InterpreterCallback
     page.append("<h1>Cornipickle Status</h1>");
     
     // Show last contact with probe
-    //createProbeContactMessage(getLastProbeContact(), page);
+    createProbeContactMessage(m_server.getLastProbeContact(), page);
     
     // Compute verdicts
     Map<StatementMetadata,Verdict> verdicts = m_interpreter.getVerdicts();
@@ -119,6 +125,8 @@ class StatusPageCallback extends InterpreterCallback
   
   protected static void createProbeContactMessage(Date last_contact, StringBuilder page)
   {
+  	// TODO: the refactoring is such that this callback no longer has access to the
+  	// server
     if (last_contact == null)
     {
         page.append("<p id=\"last-probe-contact\">No contact with probe so far.</p>\n");

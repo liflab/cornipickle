@@ -44,7 +44,7 @@ public class CornipickleServer extends Server
     // Register callbacks
     registerCallback(new ResetHistory(m_interpreter));
     registerCallback(new AddProperty(m_interpreter));
-    registerCallback(new StatusPageCallback(m_interpreter));
+    registerCallback(new StatusPageCallback(m_interpreter, this));
     registerCallback(new GetProbe(m_interpreter, m_serverName, m_port));
     registerCallback(new DummyImage(m_interpreter));
     registerCallback(new FileCallback(this));

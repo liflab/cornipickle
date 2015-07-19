@@ -33,7 +33,7 @@ public class FileCallback extends InnerFileCallback
 {
   public FileCallback(CornipickleServer s)
   {
-    super("resource/", s.getClass());
+    super("resource", s.getClass());
   }
   
   @Override

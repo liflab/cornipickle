@@ -134,7 +134,12 @@ public class Main
 		}
 		if (serve_path != null)
 		{
-			server.registerCallback(0, new PassthroughCallback(serve_path, "./"));
+			PassthroughCallback ptc = new PassthroughCallback(serve_path, "./");
+			ptc.send404(false);
+			// This is tricky. We must put this callback *after* the probe, add, etc.
+			// callbacks, but before the callback for the "resource" folder, which
+			// normally is the last. Hence we put it in next-to-last position.
+			server.registerCallback(-1, ptc);
 			println(stdout, "Serving local folder as " + serve_path, 1);
 		}
 

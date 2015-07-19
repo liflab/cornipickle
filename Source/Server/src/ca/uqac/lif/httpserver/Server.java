@@ -147,12 +147,24 @@ public class Server implements HttpHandler
   /**
    * Adds a new callback to the list of callbacks handled by
    * the server.
-   * @param index The position in the list where to insert the callback
+   * @param index The position in the list where to insert the callback.
+   *   If this value is negative, the insertion position is relative
+   *   to the end of the list. For example, a value of -1 will put the element
+   *   at the next-to-last position. (To put it at the end, use
+   *   {@link #registerCallback(RequestCallback)} without a position.
    * @param cb The callback to add
    */
   public void registerCallback(int index, RequestCallback cb)
   {
-    m_callbacks.add(index, cb);
+  	if (index < 0)
+  	{
+  		// The position is relative to the *end* of the list
+  		m_callbacks.add(index + m_callbacks.size() - 1, cb);
+  	}
+  	else
+  	{
+  		m_callbacks.add(index, cb);
+  	}
   }
   
   /**
@@ -210,9 +222,13 @@ public class Server implements HttpHandler
     int response_code = cbr.getCode();
     try
     {
-      if (contents == null)
+      if (contents == null || contents.length == 0)
       {
-        t.sendResponseHeaders(response_code, 0);	
+      	// We still need to open-close the stream, otherwise the response
+      	// is not sent
+        t.sendResponseHeaders(response_code, 0);
+        OutputStream os = t.getResponseBody();
+        os.close();
       }
       else
       {
@@ -231,6 +247,7 @@ public class Server implements HttpHandler
     }
   }
 
+  
   /**
    * Convenience method to transform a GET query into a map of
    * attribute-value pairs. For example, given an URI object
