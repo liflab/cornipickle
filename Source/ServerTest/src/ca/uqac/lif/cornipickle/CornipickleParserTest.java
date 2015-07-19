@@ -154,6 +154,22 @@ public class CornipickleParserTest
       fail("Got wrong type of object");
     }
   }
+
+  @Test
+  public void testEquality4() throws ParseException
+  {
+    String line = "$x's disabled is true";
+    ParseNode pn = shouldParseAndNotNull(line, "<equality>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof EqualsStatement))
+    {
+      fail("Got wrong type of object");
+    }
+  }
   
   @Test
   public void testLet1() throws ParseException

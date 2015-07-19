@@ -79,7 +79,8 @@ var CornipickleProbe = function()
 				out = this.addIfDefined(out, "right", add_dimensions([pos.left,  n.clientWidth]));
 				out = this.addIfDefined(out, "display", CornipickleProbe.getStyle(n, "display"));
 				out = this.addIfDefined(out, "size", n.size);
-				out = this.addIfDefined(out, "checked ", n.checked);
+				out = this.addIfDefined(out, "checked", CornipickleProbe.formatBool(n.checked));
+				out = this.addIfDefined(out, "disabled", CornipickleProbe.formatBool(n.disabled));
 				if (n === event.target)
 				{
 					out.event = this.serializeEvent(event);
@@ -411,6 +412,12 @@ CornipickleProbe.formatBackgroundString = function(elem)
 {
 	var s_background_color = CornipickleProbe.getStyle(elem, "background-color");
 	return s_background_color.trim();
+}
+
+CornipickleProbe.formatBool = function(property)
+{
+	if (property) {return "true";}
+	else {return "false";}
 }
 
 /**
