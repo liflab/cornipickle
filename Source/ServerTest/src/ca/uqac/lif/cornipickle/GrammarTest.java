@@ -90,22 +90,8 @@ public class GrammarTest
   @Test
   public void testEquality3() throws ParseException
   {
-    String line = "$b's disabled is true";
-    ParseNode pn = shouldParseAndNotNull(line, "<equality>", false);
-  }
-
-   @Test
-  public void testEquality4() throws ParseException
-  {
-    String line = "There exists $b in $(#button) such that ($b's disabled is true)";
-    ParseNode pn = shouldParseAndNotNull(line, "<exists>", false);
-  }
-
-  @Test
-  public void testBoolean() throws ParseException
-  {
-    String line = "true";
-    ParseNode pn = shouldParseAndNotNull(line, "<boolean>", false);
+    String line = "$b's disabled matches \"true\"";
+    ParseNode pn = shouldParseAndNotNull(line, "<regex_match>", false);
   }
   
   @Test

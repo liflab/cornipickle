@@ -156,16 +156,16 @@ public class CornipickleParserTest
   }
 
   @Test
-  public void testEquality4() throws ParseException
+  public void testDisabled1() throws ParseException
   {
-    String line = "$x's disabled is true";
-    ParseNode pn = shouldParseAndNotNull(line, "<equality>");
+    String line = "$x's disabled matches \"true\"";
+    ParseNode pn = shouldParseAndNotNull(line, "<regex_match>");
     LanguageElement e = parser.parseStatement(pn);
     if (e == null)
     {
       fail("Parsing returned null");
     }
-    if (!(e instanceof EqualsStatement))
+    if (!(e instanceof RegexMatch))
     {
       fail("Got wrong type of object");
     }
