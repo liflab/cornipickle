@@ -151,9 +151,13 @@ var CornipickleProbe = function()
 
 	this.includeInResult = function(n, path)
 	{
-		if (n.className && n.className.contains("nocornipickle")) // This is the probe itself
+		var classlist = get_class_list(n);
+		if (classlist)
 		{
-			return CornipickleProbe.DONT_INCLUDE_RECURSIVE;
+			if (classlist.contains("nocornipickle")) // This is the probe itself
+			{
+				return CornipickleProbe.DONT_INCLUDE_RECURSIVE;
+			}
 		}
 		if (!n.tagName) // This is a text node
 		{
@@ -202,7 +206,7 @@ var CornipickleProbe = function()
 			{
 				return false;
 			}
-			var class_parts = n.className.split(" ");
+			var class_parts = get_class_list(n).split(" "); //n.className.split(" ");
 			if (!array_contains(class_parts, class_name))
 			{
 				return false;
@@ -505,6 +509,34 @@ CornipickleProbe.toggleExplanationBox = function(id, b)
 };
 
 /**
+ * Gets the class list of the element using className 
+ * and classList DOM attributes combined, to make sure 
+ * we get the class names in every case
+ * @param  element  The DOM element to retrieve its classes
+ * @return A list of class names separated by spaces
+ */
+var get_class_list = function(element) 
+{
+	var out = "";
+	if (element.className) 
+	{
+		out += element.className; //className already is a space separated class name string
+	}
+	if (element.classList) //supported by IE9+ only; classList is an array of class names
+	{
+		for(var i = 0; i < element.classList.length; i++)
+		{
+			if(!out.contains(element.classList[i]))
+			{
+				out += " ";
+				out += element.classList[i];
+			}
+		}
+	}
+	return out;
+}
+
+/**
  * Computes the absolute coordinates of an element
  * with respect to the document
  * @param element The element to get the position
@@ -588,9 +620,12 @@ var remove_units = function(s)
 	return Number(s);
 };
 
-
-window.onload = function()
-{
+/*
+ * Replaces the window.onload() function
+ * it allows us not to change the webpage's html code 
+ * by not removing the onload blockers
+ */
+function loadFunction() {
 	cp_probe = new CornipickleProbe();
 	var cp_witness_div = document.createElement("div");
 	cp_witness_div.id = "cp-witness";
@@ -610,4 +645,15 @@ window.onload = function()
 	};
 	// Call the probe a first time at startup
 	//window.setTimeout(cp_probe.handleEvent, 0.25);
-};
+}
+
+var addFunctionOnWindowLoad = function(callback){
+      if(window.addEventListener) {
+          window.addEventListener('load',callback,false);
+      } 
+      else {
+          window.attachEvent('onload',callback);
+      }
+}
+
+addFunctionOnWindowLoad(loadFunction);
