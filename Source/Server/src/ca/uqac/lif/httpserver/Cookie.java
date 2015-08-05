@@ -19,7 +19,7 @@ package ca.uqac.lif.httpserver;
 
 /**
  * Representation of an HTTP request/response cookie.
- * {@see http://en.wikipedia.org/wiki/HTTP_cookie}
+ * See <a href="http://en.wikipedia.org/wiki/HTTP_cookie">http://en.wikipedia.org/wiki/HTTP_cookie</a>.
  */
 public class Cookie
 {
