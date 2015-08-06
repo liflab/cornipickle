@@ -626,6 +626,14 @@ var remove_units = function(s)
  * by not removing the onload blockers
  */
 function loadFunction() {
+	//IE fix for String.contains which is used throughout the file
+	//found here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
+	if ( !String.prototype.contains ) {
+	    String.prototype.contains = function() {
+	        return String.prototype.indexOf.apply( this, arguments ) !== -1;
+	    };
+	}
+
 	cp_probe = new CornipickleProbe();
 	var cp_witness_div = document.createElement("div");
 	cp_witness_div.id = "cp-witness";

@@ -17,12 +17,15 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
+import java.util.List;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URI;
 
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.Headers;
 
 import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.InnerFileCallback;
@@ -69,6 +72,11 @@ public class PassthroughCallback extends InnerFileCallback
 	public CallbackResponse process(HttpExchange t)
 	{
 		CallbackResponse response = new CallbackResponse(t);
+		//Give the right content-type to the browser by giving it what it's looking for
+		Headers headers = t.getRequestHeaders();
+		String accept_Header = headers.get("Accept").get(0);
+		response.setContentType(accept_Header.split(",")[0]);
+		
 		URI uri = t.getRequestURI();
 		String path = uri.getPath();
 		String relative_path = path.substring(m_serverFolder.length());

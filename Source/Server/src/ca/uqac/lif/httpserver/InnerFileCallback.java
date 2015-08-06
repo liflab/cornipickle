@@ -22,6 +22,7 @@ import java.net.URI;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.Headers;
 
 public class InnerFileCallback extends CachedRequestCallback
 {
@@ -68,8 +69,13 @@ public class InnerFileCallback extends CachedRequestCallback
   @Override
   public CallbackResponse serve(HttpExchange t)
   {
-    URI uri = t.getRequestURI();
     CallbackResponse response = new CallbackResponse(t);
+    //Give the right content-type to the browser by giving it what it's looking for
+    Headers headers = t.getRequestHeaders();
+    String accept_Header = headers.get("Accept").get(0);
+    response.setContentType(accept_Header.split(",")[0]);
+
+    URI uri = t.getRequestURI();
     String path = uri.getPath();
     if (path.contains(".."))
     {
