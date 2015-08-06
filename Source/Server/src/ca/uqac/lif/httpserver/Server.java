@@ -22,8 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -59,6 +61,11 @@ public class Server implements HttpHandler
    * The underlying Java HTTP server
    */
   HttpServer m_server;
+  
+  /**
+   * The debug mode provides additional verbosity
+   */
+  protected boolean m_debugMode;
 
   /**
    * Instantiates an empty server
@@ -67,6 +74,16 @@ public class Server implements HttpHandler
   {
     super();
     m_callbacks = new Vector<RequestCallback>();
+    m_debugMode = false;
+  }
+  
+  /**
+   * Sets the debug mode for the server
+   * @param b Set to true to activate debug mode, false otherwise
+   */
+  public void setDebugMode(boolean b)
+  {
+	  m_debugMode = b;
   }
 
   /**
@@ -137,7 +154,7 @@ public class Server implements HttpHandler
   /**
    * Sets the server's name. This name will be used as the value for
    * parameter "User-Agent" in every HTTP response sent.
-   * @param name The name
+   * @param ua The name
    */
   public void setUserAgent(String ua)
   {
@@ -189,8 +206,9 @@ public class Server implements HttpHandler
       	cbr = cb.process(t);
         if (cbr != null)
         {
-          System.out.println(t.getRequestURI().getPath());
-          break;
+        	if (m_debugMode)
+        		System.out.println(t.getRequestURI().getPath());
+        	break;
         }
       }
     }
@@ -204,8 +222,6 @@ public class Server implements HttpHandler
     	cbr = new CallbackResponse(t, CallbackResponse.HTTP_BAD_REQUEST, "", "");
       sendResponse(cbr);
     }
-    
-    
   }
   
   public void sendResponse(CallbackResponse cbr)
@@ -213,10 +229,10 @@ public class Server implements HttpHandler
   	HttpExchange t = cbr.getExchange();
     Headers h = t.getResponseHeaders();
     h.add("User-agent", m_userAgent);
-    String content_type = cbr.getContentType();
-    if (!content_type.isEmpty())
+    Map<String,String> headers = cbr.getHeaders();
+    for (String name : headers.keySet())
     {
-    	h.add("Content-Type", content_type);
+    	h.add(name, headers.get(name));
     }
     byte[] contents = cbr.getContents();
     int response_code = cbr.getCode();
@@ -224,8 +240,6 @@ public class Server implements HttpHandler
     {
       if (contents == null || contents.length == 0)
       {
-      	// We still need to open-close the stream, otherwise the response
-      	// is not sent
         t.sendResponseHeaders(response_code, 0);
         OutputStream os = t.getResponseBody();
         os.close();
@@ -247,7 +261,6 @@ public class Server implements HttpHandler
     }
   }
 
-  
   /**
    * Convenience method to transform a GET query into a map of
    * attribute-value pairs. For example, given an URI object
@@ -267,7 +280,7 @@ public class Server implements HttpHandler
    * attribute-value pairs. For example, given an URI object
    * representing the URL "http://abc.com/xyz?a=1&b=2", the method
    * will return an object mapping "a" to "1" and "b" to "2".
-   * @param u The URI to process
+   * @param query The URI to process
    * @return A map of attribute-value pairs
    */
   public static Map<String,String> queryToMap(String query)
@@ -276,7 +289,7 @@ public class Server implements HttpHandler
     if (query == null)
       return out;
     String[] pairs = query.split("&");
-    if (pairs.length == 1)
+    if (pairs.length == 1 && pairs[0].indexOf("=") < 0)
     {
       // No params; likely a POST request with payload
       out.put("", pairs[0]);
@@ -339,5 +352,31 @@ public class Server implements HttpHandler
       }
     }
     return sb.toString();
-  } 
+  }
+  
+  /**
+   * Encodes a string in an URL-encoded form. This is a wrapper method around
+<<<<<<< HEAD
+   * Java's <code>URLEncoder.encode()</code> method, which deals with the encoding
+=======
+   * Java's {@link URLEncoder.encode()} method, which deals with the encoding
+>>>>>>> bd6f41ba2b0a71acd8655b0f2321a8a9b69e3f8e
+   * and possible exception.
+   * @param s The input string
+   * @return The encoded string
+   */
+  public static String urlEncode(String s)
+  {
+	  String out = s;
+		try 
+		{
+			out = URLEncoder.encode(s, "UTF-8");
+		} 
+		catch (UnsupportedEncodingException e) 
+		{
+			// Do nothing
+			// Should never occur anyway
+		}
+		return out;
+  }
 }

@@ -18,6 +18,8 @@
 package ca.uqac.lif.httpserver;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -35,7 +37,8 @@ public class CallbackResponse
   /**
    * The content type of the response
    */
-  public static enum ContentType {JSON, TEXT, XML, PNG, JS, HTML};
+  public static enum ContentType {JSON, TEXT, XML, PNG, JS, HTML, JPEG,
+	  PDF, ZIP};
   
   /**
    * The HTTP exchange containing the response headers
@@ -53,9 +56,14 @@ public class CallbackResponse
   protected String m_contentType;
   
   /**
+   * The response headers
+   */
+  protected Map<String,String> m_headers;
+  
+  /**
    * The response contents
    */
-  protected byte[] m_contents;
+  protected byte[] m_contents = null;
   
   public CallbackResponse(HttpExchange t)
   {
@@ -78,6 +86,7 @@ public class CallbackResponse
   	m_exchange = t;
   	m_responseCode = response_code;
   	m_contents = contents;
+  	m_headers = new HashMap<String,String>();
   	m_contentType = content_type;
   }
   
@@ -92,7 +101,6 @@ public class CallbackResponse
   
   /**
    * Disables the client-side caching in the HTTP response to be sent 
-   * @param t The exchange
    */
   public void disableCaching()
   {
@@ -153,16 +161,44 @@ public class CallbackResponse
    */
   public void setContentType(ContentType t)
   {
-  	m_contentType = getContentTypeString(t);
+  	setContentType(getContentTypeString(t));
   }
   
   /**
    * Sets the response's content type
-   * @param t The content type
+   * @param mime The MIME type
    */
   public void setContentType(String mime)
   {
-  	m_contentType = mime;
+  	m_headers.put("Content-Type", mime);
+  }
+  
+  /**
+   * Sets the response as an attachment to be downloaded
+   * @param filename The filename
+   */
+  public void setAttachment(String filename)
+  {
+	  setHeader("Content-Disposition", "attachment; filename=" + filename);
+  }
+  
+  /**
+   * Sets a response header
+   * @param name The parameter name
+   * @param value The parameter value
+   */
+  public void setHeader(String name, String value)
+  {
+	  m_headers.put(name, value);
+  }
+  
+  /**
+   * Gets the headers of this response
+   * @return The headers
+   */
+  public Map<String,String> getHeaders()
+  {
+	  return m_headers;
   }
   
   /**
@@ -199,8 +235,17 @@ public class CallbackResponse
   	case PNG:
   		out = "image/png";
   		break;
+  	case JPEG:
+  		out = "image/jpeg";
+  		break;
   	case JS:
   		out = "application/javascript";
+  		break;
+  	case PDF:
+  		out = "application/pdf";
+  		break;
+  	case ZIP:
+  		out = "application/zip";
   		break;
   	}
   	return out;

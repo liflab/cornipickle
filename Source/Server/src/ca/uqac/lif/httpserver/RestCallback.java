@@ -37,7 +37,6 @@ public abstract class RestCallback extends RequestCallback
 	
 	/**
 	 * Creates a REST callback
-	 * @param s The server attached to this callback
 	 * @param m The HTTP method this callback listens to
 	 * @param path The path this callback listens to
 	 */
