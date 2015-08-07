@@ -44,7 +44,7 @@ The project requires the following libraries to be present in the system:
   (wro4j) for minification of JavaScript files. Make sure to retrieve a JAR
   called "with dependencies". *(tested with version 1.6.3)*
 - The [Bullwinkle parser](https://github.com/sylvainhalle/Bullwinkle),
-  an on-the-fly parser for BNF grammars
+  an on-the-fly parser for BNF grammars. *(tested with version 1.1.5)*
 
 Using Ant, you can automatically download any libraries missing from your
 system by typing:
