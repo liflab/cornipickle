@@ -62,9 +62,9 @@
 <lt>                 := <property_or_const> is less than <property_or_const> ;
 <regex_match>        := <property_or_const> matches <property_or_const> ;
 
-<add>                := ( <property_or_const> plus <property_or_const> ) ;
+<add>                := ( <property_or_const> \u002b <property_or_const> ) ; #\u002b is the '+'
 <sub>                := ( <property_or_const> - <property_or_const> ) ;
-<mult>               := ( <property_or_const> \u002a <property_or_const> ) ; # \u002a is the * symbol
+<mult>               := ( <property_or_const> \u002a <property_or_const> ) ; # \u002a is the '*'
 <div>                := ( <property_or_const> / <property_or_const> ) ;
 
 <constant>           := <number> | <string>;
