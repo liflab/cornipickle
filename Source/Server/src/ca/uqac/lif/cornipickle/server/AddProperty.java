@@ -19,6 +19,8 @@ package ca.uqac.lif.cornipickle.server;
 
 import java.util.Map;
 import java.util.Set;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.Interpreter;
@@ -79,6 +81,15 @@ class AddProperty extends InterpreterCallback
     // Try to decode and parse it
     boolean success = true;
     String props = params.get("");
+    
+    //Decode the string (had to be added because of the probe server's encoding)
+    try {
+		props = URLDecoder.decode(props,"UTF-8");
+	} catch (UnsupportedEncodingException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+    
     try
     {
       if (props != null)
