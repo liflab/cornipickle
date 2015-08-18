@@ -356,11 +356,7 @@ public class Server implements HttpHandler
   
   /**
    * Encodes a string in an URL-encoded form. This is a wrapper method around
-<<<<<<< HEAD
-   * Java's <code>URLEncoder.encode()</code> method, which deals with the encoding
-=======
-   * Java's {@link URLEncoder.encode()} method, which deals with the encoding
->>>>>>> bd6f41ba2b0a71acd8655b0f2321a8a9b69e3f8e
+   * Java's {@link URLEncoder#encode(String,String)} method, which deals with the encoding
    * and possible exception.
    * @param s The input string
    * @return The encoded string
