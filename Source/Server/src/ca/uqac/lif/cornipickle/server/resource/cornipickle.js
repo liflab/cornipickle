@@ -149,7 +149,7 @@ add_to_cornipickle = function(text)
   $.ajax({
     url : "/add",
     type : "PUT",
-    data : text,
+    data : encodeURIComponent(text),
     success : function(result) {
       //$("#to-cornipickle").prop('disabled', true);
       cp_probe.setAttributesToInclude(result.attributes);
