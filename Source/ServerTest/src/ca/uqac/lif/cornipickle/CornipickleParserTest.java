@@ -108,6 +108,22 @@ public class CornipickleParserTest
   }
 
   @Test
+  public void testDefined1() throws ParseException
+  {
+    String line = "$x's accesskey is defined";
+    ParseNode pn = shouldParseAndNotNull(line, "<defined>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof IsDefinedStatement))
+    {
+      fail("Got wrong type of object");
+    }
+  }
+
+  @Test
   public void testEquality1() throws ParseException
   {
     String line = "\"3\" equals \"3\"";

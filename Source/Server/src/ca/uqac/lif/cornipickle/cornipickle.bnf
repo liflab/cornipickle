@@ -15,14 +15,14 @@
 
 <css_selector>     := $( <css_sel_contents> ) ;
 <css_sel_contents> := <css_sel_part> <css_sel_contents> | <css_sel_part> ;
-<css_sel_part>     := ^[\w\d\u0023\.\*]+; # \u0023 is the # symbol
+<css_sel_part>     := ^[\w\u0023\.\*\-]+; # \u0023 is the # symbol
 
 # CSS attributes
 
 <css_attribute>      := value | height | width | top | left | right
                         | bottom | color | id | text | background | border 
                         | event | cornipickleid | display | size | accesskey 
-                        | checked | disabled ;
+                        | checked | disabled | min;
 
 # Element property
 
@@ -36,10 +36,11 @@
 
 # Cornichon statements
 
-<statement>          := <foreach> | <exists> | <binary_stmt> | <negation>
+<statement>          := <foreach> | <exists> | <binary_stmt> | <unary_stmt> | <negation>
                         | <temporal_stmt> | <userdef_stmt> | <let> | <when> ;
 <binary_stmt>        := <equality> | <gt> | <lt> | <regex_match> 
                         | <and> | <or> | <implies> ;
+<unary_stmt>         := <defined> ;
 <math>               := <add> | <sub> | <div> | <mult> ;
 <temporal_stmt>      := <globally> | <eventually> | <never> | <next> | <next_time> ;
 <foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
@@ -61,6 +62,7 @@
 <gt>                 := <property_or_const> is greater than <property_or_const> ;
 <lt>                 := <property_or_const> is less than <property_or_const> ;
 <regex_match>        := <property_or_const> matches <property_or_const> ;
+<defined>          := <elem_property> is defined ;
 
 <add>                := ( <property_or_const> \u002b <property_or_const> ) ; #\u002b is the '+'
 <sub>                := ( <property_or_const> - <property_or_const> ) ;

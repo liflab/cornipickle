@@ -93,6 +93,13 @@ public class GrammarTest
     String line = "$b's disabled matches \"true\"";
     ParseNode pn = shouldParseAndNotNull(line, "<regex_match>", false);
   }
+
+  @Test
+  public void testDefined1() throws ParseException
+  {
+    String line = "$b's accesskey is defined";
+    ParseNode pn = shouldParseAndNotNull(line, "<defined>", false);
+  }
   
   @Test
   public void testLet1() throws ParseException

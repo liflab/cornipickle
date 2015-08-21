@@ -40,6 +40,23 @@ public class EvaluationTest
   }
 
   @Test
+  public void testDefined1()
+  {
+    IsDefinedStatement es = new IsDefinedStatement();
+    ElementPropertyPossessive p = new ElementPropertyPossessive("$x", "accesskey");
+    JsonMap x = new JsonMap();
+    x.put("accesskey", "e");
+    es.setProperty(p);
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    d.put("$x", x);
+    Verdict answer = es.evaluate(null, d);
+    if (!answer.is(Verdict.Value.TRUE))
+    {
+      fail("Expected true, got something else");
+    }
+  }
+
+  @Test
   public void testEquality1()
   {
     EqualsStatement eq = new EqualsStatement();

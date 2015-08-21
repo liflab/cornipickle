@@ -115,6 +115,8 @@ Cornipickle.CornipickleProbe = function()
 				out = this.addIfDefined(out, "size", n.size);
 				out = this.addIfDefined(out, "checked", Cornipickle.CornipickleProbe.formatBool(n.checked));
 				out = this.addIfDefined(out, "disabled", Cornipickle.CornipickleProbe.formatBool(n.disabled));
+				out = this.addIfDefined(out, "accesskey", n.accessKey);
+				out = this.addIfDefined(out, "min", n.min);
 				if (n === event.target)
 				{
 					out.event = this.serializeEvent(event);
@@ -678,7 +680,7 @@ function loadFunction() {
         if (target_id.match(/bp_witness/) !== null) {
             // If we clicked on the probe status panel, do nothing
             return;
-        } 
+        }
         // Wait .25 sec, so that the browser has time to process the click
         window.setTimeout(function() {
             cp_probe.handleEvent(event);

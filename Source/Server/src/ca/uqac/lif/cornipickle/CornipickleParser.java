@@ -172,6 +172,7 @@ public class CornipickleParser implements ParseNodeVisitor
       return;
     }
     if (node_token.compareTo("<binary_stmt>") == 0) { }
+    else if (node_token.compareTo("<unary_stmt>") == 0) { }
     else if (node_token.compareTo("<constant>") == 0) { }
     else if (node_token.compareTo("<css_attribute>") == 0) { }
     else if (node_token.compareTo("<el_or_not>") == 0) { }
@@ -406,6 +407,15 @@ public class CornipickleParser implements ParseNodeVisitor
       ImpliesStatement out = new ImpliesStatement();
       out.addOperand(left);
       out.addOperand(right);
+      m_nodes.push(out);
+    }
+    else if (node_token.compareTo("<defined>") == 0)
+    {
+      m_nodes.pop(); //defined
+      m_nodes.pop(); //is
+      ElementProperty property = (ElementProperty) m_nodes.pop();
+      IsDefinedStatement out = new IsDefinedStatement();
+      out.setProperty(property);
       m_nodes.push(out);
     }
     else if (node_token.compareTo("<lt>") == 0)
