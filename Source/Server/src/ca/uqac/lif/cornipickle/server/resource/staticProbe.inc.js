@@ -100,6 +100,7 @@ Cornipickle.CornipickleProbe = function()
 				var pos = Cornipickle.cumulativeOffset(n);
 				out.tagname = n.tagName.toLowerCase();
 				out.cornipickleid = n.cornipickleid;
+				out = this.addIfDefined(out, "value", Cornipickle.CornipickleProbe.setValue(n));
 				out = this.addIfDefined(out, "class", n.className);
 				out = this.addIfDefined(out, "id", n.id);
 				out = this.addIfDefined(out, "height", n.clientHeight);
@@ -458,6 +459,22 @@ Cornipickle.CornipickleProbe.formatBool = function(property)
 {
 	if (property) {return "true";}
 	else {return "false";}
+}
+
+Cornipickle.CornipickleProbe.setValue = function(elem)
+{
+	//value property is only defined for input elements
+	if (elem.tagName === "INPUT" || elem.tagName === "BUTTON")
+	{
+		if (elem.type === "range" || elem.type == "number")
+		{
+			return elem.valueAsNumber;
+		}
+		else
+		{
+			return elem.value;
+		}
+	}
 }
 
 /**

@@ -19,7 +19,7 @@
 
 # CSS attributes
 
-<css_attribute>      := value | height | width | top | left | right
+<css_attribute>      := nodeValue | value | height | width | top | left | right
                         | bottom | color | id | text | background | border 
                         | event | cornipickleid | display | size | accesskey 
                         | checked | disabled | min;

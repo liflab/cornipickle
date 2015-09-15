@@ -286,7 +286,7 @@ public class EvaluationTest
   @Test
   public void testNextTime1() throws ParseException
   {
-    String expression = "The next time ($x's value equals 0) Then ($y's value equals 0)";
+    String expression = "The next time ($x's nodeValue equals 0) Then ($y's nodeValue equals 0)";
     CornipickleParser cp = new CornipickleParser();
     Statement st = cp.parseStatement(expression);
     Verdict answer;
@@ -312,7 +312,7 @@ public class EvaluationTest
   @Test
   public void testNextTime2() throws ParseException
   {
-    String expression = "The next time ($x's value equals 0) Then ($y's value equals 0)";
+    String expression = "The next time ($x's nodeValue equals 0) Then ($y's nodeValue equals 0)";
     CornipickleParser cp = new CornipickleParser();
     Statement st = cp.parseStatement(expression);
     Verdict answer;
@@ -338,7 +338,7 @@ public class EvaluationTest
   @Test
   public void testNextTime3() throws ParseException
   {
-    String expression = "The next time ($x's value equals 0) Then ($y's value equals 0)";
+    String expression = "The next time ($x's nodeValue equals 0) Then ($y's nodeValue equals 0)";
     CornipickleParser cp = new CornipickleParser();
     Statement st = cp.parseStatement(expression);
     Verdict answer;
@@ -389,7 +389,7 @@ public class EvaluationTest
     main.put("tagname", new JsonString("h1"));
     
     // Create formula
-    String expression = "For each $x in $(p) (Let $w be $x's width ($w's value is greater than 50))";
+    String expression = "For each $x in $(p) (Let $w be $x's width ($w's nodeValue is greater than 50))";
     CornipickleParser cp = new CornipickleParser();
     Statement st = cp.parseStatement(expression);
     Verdict answer;

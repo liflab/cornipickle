@@ -70,8 +70,8 @@ public abstract class ElementProperty extends Property
   {
     // Fetch element
     JsonElement e = d.get(m_elementName);
-    // Get its value
-    if (m_propertyName.compareToIgnoreCase("value") == 0)
+    // Get its value (removed because value is now taken care of in probe JS file)
+    if (m_propertyName.compareToIgnoreCase("nodeValue") == 0)
     {
       return e;
     }
