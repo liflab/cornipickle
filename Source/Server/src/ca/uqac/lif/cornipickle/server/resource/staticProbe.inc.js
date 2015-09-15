@@ -275,7 +275,22 @@ Cornipickle.CornipickleProbe = function()
 		//out.type = event.type;
 		//return out;
 		// At the moment, we only return a string with the event's name
-		// Eventually, this will be replaced with a more complex structure
+		// Eventually, this will be replaced with a more complex structure 
+		
+		// Determine if it is left or right click
+		if (event.type === "mouseup")
+		{
+			//event.which -> Firefox, Safari, Chrome, Opera
+			//event.button -> IE, Opera
+			if (event.which == 3 || event.button == 2)
+			{
+				return "right click";
+			}
+			else if (event.which == 1 || event.button == 0)
+			{
+				return "click";
+			}
+		}
 		return event.type;
 	};
 
