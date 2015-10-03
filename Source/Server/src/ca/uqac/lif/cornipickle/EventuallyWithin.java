@@ -69,15 +69,15 @@ public class EventuallyWithin extends Globally
         m_verdict.setWitnessFalse(st_v.getWitnessFalse());
         break;
       } 
-      if (currentTime > future_timestamp && !prev_st_v.is(Verdict.Value.TRUE) && st_v.is(Verdict.Value.TRUE))
+      /*if (currentTime > future_timestamp && !prev_st_v.is(Verdict.Value.TRUE) && st_v.is(Verdict.Value.TRUE))
       {
         m_verdict.setValue(Verdict.Value.FALSE);
         m_verdict.setWitnessFalse(st_v.getWitnessFalse());
         break;
-      }
+      }*/
       //keep the verdict from last snapshot to
       //evaluate if it was true before this current snapshot
-      Verdict prev_st_v = st_v;
+      //Verdict prev_st_v = st_v;
     }
     
     return m_verdict;
