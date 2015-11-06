@@ -19,6 +19,8 @@ package ca.uqac.lif.cornipickle;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import ca.uqac.lif.cornipickle.json.JsonElement;
 import ca.uqac.lif.cornipickle.json.JsonNumber;
@@ -26,58 +28,63 @@ import ca.uqac.lif.cornipickle.json.JsonNumber;
 public class EventuallyWithin extends Globally
 {
   protected NumberConstant m_timestamp;
-  protected long future_timestamp;
+  protected long m_future_timestamp;
+  protected List<Verdict> prev_st_v;
 
   public EventuallyWithin(NumberConstant timestamp)
   {
+    //Set a list of verdicts from previous evaluated statements
+    //To keep track of verdicts before the time limit
+    prev_st_v = new LinkedList<Verdict>();
+    prev_st_v.add(new Verdict(Verdict.Value.INCONCLUSIVE));
+
     m_timestamp = timestamp;
     JsonNumber eval_timestamp = (JsonNumber) m_timestamp.evaluate(null, null);
-    future_timestamp = java.lang.System.currentTimeMillis() + eval_timestamp.numberValue().longValue() * 1000;
+    m_future_timestamp =  java.lang.System.currentTimeMillis() + 
+                        eval_timestamp.numberValue().longValue() * 1000;
   }
 
   @Override
   public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   { 
     long currentTime = java.lang.System.currentTimeMillis();
-    System.out.println("Target time: " + future_timestamp); //debug
-    System.out.println("Current time: " + currentTime); //debug
     // Instantiate new inner statement
     Statement new_s = m_innerStatement.getClone();
     m_inMonitors.add(new_s);
     // Evaluate each
     Iterator<Statement> it = m_inMonitors.iterator();
+    Iterator<Verdict> it_prev_v = prev_st_v.iterator();
+
     while (it.hasNext())
     {
       Statement st = it.next();
+      Verdict prev_verdict = it_prev_v.next();
       Verdict st_v = st.evaluate(j, d);
-      if (st_v.is(Verdict.Value.FALSE))
+
+      //still below time limit
+      if (currentTime <= m_future_timestamp) 
       {
-        System.out.println("Eventually within: Verdict is inconclusive or false.");
-        //it.remove(); //to see if removing this causes problems with multiple statements
+        if (st_v.is(Verdict.Value.TRUE)) 
+        {
+          m_verdict.setValue(Verdict.Value.TRUE);
+          m_verdict.setWitnessTrue(st_v.getWitnessTrue());
+          break;
+        }
+        //only keep the previous verdict when below time limit
+        prev_st_v.add(st_v);
       }
-      if (st_v.is(Verdict.Value.TRUE) && currentTime <= future_timestamp)
+      //passed time limit
+      else 
       {
-        System.out.println("Eventually within: Verdict is true.");
-        m_verdict.setValue(Verdict.Value.TRUE);
-        m_verdict.setWitnessTrue(st_v.getWitnessTrue());
-        break;
+        //If the verdict did not become true in time, will always be false
+        if (!prev_verdict.is(Verdict.Value.TRUE))
+        {
+          m_verdict.setValue(Verdict.Value.FALSE);
+          m_verdict.setWitnessFalse(st_v.getWitnessFalse());
+          it.remove();
+          it_prev_v.remove();
+        }
       }
-      if (currentTime > future_timestamp && !st_v.is(Verdict.Value.TRUE))
-      {
-        System.out.println("Eventually within: Verdict is false.");
-        m_verdict.setValue(Verdict.Value.FALSE);
-        m_verdict.setWitnessFalse(st_v.getWitnessFalse());
-        break;
-      } 
-      /*if (currentTime > future_timestamp && !prev_st_v.is(Verdict.Value.TRUE) && st_v.is(Verdict.Value.TRUE))
-      {
-        m_verdict.setValue(Verdict.Value.FALSE);
-        m_verdict.setWitnessFalse(st_v.getWitnessFalse());
-        break;
-      }*/
-      //keep the verdict from last snapshot to
-      //evaluate if it was true before this current snapshot
-      //Verdict prev_st_v = st_v;
     }
     
     return m_verdict;
@@ -99,6 +106,12 @@ public class EventuallyWithin extends Globally
     Eventually out = new Eventually();
     out.setInnerStatement(m_innerStatement.getClone());
     return out;
+  }
+
+  private String booleanToString(boolean b) 
+  {
+    if (b) return "TRUE";
+    else return "FALSE";
   }
 
 }
