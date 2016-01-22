@@ -108,10 +108,4 @@ public class EventuallyWithin extends Globally
     return out;
   }
 
-  private String booleanToString(boolean b) 
-  {
-    if (b) return "TRUE";
-    else return "FALSE";
-  }
-
 }
