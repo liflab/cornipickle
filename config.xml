@@ -26,7 +26,7 @@
   <name>Cornipickle</name>
   
   <!-- The project's version number -->
-  <version>1.0.1</version>
+  <version>1.1</version>
   
   <!-- The project's author. Currently this only
   shows up in the footer of the Javadoc documentation. -->
@@ -69,7 +69,7 @@
       <name>Bullwinkle</name>
       <classname>ca.uqac.lif.bullwinkle.BnfParser</classname>
       <files>
-        <zip>https://github.com/sylvainhalle/Bullwinkle/releases/download/v1.1.7/bullwinkle-1.1.7.zip</zip>
+        <zip>https://github.com/sylvainhalle/Bullwinkle/releases/download/v1.1.8/bullwinkle-1.1.8.zip</zip>
       </files>
     </dependency>
     <dependency>
@@ -91,6 +91,16 @@
       <classname>org.json.simple.parser.JSONParser</classname>
       <files>
         <jar>https://json-simple.googlecode.com/files/json-simple-1.1.1.jar</jar>
+      </files>
+    </dependency>
+    <dependency>
+      <!--
+      Gson. Used to serialize objects to JSON
+      -->
+      <name>Gson</name>
+      <classname>org.json.simple.parser.JSONParser</classname>
+      <files>
+        <jar>http://search.maven.org/remotecontent?filepath=com/google/code/gson/gson/2.5/gson-2.5.jar</jar>
       </files>
     </dependency>
   </dependencies>

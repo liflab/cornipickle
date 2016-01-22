@@ -38,4 +38,13 @@ public abstract class InterpreterCallback extends RestCallback
 		super(m, path);
 		m_interpreter = i;
 	}
+	
+	/**
+	 * Sets the interpreter for this callback
+	 * @param i The interpreter
+	 */
+	public void setInterpreter(Interpreter i)
+	{
+	  m_interpreter = i;
+	}
 }

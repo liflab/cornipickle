@@ -22,6 +22,7 @@ import java.util.Date;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.Interpreter;
+import ca.uqac.lif.httpserver.RequestCallback;
 import ca.uqac.lif.httpserver.Server;
 import ca.uqac.lif.util.FileReadWrite;
 
@@ -47,7 +48,29 @@ public class CornipickleServer extends Server
     registerCallback(new StatusPageCallback(m_interpreter, this));
     registerCallback(new GetProbe(m_interpreter, m_serverName, m_port));
     registerCallback(new DummyImage(m_interpreter));
+    registerCallback(new JsonGetState(m_interpreter, this));
+    registerCallback(new JsonPutState(m_interpreter, this));
     registerCallback(new FileCallback(this));
+  }
+  
+  /**
+   * Sets the interpreter associated with this server. This will discard
+   * the current interpreter and notify all registered server callbacks
+   * of the change.
+   * @param i The new interpreter
+   */
+  public void setInterpreter(Interpreter i)
+  {
+    m_interpreter = i;
+    // Must notify all callbacks that the reference to the interpreter
+    // has changed
+    for (RequestCallback cb : m_callbacks)
+    {
+      if (cb instanceof InterpreterCallback)
+      {
+        ((InterpreterCallback) cb).setInterpreter(i);
+      }
+    }
   }
   
   /**

@@ -43,8 +43,10 @@ The project requires the following libraries to be present in the system:
 - The [Web Resource Optimizer for Java](https://code.google.com/p/wro4j/)
   (wro4j) for minification of JavaScript files. Make sure to retrieve a JAR
   called "with dependencies". *(tested with version 1.6.3)*
+- The [Gson](https://github.com/google/gson) library for serialization of
+  Java objects. *(tested with version 2.3)*
 - The [Bullwinkle parser](https://github.com/sylvainhalle/Bullwinkle),
-  an on-the-fly parser for BNF grammars. *(tested with version 1.1.5)*
+  an on-the-fly parser for BNF grammars. *(tested with version 1.1.8)*
 
 Using Ant, you can automatically download any libraries missing from your
 system by typing:

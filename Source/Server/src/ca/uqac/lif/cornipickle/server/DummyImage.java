@@ -180,6 +180,10 @@ class DummyImage extends InterpreterCallback
     cbr.addResponseCookie(new Cookie(s_cookieName, cookie_json_string));
     cbr.setContents(image_to_return);
     cbr.setContentType(CallbackResponse.ContentType.PNG);
+    // DEBUG: print state
+    com.google.gson.GsonBuilder builder = new com.google.gson.GsonBuilder();
+    com.google.gson.Gson gson = builder.create();
+    System.out.println(gson.toJson(m_interpreter));
     return cbr;
   }
 

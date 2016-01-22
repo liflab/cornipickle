@@ -74,6 +74,15 @@ public class JsonMap extends JsonElement implements Map<String,JsonElement>
   	return put(arg0, new JsonNumber(arg1));
   }
   
+  public JsonElement put(String arg0, Boolean arg1)
+  {
+    if (arg1)
+    {
+      return put(arg0, new JsonString("true"));      
+    }
+    return put(arg0, new JsonString("false"));
+  }
+  
   public JsonElement put(String arg0, String arg1)
   {
   	return put(arg0, new JsonString(arg1));

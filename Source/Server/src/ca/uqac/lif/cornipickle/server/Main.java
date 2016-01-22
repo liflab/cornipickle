@@ -103,7 +103,7 @@ public class Main
 		}
 		if (c_line.hasOption("version"))
 		{
-			stderr.println("(C) 2015 Sylvain Hallé et al., Université du Québec à Chicoutimi");
+			stderr.println("(C) 2015-2016 Laboratoire d'informatique formelle");
 			stderr.println("This program comes with ABSOLUTELY NO WARRANTY.");
 			stderr.println("This is a free software, and you are welcome to redistribute it");
 			stderr.println("under certain conditions. See the file LICENSE for details.\n");
