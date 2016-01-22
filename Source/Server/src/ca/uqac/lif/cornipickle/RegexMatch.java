@@ -93,19 +93,19 @@ public class RegexMatch extends ComparisonStatement
 
   //functions added for color conversion (might create a color comparison statement later with these)
   //Found at http://www.javascripter.net/faq/hextorgb.htm
-  private int hexToR(String h) 
+  private static int hexToR(String h) 
   { 
     return Integer.parseInt(h.substring(0,2), 16); 
   }
-  private int hexToG(String h) 
+  private static int hexToG(String h) 
   { 
     return Integer.parseInt(h.substring(2,4), 16); 
   }
-  private int hexToB(String h) 
+  private static int hexToB(String h) 
   { 
     return Integer.parseInt(h.substring(4,6), 16); 
   }
-  private String cutHex(String h) 
+  private static String cutHex(String h) 
   { 
     return (h.charAt(0) == '#') ? h.substring(1,7) : h; 
   }
