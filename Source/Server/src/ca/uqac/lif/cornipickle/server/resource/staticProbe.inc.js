@@ -42,7 +42,7 @@ Cornipickle.CornipickleProbe = function()
 	this.getAttributes = function()
 	{
 		return this.m_attributesToInclude;
-	}
+	};
 
 	/**
 	 * Sets the tag names to include in the JSON
@@ -60,7 +60,8 @@ Cornipickle.CornipickleProbe = function()
 	this.getTagNames = function() 
 	{
 		return this.m_tagsToInclude;
-	}
+	};
+	
 	/**
 	 * Sets the server name
 	 * @param name The name of the server
@@ -286,7 +287,7 @@ Cornipickle.CornipickleProbe = function()
 			{
 				return "right click";
 			}
-			else if (event.which == 1 || event.button == 0)
+			else if (event.which == 1 || event.button === 0)
 			{
 				return "click";
 			}
@@ -468,13 +469,13 @@ Cornipickle.CornipickleProbe.formatBackgroundString = function(elem)
 {
 	var s_background_color = Cornipickle.CornipickleProbe.getStyle(elem, "background-color");
 	return s_background_color.trim();
-}
+};
 
 Cornipickle.CornipickleProbe.formatBool = function(property)
 {
 	if (property) {return "true";}
 	else {return "false";}
-}
+};
 
 Cornipickle.CornipickleProbe.setValue = function(elem)
 {
@@ -490,7 +491,7 @@ Cornipickle.CornipickleProbe.setValue = function(elem)
 			return elem.value;
 		}
 	}
-}
+};
 
 /**
  * The delay in ms before the probe refreshes its status,
@@ -602,7 +603,7 @@ Cornipickle.get_class_list = function(element)
 		}
 	}
 	return out;
-}
+};
 
 /**
  * Computes the absolute coordinates of an element
@@ -730,6 +731,6 @@ var addFunctionOnWindowLoad = function(callback){
       else {
           window.attachEvent('onload',callback);
       }
-}
+};
 
 addFunctionOnWindowLoad(loadFunction);
