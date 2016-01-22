@@ -17,8 +17,6 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
-import java.util.List;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

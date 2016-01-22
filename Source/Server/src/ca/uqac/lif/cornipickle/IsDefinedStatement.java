@@ -20,7 +20,6 @@ package ca.uqac.lif.cornipickle;
 import java.util.Map;
 
 import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonNumber;
 import ca.uqac.lif.cornipickle.json.JsonString;
 
 public class IsDefinedStatement extends Statement
