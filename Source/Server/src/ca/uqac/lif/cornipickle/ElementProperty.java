@@ -19,11 +19,11 @@ package ca.uqac.lif.cornipickle;
 
 import java.util.Map;
 
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonList;
-import ca.uqac.lif.cornipickle.json.JsonMap;
-import ca.uqac.lif.cornipickle.json.JsonPath;
-import ca.uqac.lif.cornipickle.json.JsonString;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonList;
+import ca.uqac.lif.json.JsonMap;
+import ca.uqac.lif.json.JsonPath;
+import ca.uqac.lif.json.JsonString;
 
 public abstract class ElementProperty extends Property
 {

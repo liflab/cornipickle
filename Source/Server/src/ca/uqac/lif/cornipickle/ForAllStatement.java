@@ -17,7 +17,7 @@
  */
 package ca.uqac.lif.cornipickle;
 
-import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.json.JsonElement;
 
 public class ForAllStatement extends Quantifier
 {

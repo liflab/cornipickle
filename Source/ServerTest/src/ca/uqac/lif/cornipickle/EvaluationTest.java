@@ -25,11 +25,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonList;
-import ca.uqac.lif.cornipickle.json.JsonMap;
-import ca.uqac.lif.cornipickle.json.JsonNumber;
-import ca.uqac.lif.cornipickle.json.JsonString;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonList;
+import ca.uqac.lif.json.JsonMap;
+import ca.uqac.lif.json.JsonNumber;
+import ca.uqac.lif.json.JsonString;
 
 public class EvaluationTest
 {

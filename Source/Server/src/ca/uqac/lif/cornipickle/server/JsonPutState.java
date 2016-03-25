@@ -21,12 +21,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Map;
 
+import ca.uqac.lif.azrael.json.JsonSerializer;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.RequestCallback;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import com.sun.net.httpserver.HttpExchange;
 
 class JsonPutState extends InterpreterCallback
@@ -62,8 +62,6 @@ class JsonPutState extends InterpreterCallback
     }
     if (props != null && !props.isEmpty())
     {
-      GsonBuilder builder = new GsonBuilder();
-      Gson gson = builder.create();
       System.out.println("BEFORE INT");
       Interpreter i = gson.fromJson(props, Interpreter.class);
       System.out.println("ALL OK");

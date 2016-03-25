@@ -20,8 +20,8 @@ package ca.uqac.lif.cornipickle;
 import java.util.List;
 import java.util.Map;
 
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonList;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonList;
 
 public class SetDefinition extends SetExpression
 {

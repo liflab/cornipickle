@@ -25,12 +25,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ca.uqac.lif.bullwinkle.ParseNode;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonFastParser;
-import ca.uqac.lif.cornipickle.json.JsonMap;
-import ca.uqac.lif.cornipickle.json.JsonParser;
-import ca.uqac.lif.cornipickle.json.JsonSlowParser;
-import ca.uqac.lif.cornipickle.json.JsonString;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonMap;
+import ca.uqac.lif.json.JsonParser;
+import ca.uqac.lif.json.JsonString;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.util.FileReadWrite;
 
@@ -46,7 +44,7 @@ public class CssTest
   public void setUp() throws Exception
   {
     parser = new CornipickleParser();
-    m_jsonParser = new JsonFastParser();
+    m_jsonParser = new JsonParser();
   }
 
   @Test

@@ -21,8 +21,6 @@ import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.RequestCallback;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 
 class JsonGetState extends InterpreterCallback
@@ -43,8 +41,8 @@ class JsonGetState extends InterpreterCallback
   public CallbackResponse process(HttpExchange t)
   {
     StringBuilder state = new StringBuilder();
-    GsonBuilder builder = new GsonBuilder();
-    Gson gson = builder.create();
+    //GsonBuilder builder = new GsonBuilder();
+    //Gson gson = builder.create();
     state.append(gson.toJson(m_interpreter));
     CallbackResponse out = new CallbackResponse(t, CallbackResponse.HTTP_OK, state.toString(), CallbackResponse.ContentType.JSON);
     out.disableCaching();

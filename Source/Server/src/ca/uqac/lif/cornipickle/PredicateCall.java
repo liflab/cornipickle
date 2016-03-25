@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.json.JsonElement;
 
 public class PredicateCall extends Statement
 {

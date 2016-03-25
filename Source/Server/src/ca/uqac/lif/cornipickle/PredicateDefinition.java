@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 import ca.uqac.lif.bullwinkle.BnfRule;
 import ca.uqac.lif.bullwinkle.BnfRule.InvalidRuleException;
-import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.json.JsonElement;
 
 public class PredicateDefinition extends Statement
 {

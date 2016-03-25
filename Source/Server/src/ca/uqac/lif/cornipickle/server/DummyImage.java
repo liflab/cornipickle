@@ -25,14 +25,13 @@ import java.util.Set;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonFastParser;
-import ca.uqac.lif.cornipickle.json.JsonList;
-import ca.uqac.lif.cornipickle.json.JsonMap;
-import ca.uqac.lif.cornipickle.json.JsonNumber;
-import ca.uqac.lif.cornipickle.json.JsonParser;
-import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
-import ca.uqac.lif.cornipickle.json.JsonString;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonList;
+import ca.uqac.lif.json.JsonMap;
+import ca.uqac.lif.json.JsonNumber;
+import ca.uqac.lif.json.JsonParser;
+import ca.uqac.lif.json.JsonParser.JsonParseException;
+import ca.uqac.lif.json.JsonString;
 import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.Cookie;
 import ca.uqac.lif.httpserver.InnerFileServer;
@@ -136,7 +135,7 @@ class DummyImage extends InterpreterCallback
   public DummyImage(Interpreter i)
   {
     super(i, RequestCallback.Method.GET, "/image");
-    s_jsonParser = new JsonFastParser();
+    s_jsonParser = new JsonParser();
   }
 
   @Override
@@ -181,9 +180,9 @@ class DummyImage extends InterpreterCallback
     cbr.setContents(image_to_return);
     cbr.setContentType(CallbackResponse.ContentType.PNG);
     // DEBUG: print state
-    com.google.gson.GsonBuilder builder = new com.google.gson.GsonBuilder();
-    com.google.gson.Gson gson = builder.create();
-    System.out.println(gson.toJson(m_interpreter));
+    //com.google.gson.GsonBuilder builder = new com.google.gson.GsonBuilder();
+    //com.google.gson.Gson gson = builder.create();
+    //System.out.println(gson.toJson(m_interpreter));
     return cbr;
   }
 

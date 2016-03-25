@@ -85,22 +85,22 @@
     </dependency>
     <dependency>
       <!--
-      json-simple. Used to parse JSON messages
+      json-lif. Used to manage JSON objects
       -->
-      <name>json-simple</name>
-      <classname>org.json.simple.parser.JSONParser</classname>
+      <name>json-lif</name>
+      <classname>ca.uqac.lif.json.JsonMain</classname>
       <files>
-        <jar>https://json-simple.googlecode.com/files/json-simple-1.1.1.jar</jar>
+        <zip>https://github.com/liflab/json-lif/releases/download/v1.0/json-lif-1.0.zip</zip>
       </files>
     </dependency>
     <dependency>
       <!--
-      Gson. Used to serialize objects to JSON
+      Azrael. Used to serialize objects to JSON
       -->
-      <name>Gson</name>
-      <classname>org.json.simple.parser.JSONParser</classname>
+      <name>Azrael</name>
+      <classname>ca.uqac.lif.azrael.DummyMain</classname>
       <files>
-        <jar>http://search.maven.org/remotecontent?filepath=com/google/code/gson/gson/2.5/gson-2.5.jar</jar>
+        <zip>https://github.com/sylvainhalle/Azrael/releases/download/v0.1-alpha/azrael-0.1-alpha.zip</zip>
       </files>
     </dependency>
   </dependencies>

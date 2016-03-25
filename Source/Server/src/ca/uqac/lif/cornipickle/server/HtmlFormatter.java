@@ -46,7 +46,7 @@ import ca.uqac.lif.cornipickle.RegexCapture;
 import ca.uqac.lif.cornipickle.SetDefinitionExtension;
 import ca.uqac.lif.cornipickle.StringConstant;
 import ca.uqac.lif.cornipickle.WhenIsNow;
-import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.cornipickle.util.StringUtils;
 
 public class HtmlFormatter implements LanguageElementVisitor

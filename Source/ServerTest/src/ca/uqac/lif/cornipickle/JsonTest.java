@@ -12,88 +12,23 @@ import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.NodePath;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonFastParser;
-import ca.uqac.lif.cornipickle.json.JsonParser;
-import ca.uqac.lif.cornipickle.json.JsonPath;
-import ca.uqac.lif.cornipickle.json.JsonSlowParser;
-import ca.uqac.lif.cornipickle.json.JsonString;
-import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonParser;
+import ca.uqac.lif.json.JsonPath;
+import ca.uqac.lif.json.JsonString;
+import ca.uqac.lif.json.JsonParser.JsonParseException;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.util.FileReadWrite;
 
 @SuppressWarnings("unused")
 public class JsonTest
 {
-  BnfParser parser;
   JsonParser j_parser;
   
   @Before
   public void setUp() throws Exception
   {
-    parser = new BnfParser();
-    String grammar = PackageFileReader.readPackageFile(JsonSlowParser.getGrammarStream());
-    parser.setGrammar(grammar);
-    j_parser = new JsonFastParser();
-  }
-
-  @Test
-  public void testSimpleObject()
-  {
-    String json = "{ \"a\" : 0 }";
-    ParseNode pn = shouldParseAndNotNull(json, "<S>");
-    int expected_size = 13;
-    int obtained_size = pn.getSize();
-    if (expected_size != obtained_size)
-    {
-      fail("Expected tree of size " + expected_size + ", got " + obtained_size);
-    }
-  }
-  
-  @Test
-  public void testSimpleList()
-  {
-    String json = "[0, 1, 2, \"abc\" ]";
-    ParseNode pn = shouldParseAndNotNull(json, "<S>");
-    int expected_size = 23;
-    int obtained_size = pn.getSize();
-    if (expected_size != obtained_size)
-    {
-      fail("Expected tree of size " + expected_size + ", got " + obtained_size);
-    }
-  }
-  
-  @Test
-  public void testString()
-  {
-    String json = "\"abcdef\"";
-    ParseNode pn = shouldParseAndNotNull(json, "<S>");
-    int expected_size = 3;
-    int obtained_size = pn.getSize();
-    if (expected_size != obtained_size)
-    {
-      fail("Expected tree of size " + expected_size + ", got " + obtained_size);
-    }
-  }
-  
-  @Test
-  public void testNumber()
-  {
-    String json = "12345";
-    ParseNode pn = shouldParseAndNotNull(json, "<S>");
-    int expected_size = 3;
-    int obtained_size = pn.getSize();
-    if (expected_size != obtained_size)
-    {
-      fail("Expected tree of size " + expected_size + ", got " + obtained_size);
-    }
-  }
-  
-  @Test
-  public void testSample() throws IOException
-  {
-    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample.json");
-    ParseNode pn = shouldParseAndNotNull(json, "<S>");
+    j_parser = new JsonParser();
   }
   
   @Test
@@ -211,22 +146,5 @@ public class JsonTest
     }
   }
   
-  public ParseNode shouldParseAndNotNull(String line, String start_symbol)
-  {
-    parser.setStartRule(start_symbol);
-    ParseNode pn = null;
-    try
-    {
-      pn = parser.parse(line);
-    } catch (ParseException e)
-    {
-      fail(e.toString());
-    }
-    if (pn == null)
-    {
-      fail("Failed parsing: returned null");
-    }
-    return pn;
-  }
 
 }

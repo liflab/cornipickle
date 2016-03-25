@@ -9,10 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonParser;
-import ca.uqac.lif.cornipickle.json.JsonParser.JsonParseException;
-import ca.uqac.lif.cornipickle.json.JsonSlowParser;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonParser;
+import ca.uqac.lif.json.JsonParser.JsonParseException;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 
 public class WitnessTest
@@ -25,7 +24,7 @@ public class WitnessTest
   public void setUp() throws Exception
   {
     c_parser = new CornipickleParser();
-    j_parser = new JsonSlowParser();
+    j_parser = new JsonParser();
   }
 
   @Test

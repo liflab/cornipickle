@@ -19,7 +19,7 @@ package ca.uqac.lif.cornipickle;
 
 import java.util.Map;
 
-import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.json.JsonElement;
 
 public class AndStatement extends NAryStatement
 {

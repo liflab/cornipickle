@@ -33,7 +33,7 @@ import ca.uqac.lif.bullwinkle.BnfRule;
 import ca.uqac.lif.bullwinkle.CaptureBlockParseNode;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.ParseNodeVisitor;
-import ca.uqac.lif.cornipickle.json.JsonNumber;
+import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.util.EmptyException;
 

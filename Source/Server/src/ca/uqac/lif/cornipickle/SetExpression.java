@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-import ca.uqac.lif.cornipickle.json.JsonElement;
+import ca.uqac.lif.json.JsonElement;
 
 public abstract class SetExpression extends LanguageElement
 {
