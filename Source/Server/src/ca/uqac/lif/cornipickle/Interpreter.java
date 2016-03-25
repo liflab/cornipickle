@@ -219,6 +219,11 @@ public class Interpreter
   	return m_statements.get(m);
   }
   
+  Map<StatementMetadata,Statement> getStatements()
+  {
+	  return m_statements;
+  }
+  
   /**
    * Object containing all the metadata associated to a
    * Cornipickle statement. This metadata is generally declared

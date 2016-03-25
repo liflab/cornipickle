@@ -17,9 +17,12 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
+import ca.uqac.lif.azrael.SerializerException;
+import ca.uqac.lif.cornipickle.CornipickleSerializer;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.RequestCallback;
+import ca.uqac.lif.json.JsonElement;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -42,8 +45,18 @@ class JsonGetState extends InterpreterCallback
   {
     StringBuilder state = new StringBuilder();
     //GsonBuilder builder = new GsonBuilder();
-    //Gson gson = builder.create();
-    state.append(gson.toJson(m_interpreter));
+    CornipickleSerializer ser = new CornipickleSerializer();
+    JsonElement je;
+	try 
+	{
+		je = ser.serialize(m_interpreter);
+		state.append(je);
+	} 
+	catch (SerializerException e) 
+	{
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     CallbackResponse out = new CallbackResponse(t, CallbackResponse.HTTP_OK, state.toString(), CallbackResponse.ContentType.JSON);
     out.disableCaching();
     return out;

@@ -21,58 +21,79 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Map;
 
-import ca.uqac.lif.azrael.json.JsonSerializer;
+import ca.uqac.lif.azrael.SerializerException;
+import ca.uqac.lif.cornipickle.CornipickleSerializer;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.RequestCallback;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonParser;
+import ca.uqac.lif.json.JsonParser.JsonParseException;
 
 
 import com.sun.net.httpserver.HttpExchange;
 
 class JsonPutState extends InterpreterCallback
 {
-  /**
-   * A reference to the server. This is needed as the callback
-   * queries information about the server's state.
-   */
-  protected CornipickleServer m_server;
+	/**
+	 * A reference to the server. This is needed as the callback
+	 * queries information about the server's state.
+	 */
+	protected CornipickleServer m_server;
 
-  public JsonPutState(Interpreter i, CornipickleServer s)
-  {
-    super(i, RequestCallback.Method.POST, "/state");
-    m_server = s;
-  }
+	public JsonPutState(Interpreter i, CornipickleServer s)
+	{
+		super(i, RequestCallback.Method.POST, "/state");
+		m_server = s;
+	}
 
-  @Override
-  public CallbackResponse process(HttpExchange t)
-  {
-    CallbackResponse response = new CallbackResponse(t, CallbackResponse.HTTP_OK, "{}", CallbackResponse.ContentType.JSON);
-    response.disableCaching();
+	@Override
+	public CallbackResponse process(HttpExchange t)
+	{
+		CallbackResponse response = new CallbackResponse(t, CallbackResponse.HTTP_OK, "{}", CallbackResponse.ContentType.JSON);
+		response.disableCaching();
 
-    // Read request parameters
-    Map<String,String> params = getParameters(t);
+		// Read request parameters
+		Map<String,String> params = getParameters(t);
 
-    // Try to decode and parse it
-    String props = params.get("state");
-    try {
-      props = URLDecoder.decode(props,"UTF-8");
-    } catch (UnsupportedEncodingException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
-    if (props != null && !props.isEmpty())
-    {
-      System.out.println("BEFORE INT");
-      Interpreter i = gson.fromJson(props, Interpreter.class);
-      System.out.println("ALL OK");
-      if (i != null)
-      {
-        m_server.setInterpreter(i);
-        return response;
-      }
-    }
-    // Baaad request
-    response.setCode(CallbackResponse.HTTP_BAD_REQUEST);
-    return response;
-  }
+		// Try to decode and parse it
+		String props = params.get("state");
+		try {
+			props = URLDecoder.decode(props,"UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if (props != null && !props.isEmpty())
+		{
+			System.out.println("BEFORE INT");
+			JsonParser parser = new JsonParser();
+			Interpreter i = null;
+			try 
+			{
+				JsonElement el = parser.parse(props);
+				CornipickleSerializer ser = new CornipickleSerializer();
+				i = (Interpreter) ser.deserializeAs(el, Interpreter.class);
+			} 
+			catch (JsonParseException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (SerializerException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("ALL OK");
+			if (i != null)
+			{
+				m_server.setInterpreter(i);
+				return response;
+			}
+		}
+		// Baaad request
+		response.setCode(CallbackResponse.HTTP_BAD_REQUEST);
+		return response;
+	}
 } 
