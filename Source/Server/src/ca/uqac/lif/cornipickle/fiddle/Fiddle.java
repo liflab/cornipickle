@@ -28,6 +28,15 @@ import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonParser;
 import ca.uqac.lif.json.JsonParser.JsonParseException;
 
+/**
+ * A gateway to the Cornipickle interpreter that allows a completely
+ * stateless interaction between calls.
+ * <p>
+ * One interacts with the "fiddle" through the
+ * {@link #doOperation(String, String)} method.
+ * @author sylvain
+ *
+ */
 public class Fiddle
 {
 	protected CornipickleSerializer m_serializer = new CornipickleSerializer();
@@ -44,11 +53,20 @@ public class Fiddle
 		addOperation(new Evaluate());
 	}
 
-	public void addOperation(FiddleOperation op)
+	protected void addOperation(FiddleOperation op)
 	{
 		m_operations.add(op);
 	}
 
+	/**
+	 * Performs an interaction with the fiddle.
+	 * @param state The state of the Cornipickle interpreter before doing
+	 *   the interaction
+	 * @param argument A JSON string containing the arguments
+	 *   corresponding to the interaction. See the documentation of each
+	 *   {@link FiddleOperation} for details.
+	 * @return The FiddlePair corresponding to the result of the operation
+	 */
 	public FiddlePair doOperation(String state, String argument)
 	{
 		Interpreter i = null;
