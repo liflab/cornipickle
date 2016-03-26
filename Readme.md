@@ -38,13 +38,13 @@ The project requires the following libraries to be present in the system:
 
 - The [Apache Commons CLI](http://commons.apache.org/proper/commons-cli/)
   to handle command-line parameters *(tested with version 1.3)*
-- The [json-simple](https://code.google.com/p/json-simple/) library for
-  fast JSON parsing *(tested with version 1.1.1)*
+- The [json-lif](https://github.com/liflab/json-lif) library for
+  fast JSON parsing *(tested with version 1.2)*
 - The [Web Resource Optimizer for Java](https://code.google.com/p/wro4j/)
   (wro4j) for minification of JavaScript files. Make sure to retrieve a JAR
   called "with dependencies". *(tested with version 1.6.3)*
-- The [Gson](https://github.com/google/gson) library for serialization of
-  Java objects. *(tested with version 2.3)*
+- The [Azrael](https://github.com/sylvainhale/Azrael) library for
+  serialization of Java objects. *(tested with version 0.2-alpha)*
 - The [Bullwinkle parser](https://github.com/sylvainhalle/Bullwinkle),
   an on-the-fly parser for BNF grammars. *(tested with version 1.1.8)*
 

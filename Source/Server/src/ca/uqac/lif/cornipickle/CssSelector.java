@@ -32,6 +32,12 @@ public class CssSelector extends SetExpression
 {
   String m_cssSelector;
   
+  CssSelector()
+  {
+	  super();
+	  m_cssSelector = "";
+  }
+  
   public CssSelector(String selector)
   {
     super();

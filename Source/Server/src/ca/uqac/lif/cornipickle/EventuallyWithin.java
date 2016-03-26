@@ -27,85 +27,92 @@ import ca.uqac.lif.json.JsonNumber;
 
 public class EventuallyWithin extends Globally
 {
-  protected NumberConstant m_timestamp;
-  protected long m_future_timestamp;
-  protected List<Verdict> prev_st_v;
+	protected NumberConstant m_timestamp;
 
-  public EventuallyWithin(NumberConstant timestamp)
-  {
-    //Set a list of verdicts from previous evaluated statements
-    //To keep track of verdicts before the time limit
-    prev_st_v = new LinkedList<Verdict>();
-    prev_st_v.add(new Verdict(Verdict.Value.INCONCLUSIVE));
+	protected long m_futureTimestamp;
 
-    m_timestamp = timestamp;
-    JsonNumber eval_timestamp = (JsonNumber) m_timestamp.evaluate(null, null);
-    m_future_timestamp =  java.lang.System.currentTimeMillis() + 
-                        eval_timestamp.numberValue().longValue() * 1000;
-  }
+	protected List<Verdict> prev_st_v;
 
-  @Override
-  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
-  { 
-    long currentTime = java.lang.System.currentTimeMillis();
-    // Instantiate new inner statement
-    Statement new_s = m_innerStatement.getClone();
-    m_inMonitors.add(new_s);
-    // Evaluate each
-    Iterator<Statement> it = m_inMonitors.iterator();
-    Iterator<Verdict> it_prev_v = prev_st_v.iterator();
+	EventuallyWithin()
+	{
+		this(new NumberConstant(0));
+	}
 
-    while (it.hasNext())
-    {
-      Statement st = it.next();
-      Verdict prev_verdict = it_prev_v.next();
-      Verdict st_v = st.evaluate(j, d);
+	public EventuallyWithin(NumberConstant timestamp)
+	{
+		//Set a list of verdicts from previous evaluated statements
+		//To keep track of verdicts before the time limit
+		prev_st_v = new LinkedList<Verdict>();
+		prev_st_v.add(new Verdict(Verdict.Value.INCONCLUSIVE));
 
-      //still below time limit
-      if (currentTime <= m_future_timestamp) 
-      {
-        if (st_v.is(Verdict.Value.TRUE)) 
-        {
-          m_verdict.setValue(Verdict.Value.TRUE);
-          m_verdict.setWitnessTrue(st_v.getWitnessTrue());
-          break;
-        }
-        //only keep the previous verdict when below time limit
-        prev_st_v.add(st_v);
-      }
-      //passed time limit
-      else 
-      {
-        //If the verdict did not become true in time, will always be false
-        if (!prev_verdict.is(Verdict.Value.TRUE))
-        {
-          m_verdict.setValue(Verdict.Value.FALSE);
-          m_verdict.setWitnessFalse(st_v.getWitnessFalse());
-          it.remove();
-          it_prev_v.remove();
-        }
-      }
-    }
-    
-    return m_verdict;
-  }
+		m_timestamp = timestamp;
+		JsonNumber eval_timestamp = (JsonNumber) m_timestamp.evaluate(null, null);
+		m_futureTimestamp =  java.lang.System.currentTimeMillis() + 
+				eval_timestamp.numberValue().longValue() * 1000;
+	}
 
-  @Override
-  public String toString(String indent)
-  {
-    StringBuilder out = new StringBuilder();
-    out.append(indent).append("Eventually within " + m_timestamp + " seconds (\n");
-    out.append(m_innerStatement.toString(indent + "  "));
-    out.append("\n").append(indent).append(")");
-    return out.toString();
-  }
+	@Override
+	public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
+	{ 
+		long currentTime = java.lang.System.currentTimeMillis();
+		// Instantiate new inner statement
+		Statement new_s = m_innerStatement.getClone();
+		m_inMonitors.add(new_s);
+		// Evaluate each
+		Iterator<Statement> it = m_inMonitors.iterator();
+		Iterator<Verdict> it_prev_v = prev_st_v.iterator();
 
-  @Override
-  public Statement getClone()
-  {
-    Eventually out = new Eventually();
-    out.setInnerStatement(m_innerStatement.getClone());
-    return out;
-  }
+		while (it.hasNext())
+		{
+			Statement st = it.next();
+			Verdict prev_verdict = it_prev_v.next();
+			Verdict st_v = st.evaluate(j, d);
+
+			//still below time limit
+			if (currentTime <= m_futureTimestamp) 
+			{
+				if (st_v.is(Verdict.Value.TRUE)) 
+				{
+					m_verdict.setValue(Verdict.Value.TRUE);
+					m_verdict.setWitnessTrue(st_v.getWitnessTrue());
+					break;
+				}
+				//only keep the previous verdict when below time limit
+				prev_st_v.add(st_v);
+			}
+			//passed time limit
+			else 
+			{
+				//If the verdict did not become true in time, will always be false
+				if (!prev_verdict.is(Verdict.Value.TRUE))
+				{
+					m_verdict.setValue(Verdict.Value.FALSE);
+					m_verdict.setWitnessFalse(st_v.getWitnessFalse());
+					it.remove();
+					it_prev_v.remove();
+				}
+			}
+		}
+
+		return m_verdict;
+	}
+
+	@Override
+	public String toString(String indent)
+	{
+		StringBuilder out = new StringBuilder();
+		out.append(indent).append("Eventually within " + m_timestamp + " seconds (\n");
+		out.append(m_innerStatement.toString(indent + "  "));
+		out.append("\n").append(indent).append(")");
+		return out.toString();
+	}
+
+	@Override
+	public Statement getClone()
+	{
+		Eventually out = new Eventually();
+		out.setInnerStatement(m_innerStatement.getClone());
+		return out;
+	}
 
 }

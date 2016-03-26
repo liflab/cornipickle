@@ -32,6 +32,14 @@ public class RegexCapture extends SetExpression
   
   protected Pattern m_pattern;
   
+  /**
+   * Empty constructor, added only to simplify serialization
+   */
+  RegexCapture()
+  {
+	  super();
+  }
+  
   public void setPattern(Pattern pat)
   {
     m_pattern = pat;

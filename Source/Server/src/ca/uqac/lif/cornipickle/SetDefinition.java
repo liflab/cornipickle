@@ -25,45 +25,53 @@ import ca.uqac.lif.json.JsonList;
 
 public class SetDefinition extends SetExpression
 {
-  protected StringConstant m_setName;
-  
-  public SetDefinition(StringConstant name)
-  {
-    super();
-    m_setName = name;
-  }
-  
-  public SetDefinition(String name)
-  {
-    this(new StringConstant(name));
-  }
-  
-  public String getName()
-  {
-    return m_setName.toString();
-  }
+	protected StringConstant m_setName;
 
-  @Override
-  public List<JsonElement> evaluate(JsonElement t, Map<String, JsonElement> d)
-  {
-    JsonElement e = d.get(m_setName.toString());
-    if (!(e instanceof JsonList))
-    {
-      return null;
-    }
-    return (JsonList) e;
-  }
+	/**
+	 * Empty constructor, added only to simplify serialization
+	 */
+	SetDefinition()
+	{
+		super();
+	}
 
-  @Override
-  public String toString(String indent)
-  {
-    return m_setName.toString();
-  }
+	public SetDefinition(StringConstant name)
+	{
+		super();
+		m_setName = name;
+	}
 
-  @Override
-  public SetExpression getClone()
-  {
-    SetDefinition out = new SetDefinition(m_setName);
-    return out;
-  }
+	public SetDefinition(String name)
+	{
+		this(new StringConstant(name));
+	}
+
+	public String getName()
+	{
+		return m_setName.toString();
+	}
+
+	@Override
+	public List<JsonElement> evaluate(JsonElement t, Map<String, JsonElement> d)
+	{
+		JsonElement e = d.get(m_setName.toString());
+		if (!(e instanceof JsonList))
+		{
+			return null;
+		}
+		return (JsonList) e;
+	}
+
+	@Override
+	public String toString(String indent)
+	{
+		return m_setName.toString();
+	}
+
+	@Override
+	public SetExpression getClone()
+	{
+		SetDefinition out = new SetDefinition(m_setName);
+		return out;
+	}
 }

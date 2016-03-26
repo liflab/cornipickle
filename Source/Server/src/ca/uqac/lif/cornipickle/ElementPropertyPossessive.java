@@ -19,29 +19,34 @@ package ca.uqac.lif.cornipickle;
 
 public class ElementPropertyPossessive extends ElementProperty
 {
-  public ElementPropertyPossessive(StringConstant elementName, StringConstant propertyName)
-  {
-    super(elementName, propertyName);
-  }
-  
-  public ElementPropertyPossessive(String elementName, String propertyName)
-  {
-    super(elementName, propertyName);
-  }
+	public ElementPropertyPossessive()
+	{
+		super();
+	}
 
-  @Override
-  public String toString(String indent)
-  {
-    StringBuilder out = new StringBuilder();
-    out.append(m_elementName).append("'s ").append(m_propertyName);
-    return out.toString();
-  }
-  
-  @Override
-  public ElementPropertyPossessive getClone()
-  {
-    ElementPropertyPossessive out = new ElementPropertyPossessive(m_elementName, m_propertyName);
-    return out;
-  }
+	public ElementPropertyPossessive(StringConstant elementName, StringConstant propertyName)
+	{
+		super(elementName, propertyName);
+	}
+
+	public ElementPropertyPossessive(String elementName, String propertyName)
+	{
+		super(elementName, propertyName);
+	}
+
+	@Override
+	public String toString(String indent)
+	{
+		StringBuilder out = new StringBuilder();
+		out.append(m_elementName).append("'s ").append(m_propertyName);
+		return out.toString();
+	}
+
+	@Override
+	public ElementPropertyPossessive getClone()
+	{
+		ElementPropertyPossessive out = new ElementPropertyPossessive(m_elementName, m_propertyName);
+		return out;
+	}
 
 }

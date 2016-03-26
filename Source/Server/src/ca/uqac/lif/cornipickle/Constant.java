@@ -19,19 +19,23 @@ package ca.uqac.lif.cornipickle;
 
 public abstract class Constant extends Property
 {
+	Constant()
+	{
+		super();
+	}
 
-  @Override
-  public final void postfixAccept(LanguageElementVisitor visitor)
-  {
-    visitor.visit(this);
-    visitor.pop();
-  }
-  
-  @Override
-  public final void prefixAccept(LanguageElementVisitor visitor)
-  {
-    visitor.visit(this);
-    visitor.pop();
-  }
+	@Override
+	public final void postfixAccept(LanguageElementVisitor visitor)
+	{
+		visitor.visit(this);
+		visitor.pop();
+	}
+
+	@Override
+	public final void prefixAccept(LanguageElementVisitor visitor)
+	{
+		visitor.visit(this);
+		visitor.pop();
+	}
 
 }

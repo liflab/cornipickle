@@ -23,12 +23,9 @@ import java.util.Map;
 
 import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.cornipickle.Interpreter;
-import ca.uqac.lif.cornipickle.serialization.CornipickleSerializer;
+import ca.uqac.lif.cornipickle.serialization.CornipickleDeflateSerializer;
 import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.RequestCallback;
-import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonParser;
-import ca.uqac.lif.json.JsonParser.JsonParseException;
 
 
 import com.sun.net.httpserver.HttpExchange;
@@ -67,18 +64,11 @@ class JsonPutState extends InterpreterCallback
 		if (props != null && !props.isEmpty())
 		{
 			System.out.println("BEFORE INT");
-			JsonParser parser = new JsonParser();
 			Interpreter i = null;
 			try 
 			{
-				JsonElement el = parser.parse(props);
-				CornipickleSerializer ser = new CornipickleSerializer();
-				i = (Interpreter) ser.deserializeAs(el, Interpreter.class);
-			} 
-			catch (JsonParseException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				CornipickleDeflateSerializer ser = new CornipickleDeflateSerializer();
+				i = (Interpreter) ser.deserializeAs(props, Interpreter.class);
 			}
 			catch (SerializerException e) 
 			{

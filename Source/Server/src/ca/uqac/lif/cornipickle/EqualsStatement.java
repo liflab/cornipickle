@@ -22,75 +22,79 @@ import ca.uqac.lif.json.JsonString;
 
 public class EqualsStatement extends ComparisonStatement
 {
+	EqualsStatement()
+	{
+		super();
+	}
 
-  @Override
-  protected Verdict compare(JsonString e1, JsonString e2)
-  {
-    // If both values are actually numbers, we compare them as numbers
-    if (JsonNumber.isNumeric(e1) && JsonNumber.isNumeric(e2))
-    {
-      JsonNumber n1 = new JsonNumber(Integer.parseInt(e1.stringValue()));
-      JsonNumber n2 = new JsonNumber(Integer.parseInt(e2.stringValue()));
-      return compare(n1, n2);
-    }
-    Verdict out = new Verdict();
-    Witness w = new Witness();
-    w.add(new Witness(e1));
-    w.add(new Witness(e2));
-    if (e1.stringValue().compareTo(e2.stringValue()) == 0)
-    {
-      out.setValue(Verdict.Value.TRUE);
-      out.setWitnessTrue(w);
-    }
-    else
-    {
-      out.setValue(Verdict.Value.FALSE);
-      out.setWitnessFalse(w);
-    }
-    return out;
-  }
+	@Override
+	protected Verdict compare(JsonString e1, JsonString e2)
+	{
+		// If both values are actually numbers, we compare them as numbers
+		if (JsonNumber.isNumeric(e1) && JsonNumber.isNumeric(e2))
+		{
+			JsonNumber n1 = new JsonNumber(Integer.parseInt(e1.stringValue()));
+			JsonNumber n2 = new JsonNumber(Integer.parseInt(e2.stringValue()));
+			return compare(n1, n2);
+		}
+		Verdict out = new Verdict();
+		Witness w = new Witness();
+		w.add(new Witness(e1));
+		w.add(new Witness(e2));
+		if (e1.stringValue().compareTo(e2.stringValue()) == 0)
+		{
+			out.setValue(Verdict.Value.TRUE);
+			out.setWitnessTrue(w);
+		}
+		else
+		{
+			out.setValue(Verdict.Value.FALSE);
+			out.setWitnessFalse(w);
+		}
+		return out;
+	}
 
-  @Override
-  protected Verdict compare(JsonNumber e1, JsonNumber e2)
-  {
-    Verdict out = new Verdict();
-    Witness w = new Witness();
-    w.add(new Witness(e1));
-    w.add(new Witness(e2));
-    if (e1.numberValue().floatValue() == e2.numberValue().floatValue())
-    {
-      out.setValue(Verdict.Value.TRUE);
-      out.setWitnessTrue(w);
-    }
-    else
-    {
-      out.setValue(Verdict.Value.FALSE);
-      out.setWitnessFalse(w);
-    }
-    return out;
-  }
+	@Override
+	protected Verdict compare(JsonNumber e1, JsonNumber e2)
+	{
+		Verdict out = new Verdict();
+		Witness w = new Witness();
+		w.add(new Witness(e1));
+		w.add(new Witness(e2));
+		if (e1.numberValue().floatValue() == e2.numberValue().floatValue())
+		{
+			out.setValue(Verdict.Value.TRUE);
+			out.setWitnessTrue(w);
+		}
+		else
+		{
+			out.setValue(Verdict.Value.FALSE);
+			out.setWitnessFalse(w);
+		}
+		return out;
+	}
 
-  @Override
-  public String toString(String indent)
-  {
-    StringBuilder out = new StringBuilder();
-    out.append(m_left).append(" equals ").append(m_right);
-    return out.toString();
-  }
+	@Override
+	public String toString(String indent)
+	{
+		StringBuilder out = new StringBuilder();
+		out.append(m_left).append(" equals ").append(m_right);
+		return out.toString();
+	}
 
-  @Override
-  public String getKeyword()
-  {
-    return "equals";
-  }
+	@Override
+	public String getKeyword()
+	{
+		return "equals";
+	}
 
-  @Override
-  public EqualsStatement getClone()
-  {
-    EqualsStatement out = new EqualsStatement();
-    out.m_left = m_left.getClone();
-    out.m_right = m_right.getClone();
-    return out;
-  }
+	@Override
+	public EqualsStatement getClone()
+	{
+		EqualsStatement out = new EqualsStatement();
+		out.m_left = m_left.getClone();
+		out.m_right = m_right.getClone();
+		return out;
+	}
 
 }

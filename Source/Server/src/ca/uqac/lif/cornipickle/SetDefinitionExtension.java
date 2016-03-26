@@ -26,76 +26,84 @@ import ca.uqac.lif.json.JsonString;
 
 public class SetDefinitionExtension extends SetDefinition
 {
-  protected List<JsonElement> m_elements;
-  
-  public SetDefinitionExtension(StringConstant name)
-  {
-    super(name);
-    m_elements = new LinkedList<JsonElement>();
-  }
-  
-  public SetDefinitionExtension(String name)
-  {
-    this(new StringConstant(name));
-  }
-  
-  public List<JsonElement> getElements()
-  {
-    return m_elements;
-  }
-  
-  public SetDefinitionExtension(StringConstant name, ElementList elements)
-  {
-    this(name);
-    for (LanguageElement el : elements)
-    {
-      JsonElement c_el = toJsonElement(el);
-      if (c_el != null)
-      {
-        m_elements.add(c_el);
-      }
-    }
-  }
-  
-  public void addElement(LanguageElement e)
-  {
-    JsonElement c_e = toJsonElement(e);
-    if (c_e != null)
-    {
-      m_elements.add(c_e);
-    }
-  }
-  
-  protected static JsonElement toJsonElement(LanguageElement e)
-  {
-    if (e instanceof StringConstant)
-    {
-      StringConstant s = (StringConstant) e;
-      return new JsonString(s.toString());
-    }
-    else if (e instanceof NumberConstant)
-    {
-      NumberConstant s = (NumberConstant) e;
-      return s.m_value;      
-    }
-    return null;
-  }
+	protected List<JsonElement> m_elements;
 
-  @Override
-  public List<JsonElement> evaluate(JsonElement t, Map<String, JsonElement> d)
-  {
-    return m_elements;
-  }
-  
-  public String getSetName()
-  {
-    return m_setName.toString();
-  }
+	/**
+	 * Empty constructor, added only to simplify serialization
+	 */
+	SetDefinitionExtension()
+	{
+		super();
+	}
 
-  @Override
-  public String toString(String indent)
-  {
-    return m_setName.toString();
-  }
+	public SetDefinitionExtension(StringConstant name)
+	{
+		super(name);
+		m_elements = new LinkedList<JsonElement>();
+	}
+
+	public SetDefinitionExtension(String name)
+	{
+		this(new StringConstant(name));
+	}
+
+	public List<JsonElement> getElements()
+	{
+		return m_elements;
+	}
+
+	public SetDefinitionExtension(StringConstant name, ElementList elements)
+	{
+		this(name);
+		for (LanguageElement el : elements)
+		{
+			JsonElement c_el = toJsonElement(el);
+			if (c_el != null)
+			{
+				m_elements.add(c_el);
+			}
+		}
+	}
+
+	public void addElement(LanguageElement e)
+	{
+		JsonElement c_e = toJsonElement(e);
+		if (c_e != null)
+		{
+			m_elements.add(c_e);
+		}
+	}
+
+	protected static JsonElement toJsonElement(LanguageElement e)
+	{
+		if (e instanceof StringConstant)
+		{
+			StringConstant s = (StringConstant) e;
+			return new JsonString(s.toString());
+		}
+		else if (e instanceof NumberConstant)
+		{
+			NumberConstant s = (NumberConstant) e;
+			return s.m_value;      
+		}
+		return null;
+	}
+
+	@Override
+	public List<JsonElement> evaluate(JsonElement t, Map<String, JsonElement> d)
+	{
+		return m_elements;
+	}
+
+	public String getSetName()
+	{
+		return m_setName.toString();
+	}
+
+	@Override
+	public String toString(String indent)
+	{
+		return m_setName.toString();
+	}
 
 }

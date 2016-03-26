@@ -19,42 +19,49 @@ package ca.uqac.lif.cornipickle;
 
 public abstract class Operation extends Property
 {
-  protected Property m_left;
-  protected Property m_right;
-  
-  public Operation(Property p1, Property p2) 
-  {
-    super();
-    setLeft(p1);
-    setRight(p2);
-  }
-  
-  public void setLeft(Property p)
-  {
-    m_left = p;
-  }
-  
-  public void setRight(Property p)
-  {
-    m_right = p;
-  }
+	protected Property m_left;
+	protected Property m_right;
 
-  @Override
-  public final void postfixAccept(LanguageElementVisitor visitor)
-  {
-    m_left.postfixAccept(visitor);
-    m_right.postfixAccept(visitor);
-    visitor.visit(this);
-    visitor.pop();
-  }
-  
-  @Override
-  public final void prefixAccept(LanguageElementVisitor visitor)
-  {
-    visitor.visit(this);
-    m_left.prefixAccept(visitor);
-    m_right.prefixAccept(visitor);
-    visitor.pop();
-  }
+	Operation()
+	{
+		super();
+		m_left = null;
+		m_right = null;
+	}
+
+	public Operation(Property p1, Property p2) 
+	{
+		super();
+		setLeft(p1);
+		setRight(p2);
+	}
+
+	public void setLeft(Property p)
+	{
+		m_left = p;
+	}
+
+	public void setRight(Property p)
+	{
+		m_right = p;
+	}
+
+	@Override
+	public final void postfixAccept(LanguageElementVisitor visitor)
+	{
+		m_left.postfixAccept(visitor);
+		m_right.postfixAccept(visitor);
+		visitor.visit(this);
+		visitor.pop();
+	}
+
+	@Override
+	public final void prefixAccept(LanguageElementVisitor visitor)
+	{
+		visitor.visit(this);
+		m_left.prefixAccept(visitor);
+		m_right.prefixAccept(visitor);
+		visitor.pop();
+	}
 
 }

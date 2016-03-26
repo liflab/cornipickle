@@ -19,10 +19,9 @@ package ca.uqac.lif.cornipickle.server;
 
 import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.cornipickle.Interpreter;
-import ca.uqac.lif.cornipickle.serialization.CornipickleSerializer;
+import ca.uqac.lif.cornipickle.serialization.CornipickleDeflateSerializer;
 import ca.uqac.lif.httpserver.CallbackResponse;
 import ca.uqac.lif.httpserver.RequestCallback;
-import ca.uqac.lif.json.JsonElement;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -45,8 +44,8 @@ class JsonGetState extends InterpreterCallback
   {
     StringBuilder state = new StringBuilder();
     //GsonBuilder builder = new GsonBuilder();
-    CornipickleSerializer ser = new CornipickleSerializer();
-    JsonElement je;
+    CornipickleDeflateSerializer ser = new CornipickleDeflateSerializer();
+    String je;
 	try 
 	{
 		je = ser.serialize(m_interpreter);

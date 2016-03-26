@@ -64,6 +64,14 @@ public class PredicateDefinition extends Statement
     m_ruleName = ruleName;
     m_captureGroups = new Vector<String>();
   }
+  
+  /**
+   * Empty constructor, added only to simplify serialization
+   */
+  PredicateDefinition()
+  {
+	  super();
+  }
 
   @Override
   public void resetHistory()

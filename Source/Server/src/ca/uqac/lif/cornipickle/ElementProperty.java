@@ -31,6 +31,13 @@ public abstract class ElementProperty extends Property
   
   protected String m_propertyName;
   
+  ElementProperty()
+  {
+	  super();
+	  m_elementName = null;
+	  m_propertyName = null;
+  }
+  
   public ElementProperty(StringConstant elementName, StringConstant propertyName)
   {
     super();

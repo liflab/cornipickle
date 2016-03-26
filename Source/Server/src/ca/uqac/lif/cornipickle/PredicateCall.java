@@ -32,6 +32,11 @@ public class PredicateCall extends Statement
   
   protected Vector<String> m_captureBlocks;
   
+  PredicateCall()
+  {
+	  super();
+  }
+  
   public PredicateCall(PredicateDefinition predicate, String match, List<String> capture_blocks)
   {
     super();

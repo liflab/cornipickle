@@ -19,28 +19,33 @@ package ca.uqac.lif.cornipickle;
 
 public class ElementPropertyComplement extends ElementProperty
 {
-  public ElementPropertyComplement(StringConstant elementName, StringConstant propertyName)
-  {
-    super(elementName, propertyName);
-  }
-  
-  public ElementPropertyComplement(String elementName, String propertyName)
-  {
-    super(elementName, propertyName);
-  }
-  
-  @Override
-  public String toString(String indent)
-  {
-    StringBuilder out = new StringBuilder();
-    out.append("the ").append(m_propertyName).append(" of ").append(m_elementName);
-    return out.toString();
-  }
-  
-  @Override
-  public ElementPropertyComplement getClone()
-  {
-    ElementPropertyComplement out = new ElementPropertyComplement(m_elementName, m_propertyName);
-    return out;
-  }
+	ElementPropertyComplement()
+	{
+		super();
+	}
+
+	public ElementPropertyComplement(StringConstant elementName, StringConstant propertyName)
+	{
+		super(elementName, propertyName);
+	}
+
+	public ElementPropertyComplement(String elementName, String propertyName)
+	{
+		super(elementName, propertyName);
+	}
+
+	@Override
+	public String toString(String indent)
+	{
+		StringBuilder out = new StringBuilder();
+		out.append("the ").append(m_propertyName).append(" of ").append(m_elementName);
+		return out.toString();
+	}
+
+	@Override
+	public ElementPropertyComplement getClone()
+	{
+		ElementPropertyComplement out = new ElementPropertyComplement(m_elementName, m_propertyName);
+		return out;
+	}
 }
