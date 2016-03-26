@@ -1,6 +1,6 @@
 /*
     Cornipickle, validation of layout bugs in web applications
-    Copyright (C) 2015 Sylvain Hallé
+    Copyright (C) 2015-2016 Sylvain Hallé
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ public class Main
 	 * Build string to identify versions
 	 */
 	protected static final String VERSION_STRING = "0.0";
-	protected static final String BUILD_STRING = "20150126";
+	protected static final String BUILD_STRING = "20160326";
 
 	/**
 	 * Default server name
@@ -77,7 +77,7 @@ public class Main
 		stdout.setForegroundColor(AnsiPrinter.Color.BLACK);
 		stderr.setForegroundColor(AnsiPrinter.Color.BLACK);
 
-		// Propertly close print streams when closing the program
+		// Properly close print streams when closing the program
 		// https://www.securecoding.cert.org/confluence/display/java/FIO14-J.+Perform+proper+cleanup+at+program+termination
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
 		{
