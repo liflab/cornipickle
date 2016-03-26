@@ -20,6 +20,7 @@ package ca.uqac.lif.cornipickle.serialization;
 import ca.uqac.lif.azrael.Serializer;
 import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.azrael.json.JsonSerializer;
+import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonParser;
@@ -42,6 +43,12 @@ public class CornipickleSerializer implements Serializer<String>
 		super();
 		m_serializer = new JsonSerializer();
 		m_parser = new JsonParser();
+		// Already add class loaders
+		addClassLoader(Interpreter.class.getClassLoader());
+		addClassLoader(BnfParser.class.getClassLoader());
+		
+		addClassLoader(JsonElement.class.getClassLoader());
+		addClassLoader(ca.uqac.lif.cornipickle.AddOperation.class.getClassLoader());
 	}
 	
 	@Override
@@ -72,5 +79,11 @@ public class CornipickleSerializer implements Serializer<String>
 		}
 		Interpreter i = (Interpreter) m_serializer.deserializeAs(je, Interpreter.class);
 		return i;
+	}
+
+	@Override
+	public void addClassLoader(ClassLoader cl)
+	{
+		m_serializer.addClassLoader(cl);
 	}
 }
