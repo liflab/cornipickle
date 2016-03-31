@@ -40,9 +40,6 @@ The project requires the following libraries to be present in the system:
   to handle command-line parameters *(tested with version 1.3)*
 - The [json-lif](https://github.com/liflab/json-lif) library for
   fast JSON parsing *(tested with version 1.2)*
-- The [Web Resource Optimizer for Java](https://code.google.com/p/wro4j/)
-  (wro4j) for minification of JavaScript files. Make sure to retrieve a JAR
-  called "with dependencies". *(tested with version 1.6.3)*
 - The [Azrael](https://github.com/sylvainhale/Azrael) library for
   serialization of Java objects. *(tested with version 0.2-alpha)*
 - The [Bullwinkle parser](https://github.com/sylvainhalle/Bullwinkle),

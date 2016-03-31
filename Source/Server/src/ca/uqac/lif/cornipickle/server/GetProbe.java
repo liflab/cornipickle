@@ -17,14 +17,8 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.Set;
 
-import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.jerrydog.CallbackResponse;
@@ -46,122 +40,90 @@ import com.sun.net.httpserver.HttpExchange;
  */
 class GetProbe extends InterpreterCallback
 {
-  /**
-   * Whether to minify the probe's code before sending it to the
-   * server. Defaults to false in development mode.
-   */
-  protected boolean m_minifyJavaScript = false;
-  
-  /**
-   * The processor used to minify the JavaScript code
-   */
-  protected static JSMinProcessor s_jsMinProcessor;
-  
-  /**
-   * The template code for the JavaScript probe
-   */
-  protected static final String s_probeCode = readProbeCode();
-  
-  /**
-   * The template code for the witness
-   */
-  protected static final String s_witnessCode = readWitnessCode();
-  
-  /**
-   * The server name to generate the probe
-   */
-  protected String m_serverName;
-  
-  /**
-   * The server port to generate the probe
-   */
-  protected int m_serverPort;
+	/**
+	 * The template code for the JavaScript probe
+	 */
+	protected static final String s_probeCode = readProbeCode();
 
-  public GetProbe(Interpreter i, String server_name, int server_port)
-  {
-  	this(i, server_name, server_port, false);
-  }
+	/**
+	 * The template code for the witness
+	 */
+	protected static final String s_witnessCode = readWitnessCode();
 
-  public GetProbe(Interpreter i, String server_name, int server_port, boolean minify)
-  {
-    super(i, RequestCallback.Method.GET, "/probe");
-    s_jsMinProcessor = new JSMinProcessor();
-    m_serverName = server_name;
-    m_serverPort = server_port;
-    m_minifyJavaScript = minify;
-  }
+	/**
+	 * The server name to generate the probe
+	 */
+	protected String m_serverName;
 
-  @Override
-  public CallbackResponse process(HttpExchange t)
-  {
-    String probe_code = generateProbeCode();
-    return new CallbackResponse(t, CallbackResponse.HTTP_OK, probe_code, CallbackResponse.ContentType.JS);
-  }
-  
-  protected String generateProbeCode()
-  {
-    String probe_code = null;
-    try
-    {
-      //String witness_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/witness.inc.html"));
-      probe_code = new String(s_probeCode);
-      probe_code = probe_code.replace("%%WITNESS_CODE%%", escapeString(s_witnessCode));
-      probe_code = probe_code.replace("%%SERVER_NAME%%", m_serverName + ":" + m_serverPort);
-      // Add attributes to include
-      Set<String> attributes = m_interpreter.getAttributes();
-      StringBuilder attribute_string = new StringBuilder();
-      for (String att : attributes)
-      {
-        attribute_string.append("\"").append(att).append("\",");
-      }
-      probe_code = probe_code.replace("/*%%ATTRIBUTE_LIST%%*/", attribute_string.toString());
-      Set<String> tags = m_interpreter.getTagNames();
-      StringBuilder tag_string = new StringBuilder();
-      for (String tag : tags)
-      {
-        tag_string.append("\"").append(tag).append("\",");
-      }
-      probe_code = probe_code.replace("/*%%TAG_LIST%%*/", tag_string.toString());
-      if (m_minifyJavaScript)
-      {
-        probe_code = minifyJs(probe_code);
-      }
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-    return probe_code;    
-  }
-  
-  protected static String minifyJs(String code) throws IOException
-  {
-    Reader reader = new StringReader(code);
-    Writer writer = new StringWriter();
-    s_jsMinProcessor.process(reader, writer);
-    return writer.toString();    
-  }
-  
-  /**
-   * Escapes a string for JavaScript
-   * @param s The string
-   * @return The escaped String
-   */
-  protected static String escapeString(String s)
-  {
-    s = s.replaceAll("\"", "\\\\\"");
-    s = s.replaceAll("\n", "\\\\n");
-    s = s.replaceAll("\r", "\\\\r");
-    return s;
-  }
-  
-  protected static String readProbeCode()
-  {
-  	return PackageFileReader.readPackageFile(CornipickleServer.class, "resource/probe.inc.js");
-  }
-  
-  protected static String readWitnessCode()
-  {
-  	return PackageFileReader.readPackageFile(CornipickleServer.class, "resource/witness.inc.html");
-  }  
+	/**
+	 * The server port to generate the probe
+	 */
+	protected int m_serverPort;
+
+	public GetProbe(Interpreter i, String server_name, int server_port)
+	{
+		this(i, server_name, server_port, false);
+	}
+
+	public GetProbe(Interpreter i, String server_name, int server_port, boolean minify)
+	{
+		super(i, RequestCallback.Method.GET, "/probe");
+		m_serverName = server_name;
+		m_serverPort = server_port;
+	}
+
+	@Override
+	public CallbackResponse process(HttpExchange t)
+	{
+		String probe_code = generateProbeCode();
+		return new CallbackResponse(t, CallbackResponse.HTTP_OK, probe_code, CallbackResponse.ContentType.JS);
+	}
+
+	protected String generateProbeCode()
+	{
+		String probe_code = null;
+		//String witness_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/witness.inc.html"));
+		probe_code = new String(s_probeCode);
+		probe_code = probe_code.replace("%%WITNESS_CODE%%", escapeString(s_witnessCode));
+		probe_code = probe_code.replace("%%SERVER_NAME%%", m_serverName + ":" + m_serverPort);
+		// Add attributes to include
+		Set<String> attributes = m_interpreter.getAttributes();
+		StringBuilder attribute_string = new StringBuilder();
+		for (String att : attributes)
+		{
+			attribute_string.append("\"").append(att).append("\",");
+		}
+		probe_code = probe_code.replace("/*%%ATTRIBUTE_LIST%%*/", attribute_string.toString());
+		Set<String> tags = m_interpreter.getTagNames();
+		StringBuilder tag_string = new StringBuilder();
+		for (String tag : tags)
+		{
+			tag_string.append("\"").append(tag).append("\",");
+		}
+		probe_code = probe_code.replace("/*%%TAG_LIST%%*/", tag_string.toString());
+		return probe_code;    
+	}
+
+	/**
+	 * Escapes a string for JavaScript
+	 * @param s The string
+	 * @return The escaped String
+	 */
+	protected static String escapeString(String s)
+	{
+		s = s.replaceAll("\"", "\\\\\"");
+		s = s.replaceAll("\n", "\\\\n");
+		s = s.replaceAll("\r", "\\\\r");
+		return s;
+	}
+
+	protected static String readProbeCode()
+	{
+		return PackageFileReader.readPackageFile(CornipickleServer.class, "resource/probe.inc.js");
+	}
+
+	protected static String readWitnessCode()
+	{
+		return PackageFileReader.readPackageFile(CornipickleServer.class, "resource/witness.inc.html");
+	}  
 }
