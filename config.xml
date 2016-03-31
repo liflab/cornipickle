@@ -103,5 +103,15 @@
         <zip>https://github.com/sylvainhalle/Azrael/releases/download/v0.2-alpha/azrael-0.2-alpha.zip</zip>
       </files>
     </dependency>
+    <dependency>
+      <!--
+      Jerrydog. Used for server mode.
+      -->
+      <name>Jerrydog</name>
+      <classname>ca.uqac.lif.jerrydog.Server</classname>
+      <files>
+        <zip>https://github.com/sylvainhalle/Jerrydog/releases/download/v0.1-alpha/jerrydog-0.1-alpha.zip</zip>
+      </files>
+    </dependency>
   </dependencies>
 </build>

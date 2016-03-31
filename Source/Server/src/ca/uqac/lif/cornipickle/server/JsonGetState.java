@@ -20,8 +20,8 @@ package ca.uqac.lif.cornipickle.server;
 import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.serialization.CornipickleDeflateSerializer;
-import ca.uqac.lif.httpserver.CallbackResponse;
-import ca.uqac.lif.httpserver.RequestCallback;
+import ca.uqac.lif.jerrydog.CallbackResponse;
+import ca.uqac.lif.jerrydog.RequestCallback;
 
 import com.sun.net.httpserver.HttpExchange;
 

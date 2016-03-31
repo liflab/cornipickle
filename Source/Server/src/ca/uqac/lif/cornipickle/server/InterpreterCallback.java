@@ -18,8 +18,8 @@
 package ca.uqac.lif.cornipickle.server;
 
 import ca.uqac.lif.cornipickle.Interpreter;
-import ca.uqac.lif.httpserver.RequestCallback;
-import ca.uqac.lif.httpserver.RestCallback;
+import ca.uqac.lif.jerrydog.RequestCallback;
+import ca.uqac.lif.jerrydog.RestCallback;
 
 /**
  * Server callback that interacts with a Cornipickle interpreter

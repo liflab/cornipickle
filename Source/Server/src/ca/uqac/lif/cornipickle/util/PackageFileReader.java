@@ -20,7 +20,7 @@ package ca.uqac.lif.cornipickle.util;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ca.uqac.lif.httpserver.InnerFileServer;
+import ca.uqac.lif.jerrydog.InnerFileServer;
 
 public class PackageFileReader
 {

@@ -22,8 +22,8 @@ import java.util.Date;
 import com.sun.net.httpserver.HttpExchange;
 
 import ca.uqac.lif.cornipickle.Interpreter;
-import ca.uqac.lif.httpserver.CallbackResponse;
-import ca.uqac.lif.httpserver.RequestCallback;
+import ca.uqac.lif.jerrydog.CallbackResponse;
+import ca.uqac.lif.jerrydog.RequestCallback;
 
 /**
  * Resets the interpreter. This wipes any data about past events the

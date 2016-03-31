@@ -32,10 +32,10 @@ import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonParser;
 import ca.uqac.lif.json.JsonParser.JsonParseException;
 import ca.uqac.lif.json.JsonString;
-import ca.uqac.lif.httpserver.CallbackResponse;
-import ca.uqac.lif.httpserver.Cookie;
-import ca.uqac.lif.httpserver.InnerFileServer;
-import ca.uqac.lif.httpserver.RequestCallback;
+import ca.uqac.lif.jerrydog.CallbackResponse;
+import ca.uqac.lif.jerrydog.Cookie;
+import ca.uqac.lif.jerrydog.InnerFileServer;
+import ca.uqac.lif.jerrydog.RequestCallback;
 
 import com.sun.net.httpserver.HttpExchange;
 

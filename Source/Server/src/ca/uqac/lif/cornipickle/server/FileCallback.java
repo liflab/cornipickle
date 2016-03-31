@@ -21,8 +21,8 @@ import java.net.URI;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import ca.uqac.lif.httpserver.CallbackResponse;
-import ca.uqac.lif.httpserver.InnerFileCallback;
+import ca.uqac.lif.jerrydog.CallbackResponse;
+import ca.uqac.lif.jerrydog.InnerFileCallback;
 
 /**
  * Inner file callback that excludes some files following a pattern

@@ -47,6 +47,8 @@ The project requires the following libraries to be present in the system:
   serialization of Java objects. *(tested with version 0.2-alpha)*
 - The [Bullwinkle parser](https://github.com/sylvainhalle/Bullwinkle),
   an on-the-fly parser for BNF grammars. *(tested with version 1.1.8)*
+- The [Jerrydog server](https://github.com/sylvainhalle/Jerrydog) for basic
+  HTTP server capabilities. *(tested with version 0.1-alpha)*
 
 Using Ant, you can automatically download any libraries missing from your
 system by typing:

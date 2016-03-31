@@ -27,8 +27,8 @@ import java.util.Set;
 import ro.isdc.wro.model.resource.processor.impl.js.JSMinProcessor;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
-import ca.uqac.lif.httpserver.CallbackResponse;
-import ca.uqac.lif.httpserver.RequestCallback;
+import ca.uqac.lif.jerrydog.CallbackResponse;
+import ca.uqac.lif.jerrydog.RequestCallback;
 
 import com.sun.net.httpserver.HttpExchange;
 

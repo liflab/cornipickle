@@ -25,9 +25,9 @@ import java.net.URI;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.Headers;
 
-import ca.uqac.lif.httpserver.CallbackResponse;
-import ca.uqac.lif.httpserver.InnerFileCallback;
-import ca.uqac.lif.httpserver.InnerFileServer;
+import ca.uqac.lif.jerrydog.CallbackResponse;
+import ca.uqac.lif.jerrydog.InnerFileCallback;
+import ca.uqac.lif.jerrydog.InnerFileServer;
 
 public class PassthroughCallback extends InnerFileCallback
 {

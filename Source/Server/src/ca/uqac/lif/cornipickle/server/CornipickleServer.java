@@ -22,8 +22,8 @@ import java.util.Date;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.Interpreter;
-import ca.uqac.lif.httpserver.RequestCallback;
-import ca.uqac.lif.httpserver.Server;
+import ca.uqac.lif.jerrydog.RequestCallback;
+import ca.uqac.lif.jerrydog.Server;
 import ca.uqac.lif.util.FileReadWrite;
 
 public class CornipickleServer extends Server
