@@ -1,0 +1,18 @@
+{
+  "action"   : "evaluate",
+  "contents" :
+	{
+	  "tagname" : "window",
+	  "width"   : 100,
+	  "height"  : 100,
+	  "children": [
+	  	  {
+	  	  	  "tagname"       : "p",
+	  	  	  "width"         : 100,
+	  	  	  "height"        : 100,
+	  	  	  "cornipickleid" : 0,
+	  	  	  "children"      : [ ]
+	  	  }
+	  ]
+	}
+} 

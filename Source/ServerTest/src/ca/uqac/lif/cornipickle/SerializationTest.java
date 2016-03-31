@@ -55,6 +55,7 @@ public class SerializationTest
 	public void equalitySerializationTest1() throws SerializerException
 	{
 		JsonSerializer j_ser = new JsonSerializer();
+		j_ser.addClassLoader(EqualsStatement.class.getClassLoader());
 		EqualsStatement e1 = new EqualsStatement();
 		e1.setLeft(new ElementPropertyPossessive("p", "width"));
 		e1.setRight(new ElementPropertyPossessive("q", "height"));
@@ -71,6 +72,7 @@ public class SerializationTest
 	public void equalitySerializationTest2() throws SerializerException
 	{
 		JsonSerializer j_ser = new JsonSerializer();
+		j_ser.addClassLoader(AddOperation.class.getClassLoader());
 		EqualsStatement e1 = new EqualsStatement();
 		e1.setLeft(new ElementPropertyPossessive("p", "width"));
 		AddOperation plus = new AddOperation(new ElementPropertyPossessive("p", "width"), new ElementPropertyPossessive("z", "color"));

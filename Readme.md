@@ -41,7 +41,7 @@ The project requires the following libraries to be present in the system:
 - The [json-lif](https://github.com/liflab/json-lif) library for
   fast JSON parsing *(tested with version 1.2)*
 - The [Azrael](https://github.com/sylvainhale/Azrael) library for
-  serialization of Java objects. *(tested with version 0.2-alpha)*
+  serialization of Java objects. *(tested with version 0.3-alpha)*
 - The [Bullwinkle parser](https://github.com/sylvainhalle/Bullwinkle),
   an on-the-fly parser for BNF grammars. *(tested with version 1.1.8)*
 - The [Jerrydog server](https://github.com/sylvainhalle/Jerrydog) for basic

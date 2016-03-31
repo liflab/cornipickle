@@ -70,7 +70,7 @@ public class GrammarTest
   public void testUserDefinedSet1() throws ParseException
   {
     String line = "A tomato is any of \"abc\"";
-    ParseNode pn = shouldParseAndNotNull(line, "<def_set>", true);
+    ParseNode pn = shouldParseAndNotNull(line, "<def_set>", false);
   }
   
   @Test

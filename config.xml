@@ -69,7 +69,7 @@
       <name>Bullwinkle</name>
       <classname>ca.uqac.lif.bullwinkle.BnfParser</classname>
       <files>
-        <zip>https://github.com/sylvainhalle/Bullwinkle/releases/download/v1.1.8/bullwinkle-1.1.8.zip</zip>
+        <zip>https://github.com/sylvainhalle/Bullwinkle/releases/download/v1.1.9/bullwinkle-1.1.9.zip</zip>
       </files>
     </dependency>
     <dependency>
@@ -89,7 +89,7 @@
       <name>Azrael</name>
       <classname>ca.uqac.lif.azrael.DummyMain</classname>
       <files>
-        <zip>https://github.com/sylvainhalle/Azrael/releases/download/v0.2-alpha/azrael-0.2-alpha.zip</zip>
+        <zip>https://github.com/sylvainhalle/Azrael/releases/download/v0.3-alpha/azrael-0.3-alpha.zip</zip>
       </files>
     </dependency>
     <dependency>
