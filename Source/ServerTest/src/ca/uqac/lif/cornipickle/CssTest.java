@@ -111,4 +111,23 @@ public class CssTest
     }
   }
 
+  @Test
+  public void testCssGetSelector(){
+
+    CssSelector cs = new CssSelector("h");
+
+
+    assertEquals(cs.getSelector().toString(), "h");
+
+  }
+
+
+  @Test
+  public void TestCssSelectorToString(){
+
+    CssSelector cs = new CssSelector("h");
+    assertTrue("$(h)".equals(cs.toString()));
+
+  }
+
 }
