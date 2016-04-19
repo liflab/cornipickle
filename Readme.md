@@ -43,7 +43,7 @@ The project requires the following libraries to be present in the system:
 - The [Azrael](https://github.com/sylvainhale/Azrael) library for
   serialization of Java objects. *(tested with version 0.3-alpha)*
 - The [Bullwinkle parser](https://github.com/sylvainhalle/Bullwinkle),
-  an on-the-fly parser for BNF grammars. *(tested with version 1.1.8)*
+  an on-the-fly parser for BNF grammars. *(tested with version 1.2)*
 - The [Jerrydog server](https://github.com/sylvainhalle/Jerrydog) for basic
   HTTP server capabilities. *(tested with version 0.1-alpha)*
 
