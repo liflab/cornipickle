@@ -19,12 +19,16 @@ package ca.uqac.lif.cornipickle.server;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
+import ca.uqac.lif.cornipickle.serialization.CornipickleDeflateSerializer;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
@@ -37,6 +41,7 @@ import ca.uqac.lif.jerrydog.Cookie;
 import ca.uqac.lif.jerrydog.InnerFileServer;
 import ca.uqac.lif.jerrydog.RequestCallback;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 /**
@@ -141,7 +146,43 @@ class DummyImage extends InterpreterCallback
   @Override
   public CallbackResponse process(HttpExchange t)
   {
-    Map<String,String> attributes = getParameters(t); 
+    CornipickleDeflateSerializer ser = new CornipickleDeflateSerializer();
+    Map<String,String> attributes = getParameters(t);
+    
+    //Extract cookie from header
+    List<String> cookies = t.getRequestHeaders().get("Cookie");
+    String cornipickleCookie = "";
+    int indexCornipickleCookie = -1;
+    int indexCornipickleCookieEnd = -1;
+    for(Iterator<String> i = cookies.iterator(); i.hasNext();)
+    {
+      cornipickleCookie = i.next();
+      indexCornipickleCookie = cornipickleCookie.indexOf("cornipickle");
+      if(indexCornipickleCookie != -1)
+      {
+        //Skip "cornipickle=" to get to the character after "{"
+        indexCornipickleCookie = indexCornipickleCookie + 12;
+        break;
+      }
+    }
+    if(indexCornipickleCookie != -1)
+    {
+      cornipickleCookie = cornipickleCookie.substring(indexCornipickleCookie);
+      indexCornipickleCookieEnd = cornipickleCookie.indexOf(';');
+      if(indexCornipickleCookieEnd != -1)
+      {
+        cornipickleCookie = cornipickleCookie.substring(0, indexCornipickleCookieEnd);
+      }
+      //Find the interpreter in cornipickle cookie and load the content in the interpreter
+      try {
+        JsonMap jsonCornipickleCookie = (JsonMap)s_jsonParser.parse(cornipickleCookie);
+        m_interpreter = (Interpreter) ser.deserializeAs(jsonCornipickleCookie.get("interpreter").toString(), Interpreter.class);
+      } catch (JsonParseException e) {
+        e.printStackTrace(); //Never supposed to happen....
+      } catch (SerializerException e) {
+        e.printStackTrace();
+      }
+    }
 
     // Extract JSON from URL string
     String json_encoded = attributes.get("contents");
@@ -164,6 +205,7 @@ class DummyImage extends InterpreterCallback
       {
         e.printStackTrace();
       }
+
       if (j != null)
       {
         m_interpreter.evaluateAll(j);
@@ -175,7 +217,12 @@ class DummyImage extends InterpreterCallback
     byte[] image_to_return = selectImage(verdicts);
     // Create cookie response
     CallbackResponse cbr = new CallbackResponse(t);
-    String cookie_json_string = createResponseCookie(verdicts);
+    String cookie_json_string = "";
+    try {
+      cookie_json_string = createResponseCookie(verdicts,ser.serializeAs(m_interpreter, Interpreter.class));
+    } catch (SerializerException e) {
+      e.printStackTrace();
+    }
     cbr.addResponseCookie(new Cookie(s_cookieName, cookie_json_string));
     cbr.setContents(image_to_return);
     cbr.setContentType(CallbackResponse.ContentType.PNG);
@@ -234,12 +281,14 @@ class DummyImage extends InterpreterCallback
    * interpreter. This cookie contains, for each property, its caption,
    * a list of element IDs to highlight (if any), as well as the total
    * number of true/false/inconclusive properties.
+   * In addition, it contains the serialized state of the current interpreter
    * @param verdicts A map from the metadata for each property to
    *   its current verdict
+   * @param interpreter String in base 64 representing the state of the interpreter
    * @return A JSON string to be passed as a cookie in the response to
    *   the browser
    */
-  protected static String createResponseCookie(Map<StatementMetadata,Verdict> verdicts)
+  protected static String createResponseCookie(Map<StatementMetadata,Verdict> verdicts, String interpreter)
   {
     int num_false = 0;
     int num_true = 0;
@@ -275,6 +324,7 @@ class DummyImage extends InterpreterCallback
     result.put("num-false", num_false);
     result.put("num-inconclusive", num_inconclusive);
     result.put("highlight-ids", highlight_ids);
+    result.put("interpreter", interpreter);
     // Below, we use true to get a compact JSON string without CF/LF
     // (otherwise the cookie won't be passed correctly to the browser)
     return result.toString("", true); 
