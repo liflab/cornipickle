@@ -115,7 +115,7 @@ public class LessThanStatementTest {
 
     }
 
-    /*
+
     @Test
     public void TestLessThanStatementCompareStringJSonNotNumericTRUE(){
         JsonString n1 = new JsonString("A");
@@ -125,16 +125,10 @@ public class LessThanStatementTest {
 
         Verdict result = ls.compare(n1,n2);
 
-
-        System.out.println(n1.stringValue().compareTo(n2.stringValue()));
-        System.out.println(n2.stringValue().compareTo(n1.stringValue()));
-        //System.out.println(n2.stringValue());
-
-
         assertTrue(expected.getValue().equals(result.getValue()));
 
     }
-    */
+
 
     @Test
     public void TestLessThanStatementCompareStringJSonNotNumericFALSE(){
