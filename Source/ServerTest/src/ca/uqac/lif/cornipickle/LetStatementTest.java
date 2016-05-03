@@ -69,28 +69,6 @@ public class LetStatementTest {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public ParseNode shouldParseAndNotNull(String line, String start_symbol)
     {
         BnfParser p = parser.getParser();
