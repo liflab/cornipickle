@@ -703,11 +703,11 @@ public class CornipickleParserTest
 
   }
 
-  /*
+
   @Test
   public void TestCornipickleParserRegexCapture() throws ParseException{
 
-    String line = "match  with \"text\"";
+    String line = "match $x's width with \"[0-9]\"";
 
     ParseNode pn = shouldParseAndNotNull(line, "<regex_capture>");
     LanguageElement e = parser.parseStatement(pn);
@@ -721,7 +721,7 @@ public class CornipickleParserTest
       fail("Got wrong type of object");
     }
 
-  }*/
+  }
 
 
 
@@ -747,11 +747,11 @@ public class CornipickleParserTest
   }
 
 
-  /*
+
   @Test
   public void TestCornipickleParserWhen() throws ParseException{
 
-    String line = "When $x is now $y ( $x equals $y )\n";
+    String line = "When $d is now $y ( $d's width equals (200 + 100) )\n";
 
     ParseNode pn = shouldParseAndNotNull(line, "<when>");
     LanguageElement e = parser.parseStatement(pn);
@@ -766,34 +766,48 @@ public class CornipickleParserTest
     }
 
   }
-  */
 
 
 
+  @Test
+  public void TestCornipickleParserSetNameRegex() throws ParseException{
+
+    String line = "match $x's width with \"[0-9]\"";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<set_name>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof RegexCapture))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
 
 
 
+  @Test
+  public void TestCornipickleParserSetNameStringConstant() throws ParseException{
 
+    String line = "\"[0-9]\"";
 
+    ParseNode pn = shouldParseAndNotNull(line, "<userdef_set>");
+    LanguageElement e = parser.parseStatement(pn);
 
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof StringConstant))
+    {
+      fail("Got wrong type of object");
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  }
 
 
 
