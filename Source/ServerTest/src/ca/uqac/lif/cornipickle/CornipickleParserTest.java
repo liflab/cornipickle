@@ -27,6 +27,11 @@ import ca.uqac.lif.bullwinkle.BnfRule;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 public class CornipickleParserTest
 {
   CornipickleParser parser;
@@ -424,12 +429,386 @@ public class CornipickleParserTest
     }
   } 
   
+
+
+  @Test
+  public void TestCornipickleParserGetPredicates(){
+
+    PredicateDefinition pd1 = new PredicateDefinition(new StringConstant("pd1"));
+    pd1.setPattern(new StringConstant("pattern1"));
+    PredicateDefinition pd2 = new PredicateDefinition(new StringConstant("pd2"));
+    pd2.setPattern(new StringConstant("pattern2"));
+    PredicateDefinition pd3 = new PredicateDefinition(new StringConstant("pd3"));
+    pd3.setPattern(new StringConstant("pattern3"));
+
+    parser.addPredicateDefinition(pd1);
+    parser.addPredicateDefinition(pd2);
+    parser.addPredicateDefinition(pd3);
+
+    LinkedList<PredicateDefinition> alpd = new LinkedList<PredicateDefinition>();
+    alpd.add(pd1);
+    alpd.add(pd2);
+    alpd.add(pd3);
+
+    List<PredicateDefinition> result = (LinkedList)parser.getPredicates();
+
+    boolean ok = true;
+
+    for (int i = 0 ; i<result.size();i++){
+      if (!alpd.contains(result.get(i))){
+        ok = false;
+      }
+    }
+
+    assertTrue(ok);
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  @Test
+  public void TestCornipickleParserAnd() throws ParseException{
+
+    String line = "($y's right is greater than $x's left)\n" +
+            "  And\n" +
+            "  ($x's right is greater than $y's left)";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<and>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof AndStatement))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+
+  @Test
+  public void TestCornipickleParserEventually() throws ParseException{
+
+    String line = "Eventually ( \"3\" equals \"3\")\n";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<eventually>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof Eventually))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+
+
+  @Test
+  public void TestCornipickleParserDiv() throws ParseException{
+
+    String line = "(3/3)\n";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<div>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof DivOperation))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+
+
+  @Test
+  public void TestCornipickleParserEventuallyWithin() throws ParseException{
+
+    String line = "Eventually within 3 seconds ( \"3\" equals \"3\")\n";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<eventually_within>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof EventuallyWithin))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+
+  @Test
+  public void TestCornipickleParserGlobally() throws ParseException{
+
+    String line = "Always ( \"3\" equals \"3\")\n";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<globally>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof Globally))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+
+
+  @Test
+  public void TestCornipickleParserImplies() throws ParseException{
+
+    String line = "If ( \"3\" equals \"3\") Then ( \"3\" equals \"3\")\n";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<implies>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof ImpliesStatement))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+
+
+  @Test
+  public void TestCornipickleParserLt() throws ParseException{
+
+    String line = "\"3\" is less than \"3\"\n";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<lt>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof LessThanStatement))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+
+  @Test
+  public void TestCornipickleParserNegation() throws ParseException{
+
+    String line = "Not (\"3\" is less than \"3\")\n";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<negation>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof NegationStatement))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+
+  @Test
+  public void TestCornipickleParserNext() throws ParseException{
+
+    String line = "Next (\"3\" is less than \"3\")\n";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<next>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof Next))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+
+
+  @Test
+  public void TestCornipickleParserNever() throws ParseException{
+
+    String line = "Never (\"3\" is less than \"3\")\n";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<never>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof Never))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+  @Test
+  public void TestCornipickleParserOr() throws ParseException{
+
+    String line = "($y's right is greater than $x's left) Or\n($x's right is greater than $y's left)";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<or>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof OrStatement))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+  /*
+  @Test
+  public void TestCornipickleParserRegexCapture() throws ParseException{
+
+    String line = "match  with \"text\"";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<regex_capture>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof RegexCapture))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }*/
+
+
+
+
+
+  @Test
+  public void TestCornipickleParserSub() throws ParseException{
+
+    String line = "(3-3)\n";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<sub>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof SubOperation))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+
+
+  /*
+  @Test
+  public void TestCornipickleParserWhen() throws ParseException{
+
+    String line = "When $x is now $y ( $x equals $y )\n";
+
+    ParseNode pn = shouldParseAndNotNull(line, "<when>");
+    LanguageElement e = parser.parseStatement(pn);
+
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof WhenIsNow))
+    {
+      fail("Got wrong type of object");
+    }
+
+  }
+  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public ParseNode shouldParseAndNotNull(String line, String start_symbol)
   {
     BnfParser p = parser.getParser();
     //p.setDebugMode(true);
     p.setStartRule(start_symbol);
     ParseNode pn = null;
+
     try
     {
       pn = p.parse(line);
@@ -443,4 +822,8 @@ public class CornipickleParserTest
     }
     return pn;
   }
+
+
+
+
 }
