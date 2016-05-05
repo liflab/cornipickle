@@ -5,6 +5,10 @@ package ca.uqac.lif.cornipickle;/**
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.cornipickle.server.CornipickleServer;
+import ca.uqac.lif.cornipickle.util.PackageFileReader;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
+import ca.uqac.lif.json.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.matchers.StacktracePrintingMatcher;
@@ -16,9 +20,11 @@ public class WhenIsNowTest {
 
     CornipickleParser parser;
     WhenIsNow win;
+    JsonParser j_parser;
+    JsonElement jse;
 
     @Before
-    public void setUp() {
+    public void setUp() throws JsonParser.JsonParseException {
 
         parser = new CornipickleParser();
 
@@ -37,6 +43,11 @@ public class WhenIsNowTest {
         }
 
         win= (WhenIsNow) e;
+
+
+        j_parser = new JsonParser();
+        String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-8.json");
+        jse = j_parser.parse(json);
     }
 
     @Test
@@ -71,6 +82,33 @@ public class WhenIsNowTest {
         win.resetHistory();
         assertTrue(win.m_elementNow==null&&win.m_verdict.getValue()== Verdict.Value.INCONCLUSIVE);
     }
+
+
+    /*@Test
+    public void WhenIsNowTestFetchWithId() throws JsonParser.JsonParseException {
+        JsonElement j = WhenIsNow.fetchWithId(jse, 1);
+        System.out.println(j);
+
+    }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
