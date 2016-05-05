@@ -1,0 +1,94 @@
+package ca.uqac.lif.cornipickle;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import ca.uqac.lif.bullwinkle.BnfParser;
+import ca.uqac.lif.bullwinkle.ParseNode;
+import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
+import ca.uqac.lif.json.JsonString;
+
+public class RegexMatchTest {
+	CornipickleParser parser;
+	RegexMatch rm;
+	@Before
+	public void setUp() throws Exception {
+		parser= new CornipickleParser();
+		String line = "$x's disabled matches \"true\"";
+	    ParseNode pn = shouldParseAndNotNull(line, "<regex_match>");
+	    LanguageElement e = parser.parseStatement(pn);
+	    if (e == null)
+	    {
+	      fail("Parsing returned null");
+	    }
+	    if (!(e instanceof RegexMatch))
+	    {
+	      fail("Got wrong type of object");
+	    }
+	    rm=(RegexMatch)e;
+	}
+
+	@Test
+	public void testToStringString() {
+		assertTrue(rm.toString().equals("$x's disabled matches true"));
+	}
+
+	@Test
+	public void testCompareJsonStringJsonString() {
+		JsonString js1=new JsonString("A");
+		JsonString js2=new JsonString("A");
+		assertTrue(rm.compare(js1,js2).getValue().equals(Verdict.Value.TRUE));
+	}
+
+	@Test
+	public void testCompareJsonNumberJsonString2() {
+		JsonString js1=new JsonString("A");
+		JsonString js2=new JsonString("B");
+		assertTrue(rm.compare(js1,js2).getValue().equals(Verdict.Value.FALSE));
+	}
+	@Test
+	public void testCompareJsonNumberJsonNumber() {
+		JsonString js1=new JsonString("aaaaaa");
+		JsonString js2=new JsonString("aaaaaa");
+		assertTrue(rm.compare(js1,js2).getValue().equals(Verdict.Value.TRUE));
+	}
+
+	/*@Test
+	public void testGetKeyword() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testRegexMatch() {
+		fail("Not yet implemented");
+	}
+
+	*/@Test
+	public void testGetClone() {
+		RegexMatch rm2;
+		rm2=rm.getClone();
+		assertTrue(rm2.toString().equals(rm.toString()));
+	}
+	public ParseNode shouldParseAndNotNull(String line, String start_symbol){
+		    BnfParser p = parser.getParser();
+		    //p.setDebugMode(true);
+		    p.setStartRule(start_symbol);
+		    ParseNode pn = null;
+
+		    try
+		    {
+		      pn = p.parse(line);
+		    } catch (ParseException e)
+		    {
+		      fail(e.toString());
+		    }
+		    if (pn == null)
+		    {
+		      fail("Failed parsing expression through grammar: returned null");
+		    }
+		    return pn;
+		  }
+
+}
