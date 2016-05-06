@@ -1,7 +1,13 @@
 package ca.uqac.lif.cornipickle;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
+
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -64,7 +70,15 @@ public class LetStatementTest {
         LetStatement ls = new LetStatement();
         assertTrue(ls.getVariable().equals("")&&ls.m_property==null&&ls.m_value==null);
     }
-
+    
+    @Test
+	public void testEvaluateAtemporalJsonElementMapOfStringJsonElement() {
+		JsonElement je= new JsonNumber(15);
+		JsonElement je2= new JsonNumber(7);		
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
+		test.put("10", je2);	
+		assertTrue(ls.evaluateAtemporal(je, test).toString().equals("T {\n 3:{\n\n },\n 3:{\n\n }\n}"));		
+	}
 
 
 

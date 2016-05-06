@@ -2,8 +2,14 @@ package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +26,7 @@ public class NegationStatementTest {
     {
         parser = new CornipickleParser();
 
-        String line = "Not (\"3\" is less than \"4\")\n";
+        String line = "Not (\"2\" is less than \"4\")\n";
 
         ParseNode pn = shouldParseAndNotNull(line, "<negation>");
         LanguageElement e = parser.parseStatement(pn);
@@ -41,7 +47,7 @@ public class NegationStatementTest {
 
     @Test
     public void TestNegationStatementGetStatement(){
-        assertTrue("3 is less than 4".equals(ns.getStatement().toString()));
+        assertTrue("2 is less than 4".equals(ns.getStatement().toString()));
     }
 
     @Test
@@ -54,7 +60,7 @@ public class NegationStatementTest {
     @Test
     public void TestNegationStatementToString(){
         String expected = ns.toString();
-        assertTrue(expected.equals("Not (3 is less than 4)"));
+        assertTrue(expected.equals("Not (2 is less than 4)"));
     }
 
     @Test
@@ -68,22 +74,14 @@ public class NegationStatementTest {
         boolean expected = ns.m_innerStatement.isTemporal();
         assertTrue(expected==ns.isTemporal());
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Test
+	public void testEvaluateAtemporalJsonElementMapOfStringJsonElement() {
+		JsonElement je= new JsonNumber(15);
+		JsonElement je2= new JsonNumber(7);		
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
+		test.put("Trololo", je2);	
+		assertTrue(ns.evaluateAtemporal(je,test).toPlainString().equals("FALSE"));		
+	}
 
     public ParseNode shouldParseAndNotNull(String line, String start_symbol)
     {

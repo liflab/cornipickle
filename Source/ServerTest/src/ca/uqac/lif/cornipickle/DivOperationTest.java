@@ -2,12 +2,17 @@ package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
 
 public class DivOperationTest {
 	CornipickleParser parser;
@@ -37,20 +42,15 @@ public class DivOperationTest {
 		assertTrue(op.toString().equals("3.0 / 3.0"));
 	}
 
-	/*@Test
+	@Test
 	public void testEvaluateJsonElementMapOfStringJsonElement() {
-		fail("Not yet implemented");
+		JsonElement je= new JsonNumber(21);
+		JsonElement je2= new JsonNumber(15);		
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
+		test.put("2", je2);			
+		assertTrue(op.evaluate(je, test).toString().equals("1"));	
 	}
 
-	@Test
-	public void testDivOperation() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testDivOperationPropertyProperty() {
-		fail("Not yet implemented");
-	}*/
 
 	@Test
 	public void testGetClone() {

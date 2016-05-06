@@ -2,12 +2,18 @@ package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
+import ca.uqac.lif.json.JsonString;
 
 public class MultOperationTest {
 	CornipickleParser parser;
@@ -34,10 +40,14 @@ public class MultOperationTest {
 		assertTrue(mo.toString().equals("200.0 * 100.0"));
 	}
 
-	/*@Test
+	@Test
 	public void testEvaluateJsonElementMapOfStringJsonElement() {
-		fail("Not yet implemented");
-	}*/
+		JsonElement je= new JsonNumber(15);
+		JsonElement je2= new JsonNumber(7);		
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
+		test.put("5", je2);				
+		assertTrue(mo.evaluate(je, test).toString().equals("20000"));		
+	}
 
 	@Test
 	public void testMultOperation() {

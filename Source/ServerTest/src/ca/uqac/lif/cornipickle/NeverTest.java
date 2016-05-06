@@ -2,12 +2,17 @@ package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
 
 public class NeverTest {
 	CornipickleParser parser;
@@ -36,12 +41,17 @@ public class NeverTest {
 		assertTrue(nv.toString().equals("Never (\n3 is less than 3\n)"));
 	}
 
-	/*@Test
-	public void testEvaluateTemporal() {
-		fail("Not yet implemented");
+	@Test
+	public void testEvaluateTemporalJsonElementMapOfStringJsonElement() {
+		JsonElement je= new JsonNumber(15);
+		JsonElement je2= new JsonNumber(7);		
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
+		test.put("5", je2);	
+		
+		assertTrue(nv.evaluateTemporal(je, test).toString().equals("?"));		
 	}
 
-	*/@Test
+	@Test
 	public void testGetClone() {
 		Never nv2;
 		nv2=(Never)nv.getClone();
