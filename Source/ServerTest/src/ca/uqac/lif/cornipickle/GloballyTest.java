@@ -3,8 +3,14 @@ package ca.uqac.lif.cornipickle;/**
  */
 
 import ca.uqac.lif.bullwinkle.ParseNode;
+import ca.uqac.lif.cornipickle.server.HtmlFormatter;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonMap;
+import ca.uqac.lif.json.JsonNumber;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -69,5 +75,10 @@ public class GloballyTest {
         Globally g2 = (Globally)g.getClone();
         assertTrue(g.m_innerStatement.toString().equals(g2.m_innerStatement.toString()));
     }
+
+
+
+
+
 
 }

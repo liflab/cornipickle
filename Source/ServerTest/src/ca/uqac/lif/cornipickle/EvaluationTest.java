@@ -387,7 +387,8 @@ public class EvaluationTest
     JsonMap main = new JsonMap();
     main.put("children", el);
     main.put("tagname", new JsonString("h1"));
-    
+
+
     // Create formula
     String expression = "For each $x in $(p) (Let $w be $x's width ($w's nodeValue is greater than 50))";
     CornipickleParser cp = new CornipickleParser();
@@ -402,5 +403,256 @@ public class EvaluationTest
       fail("Expected true, got something else");
     }
   }
+
+
+  @Test
+  public void EvaluationTestGlobally() throws ParseException {
+    // Create "document"
+    JsonList el = new JsonList();
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("tagname", new JsonString("p"));
+      el.add(x);
+    }
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(101));
+      x.put("tagname", new JsonString("q"));
+      el.add(x);
+    }
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("tagname", new JsonString("p"));
+      el.add(x);
+    }
+    JsonMap main = new JsonMap();
+    main.put("children", el);
+    main.put("tagname", new JsonString("h1"));
+
+    // Create formula
+    String expression = "Always ( \"3\" equals \"3\")\n";
+    CornipickleParser cp = new CornipickleParser();
+    Statement st = cp.parseStatement(expression);
+    Verdict answer;
+
+    // Evaluate formula on document
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    answer = st.evaluate(main, d);
+    if (!answer.is(Verdict.Value.INCONCLUSIVE))
+    {
+      fail("Expected true, got something else");
+    }
+  }
+
+
+  @Test
+  public void EvaluationTestWhenIsNow() throws ParseException {
+
+
+    // Create "document"
+    JsonList el = new JsonList();
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("height", new JsonNumber(100));
+      x.put("tagname", new JsonString("d"));
+      el.add(x);
+      d.put("$d", x);
+    }
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("height", new JsonNumber(50));
+      x.put("tagname", new JsonString("y"));
+      el.add(x);
+      d.put("$y", x);
+    }
+    JsonMap main = new JsonMap();
+    main.put("children", el);
+    main.put("tagname", new JsonString("h1"));
+
+
+    // Create formula
+    String expression = "When $d is now $y ( $d's height equals 100 )";
+    CornipickleParser cp = new CornipickleParser();
+    WhenIsNow st = (WhenIsNow)cp.parseStatement(UtilsTest.shouldParseAndNotNull(cp, expression, "<when>"));
+    Verdict answer;
+
+
+    // Evaluate formula on document
+    answer = st.evaluate(main, d);
+
+    if (!answer.is(Verdict.Value.TRUE))
+    {
+      fail("Expected true, got something else");
+    }
+
+
+
+
+
+  }
+
+
+
+  @Test
+  public void EvaluationTestWhenIsNow2() throws ParseException {
+
+
+    // Create "document"
+    JsonList el = new JsonList();
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("height", new JsonNumber(100));
+      x.put("tagname", new JsonString("d"));
+      x.put("cornipickleid", new JsonNumber(0));
+      el.add(x);
+      d.put("$d", x);
+    }
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("height", new JsonNumber(50));
+      x.put("tagname", new JsonString("y"));
+      x.put("cornipickleid", new JsonNumber(1));
+      el.add(x);
+      d.put("$y", x);
+    }
+    JsonMap main = new JsonMap();
+    main.put("children", el);
+    main.put("tagname", new JsonString("h1"));
+
+
+    // Create formula
+    String expression = "When $d is now $y ( $d's height equals 100 )";
+    CornipickleParser cp = new CornipickleParser();
+    WhenIsNow st = (WhenIsNow)cp.parseStatement(UtilsTest.shouldParseAndNotNull(cp, expression, "<when>"));
+    Verdict answer;
+
+
+    // Evaluate formula on document
+    answer = st.evaluate(main, d);
+
+    if (!answer.is(Verdict.Value.TRUE))
+    {
+      fail("Expected true, got something else");
+    }
+
+
+
+
+
+  }
+
+  @Test
+  public void EvaluationTestWhenIsNow3() throws ParseException {
+
+
+    // Create "document"
+    JsonList el = new JsonList();
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("height", new JsonNumber(100));
+      x.put("tagname", new JsonString("d"));
+      el.add(x);
+      d.put("$d", x);
+    }
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("height", new JsonNumber(50));
+      x.put("tagname", new JsonString("y"));
+      el.add(x);
+      d.put("$y", x);
+    }
+    JsonMap main = new JsonMap();
+    main.put("children", el);
+    main.put("tagname", new JsonString("h1"));
+
+
+    // Create formula
+    String expression = "When $d is now $y ( $d's height equals 100 )";
+    CornipickleParser cp = new CornipickleParser();
+    WhenIsNow st = (WhenIsNow)cp.parseStatement(UtilsTest.shouldParseAndNotNull(cp, expression, "<when>"));
+    Verdict answer;
+
+
+    // Evaluate formula on document
+    answer = st.evaluateAtemporal(main, d);
+
+    if (!answer.is(Verdict.Value.TRUE))
+    {
+      fail("Expected true, got something else");
+    }
+
+
+
+
+
+  }
+
+
+
+  @Test
+  public void EvaluationTestWhenIsNow4() throws ParseException {
+
+
+    // Create "document"
+    JsonList el = new JsonList();
+    HashMap<String,JsonElement> d = new HashMap<String,JsonElement>();
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("height", new JsonNumber(100));
+      x.put("tagname", new JsonString("d"));
+      x.put("cornipickleid", new JsonNumber(0));
+      el.add(x);
+      d.put("$d", x);
+    }
+    {
+      JsonMap x = new JsonMap();
+      x.put("width", new JsonNumber(100));
+      x.put("height", new JsonNumber(50));
+      x.put("tagname", new JsonString("y"));
+      x.put("cornipickleid", new JsonNumber(1));
+      el.add(x);
+      d.put("$y", x);
+    }
+    JsonMap main = new JsonMap();
+    main.put("children", el);
+    main.put("tagname", new JsonString("h1"));
+
+
+    // Create formula
+    String expression = "When $d is now $y ( $d's height equals 100 )";
+    CornipickleParser cp = new CornipickleParser();
+    WhenIsNow st = (WhenIsNow)cp.parseStatement(UtilsTest.shouldParseAndNotNull(cp, expression, "<when>"));
+    Verdict answer;
+
+
+    // Evaluate formula on document
+    answer = st.evaluateAtemporal(main, d);
+
+    if (!answer.is(Verdict.Value.TRUE))
+    {
+      fail("Expected true, got something else");
+    }
+
+
+
+
+
+  }
+
+  
+  
+
 
 }
