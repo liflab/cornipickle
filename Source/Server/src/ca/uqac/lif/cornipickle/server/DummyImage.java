@@ -41,7 +41,6 @@ import ca.uqac.lif.jerrydog.Cookie;
 import ca.uqac.lif.jerrydog.InnerFileServer;
 import ca.uqac.lif.jerrydog.RequestCallback;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 /**
@@ -146,41 +145,17 @@ class DummyImage extends InterpreterCallback
   @Override
   public CallbackResponse process(HttpExchange t)
   {
-    CornipickleDeflateSerializer ser = new CornipickleDeflateSerializer();
     Map<String,String> attributes = getParameters(t);
+    Cookie cornipickleCookie = new Cookie(t,"cornipickle");
     
-    //Extract cookie from header
-    List<String> cookies = t.getRequestHeaders().get("Cookie");
-    String cornipickleCookie = "";
-    int indexCornipickleCookie = -1;
-    int indexCornipickleCookieEnd = -1;
-    for(Iterator<String> i = cookies.iterator(); i.hasNext();)
+    //Find the interpreter in cornipickle cookie and load the content in the interpreter
+    if(cornipickleCookie.getValue() != "")
     {
-      cornipickleCookie = i.next();
-      indexCornipickleCookie = cornipickleCookie.indexOf("cornipickle");
-      if(indexCornipickleCookie != -1)
-      {
-        //Skip "cornipickle=" to get to the character after "{"
-        indexCornipickleCookie = indexCornipickleCookie + 12;
-        break;
-      }
-    }
-    if(indexCornipickleCookie != -1)
-    {
-      cornipickleCookie = cornipickleCookie.substring(indexCornipickleCookie);
-      indexCornipickleCookieEnd = cornipickleCookie.indexOf(';');
-      if(indexCornipickleCookieEnd != -1)
-      {
-        cornipickleCookie = cornipickleCookie.substring(0, indexCornipickleCookieEnd);
-      }
-      //Find the interpreter in cornipickle cookie and load the content in the interpreter
       try {
-        JsonMap jsonCornipickleCookie = (JsonMap)s_jsonParser.parse(cornipickleCookie);
-        m_interpreter = (Interpreter) ser.deserializeAs(jsonCornipickleCookie.get("interpreter").toString(), Interpreter.class);
+        JsonMap jsonCornipickleCookie = (JsonMap)s_jsonParser.parse(cornipickleCookie.getValue());
+        m_interpreter = m_interpreter.restoreFromMemento(jsonCornipickleCookie.get("interpreter").toString());
       } catch (JsonParseException e) {
         e.printStackTrace(); //Never supposed to happen....
-      } catch (SerializerException e) {
-        e.printStackTrace();
       }
     }
 
@@ -218,14 +193,11 @@ class DummyImage extends InterpreterCallback
     // Create cookie response
     CallbackResponse cbr = new CallbackResponse(t);
     String cookie_json_string = "";
-    try {
-      cookie_json_string = createResponseCookie(verdicts,ser.serializeAs(m_interpreter, Interpreter.class));
-    } catch (SerializerException e) {
-      e.printStackTrace();
-    }
+    cookie_json_string = createResponseCookie(verdicts,m_interpreter.saveToMemento());
     cbr.addResponseCookie(new Cookie(s_cookieName, cookie_json_string));
     cbr.setContents(image_to_return);
     cbr.setContentType(CallbackResponse.ContentType.PNG);
+    m_interpreter.clear();
     // DEBUG: print state
     //com.google.gson.GsonBuilder builder = new com.google.gson.GsonBuilder();
     //com.google.gson.Gson gson = builder.create();

@@ -27,6 +27,7 @@ import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.jerrydog.CallbackResponse;
+import ca.uqac.lif.jerrydog.Cookie;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -128,6 +129,12 @@ class AddProperty extends InterpreterCallback
     output.put("tagnames", tagnames);    
     response.setContents(output.toString());
     response.setContentType(CallbackResponse.ContentType.JSON);
+    
+    String cookie_json_string = DummyImage.createResponseCookie(m_interpreter.getVerdicts(), m_interpreter.saveToMemento());
+    response.addResponseCookie(new Cookie(DummyImage.s_cookieName, cookie_json_string));
+    
+    m_interpreter.clear();
+    
     return response;
   }    
 }

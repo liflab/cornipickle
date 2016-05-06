@@ -297,7 +297,7 @@ public class Interpreter implements Originator<Interpreter,String>
 		String out = null;
 		try
 		{
-			m_serializer.serialize(this);
+			out = m_serializer.serialize(this);
 		}
 		catch (SerializerException e)
 		{
