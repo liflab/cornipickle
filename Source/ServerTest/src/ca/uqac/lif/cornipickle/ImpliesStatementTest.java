@@ -2,7 +2,13 @@ package ca.uqac.lif.cornipickle;/**
  * Created by paul on 05/05/16.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ca.uqac.lif.bullwinkle.ParseNode;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -63,6 +69,7 @@ public class ImpliesStatementTest {
 
         assertTrue(ok);
     }
+
 
 
 }
