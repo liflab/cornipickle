@@ -1,10 +1,10 @@
 package ca.uqac.lif.cornipickle.server;
 
-import ca.uqac.lif.bullwinkle.ParseNode;
+
 import ca.uqac.lif.cornipickle.*;
-import ca.uqac.lif.cornipickle.server.HtmlFormatter;
+
 import ca.uqac.lif.cornipickle.util.StringUtils;
-import junit.framework.TestCase;
+
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -14,6 +14,15 @@ import static org.junit.Assert.*;
  */
 public class HtmlFormatterTest {
 
+
+    CornipickleParser parser;
+    HtmlFormatter hf;
+
+    @Before
+    public void setUp(){
+        parser = new CornipickleParser();
+        hf = new HtmlFormatter();
+    }
 
     @Test
     public void htmlFormatterTestConstructor(){
@@ -87,81 +96,83 @@ public class HtmlFormatterTest {
 
     }
 
-    /*
+
     @Test
-    public void htmlFormatterTestVisitElementPropertyComplement(){
+    public void htmlFormatterTestVisitElementPropertyComplement() throws CornipickleParser.ParseException {
         HtmlFormatter hf = new HtmlFormatter();
 
         //Element
-        ElementPropertyComplement epc = new ElementPropertyComplement();
+        String line = "the height of $x";
+        LanguageElement e = UtilsTest.shouldParseAndNotNullReturnElement(parser, line, "<elem_property_com>" );
+        ElementPropertyComplement epc = (ElementPropertyComplement)e;
+
+
         StringBuilder out = new StringBuilder();
         out.append("<span class=\"element-property\">");
-        out.append("the <span class=\"property-name\">").append(e.getPropertyName()).append("</span>");
+        out.append("the <span class=\"property-name\">").append(epc.getPropertyName()).append("</span>");
         out.append(" of ");
-        out.append("<span class=\"element-name\">").append(e.getElementName()).append("</span>");
+        out.append("<span class=\"element-name\">").append(epc.getElementName()).append("</span>");
         String expected = out.toString();
         //Visit
-        hf.visit(epp);
+        hf.visit(epc);
 
         //Assert
         assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
 
     }
-    */
+
+
+
 
 
     /*
     @Test
-    public void htmlFormatterTestVisitElementComparisonStatement(){
+    public void htmlFormatterTestVisitElementComparisonStatement() throws CornipickleParser.ParseException {
+
+        String line = "\"3\" is less than \"3\"\n";
+
+        LanguageElement e  = UtilsTest.shouldParseAndNotNullReturnElement(parser, line, "<lt>");
+        ComparisonStatement cs = (ComparisonStatement)e;
+        hf.visit(cs);
+
+        System.out.println(cs);
 
 
-    }
-    */
 
-    /*
+    }*/
+
+
+
     @Test
     public void htmlFormatterTestVisitElementImpliesStatement(){
-        HtmlFormatter hf = new HtmlFormatter();
+
+
 
         //Element
-        ImpliesStatement epc = new ImpliesStatement();
+        ImpliesStatement is =(ImpliesStatement) UtilsTest.shouldParseAndNotNullReturnElement(parser, "If ( \"3\" equals \"3\") Then ( \"3\" equals \"3\")\n", "<implies>");
         StringBuilder out = new StringBuilder();
-        out.append("<span class=\"element-property\">");
-        out.append("the <span class=\"property-name\">").append(e.getPropertyName()).append("</span>");
-        out.append(" of ");
-        out.append("<span class=\"element-name\">").append(e.getElementName()).append("</span>");
+        out.append("<span class=\"implies\">If (<br />\n");
+        StringBuilder left = new StringBuilder("3 equals 3"); // Inner statement
+        StringBuilder right = new StringBuilder("3 equals 3"); // Property
+        out.append(StringUtils.prepend("&nbsp;", left));
+        out.append("<br />\n)<br/>\nThen (<br />\n");
+        out.append(StringUtils.prepend("&nbsp;", right));
+        out.append("<br />\n)");
         String expected = out.toString();
         //Visit
-        hf.visit(epp);
+
+        hf.m_elements.add(new StringBuilder(is.getStatements().get(0).toString()));
+        hf.m_elements.add(new StringBuilder(is.getStatements().get(1).toString()));
+
+        hf.visit(is);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peek().toString()));
 
     }
-    */
 
 
-    /*
-    @Test
-    public void htmlFormatterTestVisitElementLetStatement(){
-        HtmlFormatter hf = new HtmlFormatter();
 
-        //Element
-        LetStatement epc = new LetStatement();
-        StringBuilder out = new StringBuilder();
-        out.append("<span class=\"element-property\">");
-        out.append("the <span class=\"property-name\">").append(e.getPropertyName()).append("</span>");
-        out.append(" of ");
-        out.append("<span class=\"element-name\">").append(e.getElementName()).append("</span>");
-        String expected = out.toString();
-        //Visit
-        hf.visit(epp);
-
-        //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
-
-    }
-    */
 
 
 
@@ -232,39 +243,21 @@ public class HtmlFormatterTest {
     }
 
 
-    /*
+
     @Test
     public void htmlFormatterTestVisitElementRegexCapture() {
         HtmlFormatter hf = new HtmlFormatter();
 
         //Element
-        RegexCapture rc = new RegexCapture();
-        StringBuilder out = new StringBuilder();
+        RegexCapture rc = (RegexCapture) UtilsTest.shouldParseAndNotNullReturnElement(parser, "match $x's width with \"[0-9]\"", "<regex_capture>");
+        String expected = "<span class=\"regex-capture\">match <span class=\"element-name\">$x's width</span> with "+"<span class=\"string\">\"[0-9]\"</span>";
 
-        out.append("<span class=\"nary-statement\">");
-        String keyword = ns.getKeyword();
-        for (int i = 0; i < ns.getStatements().size(); i++)
-        {
-            if (i > 0)
-            {
-                out.append("<br/>\n").append(keyword).append("<br/>\n");
-            }
-            StringBuilder sts = hf.m_elements.pop();
-            sts.insert(0, "(");
-            sts.append(")");
-            //sts = prepend("&nbsp;", sts);
-            out.append(sts);
-        }
-
-
-        String expected = out.toString();
-        //Visit
-        hf.visit(ns);
+        hf.visit(rc);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peek().toString()));
     }
-    */
+
 
 
 
@@ -272,27 +265,27 @@ public class HtmlFormatterTest {
 
     //NullPointerException
 
-    /*
+
     @Test
     public void htmlFormatterTestVisitElementExistsStatement(){
         HtmlFormatter hf = new HtmlFormatter();
+        ExistsStatement es = (ExistsStatement)UtilsTest.shouldParseAndNotNullReturnElement(parser, "There exists $d in $(#d) such that ( $d's width equals (200 + 100) )" , "<exists>");
 
         StringBuilder sb1 = new StringBuilder("e1");
         StringBuilder sb2 = new StringBuilder("e2");
 
-        hf.m_elements.push(sb1);
-        hf.m_elements.push(sb2);
+        hf.m_elements.push(new StringBuilder(es.getStatement().toString()));
+        hf.m_elements.push(new StringBuilder("$(#d)"));
 
         //Element
-        ExistsStatement es = new ExistsStatement();
         StringBuilder out = new StringBuilder();
 
         out.append("<span class=\"exists\">There exists ");
         out.append("<span class=\"element-name\">").append(es.getVariable()).append("</span> in ");
-        StringBuilder set_exp = sb2;
+        StringBuilder set_exp = new StringBuilder("$(#d)");
         out.append(set_exp);
         out.append(" such that (");
-        StringBuilder inner_exp = sb1;
+        StringBuilder inner_exp = new StringBuilder(es.getStatement().toString());
         out.append(inner_exp);
         out.append(" )");
 
@@ -301,9 +294,9 @@ public class HtmlFormatterTest {
         hf.visit(es);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peek().toString()));
 
-    }*/
+    }
 
 
     //NullPointerException
@@ -568,6 +561,20 @@ public class HtmlFormatterTest {
         assertTrue((sb.toString()+"</span>").equals(hf.m_elements.firstElement().toString()));
 
 
+    }
+
+
+    @Test
+    public void HtmlFormatterTestEventually(){
+        Eventually e = (Eventually) UtilsTest.shouldParseAndNotNullReturnElement(parser, "Eventually ( \"3\" equals \"3\")\n", "<enventually>");
+        String expected = "<span><span class=\"temporal-operator\">Eventually</span> (<br />\n&nbsp;3 equals 3\n<br/>\n)";
+
+        hf.m_elements.push(new StringBuilder("3 equals 3"));
+
+        hf.visit(e);
+
+
+        assertTrue(expected.equals(hf.m_elements.peek().toString()));
     }
 
 
