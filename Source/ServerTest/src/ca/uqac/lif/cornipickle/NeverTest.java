@@ -46,9 +46,8 @@ public class NeverTest {
 		JsonElement je= new JsonNumber(15);
 		JsonElement je2= new JsonNumber(7);		
 		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
-		test.put("5", je2);	
-		
-		assertTrue(nv.evaluateTemporal(je, test).toString().equals("?"));		
+		test.put("15", je2);	
+		assertTrue(nv.evaluateTemporal(je, test).toPlainString().equals("INCONCLUSIVE"));		
 	}
 
 	@Test

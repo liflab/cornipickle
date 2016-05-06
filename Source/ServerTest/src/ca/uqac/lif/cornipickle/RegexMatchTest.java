@@ -2,12 +2,16 @@ package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.*;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
+import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonString;
 
 public class RegexMatchTest {
@@ -37,8 +41,8 @@ public class RegexMatchTest {
 
 	@Test
 	public void testCompareJsonStringJsonString() {
-		JsonString js1=new JsonString("A");
-		JsonString js2=new JsonString("A");
+		JsonString js1=new JsonString("#aaaaaa");//sera comparé js2 apres que jse soit passé au format rbg
+		JsonString js2=new JsonString("aaaaaa");//doit être de type (?i)#(\\d|[abcdef]){3,6} soit hexadecimal
 		assertTrue(rm.compare(js1,js2).getValue().equals(Verdict.Value.TRUE));
 	}
 
@@ -50,17 +54,17 @@ public class RegexMatchTest {
 	}
 	@Test
 	public void testCompareJsonNumberJsonNumber() {
-		JsonString js1=new JsonString("aaaaaa");
-		JsonString js2=new JsonString("aaaaaa");
-		assertTrue(rm.compare(js1,js2).getValue().equals(Verdict.Value.TRUE));
-	}
-
-	/*@Test
-	public void testGetKeyword() {
-		fail("Not yet implemented");
+		JsonNumber js1=new JsonNumber(3);
+		JsonNumber js2=new JsonNumber(3);
+		assertTrue(rm.compare(js1,js2).getValue().equals(Verdict.Value.FALSE));
 	}
 
 	@Test
+	public void testGetKeyword() {
+		assertTrue(rm.getKeyword().toString().equals("matches"));
+	}
+
+	/*@Test
 	public void testRegexMatch() {
 		fail("Not yet implemented");
 	}
