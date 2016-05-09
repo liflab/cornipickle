@@ -108,9 +108,9 @@ public class EventuallyWithin extends Globally
 	}
 
 	@Override
-	public Statement getClone()
+	public Statement getClone()//create a new EventuallyWithin with m_timestamp as parameter
 	{
-		EventuallyWithin out = new EventuallyWithin();
+		EventuallyWithin out = new EventuallyWithin(m_timestamp);
 		out.setInnerStatement(m_innerStatement.getClone());
 		return out;
 	}
