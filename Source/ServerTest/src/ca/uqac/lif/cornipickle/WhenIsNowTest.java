@@ -178,8 +178,11 @@ public class WhenIsNowTest {
         JsonMap main = new JsonMap();
         main.put("children", el);
         main.put("tagname", new JsonString("h1"));
+        System.out.println(main);
 
         JsonElement e =WhenIsNow.fetchWithId(main, 1);
+        System.out.println(e.toString());
+        System.out.println("{\"tagname\":\"p\",\"cornipickleid\":1,\"width\":100,\"id\":0}");
 
         assertTrue(e.toString().equals("{\"tagname\":\"p\",\"cornipickleid\":1,\"width\":100,\"id\":0}"));
 
