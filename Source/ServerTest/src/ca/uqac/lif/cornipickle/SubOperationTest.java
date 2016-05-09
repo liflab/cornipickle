@@ -2,12 +2,17 @@ package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
 
 public class SubOperationTest {
 	CornipickleParser parser;
@@ -16,7 +21,7 @@ public class SubOperationTest {
 	public void setUp() throws Exception {
 		parser=new CornipickleParser();
 
-	    String line = "(3-3)\n";
+	    String line = "(4-3)\n";
 
 	    ParseNode pn = shouldParseAndNotNull(line, "<sub>");
 	    LanguageElement e = parser.parseStatement(pn);
@@ -45,12 +50,16 @@ public class SubOperationTest {
 	}
 	@Test
 	public void testToStringString() {
-		assertTrue(so.toString().equals("3.0 - 3.0"));
+		assertTrue(so.toString().equals("4.0 - 3.0"));
 	}
-	/*@Test
-	public void test() {
-		fail("Not yet implemented");
-	}*/
+	@Test
+	public void testEvaluateJsonElementMapOfStringJsonElement() {
+		JsonElement je= new JsonNumber(15);
+		JsonElement je2= new JsonNumber(7);		
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
+		test.put("5", je2);				
+		assertTrue(so.evaluate(je, test).toString().equals("1"));		
+	}
 	
 	  public ParseNode shouldParseAndNotNull(String line, String start_symbol){
 	    BnfParser p = parser.getParser();

@@ -40,9 +40,9 @@ public class RegexMatchTest {
 	}
 
 	@Test
-	public void testCompareJsonStringJsonString() {
-		JsonString js1=new JsonString("#aaaaaa");//sera comparé js2 apres que jse soit passé au format rbg
-		JsonString js2=new JsonString("aaaaaa");//doit être de type (?i)#(\\d|[abcdef]){3,6} soit hexadecimal
+	public void testCompareJsonStringJsonString() {//compare two string js1 and js2
+		JsonString js1=new JsonString("#aaaaaa");
+		JsonString js2=new JsonString("aaaaaa");
 		assertTrue(rm.compare(js1,js2).getValue().equals(Verdict.Value.TRUE));
 	}
 
@@ -52,6 +52,8 @@ public class RegexMatchTest {
 		JsonString js2=new JsonString("B");
 		assertTrue(rm.compare(js1,js2).getValue().equals(Verdict.Value.FALSE));
 	}
+
+
 	@Test
 	public void testCompareJsonNumberJsonNumber() {
 		JsonNumber js1=new JsonNumber(3);
