@@ -42,8 +42,8 @@ public class OrStatement extends AndStatement
     {
       Verdict b = s.evaluate(j, d);
       out.disjoin(b);
-      if (out.is(Verdict.Value.TRUE))
-        break;
+     /* if (out.is(Verdict.Value.TRUE))// Verdict.Value is always equals to FALSE
+        break;*/
     }
     m_verdict = out;
     return m_verdict;
