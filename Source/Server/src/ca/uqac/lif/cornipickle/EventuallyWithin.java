@@ -110,7 +110,7 @@ public class EventuallyWithin extends Globally
 	@Override
 	public Statement getClone()
 	{
-		Eventually out = new Eventually();
+		EventuallyWithin out = new EventuallyWithin();
 		out.setInnerStatement(m_innerStatement.getClone());
 		return out;
 	}
