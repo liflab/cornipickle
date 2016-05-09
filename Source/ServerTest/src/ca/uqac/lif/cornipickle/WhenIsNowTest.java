@@ -6,9 +6,7 @@ import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.cornipickle.server.CornipickleServer;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
-import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonNumber;
-import ca.uqac.lif.json.JsonParser;
+import ca.uqac.lif.json.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.matchers.StacktracePrintingMatcher;
@@ -84,12 +82,110 @@ public class WhenIsNowTest {
     }
 
 
-    /*@Test
-    public void WhenIsNowTestFetchWithId() throws JsonParser.JsonParseException {
-        JsonElement j = WhenIsNow.fetchWithId(jse, 1);
-        System.out.println(j);
+    @Test
+    public void WhenIsNowTestFetchWithIdOK() throws JsonParser.JsonParseException {
+        // Create "document"
+        JsonList el = new JsonList();
+        {
+            JsonMap x = new JsonMap();
+            x.put("width", new JsonNumber(100));
+            x.put("tagname", new JsonString("p"));
+            x.put("id", new JsonNumber(0));
+            el.add(x);
+        }
+        {
+            JsonMap x = new JsonMap();
+            x.put("width", new JsonNumber(101));
+            x.put("tagname", new JsonString("q"));
+            x.put("id", new JsonNumber(1));
+            el.add(x);
+        }
+        JsonMap main = new JsonMap();
+        main.put("children", el);
+        main.put("tagname", new JsonString("h1"));
+        main.put("cornipickleid", new JsonNumber(1));
 
-    }*/
+
+
+        JsonElement e =WhenIsNow.fetchWithId(main, 1);
+
+        assertTrue(e.toString().equals(main.toString()));
+
+
+
+
+
+    }
+
+
+    @Test
+    public void WhenIsNowTestFetchWithIdNonTrouve() throws JsonParser.JsonParseException {
+        // Create "document"
+        JsonList el = new JsonList();
+        {
+            JsonMap x = new JsonMap();
+            x.put("width", new JsonNumber(100));
+            x.put("tagname", new JsonString("p"));
+            x.put("id", new JsonNumber(0));
+            el.add(x);
+        }
+        {
+            JsonMap x = new JsonMap();
+            x.put("width", new JsonNumber(101));
+            x.put("tagname", new JsonString("q"));
+            x.put("id", new JsonNumber(1));
+            el.add(x);
+        }
+        JsonMap main = new JsonMap();
+        main.put("children", el);
+        main.put("tagname", new JsonString("h1"));
+        //main.put("cornipickleid", new JsonNumber(1));
+
+
+
+        JsonElement e =WhenIsNow.fetchWithId(main, 1);
+
+        assertTrue(e==null);
+
+    }
+
+
+    @Test
+    public void WhenIsNowTestFetchWithIdNonMap(){
+        JsonNumber jn = new JsonNumber(1);
+        assertTrue(WhenIsNow.fetchWithId(jn, 1)==null);
+    }
+    
+    @Test
+    public void WhenIsNowTestFetchWithIdChildren(){
+        // Create "document"
+        JsonList el = new JsonList();
+        {
+            JsonMap x = new JsonMap();
+            x.put("width", new JsonNumber(100));
+            x.put("tagname", new JsonString("p"));
+            x.put("id", new JsonNumber(0));
+            x.put("cornipickleid", new JsonNumber(1));
+            el.add(x);
+        }
+        {
+            JsonMap x = new JsonMap();
+            x.put("width", new JsonNumber(101));
+            x.put("tagname", new JsonString("q"));
+            x.put("id", new JsonNumber(1));
+            el.add(x);
+        }
+        JsonMap main = new JsonMap();
+        main.put("children", el);
+        main.put("tagname", new JsonString("h1"));
+
+        JsonElement e =WhenIsNow.fetchWithId(main, 1);
+
+        assertTrue(e.toString().equals("{\"tagname\":\"p\",\"cornipickleid\":1,\"width\":100,\"id\":0}"));
+
+    }
+
+
 
 
 
