@@ -41,7 +41,7 @@ public class GreaterThanStatement extends ComparisonStatement
 		Witness w = new Witness();
 		w.add(new Witness(e1));
 		w.add(new Witness(e2));
-		if (e1.stringValue().compareTo(e2.stringValue()) == 0)
+		if (e1.stringValue().compareTo(e2.stringValue()) > 0)
 		{
 			out.setValue(Verdict.Value.TRUE);
 			out.setWitnessTrue(w);

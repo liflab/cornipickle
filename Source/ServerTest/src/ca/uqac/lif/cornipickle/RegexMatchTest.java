@@ -66,12 +66,7 @@ public class RegexMatchTest {
 		assertTrue(rm.getKeyword().toString().equals("matches"));
 	}
 
-	/*@Test
-	public void testRegexMatch() {
-		fail("Not yet implemented");
-	}
-
-	*/@Test
+	@Test
 	public void testGetClone() {
 		RegexMatch rm2;
 		rm2=rm.getClone();
