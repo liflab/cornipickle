@@ -32,4 +32,15 @@ public class UtilsTest {
         }
         return pn;
     }
+
+    public static LanguageElement shouldParseAndNotNullReturnElement(CornipickleParser parser,String line, String start_symbol){
+
+        ParseNode pn = shouldParseAndNotNull(parser, line, start_symbol);
+
+        LanguageElement e = parser.parseStatement(pn);
+
+        return e;
+
+    }
+
 }
