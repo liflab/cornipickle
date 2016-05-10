@@ -7,6 +7,11 @@ import ca.uqac.lif.cornipickle.util.StringUtils;
 
 import org.junit.Before;
 import org.junit.Test;
+import sun.awt.HeadlessToolkit;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.Assert.*;
 
 /**
@@ -530,7 +535,6 @@ public class HtmlFormatterTest {
             public void prefixAccept(LanguageElementVisitor visitor) {
 
             }
-
             @Override
             public void postfixAccept(LanguageElementVisitor visitor) {
 
@@ -576,6 +580,113 @@ public class HtmlFormatterTest {
 
         assertTrue(expected.equals(hf.m_elements.peek().toString()));
     }
+
+
+    @Test
+    public void HtmlFormatterTestForAllStatement(){
+        ForAllStatement fas = (ForAllStatement)UtilsTest.shouldParseAndNotNullReturnElement(parser, "For each $x in $(p) ($x's width equals 100)", "<foreach>");
+        String expected = "<span class=\"forall\">For each "+"<span class=\"element-name\">$x</span> in $(p) (<br/>\n&nbsp;$x's width equals 100\n<br/>\n)";
+
+        hf.m_elements.push(new StringBuilder("$x's width equals 100"));
+        hf.m_elements.push(new StringBuilder("$(p)"));
+
+        hf.visit(fas);
+
+        assertTrue(expected.equals(hf.m_elements.peek().toString()));
+    }
+
+    @Test
+    public void HtmlFormatterTestFormatMetadata(){
+        Interpreter.StatementMetadata sm = new Interpreter.StatementMetadata();
+
+        sm.put("name", "Name of the element");
+        sm.put("size", "Size of the element");
+
+        String expected = "<span class=\"comment\">\"\"\"<br/>\n"
+
+                +"&nbsp;&nbsp;"
+                +"<span class=\"attribute-name\">@size</span> "
+                +"Size of the element"
+                +"\n<br />\n"
+
+                +"&nbsp;&nbsp;"
+                +"<span class=\"attribute-name\">@name</span> "
+                +"Name of the element"
+                +"\n<br />\n"
+
+
+                +"\"\"\"<br />\n</span>\n";
+
+        String result = HtmlFormatter.format(sm);
+
+        assertTrue(expected.equals(result));
+
+    }
+
+
+
+    @Test
+    public void HtmlFormatterTestFormatMetadataWithIgnoredAttributes(){
+        Interpreter.StatementMetadata sm = new Interpreter.StatementMetadata();
+
+        sm.put("name", "Name of the element");
+        sm.put("size", "Size of the element");
+
+        String expected = "<span class=\"comment\">\"\"\"<br/>\n"
+
+                +"&nbsp;&nbsp;"
+                +"<span class=\"attribute-name\">@name</span> "
+                +"Name of the element"
+                +"\n<br />\n"
+
+
+                +"\"\"\"<br />\n</span>\n";
+
+        HashSet<String> hs = new HashSet<String>();
+        hs.add("size");
+
+        String result = HtmlFormatter.format(sm,hs);
+
+        assertTrue(expected.equals(result));
+
+    }
+
+
+
+    @Test
+    public void HtmlFormatterTestFormatMetadataWithIgnoredAttributes2(){
+        Interpreter.StatementMetadata sm = new Interpreter.StatementMetadata();
+
+        sm.put("name", "Name of the element");
+        sm.put("size", "Size of the element");
+
+        String expected = "";
+
+        HashSet<String> hs = new HashSet<String>();
+        hs.add("size");
+        hs.add("name");
+
+        String result = HtmlFormatter.format(sm,hs);
+
+        assertTrue(expected.equals(result));
+
+    }
+
+    /*@Test
+    public void HtmlFormatterTestGetFormated(){
+        ImpliesStatement is =(ImpliesStatement) UtilsTest.shouldParseAndNotNullReturnElement(parser, "If ( \"3\" equals \"3\") Then ( \"3\" equals \"3\")\n", "<implies>");
+        System.out.println(hf.m_elements);
+        hf.m_elements.clear();
+
+
+
+
+        hf.getFormatted(is);
+
+
+
+        //assertTrue(==null);
+    }*/
 
 
 
