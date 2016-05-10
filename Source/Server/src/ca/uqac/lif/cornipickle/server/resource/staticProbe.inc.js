@@ -314,7 +314,15 @@ Cornipickle.CornipickleProbe = function()
 		    	Cornipickle.CornipickleProbe.handleResponse(this.responseText);
 		    }
 		};
-		xhttp.send("contents=" + JSON.stringify(json));
+		if(sessionStorage.interpreter)
+		{
+			xhttp.send("contents=" + JSON.stringify(json) + "&interpreter=" + sessionStorage.interpreter);
+		}
+		else
+		{
+			xhttp.send("contents=" + JSON.stringify(json));
+		}
+		
 	};
 	
 	this.registerNewElement = function(n)
@@ -398,6 +406,7 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 {
 	// eval is evil, but we can't assume JSON.parse is available
 	eval("var response = " + decodeURI(response)); // jshint ignore:line
+	sessionStorage.interpreter = response.interpreter;
 	document.getElementById("cp-image").src = response["image"];
 	if (response["global-verdict"] === "TRUE")
 	{

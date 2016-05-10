@@ -169,7 +169,7 @@ class DummyImage extends InterpreterCallback
     // Select the dummy image to send back
     Map<StatementMetadata,Verdict> verdicts = m_interpreter.getVerdicts();
     byte[] image_to_return = selectImage(verdicts);
-    // Create cookie response
+    // Create response
     CallbackResponse cbr = new CallbackResponse(t);
     cbr.setContents(createResponseBody(verdicts, m_interpreter.saveToMemento(), image_to_return));
     cbr.setContentType(CallbackResponse.ContentType.JSON);
