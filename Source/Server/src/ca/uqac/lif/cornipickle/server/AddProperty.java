@@ -130,8 +130,8 @@ class AddProperty extends InterpreterCallback
     response.setContents(output.toString());
     response.setContentType(CallbackResponse.ContentType.JSON);
     
-    String cookie_json_string = DummyImage.createResponseCookie(m_interpreter.getVerdicts(), m_interpreter.saveToMemento());
-    response.addResponseCookie(new Cookie(DummyImage.s_cookieName, cookie_json_string));
+    //String cookie_json_string = DummyImage.createResponseCookie(m_interpreter.getVerdicts(), m_interpreter.saveToMemento());
+    //response.addResponseCookie(new Cookie(DummyImage.s_cookieName, cookie_json_string));
     
     m_interpreter.clear();
     

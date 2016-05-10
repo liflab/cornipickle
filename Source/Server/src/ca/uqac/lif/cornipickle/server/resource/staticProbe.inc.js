@@ -304,10 +304,17 @@ Cornipickle.CornipickleProbe = function()
 		// Serialize page contents
 		var json = cp_probe.serializePageContents(document.body, [], event);
 		json = cp_probe.serializeWindow(json);
-		var json_url = encodeURIComponent(JSON.stringify(json, Cornipickle.escape_json_string));
 		var url = "http://" + this.server_name + "/image?rand=" + Math.round(Math.random() * 1000);
-		document.getElementById("cp-image").src = url + "&contents=" + json_url;
-		window.setTimeout(Cornipickle.CornipickleProbe.handleResponse.bind(this), Cornipickle.CornipickleProbe.refreshDelay);
+		xhttp = new XMLHttpRequest();
+		xhttp.open("POST", url, true);
+		xhttp.setRequestHeader("Content-type", "text/plain");
+		xhttp.onreadystatechange = function () {
+		    var DONE = this.DONE || 4;
+		    if (this.readyState === DONE){
+		    	Cornipickle.CornipickleProbe.handleResponse(this.responseText);
+		    }
+		};
+		xhttp.send("contents=" + JSON.stringify(json));
 	};
 	
 	this.registerNewElement = function(n)
@@ -387,12 +394,11 @@ Cornipickle.CornipickleProbe.getStyle = function(elem, prop)
 	return res;
 };
 
-Cornipickle.CornipickleProbe.handleResponse = function()
+Cornipickle.CornipickleProbe.handleResponse = function(response)
 {
-	// Decode 
-	var cookie_string = Cornipickle.CornipickleProbe.getCookie("cornipickle");
 	// eval is evil, but we can't assume JSON.parse is available
-	eval("var response = " + decodeURI(cookie_string)); // jshint ignore:line
+	eval("var response = " + decodeURI(response)); // jshint ignore:line
+	document.getElementById("cp-image").src = response["image"];
 	if (response["global-verdict"] === "TRUE")
 	{
 		document.getElementById("bp_witness").style.backgroundColor = "green";
