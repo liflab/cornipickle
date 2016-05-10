@@ -17,20 +17,14 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.xml.bind.DatatypeConverter;
 
-import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
-import ca.uqac.lif.cornipickle.serialization.CornipickleDeflateSerializer;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
@@ -39,7 +33,6 @@ import ca.uqac.lif.json.JsonParser;
 import ca.uqac.lif.json.JsonParser.JsonParseException;
 import ca.uqac.lif.json.JsonString;
 import ca.uqac.lif.jerrydog.CallbackResponse;
-import ca.uqac.lif.jerrydog.Cookie;
 import ca.uqac.lif.jerrydog.InnerFileServer;
 import ca.uqac.lif.jerrydog.RequestCallback;
 

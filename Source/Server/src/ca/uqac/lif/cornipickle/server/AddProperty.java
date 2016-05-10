@@ -27,7 +27,6 @@ import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.jerrydog.CallbackResponse;
-import ca.uqac.lif.jerrydog.Cookie;
 
 import com.sun.net.httpserver.HttpExchange;
 
