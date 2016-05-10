@@ -42,8 +42,7 @@ public class OrStatementTest {
 		JsonElement je= new JsonNumber(15);
 		JsonElement je2= new JsonNumber(7);		
 		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
-		test.put("5", je2);		
-		System.out.println(or.evaluate(je, test).toString());
+		test.put("5", je2);			
 		assertTrue(or.evaluateAtemporal(je, test).toString().equals("F {\n\n}"));
 	}
 
