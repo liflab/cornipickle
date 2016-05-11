@@ -125,12 +125,10 @@ class AddProperty extends InterpreterCallback
     {
     	tagnames.add(att);
     }
-    output.put("tagnames", tagnames);    
+    output.put("tagnames", tagnames);
+    output.put("interpreter", m_interpreter.saveToMemento());
     response.setContents(output.toString());
     response.setContentType(CallbackResponse.ContentType.JSON);
-    
-    //String cookie_json_string = DummyImage.createResponseCookie(m_interpreter.getVerdicts(), m_interpreter.saveToMemento());
-    //response.addResponseCookie(new Cookie(DummyImage.s_cookieName, cookie_json_string));
     
     m_interpreter.clear();
     
