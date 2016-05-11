@@ -103,11 +103,11 @@ public class LessThanStatementTest {
     }
 
     @Test
-    public void TestLessThanStatementCompareStringJSonNumericFALSE(){
-        JsonString n1 = new JsonString("4");
-        JsonString n2 = new JsonString("3");
+    public void TestLessThanStatementCompareStringJSonNumericTRUE2(){
+        JsonString n1 = new JsonString("3");
+        JsonString n2 = new JsonString("A");
 
-        Verdict expected = new Verdict(Verdict.Value.FALSE);
+        Verdict expected = new Verdict(Verdict.Value.TRUE);
 
         Verdict result = ls.compare(n1,n2);
 

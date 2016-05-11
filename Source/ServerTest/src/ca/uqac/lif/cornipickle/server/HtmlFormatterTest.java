@@ -602,7 +602,7 @@ public class HtmlFormatterTest {
         sm.put("name", "Name of the element");
         sm.put("size", "Size of the element");
 
-        String expected = "<span class=\"comment\">\"\"\"<br/>\n"
+        String expected = "\n<span class=\"comment\">\"\"\"<br/>\n"
 
                 +"&nbsp;&nbsp;"
                 +"<span class=\"attribute-name\">@size</span> "
@@ -613,12 +613,11 @@ public class HtmlFormatterTest {
                 +"<span class=\"attribute-name\">@name</span> "
                 +"Name of the element"
                 +"\n<br />\n"
-
-
                 +"\"\"\"<br />\n</span>\n";
 
-        String result = HtmlFormatter.format(sm);
-
+        String result = HtmlFormatter.format(sm); 
+        System.out.println(result);
+        System.out.println(expected);
         assertTrue(expected.equals(result));
 
     }

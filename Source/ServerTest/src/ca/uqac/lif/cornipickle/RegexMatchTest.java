@@ -53,6 +53,12 @@ public class RegexMatchTest {
 		assertTrue(rm.compare(js1,js2).getValue().equals(Verdict.Value.FALSE));
 	}
 
+	@Test
+	public void testCompareJsonStringJsonString3() {//compare two string js1 and js2
+		JsonString js1=new JsonString("aaaaaa");
+		JsonString js2=new JsonString("#aaaaaa");
+		assertTrue(rm.compare(js1,js2).getValue().equals(Verdict.Value.FALSE));
+	}
 
 	@Test
 	public void testCompareJsonNumberJsonNumber() {
