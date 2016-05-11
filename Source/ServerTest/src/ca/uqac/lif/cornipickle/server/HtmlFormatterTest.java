@@ -602,10 +602,7 @@ public class HtmlFormatterTest {
         sm.put("name", "Name of the element");
         sm.put("size", "Size of the element");
 
-<<<<<<< HEAD
-        String expected = "\n<span class=\"comment\">\"\"\"<br/>\n"
-=======
->>>>>>> 6665469a24d86ec88747c8dd33a465da4eb59333
+
 
         String e1 = "&nbsp;&nbsp;"
                 +"<span class=\"attribute-name\">@size</span> "
@@ -616,17 +613,8 @@ public class HtmlFormatterTest {
         String e2 = "&nbsp;&nbsp;"
                 +"<span class=\"attribute-name\">@name</span> "
                 +"Name of the element"
-<<<<<<< HEAD
-                +"\n<br />\n"
-                +"\"\"\"<br />\n</span>\n";
-
-        String result = HtmlFormatter.format(sm); 
-        System.out.println(result);
-        System.out.println(expected);
-        assertTrue(expected.equals(result));
-=======
                 +"\n<br />\n";
-
+             
         String result = HtmlFormatter.format(sm);
 
         boolean assert1 = result.contains(e1);
@@ -634,7 +622,7 @@ public class HtmlFormatterTest {
 
 
         assertTrue(assert1&&assert2);
->>>>>>> 6665469a24d86ec88747c8dd33a465da4eb59333
+
 
     }
 
