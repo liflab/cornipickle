@@ -17,6 +17,8 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Map;
 import java.util.Set;
 
@@ -144,13 +146,16 @@ class DummyImage extends InterpreterCallback
     
     JsonElement j = null;
     try {
-      j = s_jsonParser.parse(attributes.get("contents"));
+      j = s_jsonParser.parse(URLDecoder.decode(attributes.get("contents"), "UTF-8"));
       if(attributes.get("interpreter") != null)
       {
-        m_interpreter = m_interpreter.restoreFromMemento(attributes.get("interpreter"));
+        m_interpreter = m_interpreter.restoreFromMemento(URLDecoder.decode(attributes.get("interpreter"), "UTF-8"));
       }
     } catch (JsonParseException e) {
       e.printStackTrace(); //Never supposed to happen....
+    } catch (UnsupportedEncodingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
 
     if (j != null)

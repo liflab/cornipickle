@@ -307,7 +307,7 @@ Cornipickle.CornipickleProbe = function()
 		var url = "http://" + this.server_name + "/image?rand=" + Math.round(Math.random() * 1000);
 		xhttp = new XMLHttpRequest();
 		xhttp.open("POST", url, true);
-		xhttp.setRequestHeader("Content-type", "text/plain");
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xhttp.onreadystatechange = function () {
 		    var DONE = this.DONE || 4;
 		    if (this.readyState === DONE){
@@ -316,11 +316,11 @@ Cornipickle.CornipickleProbe = function()
 		};
 		if(sessionStorage.interpreter)
 		{
-			xhttp.send("contents=" + JSON.stringify(json) + "&interpreter=" + sessionStorage.interpreter);
+			xhttp.send("contents=" + encodeURIComponent(JSON.stringify(json, Cornipickle.escape_json_string)) + "&interpreter=" + encodeURIComponent(sessionStorage.interpreter));
 		}
 		else
 		{
-			xhttp.send("contents=" + JSON.stringify(json));
+			xhttp.send("contents=" + encodeURIComponent(JSON.stringify(json, Cornipickle.escape_json_string)));
 		}
 		
 	};
