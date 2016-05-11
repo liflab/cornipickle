@@ -156,7 +156,7 @@ public class WhenIsNowTest {
         assertTrue(WhenIsNow.fetchWithId(jn, 1)==null);
     }
 
-    /*
+
     @Test
     public void WhenIsNowTestFetchWithIdChildren(){
         // Create "document"
@@ -179,19 +179,21 @@ public class WhenIsNowTest {
         JsonMap main = new JsonMap();
         main.put("children", el);
         main.put("tagname", new JsonString("h1"));
-        System.out.println(main);
 
         JsonElement e =WhenIsNow.fetchWithId(main, 1);
-        System.out.println(e.toString());
-        System.out.println("{\"tagname\":\"p\",\"cornipickleid\":1,\"width\":100,\"id\":0}");
+        System.out.println(e);
 
-        System.out.println(e.toString());
-        System.out.println("{\"tagname\":\"p\",\"cornipickleid\":1,\"width\":100,\"id\":0}");
+        boolean v1 = e.toString().contains("\"tagname\":\"p\"");
+        boolean v2 = e.toString().contains("\"cornipickleid\":1");
+        boolean v3 = e.toString().contains("\"width\":100");
+        boolean v4 = e.toString().contains("\"id\":0");
 
-        assertTrue(e.toString().equals("{\"tagname\":\"p\",\"cornipickleid\":1,\"width\":100,\"id\":0}"));
+        boolean f1 = !e.toString().contains("\"tagname\":\"q\"");
+
+        assertTrue(v1&&v2&&v3&&v4&&f1);
 
     }
-    */
+
 
 
 
