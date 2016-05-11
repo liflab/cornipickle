@@ -603,6 +603,7 @@ public class HtmlFormatterTest {
         sm.put("size", "Size of the element");
 
 
+
         String e1 = "&nbsp;&nbsp;"
                 +"<span class=\"attribute-name\">@size</span> "
                 +"Size of the element"
@@ -613,7 +614,7 @@ public class HtmlFormatterTest {
                 +"<span class=\"attribute-name\">@name</span> "
                 +"Name of the element"
                 +"\n<br />\n";
-
+             
         String result = HtmlFormatter.format(sm);
 
         boolean assert1 = result.contains(e1);
@@ -621,6 +622,7 @@ public class HtmlFormatterTest {
 
 
         assertTrue(assert1&&assert2);
+
 
     }
 

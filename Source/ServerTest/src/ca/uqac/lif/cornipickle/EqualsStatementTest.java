@@ -55,6 +55,18 @@ public class EqualsStatementTest {
 		JsonString jn2=new JsonString("3");
 		assertTrue(es.compare(jn1, jn2).getValue().equals(Verdict.Value.FALSE));
 	}
+	@Test
+	public void testCompareJsonStringJsonString4() {
+		JsonString jn1=new JsonString("3");
+		JsonString jn2=new JsonString("3");
+		assertTrue(es.compare(jn1, jn2).getValue().equals(Verdict.Value.TRUE));
+	}
+	@Test
+	public void testCompareJsonStringJsonString5() {
+		JsonString jn1=new JsonString("3");
+		JsonString jn2=new JsonString("A");
+		assertTrue(es.compare(jn1, jn2).getValue().equals(Verdict.Value.FALSE));
+	}
 
 	@Test
 	public void testCompareJsonNumberJsonNumber() {
@@ -62,6 +74,7 @@ public class EqualsStatementTest {
 		JsonString jn2=new JsonString("3");
 		assertTrue(es.compare(jn1, jn2).getValue().equals(Verdict.Value.TRUE));
 	}
+	
 
 	@Test
 	public void testGetKeyword() {

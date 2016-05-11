@@ -44,7 +44,6 @@ public class AndStatementTest {
 		JsonElement je=new JsonNumber(3);
 		Map<String,JsonElement>map=new HashMap<String,JsonElement>();
 		assertTrue(as.evaluateAtemporal(je, map).getValue().equals(Verdict.Value.FALSE));
-		//a reverifier
 	}
 
 	@Test
