@@ -19,16 +19,14 @@ package ca.uqac.lif.cornipickle.server;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ca.uqac.lif.azrael.SerializerException;
+import javax.xml.bind.DatatypeConverter;
+
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
-import ca.uqac.lif.cornipickle.serialization.CornipickleDeflateSerializer;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
@@ -37,7 +35,6 @@ import ca.uqac.lif.json.JsonParser;
 import ca.uqac.lif.json.JsonParser.JsonParseException;
 import ca.uqac.lif.json.JsonString;
 import ca.uqac.lif.jerrydog.CallbackResponse;
-import ca.uqac.lif.jerrydog.Cookie;
 import ca.uqac.lif.jerrydog.InnerFileServer;
 import ca.uqac.lif.jerrydog.RequestCallback;
 
@@ -138,7 +135,7 @@ class DummyImage extends InterpreterCallback
 
   public DummyImage(Interpreter i)
   {
-    super(i, RequestCallback.Method.GET, "/image");
+    super(i, RequestCallback.Method.POST, "/image");
     s_jsonParser = new JsonParser();
   }
 
@@ -146,57 +143,35 @@ class DummyImage extends InterpreterCallback
   public CallbackResponse process(HttpExchange t)
   {
     Map<String,String> attributes = getParameters(t);
-    Cookie cornipickleCookie = new Cookie(t,"cornipickle");
     
-    //Find the interpreter in cornipickle cookie and load the content in the interpreter
-    if(cornipickleCookie.getValue() != "")
-    {
-      try {
-        JsonMap jsonCornipickleCookie = (JsonMap)s_jsonParser.parse(cornipickleCookie.getValue());
-        m_interpreter = m_interpreter.restoreFromMemento(jsonCornipickleCookie.get("interpreter").toString());
-      } catch (JsonParseException e) {
-        e.printStackTrace(); //Never supposed to happen....
+    JsonElement j = null;
+    try {
+      j = s_jsonParser.parse(URLDecoder.decode(attributes.get("contents"), "UTF-8"));
+      if(attributes.get("interpreter") != null)
+      {
+        m_interpreter = m_interpreter.restoreFromMemento(URLDecoder.decode(attributes.get("interpreter"), "UTF-8"));
       }
+    } catch (JsonParseException e) {
+      e.printStackTrace(); //Never supposed to happen....
+    } catch (UnsupportedEncodingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
 
-    // Extract JSON from URL string
-    String json_encoded = attributes.get("contents");
-    if (json_encoded != null)
+    if (j != null)
     {
-      JsonElement j = null;
-      // Parse JSON
-      try
-      {
-        String json_decoded = URLDecoder.decode(json_encoded, "UTF-8");
-        j = s_jsonParser.parse(json_decoded);
-        System.out.println("JSON received");
-        System.out.println(json_decoded);
-      }
-      catch (JsonParseException e)
-      {
-        e.printStackTrace();
-      } 
-      catch (UnsupportedEncodingException e)
-      {
-        e.printStackTrace();
-      }
-
-      if (j != null)
-      {
-        m_interpreter.evaluateAll(j);
-        //m_server.setLastProbeContact();
-      }
+      m_interpreter.evaluateAll(j);
+      //m_server.setLastProbeContact();
     }
+    
     // Select the dummy image to send back
     Map<StatementMetadata,Verdict> verdicts = m_interpreter.getVerdicts();
     byte[] image_to_return = selectImage(verdicts);
-    // Create cookie response
+    // Create response
     CallbackResponse cbr = new CallbackResponse(t);
-    String cookie_json_string = "";
-    cookie_json_string = createResponseCookie(verdicts,m_interpreter.saveToMemento());
-    cbr.addResponseCookie(new Cookie(s_cookieName, cookie_json_string));
-    cbr.setContents(image_to_return);
-    cbr.setContentType(CallbackResponse.ContentType.PNG);
+    cbr.setHeader("Access-Control-Allow-Origin", "*");
+    cbr.setContents(createResponseBody(verdicts, m_interpreter.saveToMemento(), image_to_return));
+    cbr.setContentType(CallbackResponse.ContentType.JSON);
     m_interpreter.clear();
     // DEBUG: print state
     //com.google.gson.GsonBuilder builder = new com.google.gson.GsonBuilder();
@@ -249,18 +224,19 @@ class DummyImage extends InterpreterCallback
   }
   
   /**
-   * Creates a cookie out of the verdict of each property handled by the
-   * interpreter. This cookie contains, for each property, its caption,
+   * Creates the response body out of the verdict of each property handled by the
+   * interpreter. This response contains, for each property, its caption,
    * a list of element IDs to highlight (if any), as well as the total
    * number of true/false/inconclusive properties.
    * In addition, it contains the serialized state of the current interpreter
    * @param verdicts A map from the metadata for each property to
    *   its current verdict
    * @param interpreter String in base 64 representing the state of the interpreter
-   * @return A JSON string to be passed as a cookie in the response to
+   * @param image The image to return as an array of bytes
+   * @return A JSON string to be passed as the response to
    *   the browser
    */
-  protected static String createResponseCookie(Map<StatementMetadata,Verdict> verdicts, String interpreter)
+  protected static String createResponseBody(Map<StatementMetadata,Verdict> verdicts, String interpreter, byte[] image)
   {
     int num_false = 0;
     int num_true = 0;
@@ -297,6 +273,7 @@ class DummyImage extends InterpreterCallback
     result.put("num-inconclusive", num_inconclusive);
     result.put("highlight-ids", highlight_ids);
     result.put("interpreter", interpreter);
+    result.put("image", "data:image/png;base64," + DatatypeConverter.printBase64Binary(image));
     // Below, we use true to get a compact JSON string without CF/LF
     // (otherwise the cookie won't be passed correctly to the browser)
     return result.toString("", true); 
