@@ -12,7 +12,6 @@ import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
 import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonString;
 
 public class IsDefinedStatementTest {
@@ -38,11 +37,12 @@ public class IsDefinedStatementTest {
 
 	}
 	
-	/*@Test
+	/*@Test //warning nullpointerException
 	public void testEvaluateAtemporalJsonElementMapOfStringJsonElement() {
-		JsonElement je =new JsonNumber(3);
-		Map<String,JsonElement> map =new HashMap<String,JsonElement>();		
-		assertTrue(ids.evaluateAtemporal(je,map));
+		JsonElement je =new JsonString("cornipickle");
+		Map<String,JsonElement> map =new HashMap<String,JsonElement>();	
+		System.out.println(ids.m_property);
+		assertTrue(ids.evaluateAtemporal(je, map).toString().equals(Verdict.Value.FALSE));
 	}*/
 
 	@Test

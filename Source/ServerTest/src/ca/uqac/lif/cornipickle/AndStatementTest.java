@@ -47,6 +47,13 @@ public class AndStatementTest {
 	}
 
 	@Test
+	public void testEvaluateTemporalJsonElementMapOfStringJsonElement() {
+		JsonElement je=new JsonNumber(3);
+		Map<String,JsonElement>map=new HashMap<String,JsonElement>();		
+		assertTrue(as.evaluateTemporal(je, map).getValue().equals(Verdict.Value.FALSE));
+	}
+	
+	@Test
 	public void testGetClone() {
 		AndStatement as2=as.getClone();
 		assertTrue(as2.toString().equals(as.toString()));
