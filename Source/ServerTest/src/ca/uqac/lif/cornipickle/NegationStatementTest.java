@@ -82,6 +82,7 @@ public class NegationStatementTest {
 		test.put("Trololo", je2);	
 		assertTrue(ns.evaluateAtemporal(je,test).toPlainString().equals("FALSE"));		
 	}
+    
 
     public ParseNode shouldParseAndNotNull(String line, String start_symbol)
     {

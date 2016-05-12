@@ -180,8 +180,7 @@ public class WhenIsNowTest {
         main.put("children", el);
         main.put("tagname", new JsonString("h1"));
 
-        JsonElement e =WhenIsNow.fetchWithId(main, 1);
-        System.out.println(e);
+        JsonElement e =WhenIsNow.fetchWithId(main, 1);        
 
         boolean v1 = e.toString().contains("\"tagname\":\"p\"");
         boolean v2 = e.toString().contains("\"cornipickleid\":1");

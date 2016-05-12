@@ -2,7 +2,13 @@ package ca.uqac.lif.cornipickle;/**
  * Created by paul on 05/05/16.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ca.uqac.lif.bullwinkle.ParseNode;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonString;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -63,7 +69,35 @@ public class ImpliesStatementTest {
 
         assertTrue(ok);
     }
+    @Test
+    public void ImpliesStatementTestEvaluateATemporal(){
+    	JsonElement je =new JsonString("cornipickle");    	
+    	Map<String, JsonElement> map = new HashMap<String, JsonElement>();
+    	assertTrue(is.evaluateAtemporal(je, map).getValue().equals(Verdict.Value.TRUE));
+    }
+    
+    @Test
+    public void ImpliesStatementTestEvaluateATemporal2(){
+        CornipickleParser parser2 = new CornipickleParser();
 
+        String line = "If ( \"3\" equals \"3\") Then ( \"4\" equals \"3\")\n";
+
+        ParseNode pn = shouldParseAndNotNull(parser, line, "<implies>");
+        LanguageElement e = parser.parseStatement(pn);
+
+        if (e == null)
+        {
+            fail("Parsing returned null");
+        }
+        if (!(e instanceof ImpliesStatement))
+        {
+            fail("Got wrong type of object");
+        }
+        is = (ImpliesStatement)e;
+    	JsonElement je =new JsonString("cornipickle");    	
+    	Map<String, JsonElement> map = new HashMap<String, JsonElement>();
+    	assertTrue(is.evaluateAtemporal(je, map).getValue().equals(Verdict.Value.FALSE));
+    }
 
 
 }
