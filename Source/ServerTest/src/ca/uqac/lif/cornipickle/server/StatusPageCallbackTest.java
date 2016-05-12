@@ -1,24 +1,28 @@
 package ca.uqac.lif.cornipickle.server;
 
-import ca.uqac.lif.cornipickle.Interpreter;
-import ca.uqac.lif.cornipickle.PredicateDefinition;
-import ca.uqac.lif.cornipickle.SetDefinition;
-import ca.uqac.lif.cornipickle.StringConstant;
+import ca.uqac.lif.cornipickle.*;
 import ca.uqac.lif.jerrydog.CallbackResponse;
 import com.sun.net.httpserver.HttpExchange;
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.*;
 
 /**
  * Created by paul on 02/05/16.
  */
 public class StatusPageCallbackTest {
+
+    StatusPageCallback spc;
+
+    @Before
+    public void setUp(){
+         spc = new StatusPageCallback(new Interpreter(), new CornipickleServer("server", 1234));
+    }
+
+
     /*@Test
     public void testStatusPageCallbackTestProcess(){
         StatusPageCallback spc = new StatusPageCallback(new Interpreter(), new CornipickleServer("server", 1234));
@@ -110,23 +114,29 @@ public class StatusPageCallbackTest {
 
     }*/
 
-    /*@Test
+    /*
+
+    @Test
     public void testStatusPageCallbackTestCreatePredicateList(){
 
-        StatusPageCallback spc = new StatusPageCallback(new Interpreter(), new CornipickleServer("server", 1234));
+        PredicateDefinition pd1 = (PredicateDefinition)UtilsTest.shouldParseAndNotNullReturnElement(new CornipickleParser(), "We say that $x is thin when ($x's width equals 0)", "<predicate>");
+        PredicateDefinition pd2 = (PredicateDefinition)UtilsTest.shouldParseAndNotNullReturnElement(new CornipickleParser(), "We say that $x is thin when ($x's width equals 0)", "<predicate>");
+        PredicateDefinition pd3 = (PredicateDefinition)UtilsTest.shouldParseAndNotNullReturnElement(new CornipickleParser(), "We say that $x is thin when ($x's width equals 0)", "<predicate>");
 
-        PredicateDefinition pd1 = new PredicateDefinition(new StringConstant("pd1"));
-        PredicateDefinition pd2 = new PredicateDefinition(new StringConstant("pd2"));
-        PredicateDefinition pd3 = new PredicateDefinition(new StringConstant("pd3"));
+
 
         ArrayList<PredicateDefinition> alpd = new ArrayList<PredicateDefinition>();
         alpd.add(pd1);
-        alpd.add(pd2);
-        alpd.add(pd3);
+
 
         StringBuilder result = new StringBuilder();
 
         spc.createPredicateList(alpd, result);
+
+
+        String expected = "<ul class=\"predicates\">\n"
+                + "<li class=\"predicate-definition-item "
+                +
 
         System.out.println(result);
 
@@ -170,8 +180,6 @@ public class StatusPageCallbackTest {
     @Test
     public void TestStatusPageCallBackFooter(){
 
-        StatusPageCallback spc = new StatusPageCallback(new Interpreter(), new CornipickleServer("server", 1234));
-
         StringBuilder result = spc.pageFoot();
 
         Pattern pattern = Pattern.compile("<div id=\"footer\">\n<hr />\n.*</div>\n</body>\n</html>\n");
@@ -186,7 +194,7 @@ public class StatusPageCallbackTest {
     @Test
     public void TestStatusPageCallBackHead(){
 
-        StatusPageCallback spc = new StatusPageCallback(new Interpreter(), new CornipickleServer("server", 1234));
+
 
         StringBuilder result = spc.pageHead("title");
 
@@ -206,6 +214,105 @@ public class StatusPageCallbackTest {
         assertTrue(expected.equals(result.toString()));
 
     }
+    
+    @Test
+    public void StatusPageCallbackTestCreateStatusMessageOK(){
+        Map<Interpreter.StatementMetadata, Verdict> verdicts = new HashMap<Interpreter.StatementMetadata, Verdict>();
+        Interpreter.StatementMetadata sm = new Interpreter.StatementMetadata();
+
+        sm.put("name", "Name of the element");
+        sm.put("size", "Size of the element");
+
+        verdicts.put(sm, new Verdict(Verdict.Value.TRUE));
+
+
+        StringBuilder result = new StringBuilder();
+        StatusPageCallback.createStatusMessage(verdicts, result);
+
+        String expected = "<p class=\"verdicts-no-error\">All's well! All properties evaluate to true.</p>";
+
+        assertTrue(expected.equals(result.toString()));
+
+
+    }
+
+    @Test
+    public void StatusPageCallbackTestCreateStatusMessageEmpty(){
+        Map<Interpreter.StatementMetadata, Verdict> verdicts = new HashMap<Interpreter.StatementMetadata, Verdict>();
+
+
+        StringBuilder result = new StringBuilder();
+        StatusPageCallback.createStatusMessage(verdicts, result);
+
+        String expected = "<p class=\"verdicts-empty\">Cornipickle has no property to evaluate.</p>";
+
+        assertTrue(expected.equals(result.toString()));
+
+
+    }
+
+
+    @Test
+    public void StatusPageCallbackTestCreateStatusMessage1Error(){
+        Map<Interpreter.StatementMetadata, Verdict> verdicts = new HashMap<Interpreter.StatementMetadata, Verdict>();
+        Interpreter.StatementMetadata sm = new Interpreter.StatementMetadata();
+
+        sm.put("name", "Name of the element");
+
+        verdicts.put(sm, new Verdict(Verdict.Value.FALSE));
+
+
+        StringBuilder result = new StringBuilder();
+        StatusPageCallback.createStatusMessage(verdicts, result);
+
+        String expected = "<p class=\"verdicts-errors\">Oops! There is a problem with some property.</p>";
+
+        assertTrue(expected.equals(result.toString()));
+
+
+    }
+
+    @Test
+    public void StatusPageCallbackTestCreateStatusMessageMultipleErrors(){
+        Map<Interpreter.StatementMetadata, Verdict> verdicts = new HashMap<Interpreter.StatementMetadata, Verdict>();
+        Interpreter.StatementMetadata sm = new Interpreter.StatementMetadata();
+
+        sm.put("name", "Name of the element");
+        sm.put("size", "Size of the element");
+
+        verdicts.put(sm, new Verdict(Verdict.Value.FALSE));
+
+
+
+        Interpreter.StatementMetadata sm2 = new Interpreter.StatementMetadata();
+
+        sm2.put("name2", "Name of the element2");
+        sm2.put("size2", "Size of the element2");
+
+        verdicts.put(sm2, new Verdict(Verdict.Value.FALSE));
+
+
+        Interpreter.StatementMetadata sm3 = new Interpreter.StatementMetadata();
+
+        sm3.put("name3", "Name of the element3");
+        sm3.put("size3", "Size of the element3");
+
+        verdicts.put(sm3, new Verdict(Verdict.Value.FALSE));
+
+
+        StringBuilder result = new StringBuilder();
+
+        StatusPageCallback.createStatusMessage(verdicts, result);
+
+        String expected = "<p class=\"verdicts-errors\">Oops! There is a problem with 3 properties.</p>";
+
+        assertTrue(expected.equals(result.toString()));
+
+
+    }
+
+
+
 
 
 }

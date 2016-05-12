@@ -62,4 +62,12 @@ public class DummyImageTest {
         assertArrayEquals(result, out);
 
     }
+
+    
+    
+    
+    
+    
+    
+    
 }

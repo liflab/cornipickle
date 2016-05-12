@@ -7,7 +7,6 @@ import ca.uqac.lif.cornipickle.util.StringUtils;
 
 import org.junit.Before;
 import org.junit.Test;
-import sun.awt.HeadlessToolkit;
 
 import java.util.HashSet;
 import java.util.Set;
