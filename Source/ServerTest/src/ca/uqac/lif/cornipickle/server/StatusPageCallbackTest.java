@@ -16,10 +16,12 @@ import java.util.regex.*;
 public class StatusPageCallbackTest {
 
     StatusPageCallback spc;
-
+    CornipickleServer m_server;
+    Interpreter i;
     @Before
     public void setUp(){
-         spc = new StatusPageCallback(new Interpreter(), new CornipickleServer("server", 1234));
+        m_server = new CornipickleServer("server", 1234);
+         spc = new StatusPageCallback(new Interpreter(), m_server);
     }
 
 
@@ -310,6 +312,42 @@ public class StatusPageCallbackTest {
 
 
     }
+    
+    
+    
+    
+    /*@Test
+    public void StatusPageCallbackTestCreatePropertyList() throws CornipickleParser.ParseException {
+        Map<Interpreter.StatementMetadata, Verdict> verdicts = new HashMap<Interpreter.StatementMetadata, Verdict>();
+        Interpreter.StatementMetadata sm = new Interpreter.StatementMetadata();
+
+        sm.put("name", "Name of the element");
+        sm.put("size", "Size of the element");
+
+        verdicts.put(sm, new Verdict(Verdict.Value.TRUE));
+
+        StringBuilder result = new StringBuilder();
+
+
+
+        i = new Interpreter();
+        i.parseProperties("Name of the element");
+        i.parseProperties("Size of the element");
+
+
+
+
+        String s1 = "<li class=\"true\">"
+                +"<div class=\"property-metadata\">"+HtmlFormatter.format(sm)+"</div>\n"
+                +"<div class=\"property-contents\">\n"
+                +HtmlFormatter.format(spc.m_interpreter.getProperty(sm));
+
+        spc.m_interpreter.getProperty(sm);
+
+        //spc.createPropertyList(verdicts, result);
+
+
+    }*/
 
 
 
