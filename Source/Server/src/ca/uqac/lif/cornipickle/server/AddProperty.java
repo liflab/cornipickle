@@ -127,6 +127,7 @@ class AddProperty extends InterpreterCallback
     }
     output.put("tagnames", tagnames);
     output.put("interpreter", m_interpreter.saveToMemento());
+    response.setHeader("Access-Control-Allow-Origin", "*");
     response.setContents(output.toString());
     response.setContentType(CallbackResponse.ContentType.JSON);
     

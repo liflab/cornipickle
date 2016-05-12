@@ -169,6 +169,7 @@ class DummyImage extends InterpreterCallback
     byte[] image_to_return = selectImage(verdicts);
     // Create response
     CallbackResponse cbr = new CallbackResponse(t);
+    cbr.setHeader("Access-Control-Allow-Origin", "*");
     cbr.setContents(createResponseBody(verdicts, m_interpreter.saveToMemento(), image_to_return));
     cbr.setContentType(CallbackResponse.ContentType.JSON);
     m_interpreter.clear();

@@ -122,6 +122,10 @@ public class Main
 		{
 			serve_path = c_line.getOptionValue("serve-as");
 		}
+		if(c_line.hasOption("s"))
+		{
+		  server_name = c_line.getOptionValue("s");
+		}
 
 		// The remaining arguments are the Cornipickle files to read
 		CornipickleServer server = new CornipickleServer(server_name, server_port);
