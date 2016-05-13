@@ -73,12 +73,36 @@ public class LetStatementTest {
     
     @Test
 	public void testEvaluateAtemporalJsonElementMapOfStringJsonElement() {
-		JsonElement je= new JsonNumber(15);
-		JsonElement je2= new JsonNumber(7);		
-		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
-		test.put("10", je2);	
-		assertTrue(ls.evaluateAtemporal(je, test).toString().equals("T {\n 3:{\n\n },\n 3:{\n\n }\n}"));		
+		JsonElement je= new JsonNumber(15);	
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();		
+		assertTrue(ls.evaluateAtemporal(je, test).m_value.equals(Verdict.Value.TRUE));		
 	}
+    @Test
+	public void testEvaluateAtemporalJsonElementMapOfStringJsonElement2() {
+		JsonElement je= new JsonNumber(15);	
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();		
+		ls.m_value=je;
+		assertTrue(ls.evaluateAtemporal(je, test).m_value.equals(Verdict.Value.TRUE));		
+	}
+    @Test
+	public void testEvaluateTemporalJsonElementMapOfStringJsonElement() {
+		JsonElement je= new JsonNumber(15);	
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();		
+		ls.m_value=je;
+		assertTrue(ls.evaluateTemporal(je, test).m_value.equals(Verdict.Value.TRUE));		
+	}
+    @Test 
+    public void testprefixAccept(){// a modifier si possible
+    	LanguageElementVisitor test =new AttributeExtractor();
+    	ls.prefixAccept(test);
+    	assertTrue(true);
+    }
+    @Test 
+    public void testpostfixAccept(){// a modifier si possible
+    	LanguageElementVisitor test =new AttributeExtractor();
+    	ls.postfixAccept(test);
+    	assertTrue(true);
+    }
 
 
 

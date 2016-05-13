@@ -42,10 +42,8 @@ public class MultOperationTest {
 
 	@Test
 	public void testEvaluateJsonElementMapOfStringJsonElement() {
-		JsonElement je= new JsonNumber(15);
-		JsonElement je2= new JsonNumber(7);		
-		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
-		test.put("5", je2);				
+		JsonElement je= new JsonNumber(15);	
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();			
 		assertTrue(mo.evaluate(je, test).toString().equals("20000"));		
 	}
 
