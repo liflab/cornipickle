@@ -2,7 +2,6 @@ package ca.uqac.lif.cornipickle;/**
  * Created by paul on 13/05/16.
  */
 
-import org.jcp.xml.dsig.internal.dom.Utils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +40,7 @@ public class InterpreterTest {
         //ElementPropertyComplement epc = (ElementPropertyComplement)UtilsTest.shouldParseAndNotNullReturnElement(i.m_parser, "", "<elem_property>");
         i.parseProperties("Eventually ( \"3\" equals \"3\").\nEventually ( \"3\" equals \"3\").\nEventually ( \"3\" equals \"3\").");
 
-        System.out.println(i.m_statements);
+        //System.out.println(i.m_statements);
     }
 
 
