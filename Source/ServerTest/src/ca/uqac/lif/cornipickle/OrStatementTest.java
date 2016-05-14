@@ -39,11 +39,9 @@ public class OrStatementTest {
 	}
 	@Test
 	public void testEvaluateAtemporalJsonElementMapOfStringJsonElement() {
-		JsonElement je= new JsonNumber(15);
-		JsonElement je2= new JsonNumber(7);		
+		JsonElement je= new JsonNumber(15);	
 		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
-		test.put("5", je2);			
-		assertTrue(or.evaluateAtemporal(je, test).toString().equals("F {\n\n}"));
+		assertTrue(or.evaluateAtemporal(je, test).m_value.equals(Verdict.Value.FALSE));
 	}
 
 	@Test
@@ -52,7 +50,7 @@ public class OrStatementTest {
 		JsonElement je2= new JsonNumber(7);		
 		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
 		test.put("5", je2);			
-		assertTrue(or.evaluateTemporal(je, test).toString().equals("F {\n\n}"));
+		assertTrue(or.evaluateTemporal(je, test).m_value.equals(Verdict.Value.FALSE));
 	}
 
 	@Test
