@@ -19,9 +19,9 @@ public class StatementMetadataTest {
 
     @Test
     public void StatementMetadataTestToString(){
-        String expected = "@size Size of the element\n" +
-                "@name Name of the element\n";
-        assertTrue(expected.equals(sm.toString()));
+        String s1 = "@size Size of the element";
+        String s2="@name Name of the element";
+        assertTrue(sm.toString().contains(s1)&&sm.toString().contains(s2));
     }
 
 
