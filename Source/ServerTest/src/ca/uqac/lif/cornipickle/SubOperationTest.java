@@ -54,10 +54,8 @@ public class SubOperationTest {
 	}
 	@Test
 	public void testEvaluateJsonElementMapOfStringJsonElement() {
-		JsonElement je= new JsonNumber(15);
-		JsonElement je2= new JsonNumber(7);		
+		JsonElement je= new JsonNumber(15);	
 		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
-		test.put("5", je2);				
 		assertTrue(so.evaluate(je, test).toString().equals("1"));		
 	}
 	
