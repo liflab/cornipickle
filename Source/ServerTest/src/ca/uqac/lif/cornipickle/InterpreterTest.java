@@ -2,6 +2,7 @@ package ca.uqac.lif.cornipickle;/**
  * Created by paul on 13/05/16.
  */
 
+import ca.uqac.lif.bullwinkle.ParseNode;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,6 +62,15 @@ public class InterpreterTest {
 
         assertTrue(b1&&b2);
     }
+
+
+
+    @Test
+    public void testResetHistory(){
+        i.resetHistory();
+    }
+
+
 
 
     /*@Test
