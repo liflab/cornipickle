@@ -14,6 +14,7 @@ import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonNumber;
+import ca.uqac.lif.json.JsonString;
 
 public class SetDefinitionTest {
 	
@@ -37,22 +38,36 @@ public class SetDefinitionTest {
 
 	}
 	@Test
-	public void testToStringString() {
-		assertTrue(((SetDefinition)sd).toString("tomato").equals("tomato"));
+	public void testToStringString() {//not good go to 
+		SetDefinition sd2 =new SetDefinition();
+		StringConstant sc =new StringConstant("Cornipickle");
+		sd2.m_setName=sc;
+		assertTrue(((SetDefinition)sd2).toString("cornipickle").equals("cornipickleCornipickle"));
 	}
 
 	@Test
 	public void testEvaluateJsonElementMapOfStringJsonElement() {
-		JsonElement je =new JsonList();		
+		SetDefinition sd2 =new SetDefinition();
+		StringConstant sc =new StringConstant("Cornipickle");
+		sd2.m_setName=sc;
+		JsonString js =new JsonString("Cornipickle");
+		JsonList je =new JsonList();
+		je.add(js);
 		Map<String, JsonElement>map=new HashMap<String,JsonElement>();
-		assertTrue(((SetDefinition)sd).evaluate(je, map).get(0).toString().equals("\"abc\""));
+		map.put("Cornipickle", je);
+		assertTrue(((SetDefinition)sd2).evaluate(je, map).toString().equals("[\"Cornipickle\"]"));
 	}
-	/*@Test
+	@Test
 	public void testEvaluateJsonElementMapOfStringJsonElement2() {
-		JsonElement je =new JsonNumber(3);		
+		SetDefinition sd2 =new SetDefinition();
+		StringConstant sc =new StringConstant("Cornipickle");
+		sd2.m_setName=sc;
+		JsonString js =new JsonString("Cornipickle");
 		Map<String, JsonElement>map=new HashMap<String,JsonElement>();
-		assertTrue(((SetDefinition)sd).evaluate(je, map).equals(null));
-	}*/
+		map.put("Cornipickle", js);
+		assertTrue(((SetDefinition)sd2).evaluate(js, map)==null);
+	}
+
 
 	@Test
 	public void testGetClone() {

@@ -5,8 +5,15 @@ package ca.uqac.lif.cornipickle;/**
 import org.junit.Before;
 import org.junit.Test;
 
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
+
 import javax.sql.rowset.Predicate;
+
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -17,8 +24,9 @@ public class PredicateCallTest {
     @Before
     public void setUp() {
         pd = new PredicateDefinition(new StringConstant("rule"));
-        pc = new PredicateCall(pd, "match", new LinkedList<String>());
-        pc.m_predicate.m_predicate = new EqualsStatement();
+        pd.m_predicate= new OrStatement();
+        List l=new LinkedList<String>();
+        pc = new PredicateCall(pd, "match", l);
     }
     
     @Test
@@ -69,12 +77,43 @@ public class PredicateCallTest {
         assertFalse(pc.isTemporal());
     }
     
-    /*@Test
-    public void PredicateCallTestGetClone(){
-        PredicateCall pc2 = pc.getClone();
-        boolean predicate = pc2.m_predicate.toString().equals(pc.m_predicate.toString());
-        boolean matched = pc2.getMatchedString().equals(pc.getMatchedString());
-    }*/
+    @Test
+    public void PredicateCallTestGetClone(){        	
+        PredicateCall pc2 =pc.getClone();
+        assertTrue(pc2.m_predicate.m_predicate.toString().equals(pc.m_predicate.m_predicate.toString()));
+    }
+    @Test 
+    public void testpostfixAccept(){
+    	LanguageElementVisitor test =new AttributeExtractor();
+    	pc.postfixAccept(test);
+    	assertTrue(true);
+    }
+    @Test
+	public void testEvaluateAtemporalJsonElementMapOfStringJsonElement() {
+		JsonElement je= new JsonNumber(15);	
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
+		pc.m_captureBlocks.setSize(5);
+		pc.m_captureBlocks.set(0, "Cornipickle");
+		pc.m_captureBlocks.set(1, "Cornipickle");
+		pc.m_captureBlocks.set(2, "Cornipickle");
+		pc.m_captureBlocks.set(3, "Cornipickle");
+		pc.m_captureBlocks.set(4, "Cornipickle");
+		pc.m_predicate.m_captureGroups.setSize(5);
+		assertTrue(pc.evaluateAtemporal(je, test).m_value.equals(Verdict.Value.FALSE));		
+	}
+   @Test
+	public void testEvaluateTemporalJsonElementMapOfStringJsonElement() {
+		JsonElement je= new JsonNumber(15);	
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
+		pc.m_captureBlocks.setSize(5);
+		pc.m_captureBlocks.set(0, "Cornipickle");
+		pc.m_captureBlocks.set(1, "Cornipickle");
+		pc.m_captureBlocks.set(2, "Cornipickle");
+		pc.m_captureBlocks.set(3, "Cornipickle");
+		pc.m_captureBlocks.set(4, "Cornipickle");
+		pc.m_predicate.m_captureGroups.setSize(5);
+		assertTrue(pc.evaluateTemporal(je, test).m_value.equals(Verdict.Value.FALSE));		
+	}
 
 
 
