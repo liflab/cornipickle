@@ -25,7 +25,7 @@ public class RegexCaptureTest {
     public void setUp(){
         parser = new CornipickleParser();
 
-        String line = "match $x's width with \"[0-9]\"";
+        String line = "match $x's width with \"([0-9])\"";
 
         rc = (RegexCapture)UtilsTest.shouldParseAndNotNullReturnElement(parser, line, "<regex_capture>");
     }
@@ -33,7 +33,7 @@ public class RegexCaptureTest {
 
     @Test
     public void testToString(){
-        String expected = "match $x's width with [0-9]";
+        String expected = "match $x's width with ([0-9])";
         assertTrue(expected.equals(rc.toString()));
     }
 
@@ -51,17 +51,24 @@ public class RegexCaptureTest {
         assertTrue(rc.getPattern().equals("[0-1]"));
     }
 	@Test
-	public void testEvaluateJsonElementMapOfStringJsonElement2() {			
+	public void testEvaluateJsonElementMapOfStringJsonElement1() {			
 		JsonElement js =new JsonString("text");
-		JsonString test = new JsonString("text63216321");
+		JsonString test = new JsonString("text666");
 		JsonMap jm=new JsonMap();
 		jm.put("text", test);
 		Map<String, JsonElement>map=new HashMap<String,JsonElement>();
 		map.put("JsonMap", jm);
 		rc.m_variable.m_propertyName="text";
 		rc.m_variable.m_elementName="JsonMap";
-		assertTrue(rc.evaluate(js, map).toString().equals("[]"));
-		
+		assertTrue(rc.evaluate(js, map).toString().equals("[\"6\", \"6\", \"6\"]"));		
+	}
+	@Test
+	public void testEvaluateJsonElementMapOfStringJsonElement2() {			
+		JsonElement js =new JsonString("text");
+		Map<String, JsonElement>map=new HashMap<String,JsonElement>();
+		rc.m_variable.m_propertyName="text";
+		rc.m_variable.m_elementName="JsonMap";
+		assertTrue(rc.evaluate(js, map).toString().equals("[]"));		
 	}
 
 

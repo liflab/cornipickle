@@ -75,8 +75,9 @@ public class RegexCapture extends SetExpression
       return out;
     }
     JsonString text = (JsonString) value;
-    System.out.println(text.stringValue());
     Matcher mat = m_pattern.matcher(text.stringValue());
+    System.out.println(text.stringValue());
+    System.out.println(m_pattern);
     while (mat.find())
     {
     	System.out.println(mat.groupCount());
