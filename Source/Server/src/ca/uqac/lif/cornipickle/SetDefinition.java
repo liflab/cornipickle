@@ -65,7 +65,7 @@ public class SetDefinition extends SetExpression
 	@Override
 	public String toString(String indent)
 	{
-		return m_setName.toString();
+		return indent + m_setName.toString();
 	}
 
 	@Override

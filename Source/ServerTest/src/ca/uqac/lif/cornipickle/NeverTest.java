@@ -43,12 +43,11 @@ public class NeverTest {
 
 	@Test
 	public void testEvaluateTemporalJsonElementMapOfStringJsonElement() {
-		JsonElement je= new JsonNumber(15);
-		JsonElement je2= new JsonNumber(7);		
+		JsonElement je= new JsonNumber(15);	
 		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
-		test.put("15", je2);	
-		assertTrue(nv.evaluateTemporal(je, test).toPlainString().equals("INCONCLUSIVE"));		
+		assertTrue(nv.evaluateTemporal(je, test).m_value.equals(Verdict.Value.INCONCLUSIVE));		
 	}
+	
 
 	@Test
 	public void testGetClone() {

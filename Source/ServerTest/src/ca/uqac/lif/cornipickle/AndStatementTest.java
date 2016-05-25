@@ -52,13 +52,38 @@ public class AndStatementTest {
 		Map<String,JsonElement>map=new HashMap<String,JsonElement>();		
 		assertTrue(as.evaluateTemporal(je, map).getValue().equals(Verdict.Value.FALSE));
 	}
-	
+
 	@Test
 	public void testGetClone() {
 		AndStatement as2=as.getClone();
 		assertTrue(as2.toString().equals(as.toString()));
 	}
-	
+
+	@Test
+	public void testResetHistory() {
+		as.resetHistory();
+	}
+
+	@Test
+	public void testIsTemporal() {
+
+		assertFalse(as.isTemporal());
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	public ParseNode shouldParseAndNotNull(String line, String start_symbol){
 		    BnfParser p = parser.getParser();
 		    //p.setDebugMode(true);

@@ -43,11 +43,9 @@ public class EventuallyWithinTest {
 
 	@Test
 	public void testEvaluateTemporal() {//à completer
-		JsonElement je= new JsonNumber(15);
-		JsonElement je2= new JsonNumber(7);		
+		JsonElement je= new JsonNumber(15);	
 		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
-		test.put("5", je2);				
-		assertTrue(ew.evaluate(je, test).toString().equals("T {\n 3:{\n\n },\n 3:{\n\n }\n}"));		
+		assertTrue(ew.evaluate(je, test).m_value.equals(Verdict.Value.TRUE));		
 	}
 	@Test
 	public void testGetClone() {

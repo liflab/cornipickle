@@ -2,7 +2,9 @@ package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.junit.Before;
@@ -54,6 +56,27 @@ public class AttributeExtractorTest {
 		LanguageElement cs =new ElementPropertyPossessive();
 		assertTrue(ae.getAttributes(cs).toString().equals("[null]"));
 	}
+
+	@Test
+	public void AttributeExtractorTestGetAttributesPredicateCall(){
+		CornipickleParser parser = new CornipickleParser();
+		String line = "We say that $x and $y are top-aligned when (\n" +
+				"  $x's top equals $y's top\n" +
+				")";
+		PredicateDefinition pd = (PredicateDefinition)UtilsTest.shouldParseAndNotNullReturnElement(parser, line, "<predicate>");
+
+		List<String> list = new ArrayList<String>();
+		list.add("string1");
+		list.add("string2");
+		list.add("string3");
+
+		PredicateCall pc = new PredicateCall(pd, "match", list);
+
+		Set<String> set = AttributeExtractor.getAttributes(pc);
+
+		assertTrue(set.contains("top"));
+	}
+
 	/*@Test
 	public void testGetAttributes4() {
 		List<String> s =new Vector<String>();

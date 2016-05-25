@@ -2,7 +2,13 @@ package ca.uqac.lif.cornipickle;/**
  * Created by paul on 05/05/16.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ca.uqac.lif.bullwinkle.ParseNode;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,8 +53,12 @@ public class EventuallyTest {
         Eventually ev2 = (Eventually)ev.getClone();
         assertTrue(ev.m_innerStatement.toString().equals(ev2.m_innerStatement.toString()));
     }
-
-
-
+    
+    @Test
+    public void Eventuallytestevaluatetemporal(){
+    	JsonElement je =new JsonNumber(3);
+    	Map<String,JsonElement>map=new HashMap<String,JsonElement>();
+    	assertTrue(ev.evaluateTemporal(je, map).m_value.equals(Verdict.Value.TRUE));
+    }
 
 }

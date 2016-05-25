@@ -77,11 +77,22 @@ public class NegationStatementTest {
     @Test
 	public void testEvaluateAtemporalJsonElementMapOfStringJsonElement() {
 		JsonElement je= new JsonNumber(15);
-		JsonElement je2= new JsonNumber(7);		
 		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
-		test.put("Trololo", je2);	
-		assertTrue(ns.evaluateAtemporal(je,test).toPlainString().equals("FALSE"));		
+		assertTrue(ns.evaluateAtemporal(je,test).m_value.equals(Verdict.Value.FALSE));		
 	}
+    @Test 
+    public void testprefixAccept(){// a modifier si possible
+    	LanguageElementVisitor test =new AttributeExtractor();
+    	ns.prefixAccept(test);
+    	assertTrue(true);
+    }
+    @Test 
+    public void testpostfixAccept(){// a modifier si possible
+    	LanguageElementVisitor test =new AttributeExtractor();
+    	ns.postfixAccept(test);
+    	assertTrue(true);
+    }
+
     
 
     public ParseNode shouldParseAndNotNull(String line, String start_symbol)

@@ -75,6 +75,18 @@ public class GloballyTest {
         Globally g2 = (Globally)g.getClone();
         assertTrue(g.m_innerStatement.toString().equals(g2.m_innerStatement.toString()));
     }
+	@Test
+	public void testpostfixaccept(){
+		LanguageElementVisitor lev =new AttributeExtractor();
+		g.postfixAccept(lev);
+		assertTrue(true);		
+	}
+	@Test
+	public void testprefixaccept(){
+		LanguageElementVisitor lev =new AttributeExtractor();
+		g.prefixAccept(lev);
+		assertTrue(true);		
+	}
 
 
 

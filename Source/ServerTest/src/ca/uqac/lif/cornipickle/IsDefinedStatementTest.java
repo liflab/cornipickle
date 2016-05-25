@@ -42,7 +42,7 @@ public class IsDefinedStatementTest {
 		JsonElement je =new JsonString("cornipickle");
 		Map<String,JsonElement> map =new HashMap<String,JsonElement>();	
 		System.out.println(ids.m_property);
-		assertTrue(ids.evaluateAtemporal(je, map).toString().equals(Verdict.Value.FALSE));
+		assertTrue(ids.evaluateAtemporal(je, map).equals(Verdict.Value.FALSE));
 	}*/
 
 	@Test

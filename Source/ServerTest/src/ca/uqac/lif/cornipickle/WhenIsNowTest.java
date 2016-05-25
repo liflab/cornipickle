@@ -2,11 +2,15 @@ package ca.uqac.lif.cornipickle;/**
  * Created by paul on 03/05/16.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.cornipickle.server.CornipickleServer;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.json.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.matchers.StacktracePrintingMatcher;
@@ -110,11 +114,6 @@ public class WhenIsNowTest {
         JsonElement e =WhenIsNow.fetchWithId(main, 1);
 
         assertTrue(e.toString().equals(main.toString()));
-
-
-
-
-
     }
 
 
@@ -192,32 +191,22 @@ public class WhenIsNowTest {
         assertTrue(v1&&v2&&v3&&v4&&f1);
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    @Test
+	public void testEvaluateAtemporalJsonElementMapOfStringJsonElement() {
+		JsonElement je= new JsonNumber(15);	
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();		
+		win.m_elementNow=je;
+		assertTrue(win.evaluateAtemporal(je, test).m_value.equals(Verdict.Value.FALSE));		
+	}
+    @Test
+	public void testEvaluateTemporalJsonElementMapOfStringJsonElement() {
+		JsonElement je= new JsonNumber(15);	
+		Map<String,JsonElement> test = new HashMap<String, JsonElement>();		
+		win.m_elementNow=je;
+		assertTrue(win.evaluateTemporal(je, test).m_value.equals(Verdict.Value.FALSE));		
+	}
+    
     public ParseNode shouldParseAndNotNull(String line, String start_symbol)
     {
         BnfParser p = parser.getParser();
@@ -237,6 +226,18 @@ public class WhenIsNowTest {
             fail("Failed parsing expression through grammar: returned null");
         }
         return pn;
+    }
+    @Test 
+    public void testprefixAccept(){// a modifier si possible
+    	LanguageElementVisitor test =new AttributeExtractor();
+    	win.prefixAccept(test);
+    	assertTrue(true);
+    }
+    @Test 
+    public void testpostfixAccept(){// a modifier si possible
+    	LanguageElementVisitor test =new AttributeExtractor();
+    	win.postfixAccept(test);
+    	assertTrue(true);
     }
 
 
