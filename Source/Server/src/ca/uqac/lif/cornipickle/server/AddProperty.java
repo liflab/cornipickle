@@ -64,7 +64,7 @@ class AddProperty extends InterpreterCallback
 {
   public AddProperty(Interpreter i)
   {
-    super(i, Method.PUT, "/add");
+    super(i, Method.POST, "/add");
   }
 
   @Override
