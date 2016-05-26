@@ -37,12 +37,12 @@ public class IsDefinedStatementTest {
 
 	}
 	
-	/*@Test //warning nullpointerException
+	/*@Test
 	public void testEvaluateAtemporalJsonElementMapOfStringJsonElement() {
-		JsonElement je =new JsonString("cornipickle");
+		JsonElement je =new JsonString("test");
 		Map<String,JsonElement> map =new HashMap<String,JsonElement>();	
 		System.out.println(ids.m_property);
-		assertTrue(ids.evaluateAtemporal(je, map).equals(Verdict.Value.FALSE));
+		assertTrue(((IsDefinedStatement)ids).evaluateAtemporal(je, map).equals(Verdict.Value.FALSE));
 	}*/
 
 	@Test
@@ -74,6 +74,20 @@ public class IsDefinedStatementTest {
 		ids2 =ids.getClone();
 		assertTrue(ids2.toString().equals(ids.toString()));
 	}
+	@Test
+	public void testPostfixAccept() {
+		LanguageElementVisitor lev= new AttributeExtractor();
+		ids.postfixAccept(lev);
+		assertTrue(true);
+	}
+	@Test
+	public void testPrefixAccept() {
+		LanguageElementVisitor lev= new AttributeExtractor();
+		ids.prefixAccept(lev);
+		assertTrue(true);
+	}
+
+
 	
 	  public ParseNode shouldParseAndNotNull(String line, String start_symbol){
 		    BnfParser p = parser.getParser();
