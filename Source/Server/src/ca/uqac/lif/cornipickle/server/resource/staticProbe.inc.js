@@ -24,6 +24,16 @@ Cornipickle.CornipickleProbe = function()
 	 * e.g.: localhost:10101
 	 */
 	this.server_name = "";
+	
+	/**
+	 * The probe's id
+	 */
+	this.probe_id = "";
+	
+	/**
+	 * The probe's hash
+	 */
+	this.probe_hash = "";
 
 	
 	/**
@@ -69,6 +79,22 @@ Cornipickle.CornipickleProbe = function()
 	this.setServerName = function(name)
 	{
 		this.server_name = name;
+	};
+	
+	/**
+	 * Sets the probe's id
+	 */
+	this.setProbeId = function(id)
+	{
+		this.probe_id = id;
+	};
+	
+	/**
+	 * Sets the probe's hash
+	 */
+	this.setProbeHash = function(hash)
+	{
+		this.probe_hash = hash;
 	};
 
 	/**
@@ -304,7 +330,7 @@ Cornipickle.CornipickleProbe = function()
 		// Serialize page contents
 		var json = cp_probe.serializePageContents(document.body, [], event);
 		json = cp_probe.serializeWindow(json);
-		var url = "http://" + this.server_name + "/image?rand=" + Math.round(Math.random() * 1000);
+		var url = "http://" + this.server_name + "/image/";
 		xhttp = new XMLHttpRequest();
 		xhttp.open("POST", url, true);
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -314,15 +340,20 @@ Cornipickle.CornipickleProbe = function()
 		    	Cornipickle.CornipickleProbe.handleResponse(this.responseText);
 		    }
 		};
+		toSend = "contents=" + encodeURIComponent(JSON.stringify(json, Cornipickle.escape_json_string));
 		if(sessionStorage.interpreter)
 		{
-			xhttp.send("contents=" + encodeURIComponent(JSON.stringify(json, Cornipickle.escape_json_string)) + "&interpreter=" + encodeURIComponent(sessionStorage.interpreter));
+			toSend += "&interpreter=" + encodeURIComponent(sessionStorage.interpreter);
 		}
-		else
+		if(this.probe_id != "")
 		{
-			xhttp.send("contents=" + encodeURIComponent(JSON.stringify(json, Cornipickle.escape_json_string)));
+			toSend += "&id=" + this.probe_id;
 		}
-		
+		if(this.probe_hash != "")
+		{
+			toSend += "&hash=" + this.probe_hash;
+		}
+		xhttp.send(toSend);
 	};
 	
 	this.registerNewElement = function(n)
