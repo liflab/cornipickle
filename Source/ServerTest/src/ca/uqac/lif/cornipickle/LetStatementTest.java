@@ -12,9 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- * Created by paul on 03/05/16.
- */
 public class LetStatementTest {
 
     CornipickleParser parser;

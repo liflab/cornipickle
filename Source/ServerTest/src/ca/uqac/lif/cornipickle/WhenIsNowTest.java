@@ -1,21 +1,14 @@
-package ca.uqac.lif.cornipickle;/**
- * Created by paul on 03/05/16.
- */
-
+package ca.uqac.lif.cornipickle;
 import java.util.HashMap;
 import java.util.Map;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
-import ca.uqac.lif.cornipickle.server.CornipickleServer;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.json.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.matchers.StacktracePrintingMatcher;
-import org.junit.runners.model.*;
-
 import static org.junit.Assert.*;
 
 public class WhenIsNowTest {

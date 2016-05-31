@@ -1,7 +1,4 @@
-package ca.uqac.lif.cornipickle;/**
- * Created by paul on 13/05/16.
- */
-
+package ca.uqac.lif.cornipickle;
 import org.junit.Before;
 import org.junit.Test;
 

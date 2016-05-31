@@ -1,16 +1,10 @@
-package ca.uqac.lif.cornipickle;/**
- * Created by paul on 11/05/16.
- */
-
-import ca.uqac.lif.bullwinkle.ParseNode;
+package ca.uqac.lif.cornipickle;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-
 import static org.junit.Assert.*;
 
 public class TagNameExtractorTest {

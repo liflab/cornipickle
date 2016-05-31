@@ -9,13 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
-import java.util.Set;
-
 import static org.junit.Assert.*;
 
-/**
- * Created by paul on 02/05/16.
- */
+
 public class HtmlFormatterTest {
 
 
@@ -274,9 +270,6 @@ public class HtmlFormatterTest {
     public void htmlFormatterTestVisitElementExistsStatement(){
         HtmlFormatter hf = new HtmlFormatter();
         ExistsStatement es = (ExistsStatement)UtilsTest.shouldParseAndNotNullReturnElement(parser, "There exists $d in $(#d) such that ( $d's width equals (200 + 100) )" , "<exists>");
-
-        StringBuilder sb1 = new StringBuilder("e1");
-        StringBuilder sb2 = new StringBuilder("e2");
 
         hf.m_elements.push(new StringBuilder(es.getStatement().toString()));
         hf.m_elements.push(new StringBuilder("$(#d)"));

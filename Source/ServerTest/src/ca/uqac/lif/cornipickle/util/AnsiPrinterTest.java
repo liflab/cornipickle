@@ -1,18 +1,12 @@
 package ca.uqac.lif.cornipickle.util;
 
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-/**
- * Created by paul on 18/04/16.
- */
 public class AnsiPrinterTest {
 
     @Before

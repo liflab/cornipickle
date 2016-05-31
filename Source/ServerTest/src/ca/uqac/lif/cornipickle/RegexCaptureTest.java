@@ -13,9 +13,6 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by paull on 17/05/2016.
- */
 public class RegexCaptureTest {
 
     RegexCapture rc;

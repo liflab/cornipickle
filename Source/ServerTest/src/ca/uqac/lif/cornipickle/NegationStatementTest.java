@@ -13,9 +13,7 @@ import ca.uqac.lif.json.JsonNumber;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Created by paul on 03/05/16.
- */
+
 public class NegationStatementTest {
 
     CornipickleParser parser;

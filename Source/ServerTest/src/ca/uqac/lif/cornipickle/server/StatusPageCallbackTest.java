@@ -1,8 +1,6 @@
 package ca.uqac.lif.cornipickle.server;
 
 import ca.uqac.lif.cornipickle.*;
-import ca.uqac.lif.jerrydog.CallbackResponse;
-import com.sun.net.httpserver.HttpExchange;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -10,9 +8,6 @@ import static org.junit.Assert.*;
 import java.util.*;
 import java.util.regex.*;
 
-/**
- * Created by paul on 02/05/16.
- */
 public class StatusPageCallbackTest {
 
     StatusPageCallback spc;

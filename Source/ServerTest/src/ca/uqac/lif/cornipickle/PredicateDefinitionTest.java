@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
-import ca.uqac.lif.bullwinkle.BnfRule;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
 import ca.uqac.lif.json.JsonElement;

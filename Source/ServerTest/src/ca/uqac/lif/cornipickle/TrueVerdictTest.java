@@ -7,8 +7,6 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-import ca.uqac.lif.cornipickle.Verdict.Value;
-
 public class TrueVerdictTest {
 
 	@Test

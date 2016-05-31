@@ -7,9 +7,7 @@ import java.util.Date;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by paul on 02/05/16.
- */
+
 public class CornipickleServerTest {
 
     @Test

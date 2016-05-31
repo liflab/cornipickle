@@ -2,15 +2,8 @@ package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.*;
 
-import java.awt.List;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonNumber;
 
 public class QuantifierTest {
 	Quantifier q;

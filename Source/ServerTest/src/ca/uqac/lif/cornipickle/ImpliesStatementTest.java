@@ -1,6 +1,4 @@
-package ca.uqac.lif.cornipickle;/**
- * Created by paul on 05/05/16.
- */
+package ca.uqac.lif.cornipickle;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,8 +76,6 @@ public class ImpliesStatementTest {
     
     @Test
     public void ImpliesStatementTestEvaluateATemporal2(){
-        CornipickleParser parser2 = new CornipickleParser();
-
         String line = "If ( \"3\" equals \"3\") Then ( \"4\" equals \"3\")\n";
 
         ParseNode pn = shouldParseAndNotNull(parser, line, "<implies>");

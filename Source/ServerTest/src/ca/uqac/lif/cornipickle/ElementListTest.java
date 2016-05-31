@@ -1,6 +1,4 @@
-package ca.uqac.lif.cornipickle;/**
- * Created by paul on 16/05/16.
- */
+package ca.uqac.lif.cornipickle;
 
 import ca.uqac.lif.bullwinkle.ParseNode;
 import org.junit.Before;
@@ -227,6 +225,18 @@ public class ElementListTest {
 
 
     }
+	@Test
+	public void testpostfixaccept(){
+		LanguageElementVisitor lev =new AttributeExtractor();
+		el.postfixAccept(lev);
+		assertTrue(true);		
+	}
+	@Test
+	public void testprefixaccept(){
+		LanguageElementVisitor lev =new AttributeExtractor();
+		el.prefixAccept(lev);
+		assertTrue(true);		
+	}
 
 
 

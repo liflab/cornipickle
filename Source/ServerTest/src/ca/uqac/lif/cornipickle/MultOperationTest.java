@@ -13,7 +13,6 @@ import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonNumber;
-import ca.uqac.lif.json.JsonString;
 
 public class MultOperationTest {
 	CornipickleParser parser;

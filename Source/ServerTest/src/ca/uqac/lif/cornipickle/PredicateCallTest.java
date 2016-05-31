@@ -1,14 +1,9 @@
-package ca.uqac.lif.cornipickle;/**
- * Created by paul on 05/05/16.
- */
-
+package ca.uqac.lif.cornipickle;
 import org.junit.Before;
 import org.junit.Test;
 
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonNumber;
-
-import javax.sql.rowset.Predicate;
 
 import java.util.HashMap;
 import java.util.LinkedList;

@@ -1,11 +1,7 @@
-package ca.uqac.lif.cornipickle.server;/**
- * Created by paul on 06/05/16.
- */
-
+package ca.uqac.lif.cornipickle.server;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.Witness;
-import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonString;

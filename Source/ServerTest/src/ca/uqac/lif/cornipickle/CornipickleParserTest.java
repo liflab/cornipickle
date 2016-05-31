@@ -19,7 +19,6 @@ package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.*;
 
-import ca.uqac.lif.json.JsonString;
 import org.junit.Before;
 import org.junit.Test;
 
