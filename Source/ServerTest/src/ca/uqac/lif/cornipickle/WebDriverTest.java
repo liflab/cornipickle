@@ -20,19 +20,13 @@ public class WebDriverTest{
 
     private WebDriver driver;
 
-    @Before
-    public void setUp(){
+    
+    public static void main(String args[]){
         driver = new FirefoxDriver();
+        test(driver);
     }
 
-    @After
-    public void tearDown(){
-        driver.close();
-    }
-
-
-
-    @Test
+    
     public void test1() throws InterruptedException {
 
         try{
@@ -86,7 +80,7 @@ public class WebDriverTest{
                 "\n" +
                 "\n");*/
 
-        assertTrue(isOk&&isNotOk);
+        System.out.println("Test 1"+isOk&&isNotOk);
         }
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
@@ -96,7 +90,7 @@ public class WebDriverTest{
     }
 
 
-    @Test
+    
     public void test2() throws InterruptedException {
         try{
         driver.get("http://localhost:10101/examples/overlapping-elements.html");
@@ -139,7 +133,7 @@ public class WebDriverTest{
         boolean isNotOk = bpWitnessColor;
         //System.out.println("When not overlapping : "+isNotOk);
 
-        assertTrue(isOk&&isNotOk);}
+        System.out.println("Test 2"+isOk&&isNotOk);}
 
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
@@ -149,7 +143,7 @@ public class WebDriverTest{
     }
 
 
-    @Test
+    
     public void test3() throws InterruptedException {
 
         try{
@@ -194,7 +188,7 @@ public class WebDriverTest{
 //        System.out.println("When not overlapping : "+isNotOk);
 
         //Assertion
-        assertTrue(isOk&&isNotOk);}
+        System.out.println("Test 3"+isOk&&isNotOk);}
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
             assert(false);
@@ -206,7 +200,7 @@ public class WebDriverTest{
 
 
     @Ignore
-    @Test
+    
     public void test4() throws InterruptedException {
         try{
 
@@ -249,7 +243,7 @@ public class WebDriverTest{
         //System.out.println("When not OK : "+isNotOk);
 
         //Assertion
-        assertTrue(isOk&&isNotOk);}
+        System.out.println("Test 4"+isOk&&isNotOk);}
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
             assert(false);
@@ -260,7 +254,7 @@ public class WebDriverTest{
 
 
 
-    @Test
+    
     public void test5() throws InterruptedException {
         try{
 
@@ -303,7 +297,7 @@ public class WebDriverTest{
         //System.out.println("When not OK : "+isNotOk);
 
         //Assertion
-        assertTrue(isOk&&isNotOk);}
+        System.out.println("Test 5"+isOk&&isNotOk);}
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
             assert(false);
@@ -313,7 +307,7 @@ public class WebDriverTest{
     }
 
 
-    @Test
+    
     public void test8() throws InterruptedException {
         try{
         driver.get("http://localhost:10101/examples/square-order.html");
@@ -359,7 +353,7 @@ public class WebDriverTest{
 
 
         //Assertion
-        assertTrue(before&&after);}
+        System.out.println("Test 8"+before&&after);}
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
             assert(false);
@@ -368,7 +362,7 @@ public class WebDriverTest{
     }
 
 
-    @Test
+    
     public void test9() throws InterruptedException {
         try{
 
@@ -456,7 +450,7 @@ public class WebDriverTest{
         //System.out.println("After2 : "+ after2);
 
         //Assertion
-        assertTrue(before&&after&&after2);}
+        System.out.println("Test 9"+before&&after&&after2);}
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
             assert(false);

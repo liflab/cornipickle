@@ -102,25 +102,5 @@
         <zip>https://github.com/sylvainhalle/Jerrydog/releases/download/v0.1-alpha/jerrydog-0.1-alpha.zip</zip>
       </files>
     </dependency>
-    <dependency>
-      <!--
-      Selenium Web Driver. Used for testing.
-      -->
-      <name>Selenium Web Driver</name>
-      <classname>org.openqa.selenium.WebDriver</classname>
-      <files>
-        <zip>http://selenium-release.storage.googleapis.com/2.53/selenium-java-2.53.0.zip</zip>
-      </files>
-    </dependency>
-    <dependency>
-      <!--
-      Selenium Server. Used for testing.
-      -->
-      <name>Selenium Server</name>
-      <classname>org.openqa.selenium.WebDriver</classname>
-      <files>
-        <zip>https://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar</zip>
-      </files>
-    </dependency>
   </dependencies>
 </build>
