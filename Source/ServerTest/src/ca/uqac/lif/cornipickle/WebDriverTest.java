@@ -109,7 +109,7 @@ public class WebDriverTest{
         buttonAddToCornipickle.click();
 
         //Toggle misalignment
-        content.click();
+        blueSquare.click();
         Thread.sleep(2000);
 
 
@@ -134,6 +134,7 @@ public class WebDriverTest{
         //System.out.println("When not overlapping : "+isNotOk);
 
         System.out.println("Test 2"+isOk&&isNotOk);}
+
 
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
