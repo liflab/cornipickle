@@ -1,10 +1,6 @@
 package ca.uqac.lif.cornipickle;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -12,22 +8,22 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 
-
-/**
- * Created by paull on 26/05/2016.
- */
 public class WebDriverTest{
 
-    private WebDriver driver;
-
     
-    public static void main(String args[]){
-        driver = new FirefoxDriver();
-        test(driver);
+    public static void main(String args[]) throws InterruptedException{
+    	WebDriver driver = new FirefoxDriver();
+        test1(driver);
+        test2(driver);
+        test3(driver);
+        test5(driver);
+        test8(driver);
+        test9(driver);
+        driver.close();
     }
 
     
-    public void test1() throws InterruptedException {
+    public static void test1(WebDriver driver) throws InterruptedException {
 
         try{
 
@@ -80,7 +76,7 @@ public class WebDriverTest{
                 "\n" +
                 "\n");*/
 
-        System.out.println("Test 1"+isOk&&isNotOk);
+        System.out.println("Test 1"+(isOk&&isNotOk));
         }
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
@@ -91,7 +87,7 @@ public class WebDriverTest{
 
 
     
-    public void test2() throws InterruptedException {
+    public static void test2(WebDriver driver) throws InterruptedException {
         try{
         driver.get("http://localhost:10101/examples/overlapping-elements.html");
         //driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
@@ -102,7 +98,6 @@ public class WebDriverTest{
         WebElement buttonAddToCornipickle = driver.findElement(By.id("to-cornipickle"));
 
         WebElement bpWitness = driver.findElement(By.id("bp_witness"));
-        WebElement content = driver.findElement(By.id("contents"));
         WebElement blueSquare = driver.findElement(By.id("blue"));
 
         //Add to cornipickle
@@ -133,7 +128,7 @@ public class WebDriverTest{
         boolean isNotOk = bpWitnessColor;
         //System.out.println("When not overlapping : "+isNotOk);
 
-        System.out.println("Test 2"+isOk&&isNotOk);}
+        System.out.println("Test 2"+(isOk&&isNotOk));}
 
 
         catch (NoSuchElementException nsee){
@@ -145,7 +140,7 @@ public class WebDriverTest{
 
 
     
-    public void test3() throws InterruptedException {
+    public static void test3(WebDriver driver) throws InterruptedException {
 
         try{
         driver.get("http://localhost:10101/examples/outside-window.html");
@@ -157,7 +152,6 @@ public class WebDriverTest{
         WebElement buttonAddToCornipickle = driver.findElement(By.id("to-cornipickle"));
 
         WebElement bpWitness = driver.findElement(By.id("bp_witness"));
-        WebElement content = driver.findElement(By.id("contents"));
         WebElement blueSquare = driver.findElement(By.id("blue"));
 
         //Add to cornipickle
@@ -189,7 +183,7 @@ public class WebDriverTest{
 //        System.out.println("When not overlapping : "+isNotOk);
 
         //Assertion
-        System.out.println("Test 3"+isOk&&isNotOk);}
+        System.out.println("Test 3"+(isOk&&isNotOk));}
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
             assert(false);
@@ -202,7 +196,7 @@ public class WebDriverTest{
 
     @Ignore
     
-    public void test4() throws InterruptedException {
+    public void test4(WebDriver driver) throws InterruptedException {
         try{
 
         driver.get("http://localhost:10101/examples/mojibake.html");
@@ -244,7 +238,7 @@ public class WebDriverTest{
         //System.out.println("When not OK : "+isNotOk);
 
         //Assertion
-        System.out.println("Test 4"+isOk&&isNotOk);}
+        System.out.println("Test 4"+(isOk&&isNotOk));}
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
             assert(false);
@@ -256,7 +250,7 @@ public class WebDriverTest{
 
 
     
-    public void test5() throws InterruptedException {
+    public static void test5(WebDriver driver) throws InterruptedException {
         try{
 
         driver.get("http://localhost:10101/examples/wrong-text.html");
@@ -298,7 +292,7 @@ public class WebDriverTest{
         //System.out.println("When not OK : "+isNotOk);
 
         //Assertion
-        System.out.println("Test 5"+isOk&&isNotOk);}
+        System.out.println("Test 5"+(isOk&&isNotOk));}
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
             assert(false);
@@ -309,7 +303,7 @@ public class WebDriverTest{
 
 
     
-    public void test8() throws InterruptedException {
+    public static void test8(WebDriver driver) throws InterruptedException {
         try{
         driver.get("http://localhost:10101/examples/square-order.html");
         Thread.sleep(2000);
@@ -354,7 +348,7 @@ public class WebDriverTest{
 
 
         //Assertion
-        System.out.println("Test 8"+before&&after);}
+        System.out.println("Test 8"+(before&&after));}
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
             assert(false);
@@ -364,7 +358,7 @@ public class WebDriverTest{
 
 
     
-    public void test9() throws InterruptedException {
+    public static void test9(WebDriver driver) throws InterruptedException {
         try{
 
 
@@ -451,7 +445,10 @@ public class WebDriverTest{
         //System.out.println("After2 : "+ after2);
 
         //Assertion
-        System.out.println("Test 9"+before&&after&&after2);}
+        System.out.println(before);
+        System.out.println(after);
+        System.out.println(after2);
+        System.out.println("Test 9"+(before&&after&&after2));}
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
             assert(false);
