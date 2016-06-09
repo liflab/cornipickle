@@ -84,7 +84,7 @@
   
   <!-- Generate a jar with the sources -->
   <property name="build.jar.withsrc" value="true"/>
-  
+ 
   <!-- Base name of the jar to produce (used by the "zip" target) -->
   <basename property="build.jar.basename" file="${build.jar.filename}" suffix=".jar"/>
   
@@ -243,7 +243,7 @@
         <formatter type="xml"/>
         <batchtest fork="yes" todir="${test.reportdir}">
           <fileset dir="${build.test.srcdir}">
-            <include name="**/*.java"/>
+            <include name="**/*Test.java"/>
           </fileset>
         </batchtest>
       </junit>
@@ -321,6 +321,26 @@
   <target name="run" description="Invoke the runnable JAR">
     <java jar="${build.jar.filename}" fork="true"/>
   </target>
+
+
+
+  <!-- Target: WebDriverTests
+       Run WebDriver tests
+  -->
+  <target name="browserTests" description="Run browser tests">
+    <java classname="ca.uqac.lif.cornipickle.WebDriverFirefox" fork="true">
+      <classpath>
+          <pathelement location="${build.bindir}"/>
+          <pathelement location="${build.test.bindir}"/>
+          <pathelement path="${java.class.path}"/>
+          <pathelement location="${build.libdir}/${junit.jarname}"/>
+          <pathelement location="${build.libdir}/${junit.hamcrest}"/>
+        </classpath>
+    </java>
+  </target>
+
+
+
   
   <!-- Target: antrun-version
        Shows the version of AntRun
