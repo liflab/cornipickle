@@ -7,8 +7,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+<<<<<<< HEAD:Source/ServerTest/src/ca/uqac/lif/cornipickle/WebDriverTest.java
 @Ignore
 public class WebDriverTest{
+=======
+
+@Ignore
+public class WebDriverFirefox{
+>>>>>>> 2a5ddbd979bcb54dfdc62a2f023b19fc4d201867:Source/ServerTest/src/ca/uqac/lif/cornipickle/WebDriverFirefox.java
 
     
     public static void main(String args[]) throws InterruptedException{
