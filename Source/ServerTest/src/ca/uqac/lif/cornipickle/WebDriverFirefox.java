@@ -19,6 +19,8 @@ public class WebDriverFirefox{
         test3(driver);
         test5(driver);
         test8(driver);
+        driver.close();//remove when test9 will be correct
+        driver =new FirefoxDriver();//remove when test9 will be correct
         test9(driver);
         driver.close();
     }
@@ -361,8 +363,6 @@ public class WebDriverFirefox{
     
     public static void test9(WebDriver driver) throws InterruptedException {
         try{
-
-
         driver.get("http://localhost:10101/examples/square-order-next.html");
         Thread.sleep(2000);
 
@@ -446,9 +446,6 @@ public class WebDriverFirefox{
         //System.out.println("After2 : "+ after2);
 
         //Assertion
-        System.out.println(before);
-        System.out.println(after);
-        System.out.println(after2);
         System.out.println("Test 9"+(before&&after&&after2));}
         catch (NoSuchElementException nsee){
             System.out.println("Element non trouvé");
