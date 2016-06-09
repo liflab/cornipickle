@@ -13,12 +13,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 
 @Ignore
-<<<<<<< HEAD:Source/ServerTest/src/ca/uqac/lif/cornipickle/WebChromeDriverTest.java
-public class WebChromeDriverTest{
-=======
 public class WebDriverChrome{
->>>>>>> 2a5ddbd979bcb54dfdc62a2f023b19fc4d201867:Source/ServerTest/src/ca/uqac/lif/cornipickle/WebDriverChrome.java
-	
+
 //    private WebDriver driver;
 //
 //    @Before
