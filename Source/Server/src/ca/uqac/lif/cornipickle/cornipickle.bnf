@@ -2,7 +2,7 @@
 # Grammar for Cornipickle; do not edit!
 # -----------------------------------------
 
-<S> := <predicate> | <def_set> | <statement> ;
+<S> := <predicate> | <def_set> | <statement> | <context> ;
 
 # Auxiliary constructs in statements
 
@@ -13,9 +13,9 @@
 
 # CSS selector
 
-<css_selector>     := $( <css_sel_contents> ) ;
-<css_sel_contents> := <css_sel_part> <css_sel_contents> | <css_sel_part> ;
-<css_sel_part>     := ^[\w\u0023\.\*\-]+; # \u0023 is the # symbol
+<css_selector>       := $( <css_sel_contents> ) ;
+<css_sel_contents>   := <css_sel_part> <css_sel_contents> | <css_sel_part> ;
+<css_sel_part>       := ^[\w\u0023\.\*\-]+; # \u0023 is the # symbol
 
 # CSS attributes
 
@@ -23,12 +23,16 @@
                         | bottom | color | id | text | background | border 
                         | event | cornipickleid | display | size | accesskey 
                         | checked | disabled | min;
+                        
+# Page attributes
 
-# Element property
+<page_attribute>     := URL | 
+
+# Element property   := 
 
 <elem_property>      := <elem_property_pos> | <elem_property_com> ;
-<elem_property_pos>  := <var_name> 's <css_attribute> ;
-<elem_property_com>  := the <css_attribute> of <var_name> ;
+<elem_property_pos>  := <var_name> 's <css_attribute> | the page's <page_attribute>;
+<elem_property_com>  := the <css_attribute> of <var_name> | the <page_attribute> of <>;
 
 # Regular expression capture
 
@@ -43,7 +47,7 @@
 <unary_stmt>         := <defined> ;
 <math>               := <add> | <sub> | <div> | <mult> ;
 <temporal_stmt>      := <globally> | <eventually> | <eventually_within> | <never> | <next> | <next_time> ;
-<foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
+<foreach>            := For each <var_name> in <set_name> ( <statement> ) ;	
 <exists>             := There exists <var_name> in <set_name> such that ( <statement> ) ;
 <when>               := When <var_name> is now <var_name> ( <statement> ) ;
 <let>                := Let <var_name> be <property_or_const> ( <statement> ) ;
@@ -89,3 +93,7 @@
 # User-defined statements. Rules get dynamically added here
 
 <userdef_stmt>       := gnarfnfar ;
+
+# Context statements
+
+<context>            := The following rules are defined when ( <statement> ) ;
