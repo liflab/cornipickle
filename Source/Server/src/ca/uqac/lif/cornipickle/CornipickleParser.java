@@ -175,6 +175,7 @@ public class CornipickleParser implements ParseNodeVisitor
     else if (node_token.compareTo("<unary_stmt>") == 0) { }
     else if (node_token.compareTo("<constant>") == 0) { }
     else if (node_token.compareTo("<css_attribute>") == 0) { }
+    else if (node_token.compareTo("<page_attribute>") == 0) {}
     else if (node_token.compareTo("<el_or_not>") == 0) { }
     else if (node_token.compareTo("<elem_property>") == 0) { }
     else if (node_token.compareTo("<number>") == 0) { }
@@ -371,14 +372,37 @@ public class CornipickleParser implements ParseNodeVisitor
     else if (node_token.compareTo("<elem_property_pos>") == 0)
     {
       StringConstant sel = (StringConstant) m_nodes.pop();
-      m_nodes.pop(); // 's
-      StringConstant var = (StringConstant) m_nodes.pop();
+      StringConstant p = (StringConstant) m_nodes.peek();
+      StringConstant var;
+      if(p.toString().equals("page's"))
+      {
+        m_nodes.pop(); // page's
+        m_nodes.pop(); // the
+        var = new StringConstant("the page");
+      }
+      else
+      {
+        m_nodes.pop(); //'s
+        var = (StringConstant) m_nodes.pop();
+      }
+      
       ElementPropertyPossessive out = new ElementPropertyPossessive(var, sel);
       m_nodes.push(out);
     }
     else if (node_token.compareTo("<elem_property_com>") == 0)
     {
-      StringConstant var = (StringConstant) m_nodes.pop();
+      StringConstant p = (StringConstant) m_nodes.peek();
+      StringConstant var;
+      if(p.toString().equals("page"))
+      {
+        m_nodes.pop(); // page
+        m_nodes.pop(); // the
+        var = new StringConstant("the page");
+      }
+      else
+      {
+        var = (StringConstant) m_nodes.pop();
+      }
       m_nodes.pop(); // of
       StringConstant sel = (StringConstant) m_nodes.pop();
       m_nodes.pop(); // the

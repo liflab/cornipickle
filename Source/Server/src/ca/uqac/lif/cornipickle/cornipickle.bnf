@@ -26,13 +26,16 @@
                         
 # Page attributes
 
-<page_attribute>     := URL | 
+<page_attribute>     := URL | height | width | aspect-ratio | color | color-index 
+						| device-aspect-ratio | device-height | device-width | grid 
+						| monochrome | orientation | resolution | scan;
 
-# Element property   := 
+# Element property
 
 <elem_property>      := <elem_property_pos> | <elem_property_com> ;
 <elem_property_pos>  := <var_name> 's <css_attribute> | the page's <page_attribute>;
-<elem_property_com>  := the <css_attribute> of <var_name> | the <page_attribute> of <>;
+<elem_property_com>  := the <css_attribute> of <var_name> | the <page_attribute> of the page;
+
 
 # Regular expression capture
 
@@ -47,7 +50,7 @@
 <unary_stmt>         := <defined> ;
 <math>               := <add> | <sub> | <div> | <mult> ;
 <temporal_stmt>      := <globally> | <eventually> | <eventually_within> | <never> | <next> | <next_time> ;
-<foreach>            := For each <var_name> in <set_name> ( <statement> ) ;	
+<foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
 <exists>             := There exists <var_name> in <set_name> such that ( <statement> ) ;
 <when>               := When <var_name> is now <var_name> ( <statement> ) ;
 <let>                := Let <var_name> be <property_or_const> ( <statement> ) ;

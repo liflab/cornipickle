@@ -98,6 +98,12 @@ We say that $x and $y are top-aligned when (
   $x's top equals $y's top
 ).
 
+We say that the page is big when (
+  (the page's height is greater than 100)
+  And
+  (the page's width is greater than 100)
+).
+
 # We then express the fact that all menu items are either
 # left- or top-aligned.
 
@@ -113,6 +119,13 @@ For each $z in $(.menu li) (
     ($z and $t are top-aligned)
   )
 ).
+
+"""
+	@name Big page
+	@description The page should be big (> 100/100)
+	@severity Warning 
+"""
+the page is big.
 </div>
 
 </div>

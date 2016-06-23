@@ -17,6 +17,7 @@
  */
 package ca.uqac.lif.cornipickle;
 
+import java.util.List;
 import java.util.Map;
 
 import ca.uqac.lif.json.JsonElement;
@@ -76,7 +77,16 @@ public abstract class ElementProperty extends Property
   public JsonElement evaluate(JsonElement t, Map<String, JsonElement> d)
   {
     // Fetch element
-    JsonElement e = d.get(m_elementName);
+    JsonElement e;
+    if(m_elementName.equals("the page"))
+    {
+      List<JsonElement> eList = CssSelector.fetch("window", (JsonMap)t);
+      e = eList.get(0);
+    }
+    else
+    {
+      e = d.get(m_elementName);
+    }
     // Get its value (removed because value is now taken care of in probe JS file)
     if (m_propertyName.compareToIgnoreCase("nodeValue") == 0)
     {

@@ -292,6 +292,8 @@ Cornipickle.CornipickleProbe = function()
 			"tagname" : "window",
 			"width" : window.innerWidth,
 			"height" : window.innerHeight,
+			"device-width" : window.screen.availWidth,
+			"device-height" : window.screen.availHeight,
 			"children" : [ page_contents ]
 		};
 	};
