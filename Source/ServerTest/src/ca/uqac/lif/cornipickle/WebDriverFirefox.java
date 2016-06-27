@@ -8,20 +8,20 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 
-@Ignore
+
 public class WebDriverFirefox{
 
     
     public static void main(String args[]) throws InterruptedException{
     	WebDriver driver = new FirefoxDriver();
-        test1(driver);
-        test2(driver);
-        test3(driver);
-        test5(driver);
-        test8(driver);
+        test1(driver);//first time doesn't work / second time ok
+        test2(driver);//first time doesn't work / second time ok
+        test3(driver);//first time ok / second time ok
+        test5(driver);//first time ok / second time ok
+        test8(driver);//first time doesn't work / second time ok
         driver.close();//remove when test9 will be correct
         driver =new FirefoxDriver();//remove when test9 will be correct
-        test9(driver);
+        test9(driver);//if we launch test9 after test8 without closed the driver it doesn't work
         driver.close();
     }
 
