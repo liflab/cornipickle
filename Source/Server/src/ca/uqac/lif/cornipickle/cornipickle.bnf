@@ -26,15 +26,19 @@
                         
 # Page attributes
 
-<page_attribute>     := URL | height | width | aspect-ratio | color | color-index 
-						| device-aspect-ratio | device-height | device-width | grid 
-						| monochrome | orientation | resolution | scan;
+<page_attribute>     := URL | height | width | aspect-ratio | orientation;
+						
+# Device attributes
+
+<device_attribute>	 := aspect-ratio | height | width;
 
 # Element property
 
 <elem_property>      := <elem_property_pos> | <elem_property_com> ;
-<elem_property_pos>  := <var_name> 's <css_attribute> | the page's <page_attribute>;
-<elem_property_com>  := the <css_attribute> of <var_name> | the <page_attribute> of the page;
+<elem_property_pos>  := <var_name> 's <css_attribute> | the page's <page_attribute>
+						| the device's <device_attribute>;
+<elem_property_com>  := the <css_attribute> of <var_name> | the <page_attribute> of the page
+						| the <device_attribute> of the device;
 
 
 # Regular expression capture
@@ -99,4 +103,4 @@
 
 # Context statements
 
-<context>            := The following rules are defined when ( <statement> ) ;
+<context>            := The following rules apply when ( <statement> ) ;

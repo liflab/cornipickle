@@ -83,6 +83,12 @@ public abstract class ElementProperty extends Property
       List<JsonElement> eList = CssSelector.fetch("window", (JsonMap)t);
       e = eList.get(0);
     }
+    else if(m_elementName.equals("the device"))
+    {
+      List<JsonElement> eList = CssSelector.fetch("window", (JsonMap)t);
+      e = eList.get(0);
+      m_propertyName = "device-" + m_propertyName;
+    }
     else
     {
       e = d.get(m_elementName);

@@ -43,14 +43,7 @@ public class AttributeExtractor implements LanguageElementVisitor
     if (element instanceof ElementPropertyPossessive)
     {
       ElementPropertyPossessive prop = (ElementPropertyPossessive) element;
-      if(prop.getElementName().equals("the page"))
-      {
-        m_attributes.add("page_" + prop.getPropertyName());
-      }
-      else
-      {
-        m_attributes.add(prop.getPropertyName());
-      }
+      m_attributes.add(prop.getPropertyName());
     }
     else if (element instanceof PredicateCall)
     {

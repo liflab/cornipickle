@@ -46,6 +46,8 @@ public class Interpreter implements Originator<Interpreter,String>
 
 	protected Map<StatementMetadata,Verdict> m_verdicts;
 	
+	protected boolean m_evaluateNext;
+	
 	protected final transient CornipickleDeflateSerializer m_serializer;
 
 	public Interpreter()
@@ -266,6 +268,7 @@ public class Interpreter implements Originator<Interpreter,String>
 	{
 		Map<StatementMetadata,Verdict> verdicts = new HashMap<StatementMetadata,Verdict>();
 		Map<String,JsonElement> d = new HashMap<String,JsonElement>();
+		m_evaluateNext = true;
 		// Fill dictionary with user-defined sets
 		for (String set_name : m_setDefs.keySet())
 		{
@@ -278,15 +281,30 @@ public class Interpreter implements Originator<Interpreter,String>
 		{
 			Statement s = m_statements.get(key);
 			Verdict b = new Verdict(Verdict.Value.INCONCLUSIVE);
-			if (s.isTemporal())
+			if(s instanceof Context)
 			{
-				b = s.evaluate(j, d);
+			  b = s.evaluate(j,d);
+			  if(b.is(Verdict.Value.TRUE) || b.is(Verdict.Value.INCONCLUSIVE))
+			  {
+			    m_evaluateNext = true;
+			  }
+			  else
+			  {
+			    m_evaluateNext = false;
+			  }
 			}
-			else
+			else if(m_evaluateNext)
 			{
-				b = s.evaluateAtemporal(j, d);
+			  if (s.isTemporal())
+	      {
+	        b = s.evaluate(j, d);
+	      }
+	      else
+	      {
+	        b = s.evaluateAtemporal(j, d);
+	      }
+	      verdicts.put(key, b);
 			}
-			verdicts.put(key, b);
 		}
 		m_verdicts = verdicts;
 	}
