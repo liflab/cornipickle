@@ -40,6 +40,8 @@ var dynamicProbe = function()
         cp_probe.setAttributesToInclude([/*%%ATTRIBUTE_LIST%%*/]);
         cp_probe.setTagNamesToInclude([/*%%TAG_LIST%%*/]);
         cp_probe.setServerName("%%SERVER_NAME%%");
+        cp_probe.setProbeId( "1" );
+        cp_probe.setProbeHash( "interpreter" );
         document.getElementById("cp-witness").innerHTML = "%%WITNESS_CODE%%";
     }, 500);
 };
