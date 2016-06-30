@@ -175,6 +175,8 @@ public class CornipickleParser implements ParseNodeVisitor
     else if (node_token.compareTo("<unary_stmt>") == 0) { }
     else if (node_token.compareTo("<constant>") == 0) { }
     else if (node_token.compareTo("<css_attribute>") == 0) { }
+    else if (node_token.compareTo("<page_attribute>") == 0) { }
+    else if (node_token.compareTo("<device_attribute>") == 0) { }
     else if (node_token.compareTo("<el_or_not>") == 0) { }
     else if (node_token.compareTo("<elem_property>") == 0) { }
     else if (node_token.compareTo("<number>") == 0) { }
@@ -199,16 +201,30 @@ public class CornipickleParser implements ParseNodeVisitor
     }
     else if (node_token.compareTo("<and>") == 0)
     {
-      m_nodes.pop(); // (
+      m_nodes.pop(); // )
       Statement right = (Statement) m_nodes.pop();
-      m_nodes.pop(); // )
-      m_nodes.pop(); // And
       m_nodes.pop(); // (
-      Statement left = (Statement) m_nodes.pop();
+      m_nodes.pop(); // And
       m_nodes.pop(); // )
+      Statement left = (Statement) m_nodes.pop();
+      m_nodes.pop(); // (
       AndStatement out = new AndStatement();
       out.addOperand(left);
       out.addOperand(right);
+      m_nodes.push(out);
+    }
+    else if (node_token.compareTo("<context>") == 0)
+    {
+      m_nodes.pop(); // )
+      Statement right = (Statement) m_nodes.pop();
+      m_nodes.pop(); // (
+      m_nodes.pop(); // when
+      m_nodes.pop(); // apply
+      m_nodes.pop(); // rules
+      m_nodes.pop(); // following
+      m_nodes.pop(); // The
+      Context out = new Context();
+      out.setInnerStatement(right);
       m_nodes.push(out);
     }
     else if (node_token.compareTo("<css_selector>") == 0)
@@ -371,14 +387,49 @@ public class CornipickleParser implements ParseNodeVisitor
     else if (node_token.compareTo("<elem_property_pos>") == 0)
     {
       StringConstant sel = (StringConstant) m_nodes.pop();
-      m_nodes.pop(); // 's
-      StringConstant var = (StringConstant) m_nodes.pop();
+      StringConstant p = (StringConstant) m_nodes.peek();
+      StringConstant var;
+      if(p.toString().equals("page's"))
+      {
+        m_nodes.pop(); // page's
+        m_nodes.pop(); // the
+        var = new StringConstant("the page");
+      }
+      else if(p.toString().equals("device's"))
+      {
+        m_nodes.pop(); // device's
+        m_nodes.pop(); // the
+        var = new StringConstant("the device");
+      }
+      else
+      {
+        m_nodes.pop(); //'s
+        var = (StringConstant) m_nodes.pop();
+      }
+      
       ElementPropertyPossessive out = new ElementPropertyPossessive(var, sel);
       m_nodes.push(out);
     }
     else if (node_token.compareTo("<elem_property_com>") == 0)
     {
-      StringConstant var = (StringConstant) m_nodes.pop();
+      StringConstant p = (StringConstant) m_nodes.peek();
+      StringConstant var;
+      if(p.toString().equals("page"))
+      {
+        m_nodes.pop(); // page
+        m_nodes.pop(); // the
+        var = new StringConstant("the page");
+      }
+      else if(p.toString().equals("device"))
+      {
+        m_nodes.pop(); // device
+        m_nodes.pop(); // the
+        var = new StringConstant("the device");
+      }
+      else
+      {
+        var = (StringConstant) m_nodes.pop();
+      }
       m_nodes.pop(); // of
       StringConstant sel = (StringConstant) m_nodes.pop();
       m_nodes.pop(); // the
