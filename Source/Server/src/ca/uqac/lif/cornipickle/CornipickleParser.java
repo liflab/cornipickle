@@ -507,6 +507,16 @@ public class CornipickleParser implements ParseNodeVisitor
       out.setStatement(inner);
       m_nodes.push(out);
     }
+    else if (node_token.compareTo("<mediaquery_stmt>") == 0)
+    {
+      m_nodes.pop(); // applies
+      StringConstant mediaquery = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // query
+      m_nodes.pop(); // media
+      m_nodes.pop(); // The
+      MediaQueryStatement mqs = new MediaQueryStatement(mediaquery.toString());
+      m_nodes.push(mqs);
+    }
     else if (node_token.compareTo("<mult>") == 0) 
     { 
       m_nodes.pop(); //(

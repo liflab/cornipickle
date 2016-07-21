@@ -63,6 +63,11 @@ public class AttributeExtractor implements LanguageElementVisitor
         m_attributes.add("id");
       }
     }
+    else if( element instanceof MediaQueryStatement)
+    {
+      MediaQueryStatement mqs = (MediaQueryStatement) element;
+      m_attributes.add(mqs.getAttributeFormat());
+    }
   }
 
   @Override

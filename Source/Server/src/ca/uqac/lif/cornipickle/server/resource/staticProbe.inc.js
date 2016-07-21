@@ -299,9 +299,36 @@ Cornipickle.CornipickleProbe = function()
 			"device-width" : window.screen.availWidth,
 			"device-height" : window.screen.availHeight,
 			"device-aspect-ratio" : window.screen.availWidth / window.screen.availHeight,
+			"mediaqueries" : cp_probe.serializeMediaQueries(),
 			"children" : [ page_contents ]
 		};
 	};
+	
+	this.serializeMediaQueries = function()
+	{
+		var out = {};
+		for (var i = 0; i < this.m_attributesToInclude.length; i++)
+		{
+			var att = this.m_attributesToInclude[i];
+			var indexOfUnderscore = att.indexOf("_");
+			var query = "";
+			var id = -1;
+			if(indexOfUnderscore != -1)
+			{
+				id = att.substring(0,indexOfUnderscore);
+				query = att.substring(indexOfUnderscore + 1, att.length);
+				if(window.matchMedia(query).matches)
+				{
+					out[id] = "true";
+				}
+				else
+				{
+					out[id] = "false";
+				}
+			}
+		}
+		return out;
+	}
 
 	this.serializeEvent = function(event)
 	{
