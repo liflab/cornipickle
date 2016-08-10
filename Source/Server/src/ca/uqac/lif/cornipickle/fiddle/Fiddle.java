@@ -51,6 +51,7 @@ public class Fiddle
 		m_operations = new LinkedList<FiddleOperation>();
 		addOperation(new SetProperty());
 		addOperation(new Evaluate());
+		addOperation(new Expand());
 	}
 
 	protected void addOperation(FiddleOperation op)

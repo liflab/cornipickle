@@ -64,6 +64,16 @@ public class FiddleTest
 		}
 	}
 	
+	@Test
+	public void testExpand()
+	{
+	  String json;
+	  FiddlePair fp;
+	  json = PackageFileReader.readPackageFile(this.getClass(), "data/fiddle/expandS.json");
+	  fp = m_fiddle.doOperation("", json);
+	  assertEquals(fp.getArgument(),"{\"alternatives\":[\"<predicate>\",\"<def_set>\",\"<statement>\",\"<context>\"]}");
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected Map<StatementMetadata,Verdict> getVerdicts(FiddlePair fp) throws JsonParseException, SerializerException
 	{
