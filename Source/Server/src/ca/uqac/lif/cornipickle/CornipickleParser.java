@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.BnfParser.InvalidGrammarException;
@@ -34,6 +36,7 @@ import ca.uqac.lif.bullwinkle.CaptureBlockParseNode;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.ParseNodeVisitor;
 import ca.uqac.lif.json.JsonNumber;
+import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.util.EmptyException;
 
@@ -106,6 +109,11 @@ public class CornipickleParser implements ParseNodeVisitor
     //parser.setDebugMode(true);
     return parser;
   }
+  
+  public void setPartialParsing(boolean bool)
+  {
+    m_parser.setPartialParsing(bool);
+  }
 
   public Statement parseStatement(String property) throws ParseException
   {
@@ -159,6 +167,78 @@ public class CornipickleParser implements ParseNodeVisitor
     // Add definition
     m_predicateDefinitions.put(rule_name, pd);
     m_predicateCount++;
+  }
+  
+  public boolean syntaxAnalysis(String properties) throws ParseException
+  {
+    String[] lines = properties.split("\n");
+    StatementMetadata meta = new StatementMetadata();
+    boolean in_comment = false;
+    StringBuilder le_string = new StringBuilder();
+    String meta_param_name = "";
+    StringBuilder meta_param_value = new StringBuilder();
+    int i = 0;
+    for (String line : lines)
+    {
+      line = line.trim();
+      if (line.startsWith("#"))
+      {
+        // Do nothing
+      }
+      else if (line.startsWith("\"\"\""))
+      {
+        in_comment = !in_comment;
+        if (in_comment)
+        {
+          meta_param_value = new StringBuilder();
+        }
+      }
+      else if (in_comment)
+      {
+        if (line.startsWith("@"))
+        {
+          Pattern pat = Pattern.compile("@([^\\s]+)\\s(.*)");
+          Matcher mat = pat.matcher(line);
+          if (mat.find())
+          {
+            if (!meta_param_name.isEmpty())
+            {
+              meta.put(meta_param_name, meta_param_value.toString());
+              meta_param_value = new StringBuilder();
+            }
+            meta_param_name = mat.group(1);
+            meta_param_value.append(mat.group(2)).append(" ");
+          }
+        }
+        else
+        {
+          meta_param_value.append(line.trim()).append(" ");
+        }
+      }
+      else
+      {
+        le_string.append(line).append(" ");
+        if (line.endsWith(".")) // End of language element: parse it
+        {
+          String property_string = le_string.toString().trim();
+          property_string = property_string.substring(0, property_string.length() - 1); // Remove end period
+          ParseNode node = null;
+          try
+          {
+            node = m_parser.parse(property_string);
+          }
+          catch (BnfParser.ParseException e)
+          {
+            throw new ParseException(e.toString());
+          }
+          if(node == null)
+          {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
   }
 
   @Override

@@ -52,6 +52,7 @@ public class Fiddle
 		addOperation(new SetProperty());
 		addOperation(new Evaluate());
 		addOperation(new Expand());
+		addOperation(new Parse());
 	}
 
 	protected void addOperation(FiddleOperation op)

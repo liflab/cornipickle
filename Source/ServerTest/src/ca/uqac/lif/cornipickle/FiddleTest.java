@@ -74,6 +74,24 @@ public class FiddleTest
 	  assertEquals(fp.getArgument(),"{\"alternatives\":[\"<predicate>\",\"<def_set>\",\"<statement>\",\"<context>\"]}");
 	}
 	
+	@Test
+	public void testParse()
+	{
+	  String json;
+	  FiddlePair fp;
+	  json = PackageFileReader.readPackageFile(this.getClass(), "data/fiddle/parse-1.json");
+	  fp = m_fiddle.doOperation("", json);
+	  assertEquals(fp.getArgument(), "{\"isValid\":\"true\"}");
+	  
+	  json = PackageFileReader.readPackageFile(this.getClass(), "data/fiddle/parse-2.json");
+    fp = m_fiddle.doOperation("", json);
+    assertEquals(fp.getArgument(), "{\"isValid\":\"true\"}");
+    
+    json = PackageFileReader.readPackageFile(this.getClass(), "data/fiddle/parse-3-false.json");
+    fp = m_fiddle.doOperation("", json);
+    assertEquals(fp.getArgument(), "{\"isValid\":\"false\"}");
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected Map<StatementMetadata,Verdict> getVerdicts(FiddlePair fp) throws JsonParseException, SerializerException
 	{
