@@ -1,0 +1,4 @@
+{
+  "action"   : "parse",
+  "code" : "For each $x in $(p) ($x's width is greater than 100)."
+}

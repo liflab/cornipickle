@@ -1,0 +1,4 @@
+{
+  "action"   : "parse",
+  "code" : "For each $x in $(p) (<statement>)."
+}
