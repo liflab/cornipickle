@@ -48,5 +48,4 @@ public class Parse extends FiddleOperation {
     json.put("isValid", isValid);
     return json;
   }
-  
 }

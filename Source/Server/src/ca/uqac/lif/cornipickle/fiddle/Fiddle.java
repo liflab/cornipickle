@@ -53,6 +53,7 @@ public class Fiddle
 		addOperation(new Evaluate());
 		addOperation(new Expand());
 		addOperation(new Parse());
+		addOperation(new GetGrammar());
 	}
 
 	protected void addOperation(FiddleOperation op)

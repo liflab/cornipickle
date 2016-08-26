@@ -92,6 +92,16 @@ public class FiddleTest
     assertEquals(fp.getArgument(), "{\"isValid\":\"false\"}");
 	}
 	
+	@Test
+	public void testGetGrammar()
+	{
+	  String json;
+	  FiddlePair fp;
+	  json = PackageFileReader.readPackageFile(this.getClass(), "data/fiddle/getgrammar.json");
+	  fp = m_fiddle.doOperation("",json);
+	  assertTrue(fp.getArgument() != "{}");
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected Map<StatementMetadata,Verdict> getVerdicts(FiddlePair fp) throws JsonParseException, SerializerException
 	{
