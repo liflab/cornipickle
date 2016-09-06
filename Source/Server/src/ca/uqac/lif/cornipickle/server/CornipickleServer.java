@@ -50,6 +50,7 @@ public class CornipickleServer extends Server
     registerCallback(new DummyImage(m_interpreter));
     registerCallback(new JsonGetState(m_interpreter, this));
     registerCallback(new JsonPutState(m_interpreter, this));
+    registerCallback(new FiddleCallback());
     registerCallback(new FileCallback(this));
   }
   
