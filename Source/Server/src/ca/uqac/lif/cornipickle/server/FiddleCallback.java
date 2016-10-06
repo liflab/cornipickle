@@ -1,5 +1,7 @@
 package ca.uqac.lif.cornipickle.server;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -23,8 +25,14 @@ public class FiddleCallback extends RestCallback {
   public CallbackResponse process(HttpExchange t) {
     CallbackResponse response = new CallbackResponse(t);
     Map<String,String> attributes = getParameters(t);
-    FiddlePair fp = m_fiddle.doOperation("", attributes.get(""));
-    response.setContents(fp.getArgument());
+    FiddlePair fp;
+    try {
+      fp = m_fiddle.doOperation("", URLDecoder.decode(attributes.get(""), "UTF-8"));
+      response.setContents(fp.getArgument());
+    } catch (UnsupportedEncodingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     return response;
   }
 

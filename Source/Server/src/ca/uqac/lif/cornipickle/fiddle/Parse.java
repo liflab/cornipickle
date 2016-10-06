@@ -40,7 +40,7 @@ public class Parse extends FiddleOperation {
     i.getParser().setPartialParsing(true);
     boolean isValid = true;
     try {
-      isValid = i.getParser().syntaxAnalysis(code);
+      i.parseProperties(code);
     } catch (ParseException e) {
       isValid = false;
     }
