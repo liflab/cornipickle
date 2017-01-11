@@ -56,3 +56,6 @@ Source/**/.cproject
 Source/**/.buildpath
 test/
 .idea/
+
+# SonarQube
+.sonar/
