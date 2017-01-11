@@ -157,7 +157,7 @@ class DummyImage extends InterpreterCallback
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
+    
     if (j != null)
     {
       m_interpreter.evaluateAll(j);

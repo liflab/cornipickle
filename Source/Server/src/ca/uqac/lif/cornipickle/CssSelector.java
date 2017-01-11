@@ -146,7 +146,7 @@ public class CssSelector extends SetExpression
     protected void parseFromString(String first_part)
     {
       // Split CSS part into tag, class and id
-      Pattern pat = Pattern.compile("([\\w\\d]+){0,1}(\\.([\\w\\d]+)){0,1}(#([\\w\\d]+)){0,1}");
+      Pattern pat = Pattern.compile("([\\w\\d]+){0,1}(\\.([\\w\\d-]+)){0,1}(#([\\w\\d-]+)){0,1}");
       Matcher mat = pat.matcher(first_part);
       if (!mat.find())
       {
