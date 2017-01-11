@@ -54,7 +54,8 @@
                         | <and> | <or> | <implies> ;
 <unary_stmt>         := <defined> ;
 <math>               := <add> | <sub> | <div> | <mult> ;
-<temporal_stmt>      := <globally> | <eventually> | <eventually_within> | <never> | <next> | <next_time> ;
+<temporal_stmt>      := <globally> | <eventually> | <eventually_within> | <never> | <next> | <next_time> 
+                        | <until> ;
 <foreach>            := For each <var_name> in <set_name> ( <statement> ) ;
 <exists>             := There exists <var_name> in <set_name> such that ( <statement> ) ;
 <when>               := When <var_name> is now <var_name> ( <statement> ) ;
@@ -68,6 +69,7 @@
 <next>               := Next ( <statement> ) ;
 <eventually>         := Eventually ( <statement> ) ;
 <eventually_within>  := Eventually within <number> seconds ( <statement> ) ;
+<until>              := ( <statement> ) Until ( <statement> ) ;
 <next_time>          := The next time ( <statement> ) Then ( <statement> ) ;
 <property_or_const>  := <elem_property> | <constant> | <math> ;
 <equality>           := <property_or_const> equals <property_or_const>
