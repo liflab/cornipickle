@@ -670,6 +670,20 @@ public class CornipickleParser implements ParseNodeVisitor
       SubOperation out = new SubOperation(left, right);
       m_nodes.push(out);
     }
+    else if (node_token.compareTo("<until>") == 0)
+    {
+      m_nodes.pop(); // )
+      Statement right = (Statement) m_nodes.pop();
+      m_nodes.pop(); // (
+      m_nodes.pop(); // Until
+      m_nodes.pop(); // )
+      Statement left = (Statement) m_nodes.pop();
+      m_nodes.pop(); // (
+      Until out = new Until();
+      out.setLeft(left);
+      out.setRight(right);
+      m_nodes.push(out);
+    }
     else if (node_token.compareTo("<when>") == 0)
     {
       m_nodes.pop(); // (

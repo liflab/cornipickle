@@ -23,36 +23,31 @@ import java.util.Map;
 
 import ca.uqac.lif.json.JsonElement;
 
-public class Until extends TemporalStatement
-{
+public class Until extends TemporalStatement {
   protected Statement m_left;
 
   protected Statement m_right;
-  
+
   protected List<Statement> m_leftStatements;
-  
+
   protected List<Statement> m_rightStatements;
-  
-  public Until()
-  {
+
+  public Until() {
     super();
     m_leftStatements = new LinkedList<Statement>();
     m_rightStatements = new LinkedList<Statement>();
   }
-  
-  public void setLeft(Statement s)
-  {
+
+  public void setLeft(Statement s) {
     m_left = s;
   }
-  
-  public void setRight(Statement s)
-  {
+
+  public void setRight(Statement s) {
     m_right = s;
   }
 
   @Override
-  public Until getClone()
-  {
+  public Until getClone() {
     Until out = new Until();
     out.m_left = m_left.getClone();
     out.m_right = m_right.getClone();
@@ -60,8 +55,7 @@ public class Until extends TemporalStatement
   }
 
   @Override
-  public void resetHistory()
-  {
+  public void resetHistory() {
     m_left.resetHistory();
     m_right.resetHistory();
     m_verdict = new Verdict(Verdict.Value.INCONCLUSIVE);
@@ -79,7 +73,7 @@ public class Until extends TemporalStatement
       Statement right = m_rightStatements.get(i);
       Verdict v_left = left.evaluateTemporal(j, d);
       Verdict v_right = right.evaluateTemporal(j, d);
-      if (v_left.is(Verdict.Value.TRUE) && v_right.is(Verdict.Value.TRUE))
+      if (v_left.is(Verdict.Value.TRUE) && v_right.is(Verdict.Value.FALSE))
       {
         m_leftStatements.remove(i);
         m_rightStatements.remove(i);
@@ -99,8 +93,7 @@ public class Until extends TemporalStatement
   }
 
   @Override
-  public String toString(String indent)
-  {
+  public String toString(String indent) {
     StringBuilder out = new StringBuilder();
     out.append(m_left.toString(indent + "  "));
     out.append(") Until \n").append(indent).append("(\n");
@@ -110,17 +103,15 @@ public class Until extends TemporalStatement
   }
 
   @Override
-  public void postfixAccept(LanguageElementVisitor visitor)
-  {
+  public void postfixAccept(LanguageElementVisitor visitor) {
     m_left.postfixAccept(visitor);
     m_right.postfixAccept(visitor);
     visitor.visit(this);
     visitor.pop();
   }
-  
+
   @Override
-  public void prefixAccept(LanguageElementVisitor visitor)
-  {
+  public void prefixAccept(LanguageElementVisitor visitor) {
     visitor.pop();
     m_left.postfixAccept(visitor);
     m_right.postfixAccept(visitor);
