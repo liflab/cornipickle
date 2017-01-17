@@ -1,0 +1,11 @@
+{
+ "tagname" : "window",
+ "width" : 956,
+ "height" : 165,
+ "children" : [
+  {
+  	"tagname" : "a",
+  	"id" : "go"
+  }
+ ]
+}

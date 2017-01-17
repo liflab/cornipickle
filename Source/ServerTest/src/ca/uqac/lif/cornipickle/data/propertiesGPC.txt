@@ -1,0 +1,14 @@
+We say that we click on go when (
+  There exists $a in $(#go) such that (
+    $a's event is "click"
+  )
+).
+
+"""
+  @name Don't click go
+  @description You should NEVER click on go
+  @severity Warning
+"""
+Always (
+  Not (we click on go)
+).
