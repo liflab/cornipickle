@@ -1,0 +1,8 @@
+"""
+  @name width should be 956
+  @description The window's width should always 956
+  @severity Warning
+"""
+Always (
+  the page's width equals 956
+).

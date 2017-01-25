@@ -73,8 +73,7 @@ public class PredicateCall extends Statement
       String var_in_pred = m_predicate.getCaptureGroup(i);
       new_d.put(var_in_pred, d.get(var_in_match));
     }
-    m_verdict = m_predicate.evaluate(j, new_d);
-    return m_verdict;
+    return m_predicate.evaluate(j, new_d);
   }
   
   @Override

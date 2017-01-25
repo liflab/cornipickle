@@ -5,10 +5,10 @@ We say that we click on go when (
 ).
 
 """
-  @name Don't click go
+  @name Don't click on go
   @description You should NEVER click on go
   @severity Warning
 """
 Always (
-  Not (we click on go)
+  Not(we click on go)
 ).

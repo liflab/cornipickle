@@ -170,9 +170,8 @@ public class PredicateDefinition extends Statement
 
   @Override
   public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
-  {
-    m_verdict = m_predicate.evaluate(j, d);
-    return m_verdict;
+  { 
+    return m_predicate.evaluate(j, d);
   }
   
   @Override
