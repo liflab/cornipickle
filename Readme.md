@@ -9,9 +9,6 @@ a web application as a set of human-readable assertions on the page’s HTML
 and CSS data. Cornipickle, an automated testing tool that can verify
 Cornichon properties on-the-fly as a user interacts with an application.
 
-##Note: [The development of this project continues on Github](https://github.com/liflab/cornipickle)
-
-
 Table of Contents                                                    {#toc}
 -----------------
 
