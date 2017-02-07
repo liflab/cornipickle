@@ -34,6 +34,11 @@ Cornipickle.CornipickleProbe = function()
 	 * The probe's hash
 	 */
 	this.probe_hash = "";
+	
+	/*
+	 * The last page that was serialized (without a click yet)
+	 */
+	this.m_lastPage = {};
 
 
 	/**
@@ -119,7 +124,7 @@ Cornipickle.CornipickleProbe = function()
 		var current_path = path;
 		current_path.push(n.tagName);
 		var out = {};
-		if (this.includeInResult(n, path) === Cornipickle.CornipickleProbe.INCLUDE || n === event.target)
+		if (this.includeInResult(n, path) === Cornipickle.CornipickleProbe.INCLUDE || (event !== null && n === event))
 		{
 			if (n.tagName)
 			{
@@ -146,7 +151,7 @@ Cornipickle.CornipickleProbe = function()
 				out = this.addIfDefined(out, "disabled", Cornipickle.CornipickleProbe.formatBool(n.disabled));
 				out = this.addIfDefined(out, "accesskey", n.accessKey);
 				out = this.addIfDefined(out, "min", n.min);
-				if (n === event.target)
+				if (event !== null && n === event.target)
 				{
 					out.event = this.serializeEvent(event);
 				}
@@ -362,8 +367,8 @@ Cornipickle.CornipickleProbe = function()
 		// Un-highlight previously highlighted elements
 		Cornipickle.CornipickleProbe.unHighlightElements();
 		// Serialize page contents
-		var json = cp_probe.serializePageContents(document.body, [], event);
-		json = cp_probe.serializeWindow(json);
+		var json = cp_probe.serializeWindow(cp_probe.serializePageContents(document.body, [], event));
+		
 		var url = "http://" + this.server_name + "/image/";
 		xhttp = new XMLHttpRequest();
 		xhttp.open("POST", url, true);
@@ -520,7 +525,10 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 
 Cornipickle.CornipickleProbe.unHighlightElements = function()
 {
-	document.getElementById("cp-highlight").innerHTML = "";
+	if(document.getElementById("cp-highlight"))
+	{
+		document.getElementById("cp-highlight").innerHTML = "";
+	}
 };
 
 /**
@@ -818,14 +826,11 @@ function loadFunction() {
             // If we clicked on the probe status panel, do nothing
             return;
         }
-        // Wait .25 sec, so that the browser has time to process the click
-        window.setTimeout(function() {
-            cp_probe.handleEvent(event);
-        }, 0.25);
+        cp_probe.handleEvent(event);
     };
 
-	// Call the probe a first time at startup
-	//window.setTimeout(cp_probe.handleEvent(event), 0.25);
+	//Call the probe a first time at startup
+	//cp_probe.handleEvent(null);
 }
 
 var addFunctionOnWindowLoad = function(callback){
