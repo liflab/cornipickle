@@ -111,6 +111,11 @@ public abstract class ElementProperty extends Property
       JsonString js = new JsonString(s);
       return js;
     }
+    
+    if(!(e instanceof JsonMap))
+    {
+      return e;
+    }
     JsonElement v = JsonPath.get(e, m_propertyName);
     // Return
     return v;
