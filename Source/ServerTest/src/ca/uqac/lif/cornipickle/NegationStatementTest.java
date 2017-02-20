@@ -7,8 +7,13 @@ import java.util.Map;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
+import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
+import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
+import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonNumber;
+import ca.uqac.lif.json.JsonParser;
+import ca.uqac.lif.json.JsonParser.JsonParseException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,11 +23,14 @@ public class NegationStatementTest {
 
     CornipickleParser parser;
     NegationStatement ns;
+    JsonParser jsonparser;
 
     @Before
     public void setUp() throws Exception
     {
         parser = new CornipickleParser();
+        
+        jsonparser = new JsonParser();
 
         String line = "Not (\"2\" is less than \"4\")\n";
 
@@ -89,6 +97,43 @@ public class NegationStatementTest {
     	LanguageElementVisitor test =new AttributeExtractor();
     	ns.postfixAccept(test);
     	assertTrue(true);
+    }
+    
+    @Test
+    public void testMultipleSnapshots() throws ParseException, JsonParseException{
+      Interpreter interpreter = new Interpreter();
+      String properties = PackageFileReader.readPackageFile(this.getClass(), "data/propertiesGPC.txt");
+      interpreter.parseProperties(properties);
+      
+      //First event
+      JsonElement ev1 = jsonparser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/snapshot1.json"));
+      interpreter.evaluateAll(ev1);
+      
+      assertTrue(interpreter.getVerdicts().size() == 1);
+      
+      for(Map.Entry<StatementMetadata, Verdict> entry : interpreter.getVerdicts().entrySet()) {
+        assertTrue(entry.getValue().getValue().equals(Verdict.Value.INCONCLUSIVE));
+      }
+      
+      //Second event
+      JsonElement ev2 = jsonparser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/snapshot1.json"));
+      interpreter.evaluateAll(ev2);
+      
+      assertTrue(interpreter.getVerdicts().size() == 1);
+      
+      for(Map.Entry<StatementMetadata, Verdict> entry : interpreter.getVerdicts().entrySet()) {
+        assertTrue(entry.getValue().getValue().equals(Verdict.Value.INCONCLUSIVE));
+      }
+      
+      //Third event
+      JsonElement ev3 = jsonparser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/snapshot2.json"));
+      interpreter.evaluateAll(ev3);
+      
+      assertTrue(interpreter.getVerdicts().size() == 1);
+      
+      for(Map.Entry<StatementMetadata, Verdict> entry : interpreter.getVerdicts().entrySet()) {
+        assertTrue(entry.getValue().getValue().equals(Verdict.Value.FALSE));
+      }
     }
 
     

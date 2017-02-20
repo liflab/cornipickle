@@ -117,42 +117,4 @@ public class PredicateCallTest {
 		pc.m_predicate.m_captureGroups.setSize(5);
 		assertTrue(pc.evaluateTemporal(je, test).m_value.equals(Verdict.Value.FALSE));		
 	}
-
-  @Test
-  public void testGloballyWithPredicateCall() throws ParseException, JsonParseException {
-    Interpreter interpreter = new Interpreter();
-    String properties = PackageFileReader.readPackageFile(this.getClass(), "data/propertiesGPC.txt");
-    interpreter.parseProperties(properties);
-    
-    //First event
-    JsonElement ev1 = parser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/snapshot1.json"));
-    interpreter.evaluateAll(ev1);
-    
-    assertTrue(interpreter.getVerdicts().size() == 1);
-    
-    for(Map.Entry<StatementMetadata, Verdict> entry : interpreter.getVerdicts().entrySet()) {
-      assertTrue(entry.getValue().getValue().equals(Verdict.Value.INCONCLUSIVE));
-    }
-    
-    //Second event
-    JsonElement ev2 = parser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/snapshot1.json"));
-    interpreter.evaluateAll(ev2);
-    
-    assertTrue(interpreter.getVerdicts().size() == 1);
-    
-    for(Map.Entry<StatementMetadata, Verdict> entry : interpreter.getVerdicts().entrySet()) {
-      assertTrue(entry.getValue().getValue().equals(Verdict.Value.INCONCLUSIVE));
-    }
-    
-    //Third event
-    JsonElement ev3 = parser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/snapshot2.json"));
-    interpreter.evaluateAll(ev3);
-    
-    assertTrue(interpreter.getVerdicts().size() == 1);
-    
-    for(Map.Entry<StatementMetadata, Verdict> entry : interpreter.getVerdicts().entrySet()) {
-      assertTrue(entry.getValue().getValue().equals(Verdict.Value.FALSE));
-    }
-  }
-
 }

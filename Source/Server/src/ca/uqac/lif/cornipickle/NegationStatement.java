@@ -43,14 +43,14 @@ public class NegationStatement extends Statement
   @Override
   public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    m_verdict.negate(m_innerStatement.evaluate(j, d));
+    m_verdict.negate(m_innerStatement.getClone().evaluate(j, d));
     return m_verdict;
   }
   
   @Override
   public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
   {
-    m_verdict.negate(m_innerStatement.evaluateAtemporal(j, d));
+    m_verdict.negate(m_innerStatement.getClone().evaluateAtemporal(j, d));
     return m_verdict;
   }
 
