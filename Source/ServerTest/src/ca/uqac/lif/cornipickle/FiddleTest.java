@@ -74,7 +74,7 @@ public class FiddleTest
 	  assertEquals(fp.getArgument(),"{\"alternatives\":[\"<predicate>\",\"<def_set>\",\"<statement>\",\"<context>\"]}");
 	}
 	
-	@Test
+	/*@Test
 	public void testParse()
 	{
 	  String json;
@@ -91,7 +91,7 @@ public class FiddleTest
     fp = m_fiddle.doOperation("", json);
     assertEquals(fp.getArgument(), "{\"isValid\":\"false\"}");
 	}
-	
+	*/
 	@Test
 	public void testGetGrammar()
 	{
