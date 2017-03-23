@@ -5,8 +5,12 @@ import java.util.Map;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
+import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
+import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonNumber;
+import ca.uqac.lif.json.JsonParser;
+import ca.uqac.lif.json.JsonParser.JsonParseException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,11 +20,15 @@ public class LetStatementTest {
 
     CornipickleParser parser;
     LetStatement ls;
+    Interpreter interpreter;
+    JsonParser j_parser;
 
     @Before
     public void setUp() throws Exception
     {
         parser = new CornipickleParser();
+        interpreter = new Interpreter();
+        j_parser = new JsonParser();
 
         String line = "Let $arf be $x's height (\"3\" equals \"3\")";
         ParseNode pn = shouldParseAndNotNull(line, "<let>");
@@ -100,7 +108,21 @@ public class LetStatementTest {
     	ls.postfixAccept(test);
     	assertTrue(true);
     }
-
+    
+    /* Doesn't work because of $compteur + 1. $compteur can't be a constant
+    @Test
+    public void evaluateCpt() throws ParseException, JsonParseException {
+      String toParse = "Let $compteur be 0 (For each $elem in $(.menu) (Let $compteur be ($compteur + 1) ($compteur is less than 3))).";
+      
+      interpreter.parseProperties(toParse);
+      
+      String jsonString = PackageFileReader.readPackageFile(this.getClass(), "data/snapshot-letcpt.json");
+      JsonElement json = j_parser.parse(jsonString);
+      
+      interpreter.evaluateAll(json);
+      
+      assertTrue(interpreter.getVerdicts().containsValue(Verdict.Value.TRUE));
+    }*/
 
 
 

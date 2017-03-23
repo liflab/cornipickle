@@ -61,7 +61,6 @@ public class InterpreterTest {
     }
 
 
-
     @Test
     public void testResetHistory(){
         i.resetHistory();

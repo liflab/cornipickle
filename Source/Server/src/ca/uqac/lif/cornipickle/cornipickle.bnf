@@ -30,7 +30,11 @@
 						
 # Device attributes
 
-<device_attribute>	 := aspect-ratio | height | width;
+<device_attribute>   := aspect-ratio | height | width;
+
+# Set attributes
+
+<set_attribute>      := size;
 
 # Element property
 
@@ -40,6 +44,11 @@
 <elem_property_com>  := the <css_attribute> of <var_name> | the <page_attribute> of the page
 						| the <device_attribute> of the device;
 
+# Set property
+
+<set_property>       := <set_property_pos> | <set_property_com> ;
+<set_property_pos>   := <set_name> 's <set_attribute>;
+<set_property_com>   := the <set_attribute> of <set_name>;
 
 # Regular expression capture
 
@@ -71,7 +80,7 @@
 <eventually_within>  := Eventually within <number> seconds ( <statement> ) ;
 <until>              := ( <statement> ) Until ( <statement> ) ;
 <next_time>          := The next time ( <statement> ) Then ( <statement> ) ;
-<property_or_const>  := <elem_property> | <constant> | <math> ;
+<property_or_const>  := <set_property> | <elem_property> | <constant> | <math> ;
 <equality>           := <property_or_const> equals <property_or_const>
                         | <property_or_const> is <property_or_const> ;
 <gt>                 := <property_or_const> is greater than <property_or_const> ;

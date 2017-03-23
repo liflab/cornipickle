@@ -191,6 +191,8 @@ public class CornipickleParser implements ParseNodeVisitor
     else if (node_token.compareTo("<pred_pattern>") == 0) { }
     else if (node_token.compareTo("<property_or_const>") == 0) { }
     else if (node_token.compareTo("<S>") == 0) { }
+    else if (node_token.compareTo("<set_attribute>") == 0) { }
+    else if (node_token.compareTo("<set_property>") == 0) { }
     else if (node_token.compareTo("<statement>") == 0) { }
     else if (node_token.compareTo("<temporal_stmt>") == 0) { }
     else if (node_token.compareTo("<userdef_set>") == 0) { }
@@ -650,6 +652,23 @@ public class CornipickleParser implements ParseNodeVisitor
         SetDefinition sd = new SetDefinition(set_name.toString());
         m_nodes.push(sd);
       }
+    }
+    else if (node_token.compareTo("<set_property_com>") == 0)
+    {
+      SetExpression set = (SetExpression) m_nodes.pop();
+      m_nodes.pop(); // of
+      StringConstant prop = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // the
+      SetPropertyComplement out = new SetPropertyComplement(set, prop);
+      m_nodes.push(out);
+    }
+    else if (node_token.compareTo("<set_property_pos>") == 0)
+    {
+      StringConstant prop = (StringConstant) m_nodes.pop();
+      m_nodes.pop(); // 's
+      SetExpression set = (SetExpression) m_nodes.pop();
+      SetPropertyPossessive out = new SetPropertyPossessive(set, prop);
+      m_nodes.push(out);
     }
     else if (node_token.compareTo("<string>") == 0)
     {
