@@ -34,6 +34,11 @@ Cornipickle.CornipickleProbe = function()
 	 * The probe's hash
 	 */
 	this.probe_hash = "";
+	
+	/*
+	 * The last page that was serialized (without a click yet)
+	 */
+	this.m_lastPage = {};
 
 
 	/**
@@ -101,7 +106,7 @@ Cornipickle.CornipickleProbe = function()
 	 * Map from unique IDs to element references
 	 */
 	this.m_idMap = {};
-
+	
 
 	/**
 	 * Serializes the contents of the page. This method recursively
@@ -119,7 +124,7 @@ Cornipickle.CornipickleProbe = function()
 		var current_path = path;
 		current_path.push(n.tagName);
 		var out = {};
-		if (this.includeInResult(n, path) === Cornipickle.CornipickleProbe.INCLUDE || n === event.target)
+		if (this.includeInResult(n, path) === Cornipickle.CornipickleProbe.INCLUDE || (event !== null && n === event))
 		{
 			if (n.tagName)
 			{
@@ -146,7 +151,7 @@ Cornipickle.CornipickleProbe = function()
 				out = this.addIfDefined(out, "disabled", Cornipickle.CornipickleProbe.formatBool(n.disabled));
 				out = this.addIfDefined(out, "accesskey", n.accessKey);
 				out = this.addIfDefined(out, "min", n.min);
-				if (n === event.target)
+				if (event !== null && n === event.target)
 				{
 					out.event = this.serializeEvent(event);
 				}
@@ -354,6 +359,47 @@ Cornipickle.CornipickleProbe = function()
 		}
 		return event.type;
 	};
+	
+	this.preEvaluate = function()
+	{
+		console.log("preEvaluation");
+		Cornipickle.CornipickleProbe.updateTransmitIcon(true);
+		// Un-highlight previously highlighted elements
+		Cornipickle.CornipickleProbe.unHighlightElements();
+		// Serialize page contents
+		var json = cp_probe.serializeWindow(cp_probe.serializePageContents(document.body, [], null));
+		
+		var url = "http://" + this.server_name + "/preevaluate/";
+		xhttp = new XMLHttpRequest();
+		xhttp.open("POST", url, true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.onreadystatechange = function () {
+		    var DONE = this.DONE || 4;
+		    if (this.readyState === DONE){
+		    	Cornipickle.CornipickleProbe.handleResponse(this.responseText);
+		    }
+		};
+		toSend = "contents=" + encodeURIComponent(JSON.stringify(json, Cornipickle.escape_json_string));
+
+		var cpProbeProbeHash = sessionStorage.getItem(cp_probe.probe_hash);
+
+		if( cpProbeProbeHash != null )
+		{
+			toSend += "&interpreter=" + encodeURIComponent(sessionStorage.getItem(cp_probe.probe_hash));
+		}
+
+		if(this.probe_id != "")
+		{
+			toSend += "&id=" + this.probe_id;
+		}
+
+		if(this.probe_hash != "")
+		{
+			toSend += "&hash=" + this.probe_hash;
+		}
+		xhttp.send(toSend);
+
+	};
 
 	this.handleEvent = function(event)
 	{
@@ -362,8 +408,8 @@ Cornipickle.CornipickleProbe = function()
 		// Un-highlight previously highlighted elements
 		Cornipickle.CornipickleProbe.unHighlightElements();
 		// Serialize page contents
-		var json = cp_probe.serializePageContents(document.body, [], event);
-		json = cp_probe.serializeWindow(json);
+		var json = cp_probe.serializeWindow(cp_probe.serializePageContents(document.body, [], event));
+		
 		var url = "http://" + this.server_name + "/image/";
 		xhttp = new XMLHttpRequest();
 		xhttp.open("POST", url, true);
@@ -479,8 +525,13 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 	console.log("handle Response");
 	// eval is evil, but we can't assume JSON.parse is available
 	eval("var response = " + decodeURI(response)); // jshint ignore:line
-
-	sessionStorage.setItem(cp_probe.probe_hash,response.interpreter);
+	
+	if(!(response.interpreter === ""))
+	{
+		sessionStorage.setItem(cp_probe.probe_hash,response.interpreter);
+		console.log("interpreter wasn't empty");
+	}
+	
 	document.getElementById("cp-image").src = response["image"];
 	if (response["global-verdict"] === "TRUE")
 	{
@@ -520,7 +571,10 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 
 Cornipickle.CornipickleProbe.unHighlightElements = function()
 {
-	document.getElementById("cp-highlight").innerHTML = "";
+	if(document.getElementById("cp-highlight"))
+	{
+		document.getElementById("cp-highlight").innerHTML = "";
+	}
 };
 
 /**
@@ -818,14 +872,11 @@ function loadFunction() {
             // If we clicked on the probe status panel, do nothing
             return;
         }
-        // Wait .25 sec, so that the browser has time to process the click
+        cp_probe.handleEvent(event);
         window.setTimeout(function() {
-            cp_probe.handleEvent(event);
-        }, 0.25);
+        	cp_probe.preEvaluate();
+        }, 500);
     };
-
-	// Call the probe a first time at startup
-	//window.setTimeout(cp_probe.handleEvent(event), 0.25);
 }
 
 var addFunctionOnWindowLoad = function(callback){
