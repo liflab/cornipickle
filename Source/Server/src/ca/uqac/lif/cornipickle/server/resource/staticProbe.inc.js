@@ -106,7 +106,7 @@ Cornipickle.CornipickleProbe = function()
 	 * Map from unique IDs to element references
 	 */
 	this.m_idMap = {};
-
+	
 
 	/**
 	 * Serializes the contents of the page. This method recursively
@@ -359,6 +359,47 @@ Cornipickle.CornipickleProbe = function()
 		}
 		return event.type;
 	};
+	
+	this.preEvaluate = function()
+	{
+		console.log("preEvaluation");
+		Cornipickle.CornipickleProbe.updateTransmitIcon(true);
+		// Un-highlight previously highlighted elements
+		Cornipickle.CornipickleProbe.unHighlightElements();
+		// Serialize page contents
+		var json = cp_probe.serializeWindow(cp_probe.serializePageContents(document.body, [], null));
+		
+		var url = "http://" + this.server_name + "/preevaluate/";
+		xhttp = new XMLHttpRequest();
+		xhttp.open("POST", url, true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.onreadystatechange = function () {
+		    var DONE = this.DONE || 4;
+		    if (this.readyState === DONE){
+		    	Cornipickle.CornipickleProbe.handleResponse(this.responseText);
+		    }
+		};
+		toSend = "contents=" + encodeURIComponent(JSON.stringify(json, Cornipickle.escape_json_string));
+
+		var cpProbeProbeHash = sessionStorage.getItem(cp_probe.probe_hash);
+
+		if( cpProbeProbeHash != null )
+		{
+			toSend += "&interpreter=" + encodeURIComponent(sessionStorage.getItem(cp_probe.probe_hash));
+		}
+
+		if(this.probe_id != "")
+		{
+			toSend += "&id=" + this.probe_id;
+		}
+
+		if(this.probe_hash != "")
+		{
+			toSend += "&hash=" + this.probe_hash;
+		}
+		xhttp.send(toSend);
+
+	};
 
 	this.handleEvent = function(event)
 	{
@@ -484,8 +525,13 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 	console.log("handle Response");
 	// eval is evil, but we can't assume JSON.parse is available
 	eval("var response = " + decodeURI(response)); // jshint ignore:line
-
-	sessionStorage.setItem(cp_probe.probe_hash,response.interpreter);
+	
+	if(!(response.interpreter === ""))
+	{
+		sessionStorage.setItem(cp_probe.probe_hash,response.interpreter);
+		console.log("interpreter wasn't empty");
+	}
+	
 	document.getElementById("cp-image").src = response["image"];
 	if (response["global-verdict"] === "TRUE")
 	{
@@ -827,10 +873,10 @@ function loadFunction() {
             return;
         }
         cp_probe.handleEvent(event);
+        window.setTimeout(function() {
+        	cp_probe.preEvaluate();
+        }, 500);
     };
-
-	//Call the probe a first time at startup
-	//cp_probe.handleEvent(null);
 }
 
 var addFunctionOnWindowLoad = function(callback){

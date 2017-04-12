@@ -43,6 +43,33 @@ var dynamicProbe = function()
         cp_probe.setProbeId( "1" );
         cp_probe.setProbeHash( "interpreter" );
         document.getElementById("cp-witness").innerHTML = "%%WITNESS_CODE%%";
+        
+        if(document.getElementsByClassName("cornipickle-code"))
+        {
+        	var codestring = "";
+        	var codes = document.getElementsByClassName("cornipickle-code");
+        	for(var i = 0; i < codes.length; i++)
+    		{
+        		codestring = codestring + codes[i].textContent.replace(/\u00A0/g, ' ');
+    		}
+        	
+        	$.ajax({
+        	    url : "/add",
+        	    type : "POST",
+        	    data : encodeURIComponent(codestring),
+        	    success : function(result) {
+        	      //$("#to-cornipickle").prop('disabled', true);
+        	      cp_probe.setAttributesToInclude(result.attributes);
+        	      cp_probe.setTagNamesToInclude(result.tagnames);
+        	      sessionStorage.interpreter = result.interpreter;
+        	      cp_probe.preEvaluate();
+        	    },
+        	  });
+        }
+        else
+        {
+        	cp_probe.preEvaluate();
+        }
     }, 500);
 };
 
