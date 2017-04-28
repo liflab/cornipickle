@@ -1,6 +1,6 @@
 /*
     Cornipickle, validation of layout bugs in web applications
-    Copyright (C) 2015 Sylvain HallÃ©
+    Copyright (C) 2015 Sylvain Hallé
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,8 +41,8 @@ public class MultOperation extends Operation
 		JsonNumber right = (JsonNumber) m_right.evaluate(t, d);
 		Number intLeft = left.numberValue();
 		Number intRight = right.numberValue();
-		int ret = intLeft.intValue() * intRight.intValue();
-		return new JsonNumber(new Integer(ret));
+		float ret = intLeft.floatValue() * intRight.floatValue();
+		return new JsonNumber(ret);
 	}
 
 	@Override
