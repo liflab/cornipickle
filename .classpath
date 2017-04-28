@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="bin" path="src"/>
+	<classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
+	<classpathentry kind="con" path="C:/Users/chafik/workspace/Cornipickle/Source/Server/bin"/>
+	<classpathentry kind="lib" path="C:/Users/chafik/eclipse/java-neon/eclipse/plugins/org.eclipse.equinox.launcher_1.3.200.v20160318-1642.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/apache-mime4j-0.6.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/azrael.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/bsh-2.0b4.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/bullwinkle.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/commons-cli-1.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/commons-cli-1.3.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/commons-exec-1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/gson-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/guava-19.0.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/hamcrest-library-1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/httpclient-4.5.1.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/httpcore-4.4.3.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/httpmime-4.5.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/jcommander-1.48.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/jerrydog.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/jna-4.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/jna-platform-4.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/json-lif.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/junit-4.12.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/netty-3.5.7.Final.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/phantomjsdriver-1.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/readystate.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/selenium-java-2.53.0.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/selenium-java-2.53.0-srcs.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/selenium-server-standalone-2.42.2.jar"/>
+	<classpathentry kind="lib" path="C:/Windows/Sun/Java/lib/ext/testng-6.9.9.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
