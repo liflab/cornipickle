@@ -130,7 +130,8 @@ class AddPropertyMobile extends InterpreterCallback
     {
     	tagnames.add(att);
     }
-    output.put("tagnames", tagnames);
+ //   output.put("tagnames", tagnames);
+    output.put("elements", tagnames);
     String s=m_interpreter.saveToMemento();
     output.put("interpreter", s);
     response.setHeader("Access-Control-Allow-Origin", "*");

@@ -132,7 +132,8 @@ class DummyImageMobile extends InterpreterCallback
       {
     	 // System.out.println("nombre: "+URLDecoder.decode(attributes.get("interpreter"), "UTF-8").length());
     	  m_interpreter = m_interpreter.restoreFromMemento(URLDecoder.decode(attributes.get("interpreter").toString(), "UTF-8"));
-    	System.out.println (m_interpreter.toString());
+    	  
+    	//System.out.println (m_interpreter.toString());
       }
     } catch (JsonParseException e) {
       e.printStackTrace(); //Never supposed to happen....
@@ -146,6 +147,7 @@ class DummyImageMobile extends InterpreterCallback
       m_interpreter.evaluateAll(j);
       //m_server.setLastProbeContact();
     }    
+   // System.out.println(j.toString());
     // Select the dummy image to send back
     Map<StatementMetadata,Verdict> verdicts = m_interpreter.getVerdicts();
     // Create response
