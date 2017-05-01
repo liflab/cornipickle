@@ -93,8 +93,8 @@ public class CssSelector extends SetExpression
       return out;
     }
     assert !css_expression.isEmpty();
-    String el_tag_name = JsonPath.getString(root, "tagname");
-    String el_class_name = JsonPath.getString(root, "class");
+    String el_tag_name = JsonPath.getString(root, "element");// tagname
+    String el_class_name = JsonPath.getString(root, "tag");//tag
     String el_id_name = JsonPath.getString(root, "id");
     LinkedList<String> new_css_expression = null;
     String first_part = css_expression.get(0);
