@@ -42,7 +42,7 @@ public class Context extends Statement {
 
   @Override
   public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d) {
-    return m_innerStatement.evaluateAtemporal(j, d);
+    return m_innerStatement.getClone().evaluateAtemporal(j, d);
   }
 
   @Override

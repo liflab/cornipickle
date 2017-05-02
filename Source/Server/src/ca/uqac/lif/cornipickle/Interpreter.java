@@ -289,7 +289,14 @@ public class Interpreter implements Originator<Interpreter,String>
 			Verdict b = new Verdict(Verdict.Value.INCONCLUSIVE);
 			if(s instanceof Context)
 			{
-			  b = s.evaluate(j,d);
+			  if (s.isTemporal())
+        {
+          b = s.evaluate(j, d);
+        }
+        else
+        {
+          b = s.evaluateAtemporal(j, d);
+        }
 			  if(b.is(Verdict.Value.TRUE) || b.is(Verdict.Value.INCONCLUSIVE))
 			  {
 			    m_evaluateNext = true;

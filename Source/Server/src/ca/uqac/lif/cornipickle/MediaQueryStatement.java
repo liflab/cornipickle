@@ -12,7 +12,7 @@ public class MediaQueryStatement extends Statement {
 
   private static int m_mediaQueryCounter = 0;
   
-  private final int m_id;
+  private int m_id;
   
   private String m_mediaQuery;
   
@@ -53,7 +53,7 @@ public class MediaQueryStatement extends Statement {
   public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
   {
     JsonMap mediaQueryList = (JsonMap) JsonPath.get(j, "mediaqueries");
-    JsonElement verdict = mediaQueryList.get(m_id);
+    JsonElement verdict = mediaQueryList.get(String.valueOf(m_id));
     JsonString verdictString = (JsonString) verdict;
     if(verdictString.stringValue().equals("true"))
     {
@@ -91,6 +91,8 @@ public class MediaQueryStatement extends Statement {
   public Statement getClone()
   {
     MediaQueryStatement out = new MediaQueryStatement(m_mediaQuery);
+    out.m_id = this.m_id;
+    this.m_mediaQueryCounter--;
     return out;
   }
 
