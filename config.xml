@@ -69,7 +69,7 @@
       <name>Bullwinkle</name>
       <classname>ca.uqac.lif.bullwinkle.BnfParser</classname>
       <files>
-        <zip>https://github.com/sylvainhalle/Bullwinkle/releases/download/v1.2.2/bullwinkle-1.2.2.zip</zip>
+        <zip>https://github.com/sylvainhalle/Bullwinkle/releases/download/v1.2.3/bullwinkle-1.2.3.zip</zip>
       </files>
     </dependency>
     <dependency>
@@ -79,7 +79,7 @@
       <name>json-lif</name>
       <classname>ca.uqac.lif.json.JsonMain</classname>
       <files>
-        <zip>https://github.com/liflab/json-lif/releases/download/v1.2/json-lif-1.2.zip</zip>
+        <zip>https://github.com/liflab/json-lif/releases/download/v1.6/json-lif-1.6.zip</zip>
       </files>
     </dependency>
     <dependency>
@@ -89,7 +89,7 @@
       <name>Azrael</name>
       <classname>ca.uqac.lif.azrael.DummyMain</classname>
       <files>
-        <zip>https://github.com/sylvainhalle/Azrael/releases/download/v0.3-alpha/azrael-0.3-alpha.zip</zip>
+        <zip>https://github.com/sylvainhalle/Azrael/releases/download/v0.7.1/azrael-0.7.1-alpha.zip</zip>
       </files>
     </dependency>
     <dependency>
@@ -99,7 +99,7 @@
       <name>Jerrydog</name>
       <classname>ca.uqac.lif.jerrydog.Server</classname>
       <files>
-        <zip>https://github.com/sylvainhalle/Jerrydog/releases/download/v0.1-alpha/jerrydog-0.1-alpha.zip</zip>
+        <zip>https://github.com/sylvainhalle/Jerrydog/releases/download/v0.2.1/jerrydog-0.2.1.zip</zip>
       </files>
     </dependency>
 

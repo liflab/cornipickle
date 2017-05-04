@@ -68,9 +68,9 @@ public class SetProperty extends FiddleOperation
 		} 
 		catch (ParseException e) 
 		{
-			return new JsonFalse();
+			return JsonFalse.instance;
 		}
-		return new JsonTrue();
+		return JsonTrue.instance;
 	}
 
 }
