@@ -86,4 +86,10 @@ public class CornipickleSerializer implements Serializer<String>
 	{
 		m_serializer.addClassLoader(cl);
 	}
+
+  @Override
+  public Class<?> findClass(String arg0) throws ClassNotFoundException {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

@@ -76,6 +76,8 @@ public abstract class ElementProperty extends Property
   @Override
   public JsonElement evaluate(JsonElement t, Map<String, JsonElement> d)
   {
+    String propertyName = m_propertyName;
+    
     // Fetch element
     JsonElement e;
     if(m_elementName.equals("the page"))
@@ -87,19 +89,23 @@ public abstract class ElementProperty extends Property
     {
       List<JsonElement> eList = CssSelector.fetch("window", (JsonMap)t);
       e = eList.get(0);
+<<<<<<< HEAD
  //   m_propertyName = "device-" + m_propertyName;
   //  System.out.println(m_propertyName);
+=======
+      propertyName = "device-" + propertyName;
+>>>>>>> corniremote/master
     }
     else
     {
       e = d.get(m_elementName);
     }
     // Get its value (removed because value is now taken care of in probe JS file)
-    if (m_propertyName.compareToIgnoreCase("nodeValue") == 0)
+    if (propertyName.compareToIgnoreCase("nodeValue") == 0)
     {
       return e;
     }
-    else if (m_propertyName.compareToIgnoreCase("text") == 0)
+    else if (propertyName.compareToIgnoreCase("text") == 0)
     {
       if (!(e instanceof JsonMap))
       {
@@ -117,7 +123,7 @@ public abstract class ElementProperty extends Property
     {
       return e;
     }
-    JsonElement v = JsonPath.get(e, m_propertyName);
+    JsonElement v = JsonPath.get(e, propertyName);
     // Return
     return v;
   }

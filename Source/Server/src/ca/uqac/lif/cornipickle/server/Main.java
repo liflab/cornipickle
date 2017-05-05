@@ -17,6 +17,7 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
 
@@ -159,7 +160,13 @@ public class Main
 		}
 
 		// Start server
-		server.startServer();
+		try {
+      server.startServer();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      System.exit(ERR_IO);
+    }
 		stdout.setForegroundColor(AnsiPrinter.Color.BLUE);
 		println(stdout, "Server started on " + server_name + ":" + server_port, 1);
 
