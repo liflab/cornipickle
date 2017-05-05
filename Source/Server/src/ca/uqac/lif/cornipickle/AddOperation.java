@@ -41,8 +41,8 @@ public class AddOperation extends Operation
 		JsonNumber right = (JsonNumber) m_right.evaluate(t, d);
 		Number intLeft = left.numberValue();
 		Number intRight = right.numberValue();
-		int ret = intLeft.intValue() + intRight.intValue();
-		return new JsonNumber(new Integer(ret));
+		float ret = intLeft.floatValue() + intRight.floatValue();
+		return new JsonNumber(ret);
 	}
 
 	@Override

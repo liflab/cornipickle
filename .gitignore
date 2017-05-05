@@ -42,7 +42,8 @@ Source/**/.classpath
 Source/**/.settings/
 Source/**/.recommenders/
 Source/**/.loadpath
-
+.classpath
+.project
 # External tool builders
 Source/**/.externalToolBuilders/
 
