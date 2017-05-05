@@ -48,7 +48,7 @@ public class DivOperationTest {
 		JsonElement je2= new JsonNumber(15);		
 		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
 		test.put("2", je2);			
-		assertTrue(op.evaluate(je, test).toString().equals("1"));	
+		assertTrue(op.evaluate(je, test).compareTo(new JsonNumber(1)) == 0);	
 	}
 
 

@@ -66,8 +66,9 @@ public class Main
 	 */
 	protected static int s_verbosity = 1;
 	
+	public enum PlatformType { web, android_native };
 	
-	public static PlatformType _plateforme=PlatformType.web;
+	public static PlatformType _plateforme = PlatformType.web;
 
 	/**
 	 * Main method
