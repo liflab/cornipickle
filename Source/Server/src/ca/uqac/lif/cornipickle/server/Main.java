@@ -29,6 +29,8 @@ import org.apache.commons.cli.Options;
 
 import ca.uqac.lif.cornipickle.util.AnsiPrinter;
 
+
+
 public class Main
 {
 	/**
@@ -62,6 +64,9 @@ public class Main
 	 * Verbosity level for CLI
 	 */
 	protected static int s_verbosity = 1;
+	
+	
+	public static PlatformType _plateforme=PlatformType.web;
 
 	/**
 	 * Main method
@@ -97,10 +102,7 @@ public class Main
 		{
 			s_verbosity = Integer.parseInt(c_line.getOptionValue("verbosity"));
 		}
-		if (s_verbosity > 0)
-		{
-			showHeader(stdout);
-		}
+	
 		if (c_line.hasOption("version"))
 		{
 			stderr.println("(C) 2015-2016 Laboratoire d'informatique formelle");
@@ -125,6 +127,15 @@ public class Main
 		if(c_line.hasOption("s"))
 		{
 		  server_name = c_line.getOptionValue("s");
+		}
+		if(c_line.hasOption("a")){
+					
+		_plateforme=PlatformType.android_native;
+		//System.out.println("oui oui");
+		}
+		if (s_verbosity > 0)
+		{
+			showHeader(stdout);
 		}
 
 		// The remaining arguments are the Cornipickle files to read
@@ -198,6 +209,13 @@ public class Main
 				.desc("Serve local folder as path")
 				.build();
 		options.addOption(opt);
+		opt = Option.builder("a")
+				.longOpt("android")
+				//.argName("x")
+				//.hasArg()
+				.desc("Change platform type")
+				.build();
+		options.addOption(opt);
 		return options;
 	}
 
@@ -239,7 +257,7 @@ public class Main
 
 	private static void showHeader(PrintStream out)
 	{
-		out.println("Cornipickle, a web oracle");
+		out.println("Cornipickle, a "+ _plateforme +" oracle");
 		out.println("Version " + VERSION_STRING + ", build " + BUILD_STRING);
 	}
 
