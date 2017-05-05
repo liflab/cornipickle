@@ -1,0 +1,27 @@
+diff a/Source/Server/src/ca/uqac/lif/cornipickle/ElementProperty.java b/Source/Server/src/ca/uqac/lif/cornipickle/ElementProperty.java	(rejected hunks)
+@@ -89,19 +89,23 @@
+     {
+       List<JsonElement> eList = CssSelector.fetch("window", (JsonMap)t);
+       e = eList.get(0);
++<<<<<<< HEAD
+  //   m_propertyName = "device-" + m_propertyName;
+   //  System.out.println(m_propertyName);
++=======
++      propertyName = "device-" + propertyName;
++>>>>>>> corniremote/master
+     }
+     else
+     {
+       e = d.get(m_elementName);
+     }
+     // Get its value (removed because value is now taken care of in probe JS file)
+-    if (m_propertyName.compareToIgnoreCase("nodeValue") == 0)
++    if (propertyName.compareToIgnoreCase("nodeValue") == 0)
+     {
+       return e;
+     }
+-    else if (m_propertyName.compareToIgnoreCase("text") == 0)
++    else if (propertyName.compareToIgnoreCase("text") == 0)
+     {
+       if (!(e instanceof JsonMap))
+       {

@@ -96,7 +96,7 @@
 <sub>                := ( <property_or_const> - <property_or_const> ) ;
 <mult>               := ( <property_or_const> \u002a <property_or_const> ) ; # \u002a is the '*'
 <div>                := ( <property_or_const> / <property_or_const> ) ;
-<pow>                := ( <property_or_const> Pow <property_or_const> ) ; # 2 puissance(1/2)( puissance et sqrt)
+<pow>                := ( <property_or_const> ^ <property_or_const> ) ; # 2 ^(1/2)( puissance and sqrt)
 
 <constant>           := <number> | <string>;
 <number>             := ^\d+;

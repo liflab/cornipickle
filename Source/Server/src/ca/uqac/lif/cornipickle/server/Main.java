@@ -162,6 +162,7 @@ public class Main
 		// Start server
 		try {
       server.startServer();
+      
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

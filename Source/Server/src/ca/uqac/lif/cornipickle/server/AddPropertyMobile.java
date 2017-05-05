@@ -136,8 +136,8 @@ class AddPropertyMobile extends InterpreterCallback
     output.put("interpreter", s);
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setContents(output.toString());
-    System.out.println(output.toString());
-    System.out.println("interepter Lenght "+s.length());
+   // System.out.println(output.toString());
+  //  System.out.println("interepter Lenght "+s.length());
     response.setContentType(CallbackResponse.ContentType.JSON);
     
     m_interpreter.clear();

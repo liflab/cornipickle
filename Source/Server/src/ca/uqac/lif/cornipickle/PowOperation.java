@@ -38,7 +38,7 @@ public class PowOperation extends Operation {
 	public String toString(String indent)
 	{
 		StringBuilder out = new StringBuilder();
-		out.append(m_left.toString()).append(" Pow ").append(m_right.toString());
+		out.append(m_left.toString()).append(" ^ ").append(m_right.toString());
 		return out.toString();
 	}
 

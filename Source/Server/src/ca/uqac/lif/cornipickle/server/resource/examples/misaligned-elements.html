@@ -115,7 +115,11 @@ The following rules apply when (
   @severity Warning
 """
 For each $z in $(.menu li) (
-the device's width equals 1920
+  For each $t in $(.menu li) (
+    ($z and $t are left-aligned)
+    Or
+    ($z and $t are top-aligned)
+  )
 ).
 
 </div>
