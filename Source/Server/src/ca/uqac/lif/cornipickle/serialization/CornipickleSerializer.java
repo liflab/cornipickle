@@ -49,6 +49,8 @@ public class CornipickleSerializer implements Serializer<String>
 		
 		addClassLoader(JsonElement.class.getClassLoader());
 		addClassLoader(ca.uqac.lif.cornipickle.AddOperation.class.getClassLoader());
+		
+		m_serializer.addObjectHandler(0, new PatternHandler(m_serializer));
 	}
 	
 	@Override
@@ -88,8 +90,7 @@ public class CornipickleSerializer implements Serializer<String>
 	}
 
   @Override
-  public Class<?> findClass(String arg0) throws ClassNotFoundException {
-    // TODO Auto-generated method stub
-    return null;
+  public Class<?> findClass(String classString) throws ClassNotFoundException {
+    return m_serializer.findClass(classString);
   }
 }
