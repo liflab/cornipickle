@@ -26,7 +26,7 @@
                         
 # Page attributes
 
-<page_attribute>     := URL | height | width | aspect-ratio | orientation;
+<page_attribute>     := URL | height | width | scroll-height | scroll-width | aspect-ratio | orientation;
 						
 # Device attributes
 
