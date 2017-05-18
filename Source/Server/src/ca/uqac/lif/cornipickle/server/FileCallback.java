@@ -37,7 +37,7 @@ public class FileCallback extends InnerFileCallback
   }
   
   @Override
-  public CallbackResponse serve(HttpExchange t)
+  public CallbackResponse process(HttpExchange t)
   {
     URI u = t.getRequestURI();
     String path = u.getPath();
@@ -47,7 +47,7 @@ public class FileCallback extends InnerFileCallback
     	CallbackResponse cbr = new CallbackResponse(t, CallbackResponse.HTTP_NOT_FOUND, "", "");
       return cbr;
     }
-    return super.serve(t);
+    return super.process(t);
   }
 
 }

@@ -62,7 +62,11 @@ public class RegexCaptureTest {
 	@Test
 	public void testEvaluateJsonElementMapOfStringJsonElement2() {			
 		JsonElement js =new JsonString("text");
+		JsonString test = new JsonString("blablabla");
+		JsonMap jm=new JsonMap();
+    jm.put("text", test);
 		Map<String, JsonElement>map=new HashMap<String,JsonElement>();
+		map.put("JsonMap", jm);
 		rc.m_variable.m_propertyName="text";
 		rc.m_variable.m_elementName="JsonMap";
 		assertTrue(rc.evaluate(js, map).toString().equals("[]"));		

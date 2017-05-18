@@ -77,7 +77,7 @@ public class Evaluate extends FiddleOperation
 		} 
 		catch (SerializerException e) 
 		{
-			return new JsonFalse();
+			return JsonFalse.instance;
 		}
 	}
 

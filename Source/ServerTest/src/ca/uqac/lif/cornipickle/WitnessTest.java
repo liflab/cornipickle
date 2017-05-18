@@ -107,7 +107,7 @@ public class WitnessTest
       fail("Incorrect number of witnesses");
     }
     Set<Set<JsonElement>> tuples = w.flatten();
-    if (tuples.size() != 2)
+    if (tuples.size() != 1)
     {
       fail("Incorrect number of witnesses");
     }

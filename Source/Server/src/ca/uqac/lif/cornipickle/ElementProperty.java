@@ -114,6 +114,7 @@ public abstract class ElementProperty extends Property
       return js;
     }
     
+    //This covers the case where "e" is an element of a SetDefinition
     if(!(e instanceof JsonMap))
     {
       return e;

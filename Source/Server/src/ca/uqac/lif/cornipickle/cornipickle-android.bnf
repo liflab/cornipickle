@@ -11,27 +11,31 @@
 <userdef_set>        := <string> ;
 <var_name>           := ^\$[\w\d]+;
 
+
 # CSS selector
 
 <css_selector>       := $( <css_sel_contents> ) ;
 <css_sel_contents>   := <css_sel_part> <css_sel_contents> | <css_sel_part> ;
 <css_sel_part>       := ^[\w\u0023\.\*\-]+; # \u0023 is the # symbol
 
+
+
 # CSS attributes
 
 <css_attribute>      := nodeValue | value | height | width | top | left | right
                         | bottom | color | id | text | background | border 
                         | event | cornipickleid | display | size | accesskey 
-                        | checked | disabled | min;
+                        | checked | disabled | min | menuItemText | length | bgcolor | parent | widthdp | heightdb | position;
                         
 # Page attributes
 
-<page_attribute>     := URL | height | width | scroll-height | scroll-width | aspect-ratio | orientation;
+<page_attribute>     := URL | height | width | aspect-ratio | orientation;
 						
 # Device attributes
 
-<device_attribute>   := aspect-ratio | height | width;
+#<device_attribute>	 := ratio | height | width | density | langue;
 
+<device_attribute>	 := device-aspect-ratio | device-height | device-width | device-density | device-langue;
 # Set attributes
 
 <set_attribute>      := size;
@@ -92,7 +96,8 @@
 <sub>                := ( <property_or_const> - <property_or_const> ) ;
 <mult>               := ( <property_or_const> \u002a <property_or_const> ) ; # \u002a is the '*'
 <div>                := ( <property_or_const> / <property_or_const> ) ;
-<pow>                := ( <property_or_const> ^ <property_or_const> ) ; # 2 ^(1/2)( puissance et sqrt)
+<pow>                := ( <property_or_const> ^ <property_or_const> ) ; # 2 ^(1/2)( puissance and sqrt)
+
 <constant>           := <number> | <string>;
 <number>             := ^\d+;
 <string>             := ^"[^"]*";

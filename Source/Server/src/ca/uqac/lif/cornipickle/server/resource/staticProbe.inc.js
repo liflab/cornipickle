@@ -319,6 +319,8 @@ Cornipickle.CornipickleProbe = function()
 			"orientation" : Cornipickle.get_orientation(),
 			"width" : window.document.documentElement.clientWidth,
 			"height" : window.document.documentElement.clientHeight,
+			"scroll-width" : window.document.documentElement.scrollWidth,
+			"scroll-height" : window.document.documentElement.scrollHeight,
 			"device-width" : window.screen.availWidth,
 			"device-height" : window.screen.availHeight,
 			"device-aspect-ratio" : window.screen.availWidth / window.screen.availHeight,

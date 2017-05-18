@@ -56,7 +56,7 @@ public class SubOperationTest {
 	public void testEvaluateJsonElementMapOfStringJsonElement() {
 		JsonElement je= new JsonNumber(15);	
 		Map<String,JsonElement> test = new HashMap<String, JsonElement>();
-		assertTrue(so.evaluate(je, test).toString().equals("1"));		
+		assertTrue(so.evaluate(je, test).equals(new JsonNumber(1)));		
 	}
 	
 	  public ParseNode shouldParseAndNotNull(String line, String start_symbol){

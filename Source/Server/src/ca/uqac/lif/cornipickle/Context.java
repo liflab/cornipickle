@@ -4,7 +4,8 @@ import java.util.Map;
 
 import ca.uqac.lif.json.JsonElement;
 
-public class Context extends Statement {
+public class Context extends Statement
+{
   protected Statement m_innerStatement;
   
   public Context()
@@ -18,7 +19,8 @@ public class Context extends Statement {
   }
   
   @Override
-  public String toString(String indent) {
+  public String toString(String indent)
+  {
     StringBuilder out = new StringBuilder();
     out.append(indent).append("The following rules apply when (\n");
     out.append(m_innerStatement.toString(indent + "  "));
@@ -27,43 +29,50 @@ public class Context extends Statement {
   }
 
   @Override
-  public void prefixAccept(LanguageElementVisitor visitor) {
+  public void prefixAccept(LanguageElementVisitor visitor)
+  {
     visitor.visit(this);
     m_innerStatement.prefixAccept(visitor);
     visitor.pop();
   }
 
   @Override
-  public void postfixAccept(LanguageElementVisitor visitor) {
+  public void postfixAccept(LanguageElementVisitor visitor)
+  {
     m_innerStatement.postfixAccept(visitor);
     visitor.visit(this);
     visitor.pop();
   }
 
   @Override
-  public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d) {
+  public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
+  {
     return m_innerStatement.getClone().evaluateAtemporal(j, d);
   }
 
   @Override
-  public boolean isTemporal() {
+  public boolean isTemporal()
+  {
     return false;
   }
 
   @Override
-  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d) {
+  public Verdict evaluateTemporal(JsonElement j, Map<String, JsonElement> d)
+  {
     return m_innerStatement.evaluateTemporal(j, d);
   }
 
   @Override
-  public Statement getClone() {
+  public Statement getClone()
+  {
     Context out = new Context();
     out.setInnerStatement(m_innerStatement.getClone());
     return out;
   }
 
   @Override
-  public void resetHistory() {
+  public void resetHistory()
+  {
     m_verdict = new Verdict(Verdict.Value.INCONCLUSIVE);
   }
 
