@@ -180,10 +180,10 @@ Cornipickle.CornipickleProbe = function()
 			}
 			else
 			{
-				this.registerNewElement(n);
+				this.registerNewElement(n.parentElement);
 				out.tagname = "CDATA";
 				out.text = n.nodeValue;
-				out.cornipickleid = n.cornipickleid;
+				out.cornipickleid = n.parentElement.cornipickleid;
 				return out;
 			}
 		}
