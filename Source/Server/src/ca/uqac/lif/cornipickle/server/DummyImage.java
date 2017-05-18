@@ -299,5 +299,4 @@ class DummyImage extends InterpreterCallback
     }
     return ids;
   }
-
 }

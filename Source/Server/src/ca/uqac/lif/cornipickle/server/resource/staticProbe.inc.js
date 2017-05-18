@@ -180,8 +180,10 @@ Cornipickle.CornipickleProbe = function()
 			}
 			else
 			{
+				this.registerNewElement(n);
 				out.tagname = "CDATA";
 				out.text = n.nodeValue;
+				out.cornipickleid = n.cornipickleid;
 				return out;
 			}
 		}
@@ -245,6 +247,22 @@ Cornipickle.CornipickleProbe = function()
 		{
 			var part = this.m_tagsToInclude[i];
 			if (this.matchesSelector(part, n))
+			{
+				return Cornipickle.CornipickleProbe.INCLUDE;
+			}
+			else if(this.m_tagsToInclude[i] == "CDATA")
+			{
+				return this.checkIfDirectChildIsTextNode(n);
+			}
+		}
+		return Cornipickle.CornipickleProbe.DONT_INCLUDE;
+	};
+	
+	this.checkIfDirectChildIsTextNode = function(n)
+	{
+		for(var i = 0; i < n.childNodes.length; i++)
+		{
+			if(!n.childNodes[i].tagName)
 			{
 				return Cornipickle.CornipickleProbe.INCLUDE;
 			}
@@ -545,7 +563,7 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 	{
 		document.getElementById("bp_witness").style.backgroundColor = "white";
 	}
-	// Highlight elements, if any
+	// Highlight elements, if any  
 	for (var i = 0; i < response["highlight-ids"].length; i++)
 	{
 		var set_of_tuples = response["highlight-ids"][i].ids;
@@ -566,6 +584,7 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 		in_html += "\">" + response["highlight-ids"][i].caption + "</div>";
 		document.getElementById("bp_witness_explanation").innerHTML = in_html;
 	}
+
 	Cornipickle.CornipickleProbe.updateTransmitIcon(false);
 };
 
@@ -584,6 +603,10 @@ Cornipickle.CornipickleProbe.highlightElement = function(id, tuple_id)
 {
 	console.log("Highlight");
 	var el = cp_probe.m_idMap[id].element;
+	if(!el.tagName)
+	{
+		el = el.parentElement;
+	}
 	var offset = Cornipickle.cumulativeOffset(el);
 	var in_html = document.getElementById("cp-highlight").innerHTML;
 	in_html += "<div class=\"cp-highlight-zone\" ";
@@ -595,6 +618,7 @@ Cornipickle.CornipickleProbe.highlightElement = function(id, tuple_id)
 	in_html += "</div>";
 	document.getElementById("cp-highlight").innerHTML = in_html;
 };
+
 
 /**
  * Creates a style string for an element's border.
