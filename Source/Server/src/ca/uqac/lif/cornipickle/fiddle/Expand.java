@@ -47,13 +47,13 @@ public class Expand extends FiddleOperation{
 
   @Override
   public JsonElement doOperation(JsonMap argument, Interpreter i) {
-    List<TokenString> rules = i.getParser().m_parser.getAlternatives(
+    List<String> rules = i.getParser().m_parser.getAlternatives(
         ((JsonString)(argument.get("rule"))).stringValue());
     JsonMap map = new JsonMap();
     JsonList json = new JsonList();
-    for(TokenString tok : rules)
+    for(String tok : rules)
     {
-      json.add(new JsonString(tok.toString()));
+      json.add(new JsonString(tok));
     }
     map.put("alternatives", json);
     return map;
