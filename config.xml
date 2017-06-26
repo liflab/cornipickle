@@ -120,7 +120,7 @@
       <name>Selenium Server</name>
       <classname>org.openqa.selenium.WebDriver</classname>
       <files>
-        <zip>https://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar</zip>
+        <zip>https://selenium-release.storage.googleapis.com/2.44/selenium-server-standalone-2.44.0.jar</zip>
       </files>
     </dependency>
   </dependencies>

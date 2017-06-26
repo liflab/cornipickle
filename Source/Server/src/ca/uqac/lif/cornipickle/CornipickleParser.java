@@ -256,6 +256,22 @@ public class CornipickleParser implements ParseNodeVisitor
 			m_nodes.pop(); // $(
 			m_nodes.push(out);
 		}
+		else if (node_token.compareTo("<multi_css_sel>") == 0)
+		{
+		  CssSelector right = (CssSelector) m_nodes.pop();
+		  LanguageElement top = m_nodes.peek();
+		  if(node.getChildren().size() > 1) // <css_sel_contents> , <css_sel_contents>
+		  {
+		    m_nodes.pop(); //,
+		    CssSelector left = (CssSelector) m_nodes.pop();
+		    left.m_cssSelector = left.getSelector().concat("," + right.getSelector());
+		    m_nodes.push(left);
+		  }
+		  else
+		  {
+		    m_nodes.push(right);
+;		  }
+		}
 		else if (node_token.compareTo("<css_sel_contents>") == 0)
 		{
 			CssSelector sel = (CssSelector) m_nodes.pop();

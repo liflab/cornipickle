@@ -44,11 +44,23 @@ public class TagNameExtractor implements LanguageElementVisitor
     {
       CssSelector css = (CssSelector) element;
       String selector = css.getSelector();
-      String[] parts = selector.split(" ");
-      for (String part : parts)
+      if(selector.equals("*"))
       {
-        m_tags.add(part);
+        m_tags.add(selector);
       }
+      else
+      {
+        String[] parts_or = selector.split(",");
+        for (String part_or : parts_or)
+        {
+          String[] parts = part_or.split(" ");
+          for (String part : parts)
+          {
+            m_tags.add(part);
+          }
+        }
+      }
+      
     }
     else if (element instanceof PredicateCall)
     {

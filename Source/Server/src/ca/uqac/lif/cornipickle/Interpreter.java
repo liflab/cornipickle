@@ -313,9 +313,9 @@ public class Interpreter implements Originator<Interpreter,String>
 	        b = s.evaluate(j, d);
 	      }
 	      else
-	      {
-	        b = s.evaluateAtemporal(j, d);
-	      }
+        {
+          b = s.evaluateAtemporal(j, d);
+        }
 	      verdicts.put(key, b);
 			}
 		}

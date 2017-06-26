@@ -254,6 +254,10 @@ Cornipickle.CornipickleProbe = function()
 			{
 				return this.checkIfDirectChildIsTextNode(n);
 			}
+			else if(this.m_tagsToInclude[i] == "*")
+			{
+				return Cornipickle.CornipickleProbe.INCLUDE;
+			}
 		}
 		return Cornipickle.CornipickleProbe.DONT_INCLUDE;
 	};

@@ -304,6 +304,46 @@ public class CornipickleParserTest
   }
   
   @Test
+  public void testCssSelector3() throws ParseException
+  {
+    String line = "$(div#bla,h)";
+    ParseNode pn = shouldParseAndNotNull(line, "<css_selector>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof CssSelector))
+    {
+      fail("Got wrong type of object");
+    }
+    if(!(((CssSelector)e).getSelector().equals("div#bla,h")))
+    {
+      fail("Failed to parse the selector correctly");
+    }
+  }
+  
+  @Test
+  public void testCssSelector4() throws ParseException
+  {
+    String line = "$(div#bla,h,div.e#rt)";
+    ParseNode pn = shouldParseAndNotNull(line, "<css_selector>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof CssSelector))
+    {
+      fail("Got wrong type of object");
+    }
+    if(!(((CssSelector)e).getSelector().equals("div#bla,h,div.e#rt")))
+    {
+      fail("Failed to parse the selector correctly");
+    }
+  }
+  
+  @Test
   public void testUserDefinedSet2() throws ParseException
   {
     String line = "A tomato is any of \"abc\", \"def\", \"h1f\"";

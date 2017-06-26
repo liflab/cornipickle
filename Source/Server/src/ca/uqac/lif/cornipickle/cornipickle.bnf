@@ -13,7 +13,8 @@
 
 # CSS selector
 
-<css_selector>       := $( <css_sel_contents> ) ;
+<css_selector>       := $( <multi_css_sel> ) ;
+<multi_css_sel>      := <css_sel_contents> , <multi_css_sel> | <css_sel_contents> ;
 <css_sel_contents>   := <css_sel_part> <css_sel_contents> | <css_sel_part> ;
 <css_sel_part>       := ^[\w\u0023\.\*\-]+; # \u0023 is the # symbol
 

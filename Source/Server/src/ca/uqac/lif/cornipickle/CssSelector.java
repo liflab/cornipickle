@@ -71,18 +71,30 @@ public class CssSelector extends SetExpression
 			assert false;
 			return null; // Should not happen
 		}
+		if(m_cssSelector.equals("*"))
+    {
+	    List<JsonElement> out = new LinkedList<JsonElement>();
+	    out.add(j);
+	    return out;
+    }
 		return fetch(m_cssSelector, (JsonMap) j);
 	}
 
 	protected static List<JsonElement> fetch(String css_expression, JsonMap root)
 	{
-		String[] css_parts = css_expression.split(" ");
-		List<String> css_list = new LinkedList<String>();
-		for (String part : css_parts)
-		{
-			css_list.add(part);
-		}
-		return fetch(css_list, root);
+	  List<JsonElement> out = new LinkedList<JsonElement>();
+	  String[] css_or = css_expression.split(",");
+	  for(String part_or : css_or)
+	  {
+	    String[] css_parts = part_or.split(" ");
+      List<String> css_list = new LinkedList<String>();
+      for (String part : css_parts)
+      {
+        css_list.add(part);
+      }
+      out.addAll(fetch(css_list, root));
+	  }
+	  return out;
 	}
 
 	protected static List<JsonElement> fetch(List<String> css_expression, JsonMap root)
@@ -162,7 +174,7 @@ public class CssSelector extends SetExpression
 		protected void parseFromString(String first_part)
 		{
 			// Split CSS part into tag, class and id
-			Pattern pat = Pattern.compile("([\\w\\d]+){0,1}(\\.([\\w\\d-]+)){0,1}(#([\\w\\d-]+)){0,1}");
+			Pattern pat = Pattern.compile("^\\*|(?:([\\w]+){0,1}(\\.([\\w-]+)){0,1}(#([\\w-]+)){0,1})$");
 			Matcher mat = pat.matcher(first_part);
 			if (!mat.find())
 			{
