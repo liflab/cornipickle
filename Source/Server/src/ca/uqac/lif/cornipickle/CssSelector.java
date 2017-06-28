@@ -74,7 +74,10 @@ public class CssSelector extends SetExpression
 		if(m_cssSelector.equals("*"))
     {
 	    List<JsonElement> out = new LinkedList<JsonElement>();
-	    out.add(j);
+	    for(JsonElement e : (JsonList)((JsonMap)j).get("children"))
+	    {
+	      out.add(e);
+	    }
 	    return out;
     }
 		return fetch(m_cssSelector, (JsonMap) j);
