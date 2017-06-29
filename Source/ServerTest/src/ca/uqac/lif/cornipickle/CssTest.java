@@ -110,6 +110,22 @@ public class CssTest
       fail("Expected size 2, got " + list.size());
     }
   }
+  
+  @Test
+  public void testFetchAllChildrenRecursively() throws Exception
+  {
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-4.json");
+    JsonElement jse = m_jsonParser.parse(json);
+    List<JsonElement> list = CssSelector.fetchAllChildrenRecursively(jse);
+    if (list == null)
+    {
+      fail("Expected list, got null");
+    }
+    if (list.size() != 7)
+    {
+      fail("Expected size 7, got " + list.size());
+    }
+  }
 
   @Test
   public void testCssGetSelector(){

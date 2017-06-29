@@ -73,12 +73,7 @@ public class CssSelector extends SetExpression
 		}
 		if(m_cssSelector.equals("*"))
     {
-	    List<JsonElement> out = new LinkedList<JsonElement>();
-	    for(JsonElement e : (JsonList)((JsonMap)j).get("children"))
-	    {
-	      out.add(e);
-	    }
-	    return out;
+	    return fetchAllChildrenRecursively(((JsonList)((JsonMap)j).get("children")).get(0));
     }
 		return fetch(m_cssSelector, (JsonMap) j);
 	}
@@ -160,6 +155,29 @@ public class CssSelector extends SetExpression
 			}
 		}
 		return out;
+	}
+	
+	protected static List<JsonElement> fetchAllChildrenRecursively(JsonElement j)
+	{
+	  if(!(j instanceof JsonMap))
+	  {
+	    assert false;
+	  }
+	  JsonMap element = (JsonMap)j;
+	  List<JsonElement> out = new LinkedList<JsonElement>();
+	  out.add(element);
+	  if(element.containsKey("children"))
+	  {
+	    for(JsonElement child : (JsonList)element.get("children"))
+	    {
+	      if(!(child instanceof JsonMap))
+	      {
+	        assert false;
+	      }
+	      out.addAll(fetchAllChildrenRecursively((JsonMap)child));
+	    }
+	  }
+	  return out;
 	}
 
 	protected static class CssPathElement
