@@ -9,7 +9,7 @@
       "top": 81,
       "children" : [
         {
-          "tagname" : "#CDATA"
+          "tagname" : "CDATA"
         }
       ]
     },

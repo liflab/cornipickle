@@ -7,7 +7,7 @@
 # Auxiliary constructs in statements
 
 <el_or_not>          := element | ε ;
-<set_name>           := <css_selector> | <userdef_set> | <regex_capture> ;
+<set_name>           := <css_selector> | <userdef_set> | <regex_capture>;
 <userdef_set>        := <string> ;
 <var_name>           := ^\$[\w\d]+;
 
@@ -15,8 +15,8 @@
 
 <css_selector>       := $( <multi_css_sel> ) ;
 <multi_css_sel>      := <css_sel_contents> , <multi_css_sel> | <css_sel_contents> ;
-<css_sel_contents>   := <css_sel_part> <css_sel_contents> | <css_sel_part> ;
-<css_sel_part>       := ^[\w\u0023\.\*\-]+; # \u0023 is the # symbol
+<css_sel_contents>   := <css_sel_part> > <css_sel_contents> | <css_sel_part> <css_sel_contents> | <css_sel_part> ;
+<css_sel_part>       := ^[\w\u0023\.\*\-\$]+; # \u0023 is the # symbol
 
 # CSS attributes
 
@@ -58,7 +58,7 @@
 # Cornichon statements
 
 <statement>          := <foreach> | <exists> | <binary_stmt> | <unary_stmt> | <negation>
-                        | <temporal_stmt> | <userdef_stmt> | <let> | <when> | <mediaquery_stmt> ;
+                        | <temporal_stmt> | <userdef_stmt> | <let> | <when> | <mediaquery_stmt> | <considering>;
 <mediaquery_stmt>    := The media query <string> applies ;
 <binary_stmt>        := <equality> | <gt> | <lt> | <regex_match> 
                         | <and> | <or> | <implies> ;
@@ -81,6 +81,8 @@
 <eventually_within>  := Eventually within <number> seconds ( <statement> ) ;
 <until>              := ( <statement> ) Until ( <statement> ) ;
 <next_time>          := The next time ( <statement> ) Then ( <statement> ) ;
+<considering>        := Considering only <var_name> and its children ( <statement> );
+
 <property_or_const>  := <set_property> | <elem_property> | <constant> | <math> ;
 <equality>           := <property_or_const> equals <property_or_const>
                         | <property_or_const> is <property_or_const> ;

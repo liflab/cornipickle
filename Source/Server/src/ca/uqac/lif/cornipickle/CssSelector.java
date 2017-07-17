@@ -27,7 +27,9 @@ import ca.uqac.lif.cornipickle.server.Main;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
+import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonPath;
+import ca.uqac.lif.json.JsonString;
 
 public class CssSelector extends SetExpression
 {
@@ -57,6 +59,20 @@ public class CssSelector extends SetExpression
 			return;
 		m_cssSelector = right.m_cssSelector + " " + m_cssSelector;
 	}
+	
+	public void mergeAsChildWith(CssSelector right)
+	{
+	  if (right == null)
+	    return;
+	  m_cssSelector = right.m_cssSelector + ">" + m_cssSelector;
+	}
+	
+	public void mergeAsAndWith(CssSelector right)
+  {
+    if (right == null)
+      return;
+    m_cssSelector = right.m_cssSelector + "," + m_cssSelector;
+  }
 
 	public String getSelector()
 	{
@@ -75,10 +91,10 @@ public class CssSelector extends SetExpression
     {
 	    return fetchAllChildrenRecursively(((JsonList)((JsonMap)j).get("children")).get(0));
     }
-		return fetch(m_cssSelector, (JsonMap) j);
+		return fetch(m_cssSelector, (JsonMap) j, d);
 	}
 
-	protected static List<JsonElement> fetch(String css_expression, JsonMap root)
+	protected static List<JsonElement> fetch(String css_expression, JsonMap root, Map<String, JsonElement> d)
 	{
 	  List<JsonElement> out = new LinkedList<JsonElement>();
 	  String[] css_or = css_expression.split(",");
@@ -90,12 +106,12 @@ public class CssSelector extends SetExpression
       {
         css_list.add(part);
       }
-      out.addAll(fetch(css_list, root));
+      out.addAll(fetch(css_list, root, d));
 	  }
 	  return out;
 	}
 
-	protected static List<JsonElement> fetch(List<String> css_expression, JsonMap root)
+	protected static List<JsonElement> fetch(List<String> css_expression, JsonMap root, Map<String, JsonElement> d)
 	{
 		List<JsonElement> out = new LinkedList<JsonElement>();
 
@@ -124,8 +140,56 @@ public class CssSelector extends SetExpression
 		}
 		LinkedList<String> new_css_expression = null;
 		String first_part = css_expression.get(0);
+		
+		int index_of_arrow = first_part.indexOf('>');
+		String rest_first_part = null;
+		boolean isRightPartOfArrow = false;
+		if(index_of_arrow != -1)
+		{
+		  if(index_of_arrow == 0)
+		  {
+		    first_part = first_part.substring(1);
+		    isRightPartOfArrow = true;
+		  }
+		  
+		  index_of_arrow = first_part.indexOf('>');
+		  if(index_of_arrow != -1) //There's an arrow so we split in 2 and push them as 2 separate parts in the front
+		  {
+		    rest_first_part = first_part.substring(index_of_arrow);
+        first_part = first_part.substring(0, index_of_arrow);
+        css_expression.remove(0);
+        css_expression.add(0, rest_first_part);
+        css_expression.add(0, first_part);
+		  }
+		}
+		
+		boolean matches = false;
+		
+		if(first_part.charAt(0) == '$')
+		{
+		  JsonMap element = (JsonMap)d.get(first_part);
+		  if(element == null)
+		  {
+		    assert false;
+		  }
+		  
+		  JsonElement corniid = root.get("cornipickleid");
+		  if(element.get("cornipickleid").compareTo(corniid) == 0)
+		  {
+		    matches = true;
+		  }
+		}
+		else
+		{
+		  CssPathElement cpe = new CssPathElement(first_part);
+		  if(cpe.matches(el_tag_name, el_class_name, el_id_name))
+		  {
+		    matches = true;
+		  }
+		}
+		
 		CssPathElement cpe = new CssPathElement(first_part);
-		if (cpe.matches(el_tag_name, el_class_name, el_id_name))
+		if (matches)
 		{
 			if (css_expression.size() == 1)
 			{
@@ -134,6 +198,11 @@ public class CssSelector extends SetExpression
 			new_css_expression = new LinkedList<String>(css_expression);
 			new_css_expression.removeFirst();
 		}
+		else if(isRightPartOfArrow) //It had to be direct child but it wasn't
+		{
+		  return out;
+		}
+		
 		JsonList children = JsonPath.getList(root, "children");
 		if (children != null)
 		{
@@ -142,10 +211,13 @@ public class CssSelector extends SetExpression
 				if (child instanceof JsonMap)
 				{
 					JsonMap m_child = (JsonMap) child;
-					out.addAll(fetch(css_expression, m_child));
+					if(!isRightPartOfArrow)
+					{
+					  out.addAll(fetch(css_expression, m_child, d));
+					}
 					if (new_css_expression != null)
 					{
-						out.addAll(fetch(new_css_expression, m_child));
+						out.addAll(fetch(new_css_expression, m_child, d));
 					}
 				}
 				else
@@ -165,7 +237,14 @@ public class CssSelector extends SetExpression
 	  }
 	  JsonMap element = (JsonMap)j;
 	  List<JsonElement> out = new LinkedList<JsonElement>();
-	  out.add(element);
+	  if(((JsonString)element.get("tagname")).stringValue().equals("CDATA"))
+	  {
+	    return out;
+	  }
+	  else
+	  {
+	    out.add(element);
+	  }
 	  if(element.containsKey("children"))
 	  {
 	    for(JsonElement child : (JsonList)element.get("children"))

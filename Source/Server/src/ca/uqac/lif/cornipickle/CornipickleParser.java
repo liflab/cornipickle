@@ -258,19 +258,15 @@ public class CornipickleParser implements ParseNodeVisitor
 		}
 		else if (node_token.compareTo("<multi_css_sel>") == 0)
 		{
-		  CssSelector right = (CssSelector) m_nodes.pop();
+		  CssSelector sel = (CssSelector) m_nodes.pop();
 		  LanguageElement top = m_nodes.peek();
-		  if(node.getChildren().size() > 1) // <css_sel_contents> , <css_sel_contents>
+		  if(top instanceof StringConstant && ((StringConstant)top).toString().equals(",")) // <css_sel_contents> , <css_sel_contents>
 		  {
 		    m_nodes.pop(); //,
-		    CssSelector left = (CssSelector) m_nodes.pop();
-		    left.m_cssSelector = left.getSelector().concat("," + right.getSelector());
-		    m_nodes.push(left);
+		    CssSelector right = (CssSelector) m_nodes.pop();
+		    sel.mergeAsAndWith(right);
 		  }
-		  else
-		  {
-		    m_nodes.push(right);
-;		  }
+		  m_nodes.push(sel);
 		}
 		else if (node_token.compareTo("<css_sel_contents>") == 0)
 		{
@@ -281,6 +277,12 @@ public class CornipickleParser implements ParseNodeVisitor
 				CssSelector right = (CssSelector) m_nodes.pop();
 				sel.mergeWith(right);
 			}
+			else if (top instanceof StringConstant && ((StringConstant)top).toString().equals(">"))
+	    {
+			  m_nodes.pop(); //>
+			  CssSelector right = (CssSelector) m_nodes.pop();
+			  sel.mergeAsChildWith(right);
+	    }
 			m_nodes.push(sel);
 		}
 		else if (node_token.compareTo("<css_sel_part>") == 0)

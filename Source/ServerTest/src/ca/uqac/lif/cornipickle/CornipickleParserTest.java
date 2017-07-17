@@ -344,6 +344,66 @@ public class CornipickleParserTest
   }
   
   @Test
+  public void testCssSelector5() throws ParseException
+  {
+    String line = "$(div > p)";
+    ParseNode pn = shouldParseAndNotNull(line, "<css_selector>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof CssSelector))
+    {
+      fail("Got wrong type of object");
+    }
+    if(!(((CssSelector)e).getSelector().equals("div>p")))
+    {
+      fail("Failed to parse the selector correctly");
+    }
+  }
+  
+  @Test
+  public void testCssSelector6() throws ParseException
+  {
+    String line = "$(div>p>CDATA)";
+    ParseNode pn = shouldParseAndNotNull(line, "<css_selector>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof CssSelector))
+    {
+      fail("Got wrong type of object");
+    }
+    if(!(((CssSelector)e).getSelector().equals("div>p>CDATA")))
+    {
+      fail("Failed to parse the selector correctly");
+    }
+  }
+  
+  @Test
+  public void testCssSelector7() throws ParseException
+  {
+    String line = "$($x > p)";
+    ParseNode pn = shouldParseAndNotNull(line, "<css_selector>");
+    LanguageElement e = parser.parseStatement(pn);
+    if (e == null)
+    {
+      fail("Parsing returned null");
+    }
+    if (!(e instanceof CssSelector))
+    {
+      fail("Got wrong type of object");
+    }
+    if(!(((CssSelector)e).getSelector().equals("$x>p")))
+    {
+      fail("Failed to parse the selector correctly");
+    }
+  }
+  
+  @Test
   public void testUserDefinedSet2() throws ParseException
   {
     String line = "A tomato is any of \"abc\", \"def\", \"h1f\"";
