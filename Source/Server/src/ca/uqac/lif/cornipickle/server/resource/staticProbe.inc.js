@@ -409,7 +409,7 @@ Cornipickle.CornipickleProbe = function()
 
 		if( cpProbeProbeHash != null )
 		{
-			toSend += "&interpreter=" + encodeURIComponent(sessionStorage.getItem(cp_probe.probe_hash));
+			toSend += "&interpreter=" + encodeURIComponent(cpProbeProbeHash);
 		}
 
 		if(this.probe_id != "")
@@ -450,7 +450,7 @@ Cornipickle.CornipickleProbe = function()
 
 		if( cpProbeProbeHash != null )
 		{
-			toSend += "&interpreter=" + encodeURIComponent(sessionStorage.getItem(cp_probe.probe_hash));
+			toSend += "&interpreter=" + encodeURIComponent(cpProbeProbeHash);
 		}
 
 		if(this.probe_id != "")
@@ -472,12 +472,18 @@ Cornipickle.CornipickleProbe = function()
 		{
 			return;
 		}
-		n.cornipickleid = Cornipickle.CornipickleProbe.elementCounter;
-		this.m_idMap[Cornipickle.CornipickleProbe.elementCounter] = {
+		var currentId = parseInt(sessionStorage.getItem(this.probe_hash+"ElementCounter"));
+		if(!currentId)
+		{
+			sessionStorage.setItem(this.probe_hash+"ElementCounter", 0);
+			currentId = 0;
+		}
+		n.cornipickleid = currentId;
+		this.m_idMap[currentId] = {
 			"element" : n,
 			"style" : {}
 		};
-		Cornipickle.CornipickleProbe.elementCounter++;
+		sessionStorage.setItem(this.probe_hash+"ElementCounter", currentId + 1);
 	};
 };
 
@@ -673,12 +679,6 @@ Cornipickle.CornipickleProbe.setValue = function(elem)
  * processes the cookie before the server has had the time to update it
  */
 Cornipickle.CornipickleProbe.refreshDelay = 500;
-
-/**
- * A global counter to give a unique ID to every element
- * encountered and reported back to the server
- */
-Cornipickle.CornipickleProbe.elementCounter = 0;
 
 /**
  * Whether highlighted elements are let mouse events through
