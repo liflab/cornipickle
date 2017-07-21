@@ -226,13 +226,47 @@ public class WhenIsNowTest {
     JsonMap snapshot2 = new JsonMap();
     snapshot2.put("tagname", "body");
     snapshot2.put("cornipickleid", 0);
-    snapshot2.put("width", 250);
+    snapshot2.put("width", 300);
     
     Map<String, JsonElement> newd2 = new HashMap<String,JsonElement>();
     
     v = g.evaluateTemporal(snapshot2, newd2);
     
     assertEquals(v.m_value, Verdict.Value.FALSE);
+  }
+  
+  @Test
+  public void testEvaluateTemporalWithNullElement()
+  { 
+    String line = "Always ( There exists $x in $(body) such that "
+        + "( Next ( When $x is now $y ( If ($x's width equals 200) Then ( $y's width equals 300 ) ) ) ) )";
+    
+    ParseNode pn = shouldParseAndNotNull(line, "<Always>");
+    LanguageElement e = parser.parseStatement(pn);
+    
+    Globally g = (Globally)e;
+  
+    JsonMap snapshot1 = new JsonMap();
+    snapshot1.put("tagname", "body");
+    snapshot1.put("cornipickleid", 0);
+    snapshot1.put("width", 200);
+    
+    Map<String, JsonElement> newd = new HashMap<String,JsonElement>();
+    
+    Verdict v = g.evaluateTemporal(snapshot1, newd);
+    
+    assertEquals(Verdict.Value.INCONCLUSIVE, v.m_value);
+    
+    JsonMap snapshot2 = new JsonMap();
+    snapshot2.put("tagname", "body");
+    snapshot2.put("cornipickleid", 1);
+    snapshot2.put("width", 250);
+    
+    Map<String, JsonElement> newd2 = new HashMap<String,JsonElement>();
+    
+    v = g.evaluateTemporal(snapshot2, newd2);
+    
+    assertEquals(v.m_value, Verdict.Value.TRUE);
   }
   
   public ParseNode shouldParseAndNotNull(String line, String start_symbol)

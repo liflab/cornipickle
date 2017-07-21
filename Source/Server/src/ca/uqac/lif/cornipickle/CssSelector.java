@@ -170,7 +170,7 @@ public class CssSelector extends SetExpression
 		  JsonMap element = (JsonMap)d.get(first_part);
 		  if(element == null)
 		  {
-		    assert false;
+		    return out;
 		  }
 		  
 		  JsonElement corniid = root.get("cornipickleid");
@@ -178,6 +178,10 @@ public class CssSelector extends SetExpression
 		  {
 		    matches = true;
 		  }
+		}
+		else if(first_part.charAt(0) == '*')
+		{
+		  matches = true;
 		}
 		else
 		{

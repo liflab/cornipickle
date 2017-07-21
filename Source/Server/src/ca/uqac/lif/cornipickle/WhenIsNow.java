@@ -107,7 +107,15 @@ public class WhenIsNow extends Statement
 		Map<String, JsonElement> new_d = new HashMap<String, JsonElement>();
 		new_d.putAll(d);
 		new_d.put(m_variableAfter, m_elementNow);
-		return m_innerStatement.evaluateAtemporal(j, new_d);
+		Verdict innerVerdict = m_innerStatement.evaluateTemporal(j, new_d);
+    if(m_elementNow == null)
+    {
+      return new Verdict(Verdict.Value.TRUE);
+    }
+    else
+    {
+      return innerVerdict;
+    }
 	}
 
 	@Override
@@ -140,7 +148,15 @@ public class WhenIsNow extends Statement
 		Map<String, JsonElement> new_d = new HashMap<String, JsonElement>();
 		new_d.putAll(d);
 		new_d.put(m_variableAfter, m_elementNow);
-		return m_innerStatement.evaluateTemporal(j, new_d);
+		Verdict innerVerdict = m_innerStatement.evaluateTemporal(j, new_d);
+		if(m_elementNow == null)
+		{
+		  return new Verdict(Verdict.Value.TRUE);
+		}
+		else
+		{
+		  return innerVerdict;
+		}
 	}
 
 	@Override
