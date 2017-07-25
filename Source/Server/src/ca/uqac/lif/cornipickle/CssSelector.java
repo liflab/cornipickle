@@ -181,7 +181,18 @@ public class CssSelector extends SetExpression
 		}
 		else if(first_part.charAt(0) == '*')
 		{
-		  matches = true;
+		  if(!isRightPartOfArrow)
+		  {
+		    return fetchAllChildrenRecursively(root);
+		  }
+		  if(el_tag_name.equals("CDATA"))
+		  {
+		    matches = false;
+		  }
+		  else
+		  {
+		    matches = true;
+		  }
 		}
 		else
 		{
@@ -192,7 +203,6 @@ public class CssSelector extends SetExpression
 		  }
 		}
 		
-		CssPathElement cpe = new CssPathElement(first_part);
 		if (matches)
 		{
 			if (css_expression.size() == 1)

@@ -5,7 +5,14 @@
   "children" : [
     {
       "tagname" : "a",
-      "cornipickleid" : 2
+      "cornipickleid" : 2,
+      "children" : [
+        {
+          "tagname": "CDATA",
+          "cornipickleid" : 2,
+          "text" : "hey bud"
+        }
+      ]
     }
   ]
 }

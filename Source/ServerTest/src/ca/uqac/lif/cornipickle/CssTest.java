@@ -278,6 +278,60 @@ public class CssTest
   }
   
   @Test
+  public void testCssFetchStar() throws Exception
+  {
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-12.json");
+    JsonElement jse = m_jsonParser.parse(json);
+    Map<String, JsonElement> d = new HashMap<String, JsonElement>();
+    d.put("$x", m_jsonParser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/sample-12x.json")));
+    List<JsonElement> list = CssSelector.fetch("window>*", (JsonMap) jse, d);
+    if (list == null)
+    {
+      fail("Expected list, got null");
+    }
+    if (list.size() != 2)
+    {
+      fail("Expected size 2, got " + list.size());
+    }
+  }
+  
+  @Test
+  public void testCssFetchStar2() throws Exception
+  {
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-12.json");
+    JsonElement jse = m_jsonParser.parse(json);
+    Map<String, JsonElement> d = new HashMap<String, JsonElement>();
+    d.put("$x", m_jsonParser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/sample-12x.json")));
+    List<JsonElement> list = CssSelector.fetch("window *", (JsonMap) jse, d);
+    if (list == null)
+    {
+      fail("Expected list, got null");
+    }
+    if (list.size() != 4)
+    {
+      fail("Expected size 4, got " + list.size());
+    }
+  }
+  
+  @Test
+  public void testCssFetchStar3() throws Exception
+  {
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-12.json");
+    JsonElement jse = m_jsonParser.parse(json);
+    Map<String, JsonElement> d = new HashMap<String, JsonElement>();
+    d.put("$x", m_jsonParser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/sample-12x.json")));
+    List<JsonElement> list = CssSelector.fetch("div *", (JsonMap) jse, d);
+    if (list == null)
+    {
+      fail("Expected list, got null");
+    }
+    if (list.size() != 2)
+    {
+      fail("Expected size 2, got " + list.size());
+    }
+  }
+  
+  @Test
   public void testFetchAllChildrenRecursively() throws Exception
   {
     String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-4.json");
