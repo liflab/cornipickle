@@ -233,7 +233,7 @@ Cornipickle.CornipickleProbe = function()
 		}
 		if (!n.tagName) // This is a text node
 		{
-			if (n.nodeValue.trim() === "")
+			if (n.nodeValue.trim() === "" || n.nodeType == 8) //8 is a comment tag
 			{
 				// Don't include nodes containing only whitespace
 				return Cornipickle.CornipickleProbe.DONT_INCLUDE_RECURSIVE;
@@ -242,6 +242,10 @@ Cornipickle.CornipickleProbe = function()
 			{
 				return Cornipickle.CornipickleProbe.INCLUDE;
 			}
+		}
+		if(n.tagName.toLowerCase() === "svg" || n.tagName.toLowerCase() === "script")
+		{
+			return DONT_INCLUDE_RECURSIVE;
 		}
 		for (var i = 0; i < this.m_tagsToInclude.length; i++)
 		{
