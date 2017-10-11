@@ -58,7 +58,7 @@
 # Cornichon statements
 
 <statement>          := <foreach> | <exists> | <binary_stmt> | <unary_stmt> | <negation>
-                        | <temporal_stmt> | <userdef_stmt> | <let> | <when> | <mediaquery_stmt> | <considering>;
+                        | <temporal_stmt> | <userdef_stmt> | <let> | <when> | <mediaquery_stmt>;
 <mediaquery_stmt>    := The media query <string> applies ;
 <binary_stmt>        := <equality> | <gt> | <lt> | <regex_match> 
                         | <and> | <or> | <implies> ;
@@ -81,7 +81,6 @@
 <eventually_within>  := Eventually within <number> seconds ( <statement> ) ;
 <until>              := ( <statement> ) Until ( <statement> ) ;
 <next_time>          := The next time ( <statement> ) Then ( <statement> ) ;
-<considering>        := Considering only <var_name> and its children ( <statement> );
 
 <property_or_const>  := <set_property> | <elem_property> | <constant> | <math> ;
 <equality>           := <property_or_const> equals <property_or_const>
