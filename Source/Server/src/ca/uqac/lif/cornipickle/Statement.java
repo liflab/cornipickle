@@ -21,8 +21,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.cornipickle.Verdict.Value;
+import ca.uqac.lif.cornipickle.faultfinder.Expression;
 
-public abstract class Statement extends LanguageElement
+public abstract class Statement extends LanguageElement implements Expression<JsonElement>
 { 
   protected Verdict m_verdict;
   
@@ -75,5 +77,25 @@ public abstract class Statement extends LanguageElement
 
   public abstract void resetHistory();
 
+  @Override
+  public final boolean satisfies(JsonElement in)
+  {
+	  Verdict v;
+	  if(isTemporal())
+		  v = evaluate(in);
+	  else
+		  v = evaluateAtemporal(in);
+	  
+	  if(v.m_value == Value.FALSE)
+		  return false;
+	  
+	  return true;
+  }
+  
+  @Override
+  public final Expression<JsonElement> getCopy()
+  {
+	  return getClone();
+  }
 
 }
