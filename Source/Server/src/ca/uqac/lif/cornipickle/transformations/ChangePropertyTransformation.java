@@ -4,14 +4,15 @@ import ca.uqac.lif.cornipickle.faultfinder.Transformation;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
+import ca.uqac.lif.json.JsonString;
 
 public abstract class ChangePropertyTransformation extends CorniTransformation
 {
-  protected String m_id;
+  protected int m_id;
   protected String m_property;
-  protected String m_value;
+  protected JsonElement m_value;
   
-  public ChangePropertyTransformation(String id, String property, String value)
+  public ChangePropertyTransformation(int id, String property, JsonElement value)
   {
     m_id = id;
     m_property = property;
@@ -42,7 +43,7 @@ public abstract class ChangePropertyTransformation extends CorniTransformation
 		return false;
 	}
 	
-	public JsonMap findElementByCornipickleId(JsonMap in, String id)
+	public JsonMap findElementByCornipickleId(JsonMap in, int id)
 	{
 	  if(in.containsKey("cornipickleid") && in.get("cornipickleid").equals(id))
 	  {

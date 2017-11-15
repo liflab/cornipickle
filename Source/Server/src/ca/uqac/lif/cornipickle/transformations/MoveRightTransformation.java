@@ -2,10 +2,11 @@ package ca.uqac.lif.cornipickle.transformations;
 
 import ca.uqac.lif.cornipickle.faultfinder.Transformation;
 import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
 
 public class MoveRightTransformation extends ChangePropertyTransformation
 {
-  public MoveRightTransformation(String id, String value)
+  public MoveRightTransformation(int id, JsonNumber value)
   {
     super(id, "right", value);
   }
@@ -34,7 +35,7 @@ public class MoveRightTransformation extends ChangePropertyTransformation
       return false;
     }
     MoveRightTransformation trans = (MoveRightTransformation)t;
-    if(trans.m_id.equals(m_id) && trans.m_value.equals(m_value))
+    if(trans.m_id == m_id && trans.m_value.equals(m_value))
     {
       return true;
     }

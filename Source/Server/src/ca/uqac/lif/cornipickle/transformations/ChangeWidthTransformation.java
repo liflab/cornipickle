@@ -2,10 +2,11 @@ package ca.uqac.lif.cornipickle.transformations;
 
 import ca.uqac.lif.cornipickle.faultfinder.Transformation;
 import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
 
 public class ChangeWidthTransformation extends ChangePropertyTransformation
 {
-  public ChangeWidthTransformation(String id, String value)
+  public ChangeWidthTransformation(int id, JsonNumber value)
   {
     super(id, "width", value);
   }
@@ -34,7 +35,7 @@ public class ChangeWidthTransformation extends ChangePropertyTransformation
       return false;
     }
     ChangeWidthTransformation trans = (ChangeWidthTransformation)t;
-    if(trans.m_id.equals(m_id) && trans.m_value.equals(m_value))
+    if(trans.m_id == m_id && trans.m_value.equals(m_value))
     {
       return true;
     }

@@ -16,6 +16,7 @@ import ca.uqac.lif.cornipickle.transformations.MoveTopTransformation;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
+import ca.uqac.lif.json.JsonNumber;
 
 public class TransformationBuilder implements CorniExpressionVisitor {
   
@@ -23,13 +24,18 @@ public class TransformationBuilder implements CorniExpressionVisitor {
   
   private JsonElement m_page;
   
-  private Set<String> m_ids;
+  private Set<Integer> m_ids;
   
   public TransformationBuilder(JsonElement page)
   {
     m_transformations = new HashSet<CorniTransformation>();
     m_page = page;
     m_ids = fetchPageIds(m_page);
+  }
+  
+  public Set<Integer> getIds()
+  {
+    return m_ids;
   }
 
   @Override
@@ -43,76 +49,76 @@ public class TransformationBuilder implements CorniExpressionVisitor {
       ElementProperty property = (ElementProperty)e;
       if(property.getPropertyName().equals("bottom"))
       {
-        for(String id : fetchPageIds(m_page))
+        for(Integer id : fetchPageIds(m_page))
         {
-          int pageWidth = Integer.parseInt(((JsonMap)m_page).getString("height"));
-          for(int i = 0; i < pageWidth; i++)
+          int pageHeight = (int) (long) ((JsonMap)m_page).getNumber("height");
+          for(int i = 0; i < pageHeight; i++)
           {
-            m_transformations.add(new MoveBottomTransformation(id, String.valueOf(i)));
+            m_transformations.add(new MoveBottomTransformation(id, new JsonNumber(i)));
           }
         }
       }
       else if(property.getPropertyName().equals("top"))
       {
-        for(String id : fetchPageIds(m_page))
+        for(Integer id : fetchPageIds(m_page))
         {
-          int pageWidth = Integer.parseInt(((JsonMap)m_page).getString("height"));
-          for(int i = 0; i < pageWidth; i++)
+          int pageHeight = (int) (long) ((JsonMap)m_page).getNumber("height");
+          for(int i = 0; i < pageHeight; i++)
           {
-            m_transformations.add(new MoveTopTransformation(id, String.valueOf(i)));
+            m_transformations.add(new MoveTopTransformation(id, new JsonNumber(i)));
           }
         }
       }
       else if(property.getPropertyName().equals("left"))
       {
-        for(String id : fetchPageIds(m_page))
+        for(Integer id : fetchPageIds(m_page))
         {
-          int pageWidth = Integer.parseInt(((JsonMap)m_page).getString("width"));
+          int pageWidth = (int) (long) ((JsonMap)m_page).getNumber("width");
           for(int i = 0; i < pageWidth; i++)
           {
-            m_transformations.add(new MoveLeftTransformation(id, String.valueOf(i)));
+            m_transformations.add(new MoveLeftTransformation(id, new JsonNumber(i)));
           }
         }
       }
       else if(property.getPropertyName().equals("right"))
       {
-        for(String id : fetchPageIds(m_page))
+        for(Integer id : fetchPageIds(m_page))
         {
-          int pageWidth = Integer.parseInt(((JsonMap)m_page).getString("width"));
+          int pageWidth = (int) (long) ((JsonMap)m_page).getNumber("width");
           for(int i = 0; i < pageWidth; i++)
           {
-            m_transformations.add(new MoveRightTransformation(id, String.valueOf(i)));
+            m_transformations.add(new MoveRightTransformation(id, new JsonNumber(i)));
           }
         }
       }
       else if(property.getPropertyName().equals("width"))
       {
-        for(String id : fetchPageIds(m_page))
+        for(Integer id : fetchPageIds(m_page))
         {
-          int pageWidth = Integer.parseInt(((JsonMap)m_page).getString("width"));
+          int pageWidth = (int) (long) ((JsonMap)m_page).getNumber("width");
           for(int i = 0; i < pageWidth; i++)
           {
-            m_transformations.add(new ChangeWidthTransformation(id, String.valueOf(i)));
+            m_transformations.add(new ChangeWidthTransformation(id, new JsonNumber(i)));
           }
         }
       }
       else if(property.getPropertyName().equals("height"))
       {
-        for(String id : fetchPageIds(m_page))
+        for(Integer id : fetchPageIds(m_page))
         {
-          int pageWidth = Integer.parseInt(((JsonMap)m_page).getString("height"));
-          for(int i = 0; i < pageWidth; i++)
+          int pageHeight = (int) (long) ((JsonMap)m_page).getNumber("height");
+          for(int i = 0; i < pageHeight; i++)
           {
-            m_transformations.add(new ChangeHeightTransformation(id, String.valueOf(i)));
+            m_transformations.add(new ChangeHeightTransformation(id, new JsonNumber(i)));
           }
         }
       }
     }
   }
   
-  private Set<String> fetchPageIds(JsonElement page)
+  private Set<Integer> fetchPageIds(JsonElement page)
   {
-    Set<String> ids = new HashSet<String>();
+    Set<Integer> ids = new HashSet<Integer>();
     
     if(!(page instanceof JsonMap))
     {
@@ -123,7 +129,7 @@ public class TransformationBuilder implements CorniExpressionVisitor {
     JsonMap element = (JsonMap)page;
     if(element.containsKey("cornipickleid"))
     {
-      ids.add(element.getString("cornipickleid"));
+      ids.add((int) (long) element.getNumber("cornipickleid"));
     }
     if(element.containsKey("children"))
     {

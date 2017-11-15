@@ -11,6 +11,7 @@
       {
         "tagname" : "a",
         "cornipickleid" : 2,
+        "bottom" : 12,
         "children" : [
           {
             "tagname": "CDATA",
@@ -28,6 +29,7 @@
     "children" : [
       {
         "tagname" : "a",
+        "bottom"  : "100",
         "cornipickleid" : 4
       }
     ]
