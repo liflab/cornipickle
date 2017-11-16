@@ -39,11 +39,13 @@ public class TransformationBuilder implements CorniExpressionVisitor {
   }
 
   @Override
-  public void visit(Expression<JsonElement> expression) {
+  public void visit(Expression<JsonElement> expression)
+  {
   }
 
   @Override
-  public void visit(Property e) {
+  public void visit(Property e)
+  {
     if(e instanceof ElementProperty)
     {
       ElementProperty property = (ElementProperty)e;

@@ -1,7 +1,5 @@
 package ca.uqac.lif.cornipickle;
 
-import static org.junit.Assert.*;
-
 import java.util.Set;
 
 import org.junit.Before;
@@ -12,7 +10,8 @@ import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonParser;
 import ca.uqac.lif.json.JsonParser.JsonParseException;
 
-public class TransformationBuilderTest {
+public class TransformationBuilderTest
+{
   
   protected JsonParser s_parser = new JsonParser();
   protected Interpreter m_interpreter;
