@@ -1,5 +1,8 @@
 package ca.uqac.lif.cornipickle.transformations;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,6 +42,38 @@ public class ChangePropertyTransformationTest
         assert false;
       }
     } catch (JsonParseException e) {
+      assert false;
+    }
+  }
+  
+  @Test
+  public void hashcodeAndEqualsTest()
+  {
+    Set<CorniTransformation> theset = new HashSet<CorniTransformation>();
+    MoveBottomTransformation trans1 = new MoveBottomTransformation(1, new JsonNumber(1));
+    MoveBottomTransformation trans2 = new MoveBottomTransformation(1, new JsonNumber(1));
+    MoveTopTransformation trans3 = new MoveTopTransformation(1, new JsonNumber(1));
+    MoveTopTransformation trans4 = new MoveTopTransformation(1, new JsonNumber(2));
+    
+    //Check if two of same class same parameters create a collision
+    theset.add(trans1);
+    theset.add(trans2);
+    if(theset.size() != 1)
+    {
+      assert false;
+    }
+    
+    //Check if adding a different class but same parameters doesn't create a collision
+    theset.add(trans3);
+    if(theset.size() != 2)
+    {
+      assert false;
+    }
+    
+    //Check if adding same class different parameters doesn't create a collision
+    theset.add(trans4);
+    if(theset.size() != 3)
+    {
       assert false;
     }
   }
