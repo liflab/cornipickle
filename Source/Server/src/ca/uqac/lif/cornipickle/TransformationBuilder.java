@@ -3,9 +3,6 @@ package ca.uqac.lif.cornipickle;
 import java.util.HashSet;
 import java.util.Set;
 
-import ca.uqac.lif.cornipickle.faultfinder.Expression;
-import ca.uqac.lif.cornipickle.faultfinder.Transformation;
-import ca.uqac.lif.cornipickle.faultfinder.logic.CorniExpressionVisitor;
 import ca.uqac.lif.cornipickle.transformations.ChangeHeightTransformation;
 import ca.uqac.lif.cornipickle.transformations.ChangeWidthTransformation;
 import ca.uqac.lif.cornipickle.transformations.CorniTransformation;
@@ -18,7 +15,7 @@ import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNumber;
 
-public class TransformationBuilder implements CorniExpressionVisitor {
+public class TransformationBuilder implements LanguageElementVisitor {
   
   private Set<CorniTransformation> m_transformations;
   
@@ -37,14 +34,14 @@ public class TransformationBuilder implements CorniExpressionVisitor {
   {
     return m_ids;
   }
-
-  @Override
-  public void visit(Expression<JsonElement> expression)
+  
+  public Set<CorniTransformation> getTransformations()
   {
+    return m_transformations;
   }
 
   @Override
-  public void visit(Property e)
+  public void visit(LanguageElement e)
   {
     if(e instanceof ElementProperty)
     {
@@ -147,6 +144,12 @@ public class TransformationBuilder implements CorniExpressionVisitor {
       }
     }
     return ids;
+  }
+
+  @Override
+  public void pop() {
+    // TODO Auto-generated method stub
+    
   }
 
 }
