@@ -42,13 +42,4 @@ public class MoveBottomTransformation extends ChangePropertyTransformation
     }
     return false;
   }
-  @Override
-  public JsonElement toJson()
-  {
-	  JsonMap map = new JsonMap();
-	  map.put("id", m_id);
-	  map.put("property", "bottom");
-	  map.put("value", m_value);
-	  return map;
-  }
 }
