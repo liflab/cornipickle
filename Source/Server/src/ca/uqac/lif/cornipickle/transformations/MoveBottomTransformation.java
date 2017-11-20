@@ -2,6 +2,7 @@ package ca.uqac.lif.cornipickle.transformations;
 
 import ca.uqac.lif.cornipickle.faultfinder.Transformation;
 import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNumber;
 
 public class MoveBottomTransformation extends ChangePropertyTransformation
@@ -40,5 +41,14 @@ public class MoveBottomTransformation extends ChangePropertyTransformation
       return true;
     }
     return false;
+  }
+  @Override
+  public JsonElement toJson()
+  {
+	  JsonMap map = new JsonMap();
+	  map.put("id", m_id);
+	  map.put("property", "bottom");
+	  map.put("value", m_value);
+	  return map;
   }
 }
