@@ -15,6 +15,7 @@ import ca.uqac.lif.cornipickle.TransformationBuilder;
 import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.faultfinder.FaultIterator;
 import ca.uqac.lif.cornipickle.faultfinder.PositiveFaultIterator;
+import ca.uqac.lif.cornipickle.faultfinder.Transformation;
 import ca.uqac.lif.cornipickle.transformations.CorniTransformation;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
@@ -44,10 +45,10 @@ public class GetFeedbackTest {
 	
 	public CallbackResponse process()
 	  {
-		String json = PackageFileReader.readPackageFile(this.getClass(), "../data/sample-12.json");
-		
-		JsonElement j = null;
-		boolean hasNext = false;
+  		String json = PackageFileReader.readPackageFile(this.getClass(), "../data/sample-12.json");
+  		
+  		JsonElement j = null;
+  		boolean hasNext = false;
 		
 	    try 
 	    {
@@ -80,16 +81,16 @@ public class GetFeedbackTest {
 	    	 {
 	    		 Set<? extends CorniTransformation> set = (Set<? extends CorniTransformation>) m_faultIterator.next();
 				
-				for (CorniTransformation ct : set)
-				{
-					list.add(ct.toJson());
-				}
+	    		 for (CorniTransformation ct : set)
+	    		 {
+	    		   list.add(ct.toJson());
+	    		 }
 	    	 }
-	    	list.isEmpty(); 
+	    	 list.isEmpty(); 
 	    	 
-	    } catch (JsonParseException | ParseException e) {
-	      assert false; //Never supposed to happen....
-	    }
+	     } catch (JsonParseException | ParseException e) {
+	       assert false; //Never supposed to happen....
+	     }
 
 	    // Create response
 	    CallbackResponse cbr = null;

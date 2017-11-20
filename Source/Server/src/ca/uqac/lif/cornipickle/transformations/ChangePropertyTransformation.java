@@ -2,7 +2,6 @@ package ca.uqac.lif.cornipickle.transformations;
 
 import ca.uqac.lif.cornipickle.util.JsonUtils;
 import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
 
 public abstract class ChangePropertyTransformation extends CorniTransformation
@@ -36,5 +35,13 @@ public abstract class ChangePropertyTransformation extends CorniTransformation
 		return out;
 	}
 	
-
+	@Override
+  public JsonElement toJson()
+  {
+    JsonMap map = new JsonMap();
+    map.put("id", m_id);
+    map.put("property", m_property);
+    map.put("value", m_value);
+    return map;
+  }
 }
