@@ -14,8 +14,8 @@ import ca.uqac.lif.cornipickle.Statement;
 import ca.uqac.lif.cornipickle.TransformationBuilder;
 import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.faultfinder.FaultIterator;
+import ca.uqac.lif.cornipickle.faultfinder.NegativeFaultIterator;
 import ca.uqac.lif.cornipickle.faultfinder.PositiveFaultIterator;
-import ca.uqac.lif.cornipickle.faultfinder.Transformation;
 import ca.uqac.lif.cornipickle.transformations.CorniTransformation;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
@@ -71,7 +71,7 @@ public class GetFeedbackTest {
 	    	 for(Statement statement : statements)
 	    	 {
 	    		 FaultIterator<JsonElement> m_faultIterator = new PositiveFaultIterator<JsonElement>(statement, j, transfos, new ElementFilter());
-	    		 m_faultIterator.setTimeout(100000);
+	    		 m_faultIterator.setTimeout(200000000);
 	    		 if(m_faultIterator.hasNext())
 	    			 m_faultIterators.add(m_faultIterator);
 	    	 }
@@ -79,12 +79,15 @@ public class GetFeedbackTest {
 	    	 JsonList list = new JsonList();
 	    	 for(FaultIterator<JsonElement> m_faultIterator : m_faultIterators)
 	    	 {
-	    		 Set<? extends CorniTransformation> set = (Set<? extends CorniTransformation>) m_faultIterator.next();
-				
-	    		 for (CorniTransformation ct : set)
-	    		 {
-	    		   list.add(ct.toJson());
-	    		 }
+	    	   while(m_faultIterator.hasNext())
+	    	   {
+	    	     Set<? extends CorniTransformation> set = (Set<? extends CorniTransformation>) m_faultIterator.next();
+	           
+             for (CorniTransformation ct : set)
+             {
+               list.add(ct.toJson());
+             }
+	    	   }
 	    	 }
 	    	 list.isEmpty(); 
 	    	 
