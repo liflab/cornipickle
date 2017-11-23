@@ -25,8 +25,7 @@ public abstract class ChangePropertyTransformation extends CorniTransformation
 		  return in;
 		}
 		JsonMap inMap = (JsonMap)in;
-		JsonMap out = new JsonMap();
-		out.putAll(inMap);
+		JsonMap out = inMap.clone();
 		JsonMap element = JsonUtils.findElementByCornipickleId(out, m_id);
 		if(element != null)
 		{

@@ -2,7 +2,6 @@ package ca.uqac.lif.cornipickle.transformations;
 
 import ca.uqac.lif.cornipickle.faultfinder.Transformation;
 import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNumber;
 
 public class MoveBottomTransformation extends ChangePropertyTransformation

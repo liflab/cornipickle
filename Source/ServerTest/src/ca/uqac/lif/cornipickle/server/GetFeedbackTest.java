@@ -1,6 +1,8 @@
 package ca.uqac.lif.cornipickle.server;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -14,14 +16,13 @@ import ca.uqac.lif.cornipickle.Statement;
 import ca.uqac.lif.cornipickle.TransformationBuilder;
 import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.faultfinder.FaultIterator;
-import ca.uqac.lif.cornipickle.faultfinder.NegativeFaultIterator;
 import ca.uqac.lif.cornipickle.faultfinder.PositiveFaultIterator;
 import ca.uqac.lif.cornipickle.transformations.CorniTransformation;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
-import ca.uqac.lif.jerrydog.CallbackResponse;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
+import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonParser;
 import ca.uqac.lif.json.JsonParser.JsonParseException;
 
@@ -29,7 +30,7 @@ public class GetFeedbackTest {
 
 	protected JsonParser s_parser = new JsonParser();
 	protected Interpreter m_interpreter;
-	protected Set<FaultIterator<JsonElement>> m_faultIterators = new HashSet<FaultIterator<JsonElement>>();
+	protected Map<StatementMetadata,FaultIterator<JsonElement>> m_faultIterators = new HashMap<StatementMetadata,FaultIterator<JsonElement>>();
   
 	@Before
 	public void setUp() {
@@ -39,69 +40,68 @@ public class GetFeedbackTest {
 	@Test
 	public void feedbackTest()
 	{
-		CallbackResponse c = process();
-		assert false;
+	  String json = PackageFileReader.readPackageFile(this.getClass(), "../data/sample-12.json");
+    
+    JsonElement j = null;
+  
+    try 
+    {
+      j = s_parser.parse(json);
+      m_interpreter.parseProperties("There exists $x in $(div>a) such that ( $x's bottom is 14 ).");
+      TransformationBuilder builder = new TransformationBuilder(j);
+      Set<StatementMetadata> statements = new HashSet<StatementMetadata>();
+      m_interpreter.evaluateAll(j);
+      for(Entry<StatementMetadata,Verdict> entry: m_interpreter.getVerdicts().entrySet())
+      {
+        if(entry.getValue().is(Verdict.Value.FALSE))
+        {
+          Statement s = m_interpreter.getProperty(entry.getKey());
+          s.postfixAccept(builder);
+          statements.add(entry.getKey());
+        }
+      }
+ 
+      Set<CorniTransformation>  transfos = builder.getTransformations();
+      for(StatementMetadata s : statements)
+      {
+        FaultIterator<JsonElement> faultIterator = new PositiveFaultIterator<JsonElement>(m_interpreter.getProperty(s), j, transfos, new ElementFilter());
+        faultIterator.setTimeout(20000);
+        m_faultIterators.put(s, faultIterator);
+      }
+ 
+      JsonMap result = new JsonMap();
+      for(Entry<StatementMetadata,FaultIterator<JsonElement>> entry : m_faultIterators.entrySet())
+      {
+        JsonList candidates = new JsonList();
+        while(entry.getValue().hasNext())
+        {
+          JsonList transformations = new JsonList();
+          Set<? extends CorniTransformation> set = (Set<? extends CorniTransformation>) entry.getValue().next();
+          
+          for (CorniTransformation ct : set)
+          {
+            transformations.add(ct.toJson());
+          }
+          candidates.add(transformations);
+        }
+        result.put(entry.getKey().toString(), candidates);
+      }
+ 
+      if(!(result.values().size() == 1))
+      {
+        assert false;
+      }
+ 
+      for(Entry<String, JsonElement> entry : result.entrySet())
+      {
+        JsonList candidates = (JsonList)entry.getValue();
+        if(!(candidates.size() == 2))
+        {
+          assert false;
+        }
+      }
+    } catch (JsonParseException | ParseException e) {
+       assert false; //Never supposed to happen....
+    }
 	}
-	
-	public CallbackResponse process()
-	  {
-  		String json = PackageFileReader.readPackageFile(this.getClass(), "../data/sample-12.json");
-  		
-  		JsonElement j = null;
-  		boolean hasNext = false;
-		
-	    try 
-	    {
-	    	 j = s_parser.parse(json);
-	    	 m_interpreter.parseProperties("There exists $x in $(div>a) such that ( $x's bottom is 14 ).");
-	    	 TransformationBuilder builder = new TransformationBuilder(j);
-	    	 Set<Statement> statements = new HashSet<Statement>();
-	    	 m_interpreter.evaluateAll(j);
-	    	 for(Entry<StatementMetadata,Verdict> entry: m_interpreter.getVerdicts().entrySet())
-	         {
-	           if(entry.getValue().is(Verdict.Value.FALSE))
-	           {
-	             Statement s = m_interpreter.getProperty(entry.getKey());
-	             s.postfixAccept(builder);
-	             statements.add(s);
-	           }
-	         }
-	    	 
-	    	 Set<CorniTransformation>  transfos = builder.getTransformations();
-	    	 for(Statement statement : statements)
-	    	 {
-	    		 FaultIterator<JsonElement> m_faultIterator = new PositiveFaultIterator<JsonElement>(statement, j, transfos, new ElementFilter());
-	    		 m_faultIterator.setTimeout(200000000);
-	    		 if(m_faultIterator.hasNext())
-	    			 m_faultIterators.add(m_faultIterator);
-	    	 }
-	    	 
-	    	 JsonList list = new JsonList();
-	    	 for(FaultIterator<JsonElement> m_faultIterator : m_faultIterators)
-	    	 {
-	    	   while(m_faultIterator.hasNext())
-	    	   {
-	    	     Set<? extends CorniTransformation> set = (Set<? extends CorniTransformation>) m_faultIterator.next();
-	           
-             for (CorniTransformation ct : set)
-             {
-               list.add(ct.toJson());
-             }
-	    	   }
-	    	 }
-	    	 list.isEmpty(); 
-	    	 
-	     } catch (JsonParseException | ParseException e) {
-	       assert false; //Never supposed to happen....
-	     }
-
-	    // Create response
-	    CallbackResponse cbr = null;
-	 
-	    // DEBUG: print state
-	    //com.google.gson.GsonBuilder builder = new com.google.gson.GsonBuilder();
-	    //com.google.gson.Gson gson = builder.create();
-	    //System.out.println(gson.toJson(m_interpreter));
-	    return cbr;
-	  }
 }
