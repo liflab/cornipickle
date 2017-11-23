@@ -62,18 +62,21 @@ public class GetFeedbackTest {
       }
  
       Set<CorniTransformation>  transfos = builder.getTransformations();
+      JsonMap result = new JsonMap();
       for(StatementMetadata s : statements)
       {
         FaultIterator<JsonElement> faultIterator = new PositiveFaultIterator<JsonElement>(m_interpreter.getProperty(s), j, transfos, new ElementFilter());
         faultIterator.setTimeout(20000);
-        m_faultIterators.put(s, faultIterator);
+        if(faultIterator.hasNext())
+        {
+          m_faultIterators.put(s, faultIterator);
+        }
       }
  
-      JsonMap result = new JsonMap();
       for(Entry<StatementMetadata,FaultIterator<JsonElement>> entry : m_faultIterators.entrySet())
       {
         JsonList candidates = new JsonList();
-        while(entry.getValue().hasNext())
+        do
         {
           JsonList transformations = new JsonList();
           Set<? extends CorniTransformation> set = (Set<? extends CorniTransformation>) entry.getValue().next();
@@ -83,7 +86,7 @@ public class GetFeedbackTest {
             transformations.add(ct.toJson());
           }
           candidates.add(transformations);
-        }
+        } while(entry.getValue().hasNext());
         result.put(entry.getKey().toString(), candidates);
       }
  
