@@ -1,44 +1,36 @@
-/*
-    Cornipickle, validation of layout bugs in web applications
-    Copyright (C) 2015 Sylvain Hallé
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package ca.uqac.lif.cornipickle.server;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.xml.bind.DatatypeConverter;
 
+import com.sun.net.httpserver.HttpExchange;
+
+import ca.uqac.lif.cornipickle.ElementFilter;
 import ca.uqac.lif.cornipickle.Interpreter;
+import ca.uqac.lif.cornipickle.Statement;
+import ca.uqac.lif.cornipickle.TransformationBuilder;
 import ca.uqac.lif.cornipickle.Verdict;
 import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
+import ca.uqac.lif.cornipickle.faultfinder.FaultIterator;
+import ca.uqac.lif.cornipickle.faultfinder.PositiveFaultIterator;
+import ca.uqac.lif.cornipickle.transformations.CorniTransformation;
+import ca.uqac.lif.jerrydog.CallbackResponse;
+import ca.uqac.lif.jerrydog.InnerFileServer;
+import ca.uqac.lif.jerrydog.RequestCallback;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonParser;
-import ca.uqac.lif.json.JsonParser.JsonParseException;
 import ca.uqac.lif.json.JsonString;
-import ca.uqac.lif.jerrydog.CallbackResponse;
-import ca.uqac.lif.jerrydog.InnerFileServer;
-import ca.uqac.lif.jerrydog.RequestCallback;
-
-import com.sun.net.httpserver.HttpExchange;
+import ca.uqac.lif.json.JsonParser.JsonParseException;
 
 /**
  * Returns a dummy one-pixel image. This request is used as a means of
@@ -48,9 +40,11 @@ import com.sun.net.httpserver.HttpExchange;
  * of a one-pixel PNG image, and a cookie containing a JSON object. This
  * object is retrieved by the JS probe, which uses it to determine whether
  * any elements of the page should be highlighted.
+ * It also returns a set of transformations that can potentially fix the
+ * page.
  * <ul>
  * <li>Method: <b>GET</b></li>
- * <li>Name: <tt>/image</tt></li>
+ * <li>Name: <tt>/feedback</tt></li>
  * <li>Input:
  * <ul>
  * <li>A parameter named <tt>contents</tt>, which contains a urlencoded
@@ -73,13 +67,26 @@ import com.sun.net.httpserver.HttpExchange;
  *   "num-false"          : 0,
  *   "num-inconclusive"   : 0,
  *   "global-verdict"     : "TRUE",
- *   "highlight-ids"     : [
+ *   "highlight-ids"      : [
  *      {
  *        "ids"     : [[0, 1, 2, ...], [3, 4], ...],
  *        "caption" : "Some text"
  *      },
  *      ...   
- *   ]
+ *   ],
+ *   "transformations"    :
+ *      {
+ *        "uniqueid 0 The statement blabla" :
+ *        [
+ *          [{ "id" : 2, "property" : "bottom", "value" : 11"}],
+ *          [{ "id" : 3, "property" : "bottom", "value" : 11"}],
+ *          [
+ *            { "id" : 3, "property" : "bottom", "value" : 15"},
+ *            { "id" : 4, "property" : "bottom", "value" : 15"}
+ *          ]
+ *        ],
+ *        "uniqueid 1 The other statement" : ....
+ *      }
  * }
  * </pre>
  * The attributes <tt>num-true</tt>, <tt>num-false</tt> and
@@ -99,14 +106,17 @@ import com.sun.net.httpserver.HttpExchange;
  * <tt>caption</tt> corresponds to the metadata <tt>@caption</tt> associated with
  * the property, if any. Note that properties that are not violated will not
  * create such a structure in the response cookie.
+ * The property <tt>transformations</tt> is a map with statement metadata as the
+ * keys and candidate transformations as values. Each candidate is a list of
+ * transformations that are needed to make the verdict true.
  * </li>
  * </ul>
  * </li>
  * </ul>
- * @author Sylvain
+ * @author Francis
  *
  */
-class DummyImage extends InterpreterCallback
+public class GetFeedback extends InterpreterCallback
 {
   /**
    * Dummy image made of one white pixel
@@ -127,8 +137,8 @@ class DummyImage extends InterpreterCallback
       CornipickleServer.class.getResourceAsStream("resource/dummy-image-green.png"));
   
   static JsonParser s_jsonParser;
-
-  public DummyImage(Interpreter i)
+  
+  public GetFeedback(Interpreter i)
   {
     super(i, RequestCallback.Method.POST, "/image/");
     s_jsonParser = new JsonParser();
@@ -152,7 +162,6 @@ class DummyImage extends InterpreterCallback
       e.printStackTrace(); //Never supposed to happen....
     } catch (UnsupportedEncodingException e)
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     
@@ -168,7 +177,7 @@ class DummyImage extends InterpreterCallback
     // Create response
     CallbackResponse cbr = new CallbackResponse(t);
     cbr.setHeader("Access-Control-Allow-Origin", "*");
-    cbr.setContents(createResponseBody(verdicts, m_interpreter.saveToMemento(), image_to_return));
+    cbr.setContents(createResponseBody(verdicts, m_interpreter.saveToMemento(), image_to_return, j));
     cbr.setContentType(CallbackResponse.ContentType.JSON);
     m_interpreter.clear();
     // DEBUG: print state
@@ -177,7 +186,7 @@ class DummyImage extends InterpreterCallback
     //System.out.println(gson.toJson(m_interpreter));
     return cbr;
   }
-
+  
   /**
    * Determines which of the three images (red, white, blue) to send back
    *   to the browser. The image is chosen as follows:
@@ -234,7 +243,8 @@ class DummyImage extends InterpreterCallback
    * @return A JSON string to be passed as the response to
    *   the browser
    */
-  protected static String createResponseBody(Map<StatementMetadata,Verdict> verdicts, String interpreter, byte[] image)
+  protected String createResponseBody(Map<StatementMetadata,Verdict> verdicts, String interpreter,
+      byte[] image, JsonElement j)
   {
     int num_false = 0;
     int num_true = 0;
@@ -243,8 +253,8 @@ class DummyImage extends InterpreterCallback
     JsonList highlight_ids = new JsonList();
     for (StatementMetadata key : verdicts.keySet())
     {
-    	JsonMap element = new JsonMap();
-    	JsonList id_to_highlight = new JsonList();
+      JsonMap element = new JsonMap();
+      JsonList id_to_highlight = new JsonList();
       Verdict v = verdicts.get(key);
       outcome.conjoin(v);
       if (v.is(Verdict.Value.FALSE))
@@ -271,6 +281,7 @@ class DummyImage extends InterpreterCallback
     result.put("num-inconclusive", num_inconclusive);
     result.put("highlight-ids", highlight_ids);
     result.put("interpreter", interpreter);
+    result.put("transformations", getTransformations(verdicts, j));
     result.put("image", "data:image/png;base64," + DatatypeConverter.printBase64Binary(image));
     // Below, we use true to get a compact JSON string without CF/LF
     // (otherwise the cookie won't be passed correctly to the browser)
@@ -301,5 +312,53 @@ class DummyImage extends InterpreterCallback
       ids.add(out);
     }
     return ids;
+  }
+  
+  protected JsonMap getTransformations(Map<StatementMetadata,Verdict> verdicts, JsonElement page)
+  {
+    JsonMap toReturn = new JsonMap();
+    TransformationBuilder builder = new TransformationBuilder(page);
+    Set<StatementMetadata> falseStatements = new HashSet<StatementMetadata>();
+    Map<StatementMetadata,FaultIterator<JsonElement>> faultIterators = new HashMap<StatementMetadata,FaultIterator<JsonElement>>();
+    
+    for(Entry<StatementMetadata,Verdict> entry : verdicts.entrySet())
+    {
+      if(entry.getValue().is(Verdict.Value.FALSE))
+      {
+        Statement s = m_interpreter.getProperty(entry.getKey());
+        s.postfixAccept(builder);
+        falseStatements.add(entry.getKey());
+      }
+    }
+
+    Set<CorniTransformation>  transfos = builder.getTransformations();
+    for(StatementMetadata s : falseStatements)
+    {
+      FaultIterator<JsonElement> faultIterator = new PositiveFaultIterator<JsonElement>(m_interpreter.getProperty(s), page, transfos, new ElementFilter());
+      faultIterator.setTimeout(20000);
+      if(faultIterator.hasNext())
+      {
+        faultIterators.put(s, faultIterator);
+      }
+    }
+
+    for(Entry<StatementMetadata,FaultIterator<JsonElement>> entry : faultIterators.entrySet())
+    {
+      JsonList candidates = new JsonList();
+      do
+      {
+        JsonList transformations = new JsonList();
+        Set<? extends CorniTransformation> set = (Set<? extends CorniTransformation>) entry.getValue().next();
+        
+        for (CorniTransformation ct : set)
+        {
+          transformations.add(ct.toJson());
+        }
+        candidates.add(transformations);
+      } while(entry.getValue().hasNext());
+      toReturn.put(entry.getKey().toString(), candidates);
+    }
+    
+    return toReturn;
   }
 }
