@@ -150,12 +150,14 @@ public class GetFeedback extends InterpreterCallback
     Map<String,String> attributes = getParameters(t);
     
     JsonElement j = null;
+    String memento = "";
     try
     {
       j = s_jsonParser.parse(URLDecoder.decode(attributes.get("contents"), "UTF-8"));
       if(attributes.get("interpreter") != null)
       {
-        m_interpreter = m_interpreter.restoreFromMemento(URLDecoder.decode(attributes.get("interpreter"), "UTF-8"));
+    	  memento = URLDecoder.decode(attributes.get("interpreter"), "UTF-8");
+          m_interpreter = m_interpreter.restoreFromMemento(memento);
       }
     } catch (JsonParseException e)
     {
@@ -177,7 +179,7 @@ public class GetFeedback extends InterpreterCallback
     // Create response
     CallbackResponse cbr = new CallbackResponse(t);
     cbr.setHeader("Access-Control-Allow-Origin", "*");
-    cbr.setContents(createResponseBody(verdicts, m_interpreter.saveToMemento(), image_to_return, j));
+    cbr.setContents(createResponseBody(verdicts, memento, image_to_return, j));
     cbr.setContentType(CallbackResponse.ContentType.JSON);
     m_interpreter.clear();
     // DEBUG: print state
