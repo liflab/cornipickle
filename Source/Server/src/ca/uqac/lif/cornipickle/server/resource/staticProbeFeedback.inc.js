@@ -35,7 +35,7 @@ Cornipickle.CornipickleProbe = function()
 	 */
 	this.probe_hash = "";
 	
-	/*
+	/**
 	 * The last page that was serialized (without a click yet)
 	 */
 	this.m_lastPage = {};
@@ -112,11 +112,15 @@ Cornipickle.CornipickleProbe = function()
 	 */
 	this.m_currentTransformations = {};
 	
-	/*
+	/**
 	 * List of p elements to cycle
 	 */
 	this.m_carouselCorrections = [];
-	this.m_carouseliterator = 0;
+	
+	/**
+	 * Iterator on the previous array
+	 */
+	this.m_carouselIterator = 0;
 
 	/**
 	 * Serializes the contents of the page. This method recursively
@@ -401,13 +405,15 @@ Cornipickle.CornipickleProbe = function()
 	this.preEvaluate = function()
 	{
 		console.log("preEvaluation");
+		cp_probe.m_carouselIterator = 0;
+		cp_probe.m_carouselCorrections = [];
 		Cornipickle.CornipickleProbe.updateTransmitIcon(true);
 		// Un-highlight previously highlighted elements
 		Cornipickle.CornipickleProbe.unHighlightElements();
 		// Serialize page contents
 		var json = cp_probe.serializeWindow(cp_probe.serializePageContents(document.body, [], null));
 		
-		var url = "http://" + this.server_name + "/preevaluate/";
+		var url = "http://" + this.server_name + "/getfeedback/";
 		xhttp = new XMLHttpRequest();
 		xhttp.open("POST", url, true);
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -502,9 +508,17 @@ Cornipickle.CornipickleProbe = function()
 	
 	this.nextTransformation = function(event)
 	{
-		this.m_carouseliterator = this.m_carouseliterator + 1;
 		var div = document.getElementById("correctionsdiv");
-		div.innerHTML = "<p>" + this.m_carouselCorrections[this.m_carouseliterator] + "</p>";
+		if(cp_probe.m_carouselCorrections[cp_probe.m_carouselIterator] !== undefined)
+		{
+			div.innerHTML = "<p>" + cp_probe.m_carouselCorrections[cp_probe.m_carouselIterator] + "</p>";
+			cp_probe.m_carouselIterator = cp_probe.m_carouselIterator + 1;
+		}
+		else
+		{
+			div.innerHTML = "<p>No more candidates...</p>";
+			cp_probe.m_carouselIterator = 0;
+		}
 	};
 };
 
@@ -570,7 +584,7 @@ Cornipickle.CornipickleProbe.getStyle = function(elem, prop)
 	return res;
 };
 
-Cornipickle­.CornipickleProbe.getCorrectionText = function(transformation)
+Cornipickle.CornipickleProbe.getCorrectionText = function(transformation)
 {
 	var text = "";
 	for(var i = 0; i < transformation.length; i++)
@@ -617,7 +631,7 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 
 	if (response["transformations"] !== "")
 	{
-		this.m_currentTransformations = response["transformations"];
+		cp_probe.m_currentTransformations = response["transformations"];
 	}
 
 	// Highlight elements, if any  
@@ -642,17 +656,16 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 		document.getElementById("bp_witness_explanation").innerHTML = in_html;
 	}
 	
-	for (var key in this.m_currentTransformations)
+	for (var key in cp_probe.m_currentTransformations)
 	{
-		var candidates = this.m_currentTransformations[key];
+		var candidates = cp_probe.m_currentTransformations[key];
 		for(var i = 0; i < candidates.length; i++)
 		{
-			this.m_carouselCorrections.push(getCorrectionText(candidates[i]));
+			cp_probe.m_carouselCorrections.push(Cornipickle.CornipickleProbe.getCorrectionText(candidates[i]));
 		}
 	}
 	
-	var div = document.getElementById("correctionsdiv");
-	div.innerHTML = "<p>" + this.m_carouselCorrections[this.m_carouseliterator] + "</p>";
+	cp_probe.nextTransformation(null);
 
 	Cornipickle.CornipickleProbe.updateTransmitIcon(false);
 };
@@ -948,10 +961,11 @@ function loadFunction() {
         };
     }
 
-	var nextTransButton = document.getElementById("next-transformation");
-	nextTransButton.onmouseup = cp_probe.nextTransformation;
-
     cp_probe = new Cornipickle.CornipickleProbe();
+    
+    var nextTransButton = document.getElementById("next-transformation");
+	nextTransButton.onmouseup = cp_probe.nextTransformation;
+    
     var cp_witness_div = document.createElement("div");
     cp_witness_div.id = "cp-witness";
     document.body.appendChild(cp_witness_div);

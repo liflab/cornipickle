@@ -140,7 +140,7 @@ public class GetFeedback extends InterpreterCallback
   
   public GetFeedback(Interpreter i)
   {
-    super(i, RequestCallback.Method.POST, "/image/");
+    super(i, RequestCallback.Method.POST, "/getfeedback/");
     s_jsonParser = new JsonParser();
   }
 
@@ -337,7 +337,7 @@ public class GetFeedback extends InterpreterCallback
     for(StatementMetadata s : falseStatements)
     {
       FaultIterator<JsonElement> faultIterator = new PositiveFaultIterator<JsonElement>(m_interpreter.getProperty(s), page, transfos, new ElementFilter());
-      faultIterator.setTimeout(20000);
+      faultIterator.setTimeout(40000);
       if(faultIterator.hasNext())
       {
         faultIterators.put(s, faultIterator);
@@ -357,8 +357,8 @@ public class GetFeedback extends InterpreterCallback
           transformations.add(ct.toJson());
         }
         candidates.add(transformations);
-      } while(entry.getValue().hasNext());
-      toReturn.put(entry.getKey().toString(), candidates);
+      } while(entry.getValue().hasNext() && candidates.size() < 5);
+      toReturn.put(entry.getKey().toString().replace("\n", " "), candidates);
     }
     
     return toReturn;

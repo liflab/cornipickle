@@ -113,6 +113,11 @@ public class TransformationBuilder implements LanguageElementVisitor {
         }
       }
     }
+    else if(e instanceof PredicateCall)
+    {
+    	PredicateCall pc = (PredicateCall) e;
+    	pc.getPredicateDefinition().postfixAccept(this);
+    }
   }
   
   private Set<Integer> fetchPageIds(JsonElement page)
