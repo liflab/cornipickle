@@ -405,8 +405,6 @@ Cornipickle.CornipickleProbe = function()
 	this.preEvaluate = function()
 	{
 		console.log("preEvaluation");
-		cp_probe.m_carouselIterator = 0;
-		cp_probe.m_carouselCorrections = [];
 		Cornipickle.CornipickleProbe.updateTransmitIcon(true);
 		// Un-highlight previously highlighted elements
 		Cornipickle.CornipickleProbe.unHighlightElements();
@@ -606,6 +604,8 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 {
 
 	console.log("handle Response");
+	cp_probe.m_carouselIterator = 0;
+	cp_probe.m_carouselCorrections = [];
 	// eval is evil, but we can't assume JSON.parse is available
 	eval("var response = " + decodeURI(response)); // jshint ignore:line
 	
