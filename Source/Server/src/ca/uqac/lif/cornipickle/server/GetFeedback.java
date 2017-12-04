@@ -347,17 +347,15 @@ public class GetFeedback extends InterpreterCallback
     for(Entry<StatementMetadata,FaultIterator<JsonElement>> entry : faultIterators.entrySet())
     {
       JsonList candidates = new JsonList();
-      do
-      {
-        JsonList transformations = new JsonList();
-        Set<? extends CorniTransformation> set = (Set<? extends CorniTransformation>) entry.getValue().next();
-        
-        for (CorniTransformation ct : set)
-        {
-          transformations.add(ct.toJson());
-        }
-        candidates.add(transformations);
-      } while(entry.getValue().hasNext() && candidates.size() < 5);
+	    JsonList transformations = new JsonList();
+	    Set<? extends CorniTransformation> set = (Set<? extends CorniTransformation>) entry.getValue().next();
+	    
+	    for (CorniTransformation ct : set)
+	    {
+	      transformations.add(ct.toJson());
+	    }
+	    
+	    candidates.add(transformations);
       toReturn.put(entry.getKey().toString().replace("\n", " "), candidates);
     }
     

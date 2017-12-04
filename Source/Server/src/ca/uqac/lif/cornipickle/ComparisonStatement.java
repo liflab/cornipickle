@@ -17,26 +17,37 @@
  */
 package ca.uqac.lif.cornipickle;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import ca.uqac.lif.cornipickle.transformations.CorniTransformation;
+import ca.uqac.lif.cornipickle.transformations.PropertyTransformationFactory;
 import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonString;
 
-public abstract class ComparisonStatement extends Statement
+public abstract class ComparisonStatement extends Statement implements HasTransformations
 {
 	protected Property m_left;
 	protected Property m_right;
+	
+	protected transient List<CorniTransformation> m_transformations;
 
 	ComparisonStatement()
 	{
 		super();
+		m_transformations = new ArrayList<CorniTransformation>();
 	}
 
 	public final Verdict evaluateTemporal(JsonElement j, Map<String,JsonElement> d)
 	{
 		JsonElement e1 = m_left.evaluate(j, d);
 		JsonElement e2 = m_right.evaluate(j, d);
+		
+		generateTransformations(e1, e2, j, d);
+		
 		m_verdict = compare(e1, e2);
 		return m_verdict;
 	}
@@ -80,6 +91,61 @@ public abstract class ComparisonStatement extends Statement
 			return compare((JsonNumber) e1, (JsonNumber) e2);
 		}
 		return new Verdict(Verdict.Value.FALSE);
+	}
+	
+	protected void generateTransformations(JsonElement e1, JsonElement e2, JsonElement j, Map<String,JsonElement> d)
+	{
+	  if(!(this instanceof RegexMatch))
+	  {
+	    if(e1 instanceof JsonNumber && e2 instanceof JsonNumber)
+	    {
+	      if(m_left instanceof ElementProperty)
+	      {
+	        ElementProperty left = (ElementProperty) m_left;
+	        JsonMap element = (JsonMap) d.get(left.getElementName());
+          int id = element.getInt("cornipickleid");
+          JsonNumber e3 = new JsonNumber(((JsonNumber)e2).numberValue().intValue() + 1);
+          JsonNumber e4 = new JsonNumber(((JsonNumber)e2).numberValue().intValue() - 1);
+          
+          m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e2));
+          m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e3));
+          m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e4));
+	      }
+	      else if(m_right instanceof ElementProperty)
+	      {
+	        ElementProperty right = (ElementProperty) m_right;
+          JsonMap element = (JsonMap) d.get(right.getElementName());
+          int id = element.getInt("cornipickleid");
+          JsonNumber e3 = new JsonNumber(((JsonNumber)e1).numberValue().intValue() + 1);
+          JsonNumber e4 = new JsonNumber(((JsonNumber)e1).numberValue().intValue() - 1);
+          
+          m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e1));
+          m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e3));
+          m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e4));
+	      }
+	      //If left is an operation and not a constant. If it is a constant, the transformations have been taken care
+	      //of above.
+	      else if (m_left instanceof Operation && !((Operation)m_left).isConstantOperation())
+	      {
+	        //TODO
+	      }
+	    }
+	  }
+	}
+	
+	@Override
+	public List<CorniTransformation> getTransformations()
+	{
+	  return m_transformations;
+	}
+	
+	@Override
+	public List<CorniTransformation> flushTransformations()
+	{
+	  List<CorniTransformation> toReturn = new ArrayList<CorniTransformation>();
+	  toReturn.addAll(m_transformations);
+	  m_transformations.clear();
+	  return toReturn;
 	}
 
 	protected abstract Verdict compare(JsonString e1, JsonString e2);

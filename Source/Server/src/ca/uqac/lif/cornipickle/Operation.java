@@ -45,6 +45,18 @@ public abstract class Operation extends Property
 	{
 		m_right = p;
 	}
+	
+	public boolean isConstantOperation()
+	{
+	  if(m_left instanceof ElementProperty || m_right instanceof ElementProperty ||
+	      m_left instanceof SetProperty || m_right instanceof SetProperty ||
+	      (m_left instanceof Operation && !((Operation)m_left).isConstantOperation()) ||
+	      (m_right instanceof Operation && !((Operation)m_right).isConstantOperation()))
+	  {
+	    return false;
+	  }
+	  return true;
+	}
 
 	@Override
 	public final void postfixAccept(LanguageElementVisitor visitor)
