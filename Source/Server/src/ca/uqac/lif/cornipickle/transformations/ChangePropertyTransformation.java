@@ -43,4 +43,10 @@ public abstract class ChangePropertyTransformation extends CorniTransformation
     map.put("value", m_value);
     return map;
   }
+	
+	@Override
+	public String toString()
+	{
+	  return "Change " + m_property + " property of element with ID " + m_id + " to " + m_value.toString();
+	}
 }

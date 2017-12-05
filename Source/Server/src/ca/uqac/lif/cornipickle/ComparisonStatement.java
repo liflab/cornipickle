@@ -46,9 +46,10 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 		JsonElement e1 = m_left.evaluate(j, d);
 		JsonElement e2 = m_right.evaluate(j, d);
 		
+		m_verdict = compare(e1, e2);
+		
 		generateTransformations(e1, e2, j, d);
 		
-		m_verdict = compare(e1, e2);
 		return m_verdict;
 	}
 
@@ -126,9 +127,16 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	      }
 	      //If left is an operation and not a constant. If it is a constant, the transformations have been taken care
 	      //of above.
-	      else if (m_left instanceof Operation && !((Operation)m_left).isConstantOperation())
+	      if (m_left instanceof Operation && !((Operation)m_left).isConstantOperation())
 	      {
-	        //TODO
+	        //TODO: See message on slack https://liflab.slack.com/archives/C3QFMFK1P/p1512506387000193
+	      }
+	      
+	      //If right is an operation and not a constant. If it is a constant, the transformations have been taken care
+        //of above.
+	      if (m_right instanceof Operation && !((Operation)m_right).isConstantOperation())
+	      {
+	        //TODO: See message on slack https://liflab.slack.com/archives/C3QFMFK1P/p1512506387000193
 	      }
 	    }
 	  }
