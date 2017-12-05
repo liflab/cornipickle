@@ -111,7 +111,8 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
           m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e3));
           m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e4));
 	      }
-	      else if(m_right instanceof ElementProperty)
+	      
+	      if(m_right instanceof ElementProperty)
 	      {
 	        ElementProperty right = (ElementProperty) m_right;
           JsonMap element = (JsonMap) d.get(right.getElementName());
