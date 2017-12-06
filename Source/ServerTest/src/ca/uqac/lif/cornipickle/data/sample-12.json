@@ -29,7 +29,7 @@
     "children" : [
       {
         "tagname" : "a",
-        "bottom"  : "100",
+        "bottom"  : 100,
         "cornipickleid" : 4
       }
     ]

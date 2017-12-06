@@ -9,7 +9,7 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/cornipickle.js"></script>
-<script type="text/javascript" src="/probe"></script>
+<script type="text/javascript" src="/probefeedback"></script>
 <title>Elements outside window - Cornipickle</title>
 <script type="text/javascript">
 // <![CDATA[
@@ -91,6 +91,12 @@ $(document).ready(function() {
 <h2>What's the problem?</h2>
 <p>Two squares overlap (let's pretend they shouldn't). Try moving the
 squares around and re-evaluate the property.</p>
+
+<div id="correctionsdiv">
+<p id="Correction explanation">No correction needed.</p>
+</div>
+
+<p><button id="next-transformation" class="no-event">Next candidate transformation</button></p>
 
 <div id="cornipickle-section" class="nocornipickle">
 

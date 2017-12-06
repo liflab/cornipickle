@@ -43,80 +43,13 @@ public class TransformationBuilder implements LanguageElementVisitor {
   @Override
   public void visit(LanguageElement e)
   {
-    if(e instanceof ElementProperty)
+    if(e instanceof ComparisonStatement)
     {
-      ElementProperty property = (ElementProperty)e;
-      if(property.getPropertyName().equals("bottom"))
-      {
-        for(Integer id : fetchPageIds(m_page))
-        {
-          int pageHeight = (int) (long) ((JsonMap)m_page).getNumber("height");
-          for(int i = 0; i < pageHeight; i++)
-          {
-            m_transformations.add(new MoveBottomTransformation(id, new JsonNumber(i)));
-          }
-        }
-      }
-      else if(property.getPropertyName().equals("top"))
-      {
-        for(Integer id : fetchPageIds(m_page))
-        {
-          int pageHeight = (int) (long) ((JsonMap)m_page).getNumber("height");
-          for(int i = 0; i < pageHeight; i++)
-          {
-            m_transformations.add(new MoveTopTransformation(id, new JsonNumber(i)));
-          }
-        }
-      }
-      else if(property.getPropertyName().equals("left"))
-      {
-        for(Integer id : fetchPageIds(m_page))
-        {
-          int pageWidth = (int) (long) ((JsonMap)m_page).getNumber("width");
-          for(int i = 0; i < pageWidth; i++)
-          {
-            m_transformations.add(new MoveLeftTransformation(id, new JsonNumber(i)));
-          }
-        }
-      }
-      else if(property.getPropertyName().equals("right"))
-      {
-        for(Integer id : fetchPageIds(m_page))
-        {
-          int pageWidth = (int) (long) ((JsonMap)m_page).getNumber("width");
-          for(int i = 0; i < pageWidth; i++)
-          {
-            m_transformations.add(new MoveRightTransformation(id, new JsonNumber(i)));
-          }
-        }
-      }
-      else if(property.getPropertyName().equals("width"))
-      {
-        for(Integer id : fetchPageIds(m_page))
-        {
-          int pageWidth = (int) (long) ((JsonMap)m_page).getNumber("width");
-          for(int i = 0; i < pageWidth; i++)
-          {
-            m_transformations.add(new ChangeWidthTransformation(id, new JsonNumber(i)));
-          }
-        }
-      }
-      else if(property.getPropertyName().equals("height"))
-      {
-        for(Integer id : fetchPageIds(m_page))
-        {
-          int pageHeight = (int) (long) ((JsonMap)m_page).getNumber("height");
-          for(int i = 0; i < pageHeight; i++)
-          {
-            m_transformations.add(new ChangeHeightTransformation(id, new JsonNumber(i)));
-          }
-        }
-      }
+      m_transformations.addAll(((ComparisonStatement)e).flushTransformations());
     }
     else if(e instanceof PredicateCall)
     {
-    	PredicateCall pc = (PredicateCall) e;
-    	pc.getPredicateDefinition().postfixAccept(this);
+      ((PredicateCall)e).getPredicateDefinition().postfixAccept(this);
     }
   }
   

@@ -33,12 +33,16 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	protected Property m_left;
 	protected Property m_right;
 	
-	protected transient List<CorniTransformation> m_transformations;
+	protected static transient final List<CorniTransformation> m_transformations = 
+	    new ArrayList<CorniTransformation>();
+	
+	//Identifies if this statement is relative to the past.
+	protected boolean m_present;
 
 	ComparisonStatement()
 	{
 		super();
-		m_transformations = new ArrayList<CorniTransformation>();
+		m_present = true;
 	}
 
 	public final Verdict evaluateTemporal(JsonElement j, Map<String,JsonElement> d)
@@ -48,7 +52,12 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 		
 		m_verdict = compare(e1, e2);
 		
-		generateTransformations(e1, e2, j, d);
+		if(m_present)
+		{
+		  generateTransformations(e1, e2, j, d);
+		}
+
+		m_present  = false;
 		
 		return m_verdict;
 	}
@@ -58,7 +67,12 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	{
 		JsonElement e1 = m_left.evaluate(j, d);
 		JsonElement e2 = m_right.evaluate(j, d);
-		return compare(e1, e2);
+		
+		Verdict v = compare(e1, e2);
+		
+		generateTransformations(e1, e2, j, d);
+		
+		return v;
 	}
 
 	public final boolean isTemporal()
