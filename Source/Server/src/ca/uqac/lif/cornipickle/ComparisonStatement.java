@@ -119,9 +119,12 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	        ElementProperty left = (ElementProperty) m_left;
 	        JsonMap element = (JsonMap) d.get(left.getElementName());
           int id = element.getInt("cornipickleid");
+          
+          //Make 3 transformations with values being exactly the right side of the comparison,
+          //the same value + 1, and the same value - 1 to cover cases for a greater than, less than
+          //and equals.
           JsonNumber e3 = new JsonNumber(((JsonNumber)e2).numberValue().intValue() + 1);
           JsonNumber e4 = new JsonNumber(((JsonNumber)e2).numberValue().intValue() - 1);
-          
           m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e2));
           m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e3));
           m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e4));
@@ -132,9 +135,12 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	        ElementProperty right = (ElementProperty) m_right;
           JsonMap element = (JsonMap) d.get(right.getElementName());
           int id = element.getInt("cornipickleid");
+          
+          //Make 3 transformations with values being exactly the left side of the comparison,
+          //the same value + 1, and the same value - 1 to cover cases for a greater than, less than
+          //and equals.
           JsonNumber e3 = new JsonNumber(((JsonNumber)e1).numberValue().intValue() + 1);
           JsonNumber e4 = new JsonNumber(((JsonNumber)e1).numberValue().intValue() - 1);
-          
           m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e1));
           m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e3));
           m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e4));

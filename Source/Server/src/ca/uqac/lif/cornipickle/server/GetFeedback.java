@@ -319,35 +319,57 @@ public class GetFeedback extends InterpreterCallback
   protected JsonMap getTransformations(Map<StatementMetadata,Verdict> verdicts, JsonElement page)
   {
     JsonMap toReturn = new JsonMap();
+    
+    //Prepares the builder that will look for transformations in the statements.
+    //Also sets up the list of cornipickle ids
     TransformationBuilder builder = new TransformationBuilder(page);
+    
+    //A set of statements that may need transformations
     Set<StatementMetadata> falseStatements = new HashSet<StatementMetadata>();
+    
+    //Iterators on transformations for every false statements
     Map<StatementMetadata,FaultIterator<JsonElement>> faultIterators = new HashMap<StatementMetadata,FaultIterator<JsonElement>>();
     
+    //Fill the false statements set
     for(Entry<StatementMetadata,Verdict> entry : verdicts.entrySet())
     {
       if(entry.getValue().is(Verdict.Value.FALSE))
       {
         Statement s = m_interpreter.getProperty(entry.getKey());
+        
+        //Get the transformations by analyzing the properties of the statement.
+        //Some of that work has been done during the evaluation
         s.postfixAccept(builder);
         falseStatements.add(entry.getKey());
       }
     }
-
+    
+    //Get the transformations gathered during postfix accept
     Set<CorniTransformation>  transfos = builder.getTransformations();
+    
+    //Check every iterator to find transformations that render their statement True
     for(StatementMetadata s : falseStatements)
     {
       FaultIterator<JsonElement> faultIterator = new PositiveFaultIterator<JsonElement>(m_interpreter.getProperty(s), page, transfos, new ElementFilter());
       faultIterator.setTimeout(40000);
+      
+      //Check if there's at least one candidate transformation
       if(faultIterator.hasNext())
       {
         faultIterators.put(s, faultIterator);
       }
     }
-
+    
+    //For each statement that has at least one candidate transformation
     for(Entry<StatementMetadata,FaultIterator<JsonElement>> entry : faultIterators.entrySet())
     {
+      //All the candidates for the current statement
       JsonList candidates = new JsonList();
+      
+      //A candidate is a list transformations
 	    JsonList transformations = new JsonList();
+	    
+	    //Get the next candidate
 	    Set<? extends CorniTransformation> set = (Set<? extends CorniTransformation>) entry.getValue().next();
 	    
 	    for (CorniTransformation ct : set)
