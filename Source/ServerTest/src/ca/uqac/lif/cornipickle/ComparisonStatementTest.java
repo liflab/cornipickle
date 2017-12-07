@@ -3,15 +3,34 @@ package ca.uqac.lif.cornipickle;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Map.Entry;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
+import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.transformations.CorniTransformation;
+import ca.uqac.lif.cornipickle.util.PackageFileReader;
+import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNumber;
+import ca.uqac.lif.json.JsonParser;
+import ca.uqac.lif.json.JsonParser.JsonParseException;
 
 public class ComparisonStatementTest
 {
+  
+  Interpreter m_interpreter;
+  JsonParser m_parser;
+  
+  @Before
+  public void setUp()
+  {
+    m_interpreter = new Interpreter();
+    m_parser = new JsonParser();
+  }
+  
   @Test
   public void flushTransformationsTest()
   {
@@ -35,5 +54,38 @@ public class ComparisonStatementTest
     
     assertTrue(trans.size() > 0);
     assertTrue(s.getTransformations().size() == 0);
+  }
+  
+  @Test
+  public void transientTransformationsTest()
+  {
+    String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-12.json");
+
+    try
+    {
+      JsonElement page = m_parser.parse(json);
+      m_interpreter.parseProperties("There exists $x in $(div>a) such that ( $x's bottom is 14 ).");
+      m_interpreter.evaluateAll(page);
+      TransformationBuilder builder = new TransformationBuilder(page);
+      
+      String memento = m_interpreter.saveToMemento();
+      m_interpreter = m_interpreter.restoreFromMemento(memento);
+      
+      for(Entry<StatementMetadata,Statement> entry : m_interpreter.m_statements.entrySet())
+      {
+        entry.getValue().postfixAccept(builder);
+      }
+      
+      assertTrue(builder.getTransformations().size() == 0);
+      
+    } catch (ParseException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (JsonParseException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 }

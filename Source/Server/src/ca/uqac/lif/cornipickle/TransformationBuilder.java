@@ -39,6 +39,11 @@ public class TransformationBuilder implements LanguageElementVisitor {
   {
     return m_transformations;
   }
+  
+  public void clearTransformations()
+  {
+    m_transformations = new HashSet<CorniTransformation>();
+  }
 
   @Override
   public void visit(LanguageElement e)
