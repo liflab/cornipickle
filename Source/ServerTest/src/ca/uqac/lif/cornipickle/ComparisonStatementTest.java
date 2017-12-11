@@ -57,7 +57,7 @@ public class ComparisonStatementTest
   }
   
   @Test
-  public void transientTransformationsTest()
+  public void serializeTransformationsTest()
   {
     String json = PackageFileReader.readPackageFile(this.getClass(), "data/sample-12.json");
 

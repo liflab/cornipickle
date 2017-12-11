@@ -33,7 +33,7 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	protected Property m_left;
 	protected Property m_right;
 	
-	protected static transient final List<CorniTransformation> m_transformations = 
+	protected static List<CorniTransformation> m_transformations = 
 	    new ArrayList<CorniTransformation>();
 	
 	//Identifies if this statement is relative to the past.

@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -326,6 +327,13 @@ public class Interpreter implements Originator<Interpreter,String>
 	public String saveToMemento()
 	{
 		String out = null;
+		
+		//Clear the transformations in comparison statements
+		for(Entry<StatementMetadata, Statement> entry : m_statements.entrySet())
+		{
+		  entry.getValue().postfixAccept(new TransformationFlusher());
+		}
+		
 		try
 		{
 			out = m_serializer.serialize(this);
@@ -352,5 +360,29 @@ public class Interpreter implements Originator<Interpreter,String>
 			e.printStackTrace();
 		}
 		return i;
+	}
+	
+	public class TransformationFlusher implements LanguageElementVisitor
+	{
+    @Override
+    public void visit(LanguageElement element)
+    {
+      if(element instanceof ComparisonStatement)
+      {
+        ((ComparisonStatement)element).flushTransformations();
+      }
+      else if(element instanceof PredicateCall)
+      {
+        ((PredicateCall)element).getPredicateDefinition().postfixAccept(this);
+      }
+    }
+
+    @Override
+    public void pop()
+    {
+      // TODO Auto-generated method stub
+      
+    }
+	  
 	}
 }
