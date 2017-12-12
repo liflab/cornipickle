@@ -38,6 +38,7 @@ public abstract class ChangePropertyTransformation extends CorniTransformation
   public JsonElement toJson()
   {
     JsonMap map = new JsonMap();
+    map.put("type", "changeproperty");
     map.put("id", m_id);
     map.put("property", m_property);
     map.put("value", m_value);

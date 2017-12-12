@@ -123,5 +123,15 @@
         <zip>https://selenium-release.storage.googleapis.com/2.44/selenium-server-standalone-2.44.0.jar</zip>
       </files>
     </dependency>
+    <dependency>
+      <!--
+      Xeger. Used to generate strings that match a regex.
+      -->
+      <name>Xeger</name>
+      <classname>nl.flotsam.xeger.Xeger</classname>
+      <files>
+        <zip>https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/xeger/xeger-1.0-SNAPSHOT.jar</zip>
+      </files>
+    </dependency>
   </dependencies>
 </build>

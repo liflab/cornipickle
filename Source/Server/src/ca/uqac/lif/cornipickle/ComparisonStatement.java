@@ -160,6 +160,10 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	      }
 	    }
 	  }
+	  else if(this instanceof RegexMatch)
+	  {
+	    
+	  }
 	}
 	
 	@Override

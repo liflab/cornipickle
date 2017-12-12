@@ -587,13 +587,16 @@ Cornipickle.CornipickleProbe.getCorrectionText = function(transformation)
 	var text = "";
 	for(var i = 0; i < transformation.length; i++)
 	{
-		if(transformation[i]["property"] === "bottom"
-			|| transformation[i]["property"] === "top"
-			|| transformation[i]["property"] === "left"
-			|| transformation[i]["property"] === "right")
+		if(transformation[i]["type"] === "changeproperty"
 		{
-			text += "Move the " + transformation[i]["property"] + " of the element with ID ";
-			text += transformation[i]["id"] + " to " + transformation[i]["value"] + " pixels. "
+			if(transformation[i]["property"] === "bottom"
+				|| transformation[i]["property"] === "top"
+				|| transformation[i]["property"] === "left"
+				|| transformation[i]["property"] === "right")
+			{
+				text += "Move the " + transformation[i]["property"] + " of the element with ID ";
+				text += transformation[i]["id"] + " to " + transformation[i]["value"] + " pixels. "
+			}
 		}
 	}
 	
