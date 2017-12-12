@@ -10,8 +10,18 @@ public class RegexTransformation extends CorniTransformation
 {
   protected int m_id;
   protected boolean m_shouldMatch;
+  protected String m_property;
   protected String m_regularExpression;
   protected String m_value;
+  
+  public RegexTransformation(int id, boolean shouldMatch, String property, String reg, String value)
+  {
+    m_id = id;
+    m_shouldMatch = shouldMatch;
+    m_property = property;
+    m_regularExpression = reg;
+    m_value = value;
+  }
   
   @Override
   public JsonElement apply(JsonElement in)

@@ -23,10 +23,14 @@ import java.util.Map;
 
 import ca.uqac.lif.cornipickle.transformations.CorniTransformation;
 import ca.uqac.lif.cornipickle.transformations.PropertyTransformationFactory;
+import ca.uqac.lif.cornipickle.transformations.RegexTransformation;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonString;
+import nl.flotsam.xeger.Xeger;
+
+
 
 public abstract class ComparisonStatement extends Statement implements HasTransformations
 {
@@ -162,7 +166,33 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	  }
 	  else if(this instanceof RegexMatch)
 	  {
-	    
+	    if(e1 instanceof JsonString && e2 instanceof JsonString)
+	    {
+	      if(m_left instanceof ElementProperty)
+	      {
+	        String subject = ((JsonString)e1).stringValue();
+	        String pattern = ((JsonString)e2).stringValue();
+	        ElementProperty left = (ElementProperty) m_left;
+          JsonMap element = (JsonMap) d.get(left.getElementName());
+          int id = element.getInt("cornipickleid");
+          String otherValue = "";
+          
+          Verdict v = compare(e1, e2);
+          
+          if(v.is(Verdict.Value.FALSE))
+          {
+            Xeger xeger = new Xeger("(?!" + pattern + ")");
+            otherValue = xeger.generate();
+            m_transformations.add(new RegexTransformation(id, true, left.m_propertyName, pattern, otherValue));
+          }
+          else
+          {
+            Xeger xeger = new Xeger(pattern);
+            otherValue = xeger.generate();
+            m_transformations.add(new RegexTransformation(id, false, left.m_propertyName, pattern, otherValue));
+          }
+	      }
+	    }
 	  }
 	}
 	
