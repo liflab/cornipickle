@@ -15,7 +15,6 @@ import ca.uqac.lif.json.JsonParser.JsonParseException;
 
 public class TransformationBuilderTest
 {
-  
   protected JsonParser s_parser = new JsonParser();
   protected Interpreter m_interpreter;
   
@@ -44,7 +43,7 @@ public class TransformationBuilderTest
         }
       }
       
-      if(builder.getTransformations().size() != 660)
+      if(builder.getTransformations().size() != 6)
       {
         assert false;
       }

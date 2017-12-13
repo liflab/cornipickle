@@ -14,6 +14,11 @@ public class RegexTransformation extends CorniTransformation
   protected String m_regularExpression;
   protected String m_value;
   
+  private RegexTransformation()
+  {
+    super();
+  }
+  
   public RegexTransformation(int id, boolean shouldMatch, String property, String reg, String value)
   {
     m_id = id;

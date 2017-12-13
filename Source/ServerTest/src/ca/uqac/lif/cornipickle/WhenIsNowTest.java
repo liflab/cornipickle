@@ -232,6 +232,33 @@ public class WhenIsNowTest {
     
     v = g.evaluateTemporal(snapshot2, newd2);
     
+    assertEquals(v.m_value, Verdict.Value.INCONCLUSIVE);
+    
+    pn = shouldParseAndNotNull(line, "<Always>");
+    e = parser.parseStatement(pn);
+    
+    g = (Globally)e;
+  
+    snapshot1 = new JsonMap();
+    snapshot1.put("tagname", "body");
+    snapshot1.put("cornipickleid", 0);
+    snapshot1.put("width", 200);
+    
+    newd = new HashMap<String,JsonElement>();
+    
+    v = g.evaluateTemporal(snapshot1, newd);
+    
+    assertEquals(Verdict.Value.INCONCLUSIVE, v.m_value);
+    
+    snapshot2 = new JsonMap();
+    snapshot2.put("tagname", "body");
+    snapshot2.put("cornipickleid", 0);
+    snapshot2.put("width", 250);
+    
+    newd2 = new HashMap<String,JsonElement>();
+    
+    v = g.evaluateTemporal(snapshot2, newd2);
+    
     assertEquals(v.m_value, Verdict.Value.FALSE);
   }
   
@@ -266,7 +293,7 @@ public class WhenIsNowTest {
     
     v = g.evaluateTemporal(snapshot2, newd2);
     
-    assertEquals(v.m_value, Verdict.Value.TRUE);
+    assertEquals(v.m_value, Verdict.Value.INCONCLUSIVE);
   }
   
   public ParseNode shouldParseAndNotNull(String line, String start_symbol)

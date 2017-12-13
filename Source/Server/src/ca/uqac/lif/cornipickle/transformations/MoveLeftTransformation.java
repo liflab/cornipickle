@@ -6,6 +6,11 @@ import ca.uqac.lif.json.JsonNumber;
 
 public class MoveLeftTransformation extends ChangePropertyTransformation
 {
+  private MoveLeftTransformation()
+  {
+    super();
+  }
+  
   public MoveLeftTransformation(int id, JsonNumber value)
   {
     super(id, "left", value);

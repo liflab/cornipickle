@@ -2,8 +2,8 @@ package ca.uqac.lif.cornipickle;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +50,7 @@ public class ComparisonStatementTest
     
     assertTrue(s.getTransformations().size() > 0);
     
-    List<CorniTransformation> trans = s.flushTransformations();
+    Set<CorniTransformation> trans = s.flushTransformations();
     
     assertTrue(trans.size() > 0);
     assertTrue(s.getTransformations().size() == 0);

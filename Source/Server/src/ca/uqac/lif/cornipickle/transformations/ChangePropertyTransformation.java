@@ -10,6 +10,11 @@ public abstract class ChangePropertyTransformation extends CorniTransformation
   protected String m_property;
   protected JsonElement m_value;
   
+  protected ChangePropertyTransformation()
+  {
+    super();
+  }
+  
   public ChangePropertyTransformation(int id, String property, JsonElement value)
   {
     m_id = id;

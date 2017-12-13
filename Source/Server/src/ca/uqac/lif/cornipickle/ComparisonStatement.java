@@ -17,9 +17,9 @@
  */
 package ca.uqac.lif.cornipickle;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import ca.uqac.lif.cornipickle.transformations.CorniTransformation;
 import ca.uqac.lif.cornipickle.transformations.PropertyTransformationFactory;
@@ -37,8 +37,8 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	protected Property m_left;
 	protected Property m_right;
 	
-	protected static List<CorniTransformation> m_transformations = 
-	    new ArrayList<CorniTransformation>();
+	protected static Set<CorniTransformation> m_transformations = 
+	    new HashSet<CorniTransformation>();
 	
 	//Identifies if this statement is relative to the past.
 	protected boolean m_present;
@@ -121,33 +121,58 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	      if(m_left instanceof ElementProperty)
 	      {
 	        ElementProperty left = (ElementProperty) m_left;
-	        JsonMap element = (JsonMap) d.get(left.getElementName());
-          int id = element.getInt("cornipickleid");
-          
-          //Make 3 transformations with values being exactly the right side of the comparison,
-          //the same value + 1, and the same value - 1 to cover cases for a greater than, less than
-          //and equals.
-          JsonNumber e3 = new JsonNumber(((JsonNumber)e2).numberValue().intValue() + 1);
-          JsonNumber e4 = new JsonNumber(((JsonNumber)e2).numberValue().intValue() - 1);
-          m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e2));
-          m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e3));
-          m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e4));
+	        JsonMap element = null;
+	        if(d.get(left.getElementName()) instanceof JsonMap)
+	        {
+	          element = (JsonMap) d.get(left.getElementName());
+	          
+	          int id;
+	          if(element.containsKey("cornipickleid"))
+	          {
+	            id = element.getInt("cornipickleid");
+	          }
+	          else
+	          {
+	            id = -1;
+	          }
+	          
+	          //Make 3 transformations with values being exactly the right side of the comparison,
+	          //the same value + 1, and the same value - 1 to cover cases for a greater than, less than
+	          //and equals.
+	          JsonNumber e3 = new JsonNumber(((JsonNumber)e2).numberValue().intValue() + 1);
+	          JsonNumber e4 = new JsonNumber(((JsonNumber)e2).numberValue().intValue() - 1);
+	          m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e2));
+	          m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e3));
+	          m_transformations.add(PropertyTransformationFactory.getInstance(id, left.getPropertyName(), e4));
+	        }
 	      }
 	      
 	      if(m_right instanceof ElementProperty)
 	      {
 	        ElementProperty right = (ElementProperty) m_right;
-          JsonMap element = (JsonMap) d.get(right.getElementName());
-          int id = element.getInt("cornipickleid");
-          
-          //Make 3 transformations with values being exactly the left side of the comparison,
-          //the same value + 1, and the same value - 1 to cover cases for a greater than, less than
-          //and equals.
-          JsonNumber e3 = new JsonNumber(((JsonNumber)e1).numberValue().intValue() + 1);
-          JsonNumber e4 = new JsonNumber(((JsonNumber)e1).numberValue().intValue() - 1);
-          m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e1));
-          m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e3));
-          m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e4));
+	        JsonMap element = null;
+          if(d.get(right.getElementName()) instanceof JsonMap)
+          {
+            element = (JsonMap) d.get(right.getElementName());
+            
+            int id;
+            if(element.containsKey("cornipickleid"))
+            {
+              id = element.getInt("cornipickleid");
+            }
+            else
+            {
+              id = -1;
+            }
+            //Make 3 transformations with values being exactly the left side of the comparison,
+            //the same value + 1, and the same value - 1 to cover cases for a greater than, less than
+            //and equals.
+            JsonNumber e3 = new JsonNumber(((JsonNumber)e1).numberValue().intValue() + 1);
+            JsonNumber e4 = new JsonNumber(((JsonNumber)e1).numberValue().intValue() - 1);
+            m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e1));
+            m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e3));
+            m_transformations.add(PropertyTransformationFactory.getInstance(id, right.getPropertyName(), e4));
+          }
 	      }
 	      //If left is an operation and not a constant. If it is a constant, the transformations have been taken care
 	      //of above.
@@ -197,15 +222,15 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	}
 	
 	@Override
-	public List<CorniTransformation> getTransformations()
+	public Set<CorniTransformation> getTransformations()
 	{
 	  return m_transformations;
 	}
 	
 	@Override
-	public List<CorniTransformation> flushTransformations()
+	public Set<CorniTransformation> flushTransformations()
 	{
-	  List<CorniTransformation> toReturn = new ArrayList<CorniTransformation>();
+	  Set<CorniTransformation> toReturn = new HashSet<CorniTransformation>();
 	  toReturn.addAll(m_transformations);
 	  m_transformations.clear();
 	  return toReturn;

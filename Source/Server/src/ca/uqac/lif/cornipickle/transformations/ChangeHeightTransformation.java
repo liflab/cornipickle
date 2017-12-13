@@ -6,6 +6,11 @@ import ca.uqac.lif.json.JsonNumber;
 
 public class ChangeHeightTransformation extends ChangePropertyTransformation
 {
+  private ChangeHeightTransformation()
+  {
+    super();
+  }
+  
   public ChangeHeightTransformation(int id, JsonNumber value)
   {
     super(id, "height", value);

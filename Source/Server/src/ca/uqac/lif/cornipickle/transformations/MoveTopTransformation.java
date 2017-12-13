@@ -6,6 +6,11 @@ import ca.uqac.lif.json.JsonNumber;
 
 public class MoveTopTransformation extends ChangePropertyTransformation
 {
+  private MoveTopTransformation()
+  {
+    super();
+  }
+  
   public MoveTopTransformation(int id, JsonNumber value)
   {
     super(id, "top", value);
