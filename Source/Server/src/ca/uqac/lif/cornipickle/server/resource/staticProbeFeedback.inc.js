@@ -587,7 +587,7 @@ Cornipickle.CornipickleProbe.getCorrectionText = function(transformation)
 	var text = "";
 	for(var i = 0; i < transformation.length; i++)
 	{
-		if(transformation[i]["type"] === "changeproperty"
+		if(transformation[i]["type"] === "changeproperty")
 		{
 			if(transformation[i]["property"] === "bottom"
 				|| transformation[i]["property"] === "top"
@@ -597,6 +597,16 @@ Cornipickle.CornipickleProbe.getCorrectionText = function(transformation)
 				text += "Move the " + transformation[i]["property"] + " of the element with ID ";
 				text += transformation[i]["id"] + " to " + transformation[i]["value"] + " pixels. "
 			}
+		}
+		else if(transformation[i]["type"] === "regex")
+		{
+			text += "The text in the element with ID " + transformation[i]["id"] + " should ";
+			if(!transformation[i]["shouldmatch"])
+			{
+				text += " not ";
+			}
+			text += " match the regular expression " + transformation[i]["regex"] + ". (Example: ";
+			text += transformation[i]["value"] + ")";
 		}
 	}
 	
@@ -632,7 +642,7 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 		document.getElementById("bp_witness").style.backgroundColor = "white";
 	}
 
-	if (response["transformations"] !== "")
+	if (response["transformations"])
 	{
 		cp_probe.m_currentTransformations = response["transformations"];
 	}

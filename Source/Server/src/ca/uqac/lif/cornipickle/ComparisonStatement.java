@@ -198,24 +198,30 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	        String subject = ((JsonString)e1).stringValue();
 	        String pattern = ((JsonString)e2).stringValue();
 	        ElementProperty left = (ElementProperty) m_left;
-          JsonMap element = (JsonMap) d.get(left.getElementName());
-          int id = element.getInt("cornipickleid");
-          String otherValue = "";
-          
-          Verdict v = compare(e1, e2);
-          
-          if(v.is(Verdict.Value.FALSE))
-          {
-            Xeger xeger = new Xeger("(?!" + pattern + ")");
-            otherValue = xeger.generate();
-            m_transformations.add(new RegexTransformation(id, true, left.m_propertyName, pattern, otherValue));
-          }
-          else
-          {
-            Xeger xeger = new Xeger(pattern);
-            otherValue = xeger.generate();
-            m_transformations.add(new RegexTransformation(id, false, left.m_propertyName, pattern, otherValue));
-          }
+	        JsonMap element = null;
+	        
+	        if(d.get(left.getElementName()) instanceof JsonMap)
+	        {
+	          element = (JsonMap) d.get(left.getElementName());
+	          
+	          int id = element.getInt("cornipickleid");
+	          String otherValue = "";
+	          
+	          Verdict v = compare(e1, e2);
+	          
+	          if(v.is(Verdict.Value.FALSE))
+	          {
+	            Xeger xeger = new Xeger(pattern);
+	            otherValue = xeger.generate();
+	            m_transformations.add(new RegexTransformation(id, true, left.m_propertyName, pattern, otherValue));
+	          }
+	          else
+	          {
+	            Xeger xeger = new Xeger("(?!" + pattern + ")");
+	            otherValue = xeger.generate();
+	            m_transformations.add(new RegexTransformation(id, false, left.m_propertyName, pattern, otherValue));
+	          }
+	        }
 	      }
 	    }
 	  }
