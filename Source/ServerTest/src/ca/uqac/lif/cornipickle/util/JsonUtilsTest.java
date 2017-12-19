@@ -16,7 +16,7 @@ public class JsonUtilsTest
   public void findElementByCornipickleIdTest()
   {
     try {
-      JsonElement page = s_parser.parse(PackageFileReader.readPackageFile(this.getClass(), "data/sample-12.json"));
+      JsonElement page = s_parser.parse(PackageFileReader.readPackageFile(this.getClass(), "../data/sample-12.json"));
       
       JsonElement found = JsonUtils.findElementByCornipickleId((JsonMap)page, 2);
       

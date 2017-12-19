@@ -217,6 +217,7 @@ public abstract class ComparisonStatement extends Statement implements HasTransf
 	          }
 	          else
 	          {
+	            //does not work, ?! is not supported by xeger
 	            Xeger xeger = new Xeger("(?!" + pattern + ")");
 	            otherValue = xeger.generate();
 	            m_transformations.add(new RegexTransformation(id, false, left.m_propertyName, pattern, otherValue));

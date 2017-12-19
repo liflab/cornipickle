@@ -94,6 +94,7 @@ public class Interpreter implements Originator<Interpreter,String>
 		m_setDefs = new HashMap<String,SetDefinition>();
 		m_parser = new CornipickleParser();
 		m_verdicts = new HashMap<StatementMetadata,Verdict>();  	
+		cleanTransformations();
 	}
 
 	public Set<String> getAttributes()
@@ -322,17 +323,21 @@ public class Interpreter implements Originator<Interpreter,String>
 		}
 		m_verdicts = verdicts;
 	}
+	
+	public void cleanTransformations()
+	{
+	  for(Entry<StatementMetadata, Statement> entry : m_statements.entrySet())
+    {
+      entry.getValue().postfixAccept(new TransformationCleaner());
+    }
+	}
 
 	@Override
 	public String saveToMemento()
 	{
 		String out = null;
 		
-		//Clear the transformations in comparison statements
-		for(Entry<StatementMetadata, Statement> entry : m_statements.entrySet())
-		{
-		  entry.getValue().postfixAccept(new TransformationFlusher());
-		}
+		cleanTransformations();
 		
 		try
 		{
@@ -362,7 +367,7 @@ public class Interpreter implements Originator<Interpreter,String>
 		return i;
 	}
 	
-	public class TransformationFlusher implements LanguageElementVisitor
+	public class TransformationCleaner implements LanguageElementVisitor
 	{
     @Override
     public void visit(LanguageElement element)

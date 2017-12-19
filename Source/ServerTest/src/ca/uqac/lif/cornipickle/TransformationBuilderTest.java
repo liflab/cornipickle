@@ -32,6 +32,8 @@ public class TransformationBuilderTest
       m_interpreter.parseProperties("There exists $x in $(div>a) such that ( $x's bottom is 14 ).");
       TransformationBuilder builder = new TransformationBuilder(page);
       
+      m_interpreter.cleanTransformations();
+      
       m_interpreter.evaluateAll(page);
       
       for(Entry<StatementMetadata,Verdict> entry: m_interpreter.getVerdicts().entrySet())
