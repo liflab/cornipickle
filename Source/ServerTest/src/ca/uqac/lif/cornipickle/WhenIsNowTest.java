@@ -232,7 +232,7 @@ public class WhenIsNowTest {
     
     v = g.evaluateTemporal(snapshot2, newd2);
     
-    assertEquals(v.m_value, Verdict.Value.FALSE);
+    assertEquals(v.m_value, Verdict.Value.INCONCLUSIVE);
   }
   
   @Test
@@ -266,7 +266,7 @@ public class WhenIsNowTest {
     
     v = g.evaluateTemporal(snapshot2, newd2);
     
-    assertEquals(v.m_value, Verdict.Value.TRUE);
+    assertEquals(v.m_value, Verdict.Value.INCONCLUSIVE);
   }
   
   public ParseNode shouldParseAndNotNull(String line, String start_symbol)
