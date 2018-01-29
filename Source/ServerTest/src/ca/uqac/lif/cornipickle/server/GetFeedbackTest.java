@@ -103,8 +103,10 @@ public class GetFeedbackTest {
           assert false;
         }
       }
-    } catch (JsonParseException | ParseException e) {
-       assert false; //Never supposed to happen....
+    } catch (JsonParseException e1) {
+      assert false; //Never supposed to happen....
+    } catch (ParseException e2) {
+      assert false;
     }
 	}
 }

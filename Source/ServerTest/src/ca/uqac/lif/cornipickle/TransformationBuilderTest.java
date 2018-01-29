@@ -49,7 +49,9 @@ public class TransformationBuilderTest
       {
         assert false;
       }
-    } catch (JsonParseException | ParseException e) {
+    } catch (JsonParseException e1) {
+      assert false;
+    } catch (ParseException e2) {
       assert false;
     }
   }

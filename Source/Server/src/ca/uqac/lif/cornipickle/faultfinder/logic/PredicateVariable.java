@@ -69,7 +69,7 @@ public class PredicateVariable extends LogicalExpression<NamedDomain>
 	public boolean satisfies(NamedDomain in)
 	{
 		Function f = in.getFunction(m_predicateName);
-		return (boolean) f.evaluate(m_operandValues);
+		return (Boolean) f.evaluate(m_operandValues);
 	}
 	
 	@Override

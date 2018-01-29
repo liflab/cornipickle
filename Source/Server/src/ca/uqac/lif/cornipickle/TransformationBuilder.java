@@ -71,7 +71,7 @@ public class TransformationBuilder implements LanguageElementVisitor {
     JsonMap element = (JsonMap)page;
     if(element.containsKey("cornipickleid"))
     {
-      ids.add((int) (long) element.getNumber("cornipickleid"));
+      ids.add(element.getNumber("cornipickleid").intValue());
     }
     if(element.containsKey("children"))
     {
