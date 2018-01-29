@@ -320,8 +320,10 @@ Cornipickle.CornipickleProbe = function()
 
 	this.serializeWindow = function(page_contents)
 	{
+		this.registerNewElement(window);
 		return {
 			"tagname" : "window",
+			"cornipickleid" : window.cornipickleid,
 			"URL" : window.location.host + window.location.pathname,
 			"aspect-ratio" : window.document.documentElement.clientWidth / window.document.documentElement.clientHeight,
 			"orientation" : Cornipickle.get_orientation(),
