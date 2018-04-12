@@ -1,13 +1,12 @@
 Cornipickle: a runtime monitor for layout constraints
 =====================================================
 
-[![Travis](https://img.shields.io/travis/liflab/cornipickle.svg?style=flat-square)]()
-[![SonarQube Coverage](https://img.shields.io/sonar/http/sonarqube.com/liflab:cornipickle/coverage.svg?style=flat-square)]()
+Cornipickle is an automated testing tool that can verify declarative properties
+on-the-fly as a user interacts with an application. Test oracles are written in
+a a declarative language that can express desirable properties of a web
+application as a set of human-readable assertions on the page's HTML and CSS
+data.
 
-Cornichon is a declarative language that can express desirable properties of
-a web application as a set of human-readable assertions on the page’s HTML
-and CSS data. Cornipickle, an automated testing tool that can verify
-Cornichon properties on-the-fly as a user interacts with an application.
 
 Table of Contents                                                    {#toc}
 -----------------
@@ -27,10 +26,10 @@ First make sure you have the following installed:
 - [Ant](http://ant.apache.org) to automate the compilation and build process
 
 Download the sources for Cornipickle from
-[Bitbucket](http://bitbucket.org.com/sylvainhalle/cornipickle) or clone the
-repository using Git:
+[GitHub](https://github.com/liflab/cornipickle) or clone the repository using
+Git:
 
-    git@bitbucket.org:sylvainhalle/cornipickle.git
+    git@github.com:liflab/cornipickle.git
 
 ### Installing dependencies
 
@@ -134,9 +133,33 @@ try these examples by starting the server and visiting
 [http://localhost:10101/status](http://localhost:10101/status)
 in your browser. Refresh the page to get updated info.
 
+Further documentation {#doc}
+---------------------
+
+More online documentation about Cornipickle is under way. In the meantime,
+please refer to Cornipickle's page on the LIF's website for references to
+presentation slides and research papers detailing how the tool works and how to
+use the language.
+
+Please feel free to contact us if you have any questions, or if you want to use
+Cornipickle in a specific context.
 
 About the author                                                   {#about}
 ----------------
 
-Cornipickle was written by Sylvain Hallé, associate professor at Université
-du Québec à Chicoutimi, Canada.
+Cornipickle was first written by [Sylvain Hallé](http://leduotang.ca/sylvain),
+associate professor at [Université du Québec à Chicoutimi](https://www.uqac.ca),
+Canada, and head of the [Laboratoire d'informatique
+formelle](https://liflab.ca). Special thanks to the team of of graduate and
+undergraduate students who contributed to the development of Cornipickle:
+
+- Gabrielle Bastien
+- Nicolas Bergeron
+- Oussama Beroual
+- Xavier Chamberland-Thibeault
+- Francis Guérin
+- Chafik Meniar
+- Florence Opalvens
+- Jérémy Spieldenner
+
+<!-- :wrap=hard:maxLineLen=80: -->
