@@ -5,12 +5,9 @@ import java.util.Map;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.ParseNode;
-import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
-import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonParser;
-import ca.uqac.lif.json.JsonParser.JsonParseException;
 
 import org.junit.Before;
 import org.junit.Test;

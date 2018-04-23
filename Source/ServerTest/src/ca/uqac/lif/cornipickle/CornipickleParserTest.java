@@ -548,7 +548,7 @@ public class CornipickleParserTest
     alpd.add(pd2);
     alpd.add(pd3);
 
-    List<PredicateDefinition> result = (LinkedList)parser.getPredicates();
+    List<PredicateDefinition> result = (LinkedList<PredicateDefinition>)parser.getPredicates();
 
     boolean ok = true;
 

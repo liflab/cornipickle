@@ -27,7 +27,6 @@ import ca.uqac.lif.cornipickle.server.Main;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
-import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonPath;
 import ca.uqac.lif.json.JsonString;
 

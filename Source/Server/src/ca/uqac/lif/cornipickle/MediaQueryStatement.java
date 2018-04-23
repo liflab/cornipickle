@@ -3,7 +3,6 @@ package ca.uqac.lif.cornipickle;
 import java.util.Map;
 
 import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonPath;
 import ca.uqac.lif.json.JsonString;
@@ -92,7 +91,7 @@ public class MediaQueryStatement extends Statement {
   {
     MediaQueryStatement out = new MediaQueryStatement(m_mediaQuery);
     out.m_id = this.m_id;
-    this.m_mediaQueryCounter--;
+    m_mediaQueryCounter--;
     return out;
   }
 

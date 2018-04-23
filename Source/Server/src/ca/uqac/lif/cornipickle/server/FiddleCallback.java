@@ -11,7 +11,6 @@ import ca.uqac.lif.cornipickle.fiddle.FiddlePair;
 import ca.uqac.lif.jerrydog.CallbackResponse;
 import ca.uqac.lif.jerrydog.RequestCallback;
 import ca.uqac.lif.jerrydog.RestCallback;
-import ca.uqac.lif.json.JsonMap;
 
 public class FiddleCallback extends RestCallback {
   protected Fiddle m_fiddle;

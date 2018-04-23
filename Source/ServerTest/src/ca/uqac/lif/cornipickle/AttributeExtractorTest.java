@@ -42,17 +42,17 @@ public class AttributeExtractorTest {
 	@Test
 	public void testGetAttributes() {
 		LanguageElement cs =new CssSelector("#Cornipickle");
-		assertTrue(ae.getAttributes(cs).toString().equals("[id]"));
+		assertTrue(AttributeExtractor.getAttributes(cs).toString().equals("[id]"));
 	}
 	@Test
 	public void testGetAttributes2() {
 		LanguageElement cs =new CssSelector(".Cornipickle");
-		assertTrue(ae.getAttributes(cs).toString().equals("[class]"));
+		assertTrue(AttributeExtractor.getAttributes(cs).toString().equals("[class]"));
 	}
 	@Test
 	public void testGetAttributes3() {
 		LanguageElement cs =new ElementPropertyPossessive();
-		assertTrue(ae.getAttributes(cs).toString().equals("[null]"));
+		assertTrue(AttributeExtractor.getAttributes(cs).toString().equals("[null]"));
 	}
 
 	@Test

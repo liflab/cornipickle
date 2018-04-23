@@ -19,9 +19,15 @@ public class NumberConstantTest {
     }
 
     @Test
-    public void NumberConstantTestNumberConstructor(){
+    public void NumberConstantTestNumberConstructor()
+    {
         NumberConstant nc = new NumberConstant(new Number() {
-            @Override
+            /**
+			 * Dummy UID
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public int intValue() {
                 return 0;
             }
@@ -55,7 +61,12 @@ public class NumberConstantTest {
     @Test
     public void NumberConstantTestJsonNumberConstructor(){
         NumberConstant nc = new NumberConstant(new JsonNumber(new Number() {
-            @Override
+            /**
+			 * Dummy UID
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public int intValue() {
                 return 0;
             }

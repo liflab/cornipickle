@@ -1,14 +1,11 @@
 package ca.uqac.lif.cornipickle;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
-import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
-import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonParser;
-import ca.uqac.lif.json.JsonParser.JsonParseException;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -27,7 +24,7 @@ public class PredicateCallTest {
     public void setUp() {
         pd = new PredicateDefinition(new StringConstant("rule"));
         pd.m_predicate= new OrStatement();
-        List l=new LinkedList<String>();
+        List<String> l=new LinkedList<String>();
         pc = new PredicateCall(pd, "match", l);
         parser = new JsonParser();
     }

@@ -2,7 +2,6 @@ package ca.uqac.lif.cornipickle.fiddle;
 
 import java.util.List;
 
-import ca.uqac.lif.bullwinkle.TokenString;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonMap;

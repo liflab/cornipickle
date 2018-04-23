@@ -11,9 +11,8 @@ public class TrueVerdictTest {
 
 	@Test
 	public void testGetTrueVerdict() {
-		TrueVerdict tv= new TrueVerdict();
 		Pattern pattern=Pattern.compile("ca.uqac.lif.cornipickle.");
-		Matcher matcher =pattern.matcher(tv.getTrueVerdict().toString());
+		Matcher matcher =pattern.matcher(TrueVerdict.getTrueVerdict().toString());
 		if (matcher.find()){
 			assertTrue(true);
 		}else{

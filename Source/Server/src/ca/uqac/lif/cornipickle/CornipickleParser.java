@@ -1,4 +1,3 @@
-package ca.uqac.lif.cornipickle;
 /*
     Cornipickle, validation of layout bugs in web applications
     Copyright (C) 2015 Sylvain Hallé
@@ -17,6 +16,8 @@ package ca.uqac.lif.cornipickle;
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package ca.uqac.lif.cornipickle;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -25,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.BnfParser.InvalidGrammarException;
@@ -35,7 +34,6 @@ import ca.uqac.lif.bullwinkle.CaptureBlockParseNode;
 import ca.uqac.lif.bullwinkle.ParseNode;
 import ca.uqac.lif.bullwinkle.ParseNodeVisitor;
 import ca.uqac.lif.json.JsonNumber;
-import ca.uqac.lif.cornipickle.Interpreter.StatementMetadata;
 import ca.uqac.lif.cornipickle.server.Main;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
 import ca.uqac.lif.util.EmptyException;
@@ -148,7 +146,12 @@ public class CornipickleParser implements ParseNodeVisitor
 	protected LanguageElement parseStatement(ParseNode root)
 	{
 		reset();
-		root.postfixAccept(this);
+		try {
+			root.postfixAccept(this);
+		} catch (VisitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (m_nodes.isEmpty())
 		{
 			return null;

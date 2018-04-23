@@ -28,7 +28,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ca.uqac.lif.azrael.SerializerException;
-import ca.uqac.lif.bullwinkle.BnfRule;
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.serialization.CornipickleDeflateSerializer;
 import ca.uqac.lif.json.JsonElement;

@@ -17,11 +17,6 @@ public class PowOperation extends Operation {
 	{
 		super(p1, p2);
 	}
-
-	private double isNthRoot(int value, int n) {
-	  return  Math.pow(value, n);// n=1/2 => sqrt
-	
-	}
 	
 	@Override
 	public JsonElement evaluate(JsonElement t, Map<String, JsonElement> d)
