@@ -1,6 +1,5 @@
 language: java
 dist: trusty
-sudo: required
 install: ant download-deps
 notifications:
   # Email notifications are disabled to not annoy anybody.
@@ -11,6 +10,5 @@ addons:
     token:
       secure: c11f78b32f6c5a83c760c5b6d6ea388e166b07f7 # encrypted value of your token
 script:
-  - sudo ant install-deps
   - ant test
   - sonar-scanner
