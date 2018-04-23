@@ -34,7 +34,6 @@ import ca.uqac.lif.json.JsonParser;
 import ca.uqac.lif.json.JsonPath;
 import ca.uqac.lif.json.JsonString;
 import ca.uqac.lif.cornipickle.util.PackageFileReader;
-import ca.uqac.lif.util.FileReadWrite;
 
 @SuppressWarnings("unused")
 public class CssTest

@@ -17,6 +17,8 @@
  */
 package ca.uqac.lif.cornipickle;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,7 +36,6 @@ import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonParser;
 import ca.uqac.lif.json.JsonParser.JsonParseException;
-import ca.uqac.lif.util.FileReadWrite;
 
 public class Interpreter implements Originator<Interpreter,String>
 {
@@ -62,8 +63,8 @@ public class Interpreter implements Originator<Interpreter,String>
 		// Read file contents
 		String corni_filename = args[0];
 		String json_filename = args[1];
-		String corni_file_contents = FileReadWrite.readFile(corni_filename);
-		String json_file_contents = FileReadWrite.readFile(json_filename);
+		String corni_file_contents = readFile(corni_filename);
+		String json_file_contents = readFile(json_filename);
 		JsonElement jse = new JsonParser().parse(json_file_contents);
 
 		Interpreter interpreter = new Interpreter();
@@ -351,5 +352,25 @@ public class Interpreter implements Originator<Interpreter,String>
 			e.printStackTrace();
 		}
 		return i;
+	}
+	
+	public static String readFile(String filename)
+	{
+		StringBuilder contentBuilder = new StringBuilder();
+	    try
+	    {
+	    	BufferedReader br = new BufferedReader(new FileReader(filename));
+	        String sCurrentLine;
+	        while ((sCurrentLine = br.readLine()) != null)
+	        {
+	            contentBuilder.append(sCurrentLine).append("\n");
+	        }
+	        br.close();
+	    }
+	    catch (IOException e)
+	    {
+	        e.printStackTrace();
+	    }
+	    return contentBuilder.toString();
 	}
 }

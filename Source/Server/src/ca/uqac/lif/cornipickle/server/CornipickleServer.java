@@ -17,14 +17,12 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
-import java.io.IOException;
 import java.util.Date;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.jerrydog.RequestCallback;
 import ca.uqac.lif.jerrydog.Server;
-import ca.uqac.lif.util.FileReadWrite;
 
 public class CornipickleServer extends Server
 {
@@ -98,14 +96,10 @@ public class CornipickleServer extends Server
   {
     try
     {
-      String corni_file_contents = FileReadWrite.readFile(filename);
+      String corni_file_contents = Interpreter.readFile(filename);
       m_interpreter.parseProperties(corni_file_contents);
     }
     catch (ParseException e)
-    {
-      e.printStackTrace();
-    }
-    catch (IOException e)
     {
       e.printStackTrace();
     }

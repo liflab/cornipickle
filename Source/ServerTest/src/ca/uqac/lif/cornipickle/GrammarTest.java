@@ -25,7 +25,6 @@ import org.junit.Before;
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.BnfParser.ParseException;
 import ca.uqac.lif.bullwinkle.ParseNode;
-import ca.uqac.lif.util.FileReadWrite;
 
 @SuppressWarnings("unused")
 public class GrammarTest
