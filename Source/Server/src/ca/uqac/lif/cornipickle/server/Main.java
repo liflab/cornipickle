@@ -20,6 +20,7 @@ package ca.uqac.lif.cornipickle.server;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -28,6 +29,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
+import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.util.AnsiPrinter;
 
 
@@ -49,7 +51,7 @@ public class Main
 	 * Build string to identify versions
 	 */
 	protected static final String VERSION_STRING = "0.0";
-	protected static final String BUILD_STRING = "20160326";
+	protected static final String BUILD_STRING = "20180424";
 
 	/**
 	 * Default server name
@@ -65,9 +67,9 @@ public class Main
 	 * Verbosity level for CLI
 	 */
 	protected static int s_verbosity = 1;
-	
+
 	public enum PlatformType { web, android_native };
-	
+
 	public static PlatformType _plateforme = PlatformType.web;
 
 	/**
@@ -104,7 +106,7 @@ public class Main
 		{
 			s_verbosity = Integer.parseInt(c_line.getOptionValue("verbosity"));
 		}
-	
+
 		if (c_line.hasOption("version"))
 		{
 			stderr.println("(C) 2015-2016 Laboratoire d'informatique formelle");
@@ -128,12 +130,12 @@ public class Main
 		}
 		if(c_line.hasOption("s"))
 		{
-		  server_name = c_line.getOptionValue("s");
+			server_name = c_line.getOptionValue("s");
 		}
 		if(c_line.hasOption("a")){
-					
-		_plateforme=PlatformType.android_native;
-		//System.out.println("oui oui");
+
+			_plateforme=PlatformType.android_native;
+			//System.out.println("oui oui");
 		}
 		if (s_verbosity > 0)
 		{
@@ -161,19 +163,17 @@ public class Main
 		}
 
 		// Start server
-		try {
-      server.startServer();
-      
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      System.exit(ERR_IO);
-    }
+		try 
+		{
+			server.startServer();
+		} 
+		catch (IOException e) 
+		{
+			Interpreter.LOGGER.log(Level.SEVERE, e.toString());
+			System.exit(ERR_IO);
+		}
 		stdout.setForegroundColor(AnsiPrinter.Color.BLUE);
 		println(stdout, "Server started on " + server_name + ":" + server_port, 1);
-
-		// Terminate without error
-		//System.exit(ERR_OK);
 	}
 
 	protected static void println(PrintStream out, String message, int verbosity_level)

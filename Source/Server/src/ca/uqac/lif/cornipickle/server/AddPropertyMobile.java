@@ -19,6 +19,7 @@ package ca.uqac.lif.cornipickle.server;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -62,86 +63,86 @@ import com.sun.net.httpserver.HttpExchange;
  */
 class AddPropertyMobile extends InterpreterCallback
 {
-	public static boolean added=false;
-  public AddPropertyMobile(Interpreter i)
-  {
-    super(i, Method.POST, "/addMobile");
-    
-  }
+	public static final boolean added = false;
 
-  @Override
-  public CallbackResponse process(HttpExchange t)
-  {
-  	CallbackResponse response = new CallbackResponse(t);
-    System.out.println("received");
-    // Disable caching on the client
-    response.disableCaching();
+	public AddPropertyMobile(Interpreter i)
+	{
+		super(i, Method.POST, "/addMobile");
 
-    // Read request parameters
-    Map<String,String> params = getParameters(t);
-    
-    // Try to decode and parse it
-    boolean success = true;
-    
-    String props = params.get("");
-    
-    //Decode the string (had to be added because of the probe server's encoding)
-    try {
-		props = URLDecoder.decode(props,"UTF-8");
-		
-	} catch (UnsupportedEncodingException e1) {
-		// TODO Auto-generated catch block
-		//e1.printStackTrace();
-	    System.out.println("received");
 	}
-    
-    try
-    {
-      if (props != null)
-      {
-      	// Wipe the status of the interpreter first
-      	m_interpreter.clear();
-      	m_interpreter.parseProperties(props);
-      }
-    } 
-    catch (ParseException e)
-    {
-      e.printStackTrace();
-      success = false;
-    }
-    if (!success)
-    {
-      // Baaad request
-    	response.setCode(CallbackResponse.HTTP_BAD_REQUEST);
-      return response;
-    }
-    // It worked; obtain new attributes and tag names for the probe
-    JsonMap output = new JsonMap();
-    Set<String> attribute_set = m_interpreter.getAttributes();
-    JsonList attributes = new JsonList();
-    for (String att : attribute_set)
-    {
-    	attributes.add(att);
-    }
-    output.put("attributes", attributes);
-    Set<String> tagname_set = m_interpreter.getTagNames();
-    JsonList tagnames = new JsonList();
-    for (String att : tagname_set)
-    {
-    	tagnames.add(att);
-    }
- //   output.put("tagnames", tagnames);
-    output.put("elements", tagnames);
-    String s=m_interpreter.saveToMemento();
-    output.put("interpreter", s);
-    response.setHeader("Access-Control-Allow-Origin", "*");
-    response.setContents(output.toString());
-   // System.out.println(output.toString());
-  //  System.out.println("interepter Lenght "+s.length());
-    response.setContentType(CallbackResponse.ContentType.JSON);
-    
-    m_interpreter.clear();
-   
-    return response;
-  }    
+
+	@Override
+	public CallbackResponse process(HttpExchange t)
+	{
+		CallbackResponse response = new CallbackResponse(t);
+		System.out.println("received");
+		// Disable caching on the client
+		response.disableCaching();
+
+		// Read request parameters
+		Map<String,String> params = getParameters(t);
+
+		// Try to decode and parse it
+		boolean success = true;
+
+		String props = params.get("");
+
+		//Decode the string (had to be added because of the probe server's encoding)
+		try 
+		{
+			props = URLDecoder.decode(props,"UTF-8");
+		} 
+		catch (UnsupportedEncodingException e1)
+		{
+			Interpreter.LOGGER.log(Level.SEVERE, e1.toString());
+		}
+
+		try
+		{
+			if (props != null)
+			{
+				// Wipe the status of the interpreter first
+				m_interpreter.clear();
+				m_interpreter.parseProperties(props);
+			}
+		} 
+		catch (ParseException e)
+		{
+			success = false;
+		}
+		if (!success)
+		{
+			// Baaad request
+			response.setCode(CallbackResponse.HTTP_BAD_REQUEST);
+			return response;
+		}
+		// It worked; obtain new attributes and tag names for the probe
+		JsonMap output = new JsonMap();
+		Set<String> attribute_set = m_interpreter.getAttributes();
+		JsonList attributes = new JsonList();
+		for (String att : attribute_set)
+		{
+			attributes.add(att);
+		}
+		output.put("attributes", attributes);
+		Set<String> tagname_set = m_interpreter.getTagNames();
+		JsonList tagnames = new JsonList();
+		for (String att : tagname_set)
+		{
+			tagnames.add(att);
+		}
+		//   output.put("tagnames", tagnames);
+		output.put("elements", tagnames);
+		String s=m_interpreter.saveToMemento();
+		output.put("interpreter", s);
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContents(output.toString());
+		// System.out.println(output.toString());
+		//  System.out.println("interepter Lenght "+s.length());
+		response.setContentType(CallbackResponse.ContentType.JSON);
+
+		m_interpreter.clear();
+
+		return response;
+	}    
 }

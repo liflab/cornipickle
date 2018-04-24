@@ -26,8 +26,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.sun.istack.internal.logging.Logger;
 
 import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
@@ -46,10 +49,15 @@ public class Interpreter implements Originator<Interpreter,String>
 	protected CornipickleParser m_parser;
 
 	protected Map<StatementMetadata,Verdict> m_verdicts;
-
+	
 	protected boolean m_evaluateNext;
-
+	
 	protected final transient CornipickleDeflateSerializer m_serializer;
+	
+	/**
+	 * A global logger instance to trap exceptions throughout the program
+	 */
+	public static final transient Logger LOGGER = Logger.getLogger(Interpreter.class);
 
 	public Interpreter()
 	{
@@ -76,11 +84,11 @@ public class Interpreter implements Originator<Interpreter,String>
 
 	public void resetHistory()
 	{
-		for (Map.Entry<StatementMetadata,Statement> entry : m_statements.entrySet())
+		for (StatementMetadata key : m_statements.keySet())
 		{
-			Statement s = entry.getValue();
+			Statement s = m_statements.get(key);
 			s.resetHistory();
-			m_verdicts.put(entry.getKey(), new Verdict(Verdict.Value.INCONCLUSIVE));
+			m_verdicts.put(key, new Verdict(Verdict.Value.INCONCLUSIVE));
 		}
 	}
 
@@ -98,8 +106,9 @@ public class Interpreter implements Originator<Interpreter,String>
 	public Set<String> getAttributes()
 	{
 		Set<String> out = new HashSet<String>();
-		for (Statement s : m_statements.values())
+		for (StatementMetadata m : m_statements.keySet())
 		{
+			Statement s = m_statements.get(m);
 			out.addAll(AttributeExtractor.getAttributes(s));
 		}
 		return out;
@@ -108,8 +117,9 @@ public class Interpreter implements Originator<Interpreter,String>
 	public Set<String> getTagNames()
 	{
 		Set<String> out = new HashSet<String>();
-		for (Statement s : m_statements.values())
+		for (StatementMetadata m : m_statements.keySet())
 		{
+			Statement s = m_statements.get(m);
 			out.addAll(TagNameExtractor.getTags(s));
 		}
 		return out;
@@ -174,6 +184,8 @@ public class Interpreter implements Originator<Interpreter,String>
 						// A user-defined predicate; we add it to the grammar
 						PredicateDefinition pd = (PredicateDefinition) le;
 						m_parser.addPredicateDefinition(pd);
+						meta = new StatementMetadata();
+						le_string = new StringBuilder();
 					}
 					else if (le instanceof Statement)
 					{
@@ -181,6 +193,8 @@ public class Interpreter implements Originator<Interpreter,String>
 						meta.put("uniqueid", Integer.toString(i));
 						m_statements.put(meta, s);
 						m_verdicts.put(meta, new Verdict(Verdict.Value.INCONCLUSIVE));
+						meta = new StatementMetadata();
+						le_string = new StringBuilder();
 					}
 					else if (le instanceof SetDefinitionExtension)
 					{
@@ -207,7 +221,11 @@ public class Interpreter implements Originator<Interpreter,String>
 	public List<SetDefinition> getSetDefinitions()
 	{
 		List<SetDefinition> out = new LinkedList<SetDefinition>();
-		out.addAll(m_setDefs.values());
+		for (String k : m_setDefs.keySet())
+		{
+			SetDefinition sd = m_setDefs.get(k);
+			out.add(sd);
+		}
 		return out;
 	}
 
@@ -220,10 +238,10 @@ public class Interpreter implements Originator<Interpreter,String>
 	{
 		return m_statements;
 	}
-
+	
 	public CornipickleParser getParser()
 	{
-		return m_parser;
+	  return m_parser;
 	}
 
 	/**
@@ -244,11 +262,11 @@ public class Interpreter implements Originator<Interpreter,String>
 		public String toString()
 		{
 			StringBuilder out = new StringBuilder();
-			for (Map.Entry<String,String> entry : entrySet())
+			for (String key : keySet())
 			{
-				String key = entry.getKey();
 				out.append("@").append(key).append(" ");
-				out.append(entry.getValue());
+				String value = get(key);
+				out.append(value);
 				out.append("\n");
 			}
 			return out.toString();
@@ -273,40 +291,40 @@ public class Interpreter implements Originator<Interpreter,String>
 			jl.addAll(def.evaluate(null));
 			d.put(set_name, jl);
 		}
-		for (Map.Entry<StatementMetadata,Statement> entry : m_statements.entrySet())
+		for (StatementMetadata key : m_statements.keySet())
 		{
-			Statement s = m_statements.get(entry.getKey());
+			Statement s = m_statements.get(key);
 			Verdict b = new Verdict(Verdict.Value.INCONCLUSIVE);
-			if (s instanceof Context)
+			if(s instanceof Context)
 			{
-				if (s.isTemporal())
-				{
-					b = s.evaluate(j, d);
-				}
-				else
-				{
-					b = s.evaluateAtemporal(j, d);
-				}
-				if (b.is(Verdict.Value.TRUE) || b.is(Verdict.Value.INCONCLUSIVE))
-				{
-					m_evaluateNext = true;
-				}
-				else
-				{
-					m_evaluateNext = false;
-				}
+			  if (s.isTemporal())
+        {
+          b = s.evaluate(j, d);
+        }
+        else
+        {
+          b = s.evaluateAtemporal(j, d);
+        }
+			  if(b.is(Verdict.Value.TRUE) || b.is(Verdict.Value.INCONCLUSIVE))
+			  {
+			    m_evaluateNext = true;
+			  }
+			  else
+			  {
+			    m_evaluateNext = false;
+			  }
 			}
-			else if (m_evaluateNext)
+			else if(m_evaluateNext)
 			{
-				if (s.isTemporal())
-				{
-					b = s.evaluate(j, d);
-				}
-				else
-				{
-					b = s.evaluateAtemporal(j, d);
-				}
-				verdicts.put(entry.getKey(), b);
+			  if (s.isTemporal())
+	      {
+	        b = s.evaluate(j, d);
+	      }
+	      else
+        {
+          b = s.evaluateAtemporal(j, d);
+        }
+	      verdicts.put(key, b);
 			}
 		}
 		m_verdicts = verdicts;
@@ -338,42 +356,28 @@ public class Interpreter implements Originator<Interpreter,String>
 		}
 		catch (SerializerException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Interpreter.LOGGER.log(Level.SEVERE, "Cannot restore interpreter from momento");
 		}
 		return i;
 	}
-
+	
 	public static String readFile(String filename)
 	{
 		StringBuilder contentBuilder = new StringBuilder();
-		BufferedReader br = null;
-		try
-		{
-			br = new BufferedReader(new FileReader(filename));
-			String sCurrentLine;
-			while ((sCurrentLine = br.readLine()) != null)
-			{
-				contentBuilder.append(sCurrentLine).append("\n");
-			}
-			br.close();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			if (br != null)
-			{
-				try {
-					br.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		return contentBuilder.toString();
+	    try
+	    {
+	    	BufferedReader br = new BufferedReader(new FileReader(filename));
+	        String sCurrentLine;
+	        while ((sCurrentLine = br.readLine()) != null)
+	        {
+	            contentBuilder.append(sCurrentLine).append("\n");
+	        }
+	        br.close();
+	    }
+	    catch (IOException e)
+	    {
+	    	Interpreter.LOGGER.log(Level.WARNING, "Cannot read file " + filename);
+	    }
+	    return contentBuilder.toString();
 	}
 }

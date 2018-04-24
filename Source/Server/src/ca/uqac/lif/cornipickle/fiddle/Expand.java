@@ -15,19 +15,19 @@ import ca.uqac.lif.json.JsonList;
  * <pre>
  * {
  *   "action"   : "expand",
- *   "rule"     : "<rule>"
+ *   "rule"     : "&lt;rule&gt;"
  * }
  * </pre>
  * where the content of the <tt>rule</tt> attribute is a rule of
- * the form < rule >.
+ * the form &lt;rule&gt;.
  * <p>
  * The format of the response is a JSON list:
  * {
  *   "alternatives":
  *      [
- *        "<rule1>",
- *        "<rule2>",
- *        "<rule3>",
+ *        "&lt;rule1&gt;",
+ *        "&lt;rule2&gt;",
+ *        "&lt;rule3&gt;",
  *        ...
  *      ]
  * }
@@ -35,7 +35,6 @@ import ca.uqac.lif.json.JsonList;
  * @author francis
  *
  */
-
 public class Expand extends FiddleOperation{
 
   @Override
@@ -46,7 +45,7 @@ public class Expand extends FiddleOperation{
 
   @Override
   public JsonElement doOperation(JsonMap argument, Interpreter i) {
-    List<String> rules = i.getParser().m_parser.getAlternatives(
+    List<String> rules = i.getParser().getParser().getAlternatives(
         ((JsonString)(argument.get("rule"))).stringValue());
     JsonMap map = new JsonMap();
     JsonList json = new JsonList();

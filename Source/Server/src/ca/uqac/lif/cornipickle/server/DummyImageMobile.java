@@ -21,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.Verdict;
@@ -105,8 +106,6 @@ import com.sun.net.httpserver.HttpExchange;
  */
 class DummyImageMobile extends InterpreterCallback
 {
-
-
 	static JsonParser s_jsonParser;
 
 	public DummyImageMobile(Interpreter i)
@@ -121,7 +120,8 @@ class DummyImageMobile extends InterpreterCallback
 		Map<String,String> attributes = getParameters(t);
 
 		JsonElement j = null;
-		try {
+		try 
+		{
 			j = s_jsonParser.parse(URLDecoder.decode(attributes.get("contents").toString(), "UTF-8"));
 			//j = s_jsonParser.parse(attributes.toString().substring(2,attributes.toString().length()-1 ));
 			if(attributes.get("interpreter") != null)
@@ -131,13 +131,15 @@ class DummyImageMobile extends InterpreterCallback
 
 				//System.out.println (m_interpreter.toString());
 			}
-		} catch (JsonParseException e) {
-			e.printStackTrace(); //Never supposed to happen....
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} 
+		catch (JsonParseException e) 
+		{
+			Interpreter.LOGGER.log(Level.SEVERE, e.toString()); //Never supposed to happen....
+		} 
+		catch (UnsupportedEncodingException e)
+		{
+			Interpreter.LOGGER.log(Level.SEVERE, e.toString());
 		}
-
 		if (j != null)
 		{
 			m_interpreter.evaluateAll(j);

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.logging.Level;
 
 import ca.uqac.lif.bullwinkle.BnfParser;
 import ca.uqac.lif.bullwinkle.BnfParser.InvalidGrammarException;
@@ -40,7 +41,7 @@ import ca.uqac.lif.util.EmptyException;
 
 public class CornipickleParser implements ParseNodeVisitor
 {
-	public BnfParser m_parser;
+	protected BnfParser m_parser;
 
 	protected Stack<LanguageElement> m_nodes;
 
@@ -84,7 +85,7 @@ public class CornipickleParser implements ParseNodeVisitor
 		}
 	}
 
-	protected BnfParser getParser()
+	public BnfParser getParser()
 	{
 		return m_parser;
 	}
@@ -102,12 +103,15 @@ public class CornipickleParser implements ParseNodeVisitor
 		{
 			grammar = PackageFileReader.readPackageFile(getGrammarStream());
 			parser.setGrammar(grammar);
-		} catch (IOException e){
-			e.printStackTrace();
-		} catch (InvalidGrammarException e) {
-			e.printStackTrace();
+		} 
+		catch (IOException e)
+		{
+			Interpreter.LOGGER.log(Level.SEVERE, "Cannot read grammar");
+		} 
+		catch (InvalidGrammarException e)
+		{
+			Interpreter.LOGGER.log(Level.SEVERE, "Invalid grammar");
 		}
-		// parser.setDebugMode(true);
 		return parser;
 	}
 

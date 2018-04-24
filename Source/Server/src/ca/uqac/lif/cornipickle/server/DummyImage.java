@@ -21,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -140,17 +141,21 @@ class DummyImage extends InterpreterCallback
 		Map<String,String> attributes = getParameters(t);
 
 		JsonElement j = null;
-		try {
+		try 
+		{
 			j = s_jsonParser.parse(URLDecoder.decode(attributes.get("contents"), "UTF-8"));
 			if(attributes.get("interpreter") != null)
 			{
 				m_interpreter = m_interpreter.restoreFromMemento(URLDecoder.decode(attributes.get("interpreter"), "UTF-8"));
 			}
-		} catch (JsonParseException e) {
-			e.printStackTrace(); //Never supposed to happen....
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} 
+		catch (JsonParseException e)
+		{
+			Interpreter.LOGGER.log(Level.SEVERE, e.toString()); //Never supposed to happen....
+		} 
+		catch (UnsupportedEncodingException e)
+		{
+			Interpreter.LOGGER.log(Level.SEVERE, e.toString());
 		}
 
 		if (j != null)
@@ -168,10 +173,6 @@ class DummyImage extends InterpreterCallback
 		cbr.setContents(createResponseBody(verdicts, m_interpreter.saveToMemento(), image_to_return));
 		cbr.setContentType(CallbackResponse.ContentType.JSON);
 		m_interpreter.clear();
-		// DEBUG: print state
-		//com.google.gson.GsonBuilder builder = new com.google.gson.GsonBuilder();
-		//com.google.gson.Gson gson = builder.create();
-		//System.out.println(gson.toJson(m_interpreter));
 		return cbr;
 	}
 
@@ -199,7 +200,18 @@ class DummyImage extends InterpreterCallback
 				num_errors++;
 			}
 		}
-		if (num_errors > 0)
+		if (num_errors == 0)
+		{
+			if (verdicts.isEmpty())
+			{
+				// Cornipickle has no property to evaluate
+			}
+			else
+			{
+				// All's well! All properties evaluate to true 
+			}
+		}
+		else
 		{
 			// Errors found
 			image_out = s_dummyImageRed;

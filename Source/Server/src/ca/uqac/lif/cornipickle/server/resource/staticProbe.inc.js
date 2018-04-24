@@ -560,7 +560,7 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 
 	console.log("handle Response");
 	// eval is evil, but we can't assume JSON.parse is available
-	eval("var response = " + decodeURI(response)); // jshint ignore:line
+	eval("var response = " + decodeURI(response)); //NOSONAR
 	
 	if(!(response.interpreter === ""))
 	{

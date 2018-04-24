@@ -20,6 +20,7 @@ package ca.uqac.lif.cornipickle.server;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Map;
+import java.util.logging.Level;
 
 import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.cornipickle.Interpreter;
@@ -55,15 +56,16 @@ class JsonPutState extends InterpreterCallback
 
 		// Try to decode and parse it
 		String props = params.get("state");
-		try {
+		try 
+		{
 			props = URLDecoder.decode(props,"UTF-8");
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} 
+		catch (UnsupportedEncodingException e1)
+		{
+			Interpreter.LOGGER.log(Level.SEVERE, e1.toString());
 		}
 		if (props != null && !props.isEmpty())
 		{
-			System.out.println("BEFORE INT");
 			Interpreter i = null;
 			try 
 			{
@@ -72,10 +74,8 @@ class JsonPutState extends InterpreterCallback
 			}
 			catch (SerializerException e) 
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Interpreter.LOGGER.log(Level.SEVERE, e.toString());
 			}
-			System.out.println("ALL OK");
 			if (i != null)
 			{
 				m_server.setInterpreter(i);
