@@ -1,6 +1,6 @@
 /*
     Cornipickle, validation of layout bugs in web applications
-    Copyright (C) 2015 Sylvain Hallé
+    Copyright (C) 2015-2018 Sylvain Hallé
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ public class TrueVerdict
     return ref;
   }
 
+  @Override
   public Object clone() throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException(); 

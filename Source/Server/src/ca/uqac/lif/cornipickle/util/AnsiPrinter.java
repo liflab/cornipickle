@@ -1,6 +1,6 @@
 /*
     Cornipickle, validation of layout bugs in web applications
-    Copyright (C) 2015 Sylvain Hallé
+    Copyright (C) 2015-2018 Sylvain Hallé
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ public class AnsiPrinter extends PrintStream
    */
   public static enum Color {BLACK, BLUE, GREEN, CYAN, RED, PURPLE, BROWN,
     LIGHT_GRAY, DARK_GRAY, LIGHT_BLUE, LIGHT_GREEN, LIGHT_CYAN, LIGHT_RED,
-    LIGHT_PURPLE, YELLOW, WHITE};
+    LIGHT_PURPLE, YELLOW, WHITE}
     
   /**
    * Whether ANSI codes are enabled. If set to false (with

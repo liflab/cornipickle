@@ -17,9 +17,9 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
+import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 
 import ca.uqac.lif.cornipickle.ComparisonStatement;
 import ca.uqac.lif.cornipickle.CssSelector;
@@ -51,12 +51,12 @@ import ca.uqac.lif.cornipickle.util.StringUtils;
 
 public class HtmlFormatter implements LanguageElementVisitor
 {
-  protected Stack<StringBuilder> m_elements;
+  protected ArrayDeque<StringBuilder> m_elements;
   
   public HtmlFormatter()
   {
     super();
-    m_elements = new Stack<StringBuilder>();
+    m_elements = new ArrayDeque<StringBuilder>();
   }
   
   public static String format(LanguageElement root)

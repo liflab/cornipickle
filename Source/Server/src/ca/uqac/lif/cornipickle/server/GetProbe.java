@@ -83,7 +83,7 @@ class GetProbe extends InterpreterCallback
 	{
 		String probe_code = null;
 		//String witness_code = PackageFileReader.readPackageFile(m_server.getResourceAsStream(m_server.getResourceFolderName() + "/witness.inc.html"));
-		probe_code = new String(s_probeCode);
+		probe_code = s_probeCode;
 		probe_code = probe_code.replace("%%WITNESS_CODE%%", escapeString(s_witnessCode));
 		probe_code = probe_code.replace("%%SERVER_NAME%%", m_serverName + ":" + m_serverPort);
 		// Add attributes to include

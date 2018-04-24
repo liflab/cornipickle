@@ -46,9 +46,9 @@ public class Interpreter implements Originator<Interpreter,String>
 	protected CornipickleParser m_parser;
 
 	protected Map<StatementMetadata,Verdict> m_verdicts;
-	
+
 	protected boolean m_evaluateNext;
-	
+
 	protected final transient CornipickleDeflateSerializer m_serializer;
 
 	public Interpreter()
@@ -76,11 +76,11 @@ public class Interpreter implements Originator<Interpreter,String>
 
 	public void resetHistory()
 	{
-		for (StatementMetadata key : m_statements.keySet())
+		for (Map.Entry<StatementMetadata,Statement> entry : m_statements.entrySet())
 		{
-			Statement s = m_statements.get(key);
+			Statement s = entry.getValue();
 			s.resetHistory();
-			m_verdicts.put(key, new Verdict(Verdict.Value.INCONCLUSIVE));
+			m_verdicts.put(entry.getKey(), new Verdict(Verdict.Value.INCONCLUSIVE));
 		}
 	}
 
@@ -98,9 +98,8 @@ public class Interpreter implements Originator<Interpreter,String>
 	public Set<String> getAttributes()
 	{
 		Set<String> out = new HashSet<String>();
-		for (StatementMetadata m : m_statements.keySet())
+		for (Statement s : m_statements.values())
 		{
-			Statement s = m_statements.get(m);
 			out.addAll(AttributeExtractor.getAttributes(s));
 		}
 		return out;
@@ -109,9 +108,8 @@ public class Interpreter implements Originator<Interpreter,String>
 	public Set<String> getTagNames()
 	{
 		Set<String> out = new HashSet<String>();
-		for (StatementMetadata m : m_statements.keySet())
+		for (Statement s : m_statements.values())
 		{
-			Statement s = m_statements.get(m);
 			out.addAll(TagNameExtractor.getTags(s));
 		}
 		return out;
@@ -176,8 +174,6 @@ public class Interpreter implements Originator<Interpreter,String>
 						// A user-defined predicate; we add it to the grammar
 						PredicateDefinition pd = (PredicateDefinition) le;
 						m_parser.addPredicateDefinition(pd);
-						meta = new StatementMetadata();
-						le_string = new StringBuilder();
 					}
 					else if (le instanceof Statement)
 					{
@@ -185,8 +181,6 @@ public class Interpreter implements Originator<Interpreter,String>
 						meta.put("uniqueid", Integer.toString(i));
 						m_statements.put(meta, s);
 						m_verdicts.put(meta, new Verdict(Verdict.Value.INCONCLUSIVE));
-						meta = new StatementMetadata();
-						le_string = new StringBuilder();
 					}
 					else if (le instanceof SetDefinitionExtension)
 					{
@@ -213,11 +207,7 @@ public class Interpreter implements Originator<Interpreter,String>
 	public List<SetDefinition> getSetDefinitions()
 	{
 		List<SetDefinition> out = new LinkedList<SetDefinition>();
-		for (String k : m_setDefs.keySet())
-		{
-			SetDefinition sd = m_setDefs.get(k);
-			out.add(sd);
-		}
+		out.addAll(m_setDefs.values());
 		return out;
 	}
 
@@ -230,10 +220,10 @@ public class Interpreter implements Originator<Interpreter,String>
 	{
 		return m_statements;
 	}
-	
+
 	public CornipickleParser getParser()
 	{
-	  return m_parser;
+		return m_parser;
 	}
 
 	/**
@@ -254,11 +244,11 @@ public class Interpreter implements Originator<Interpreter,String>
 		public String toString()
 		{
 			StringBuilder out = new StringBuilder();
-			for (String key : keySet())
+			for (Map.Entry<String,String> entry : entrySet())
 			{
+				String key = entry.getKey();
 				out.append("@").append(key).append(" ");
-				String value = get(key);
-				out.append(value);
+				out.append(entry.getValue());
 				out.append("\n");
 			}
 			return out.toString();
@@ -283,40 +273,40 @@ public class Interpreter implements Originator<Interpreter,String>
 			jl.addAll(def.evaluate(null));
 			d.put(set_name, jl);
 		}
-		for (StatementMetadata key : m_statements.keySet())
+		for (Map.Entry<StatementMetadata,Statement> entry : m_statements.entrySet())
 		{
-			Statement s = m_statements.get(key);
+			Statement s = m_statements.get(entry.getKey());
 			Verdict b = new Verdict(Verdict.Value.INCONCLUSIVE);
-			if(s instanceof Context)
+			if (s instanceof Context)
 			{
-			  if (s.isTemporal())
-        {
-          b = s.evaluate(j, d);
-        }
-        else
-        {
-          b = s.evaluateAtemporal(j, d);
-        }
-			  if(b.is(Verdict.Value.TRUE) || b.is(Verdict.Value.INCONCLUSIVE))
-			  {
-			    m_evaluateNext = true;
-			  }
-			  else
-			  {
-			    m_evaluateNext = false;
-			  }
+				if (s.isTemporal())
+				{
+					b = s.evaluate(j, d);
+				}
+				else
+				{
+					b = s.evaluateAtemporal(j, d);
+				}
+				if (b.is(Verdict.Value.TRUE) || b.is(Verdict.Value.INCONCLUSIVE))
+				{
+					m_evaluateNext = true;
+				}
+				else
+				{
+					m_evaluateNext = false;
+				}
 			}
-			else if(m_evaluateNext)
+			else if (m_evaluateNext)
 			{
-			  if (s.isTemporal())
-	      {
-	        b = s.evaluate(j, d);
-	      }
-	      else
-        {
-          b = s.evaluateAtemporal(j, d);
-        }
-	      verdicts.put(key, b);
+				if (s.isTemporal())
+				{
+					b = s.evaluate(j, d);
+				}
+				else
+				{
+					b = s.evaluateAtemporal(j, d);
+				}
+				verdicts.put(entry.getKey(), b);
 			}
 		}
 		m_verdicts = verdicts;
@@ -353,24 +343,37 @@ public class Interpreter implements Originator<Interpreter,String>
 		}
 		return i;
 	}
-	
+
 	public static String readFile(String filename)
 	{
 		StringBuilder contentBuilder = new StringBuilder();
-	    try
-	    {
-	    	BufferedReader br = new BufferedReader(new FileReader(filename));
-	        String sCurrentLine;
-	        while ((sCurrentLine = br.readLine()) != null)
-	        {
-	            contentBuilder.append(sCurrentLine).append("\n");
-	        }
-	        br.close();
-	    }
-	    catch (IOException e)
-	    {
-	        e.printStackTrace();
-	    }
-	    return contentBuilder.toString();
+		BufferedReader br = null;
+		try
+		{
+			br = new BufferedReader(new FileReader(filename));
+			String sCurrentLine;
+			while ((sCurrentLine = br.readLine()) != null)
+			{
+				contentBuilder.append(sCurrentLine).append("\n");
+			}
+			br.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			if (br != null)
+			{
+				try {
+					br.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return contentBuilder.toString();
 	}
 }

@@ -4,7 +4,7 @@ import ca.uqac.lif.json.JsonElement;
 
 public class Verdict
 {
-  public static enum Value {TRUE, FALSE, INCONCLUSIVE};
+  public static enum Value {TRUE, FALSE, INCONCLUSIVE}
   
   protected Value m_value;
   

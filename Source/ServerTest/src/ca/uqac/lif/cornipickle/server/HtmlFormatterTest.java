@@ -28,7 +28,7 @@ public class HtmlFormatterTest {
     public void htmlFormatterTestConstructor(){
 
         HtmlFormatter hf = new HtmlFormatter();
-        assertTrue(hf.m_elements.empty());
+        assertTrue(hf.m_elements.isEmpty());
 
     }
 
@@ -53,7 +53,7 @@ public class HtmlFormatterTest {
         hf.visit(sc);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -71,7 +71,7 @@ public class HtmlFormatterTest {
         hf.visit(nc);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -92,7 +92,7 @@ public class HtmlFormatterTest {
         hf.visit(epp);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -117,7 +117,7 @@ public class HtmlFormatterTest {
         hf.visit(epc);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -203,7 +203,7 @@ public class HtmlFormatterTest {
         hf.visit(nt);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
     }
 
 
@@ -239,7 +239,7 @@ public class HtmlFormatterTest {
         hf.visit(ns);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
     }
 
 
@@ -326,7 +326,7 @@ public class HtmlFormatterTest {
         hf.visit(fas);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
     }
     */
 
@@ -349,7 +349,7 @@ public class HtmlFormatterTest {
         hf.visit(ns);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -378,7 +378,7 @@ public class HtmlFormatterTest {
         hf.visit(pd);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -402,7 +402,7 @@ public class HtmlFormatterTest {
         hf.visit(ns);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -429,7 +429,7 @@ public class HtmlFormatterTest {
         hf.visit(n);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -455,7 +455,7 @@ public class HtmlFormatterTest {
         hf.visit(g);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -484,7 +484,7 @@ public class HtmlFormatterTest {
         hf.visit(win);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -508,7 +508,7 @@ public class HtmlFormatterTest {
         hf.visit(cs);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -541,7 +541,7 @@ public class HtmlFormatterTest {
         hf.visit(e);
 
         //Assert
-        assertTrue(expected.equals(hf.m_elements.firstElement().toString()));
+        assertTrue(expected.equals(hf.m_elements.peekFirst().toString()));
 
     }
 
@@ -554,7 +554,7 @@ public class HtmlFormatterTest {
         hf.m_elements.push(new StringBuilder("e"));
         hf.pop();
 
-        assertTrue((sb.toString()+"</span>").equals(hf.m_elements.firstElement().toString()));
+        assertTrue((sb.toString()+"</span>").equals(hf.m_elements.peekFirst().toString()));
 
 
     }
