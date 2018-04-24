@@ -1,6 +1,6 @@
 /*
     Cornipickle, validation of layout bugs in web applications
-    Copyright (C) 2015-2016 Sylvain Hallé
+    Copyright (C) 2015-2018 Sylvain Hallé
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,10 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.sun.istack.internal.logging.Logger;
 
 import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
@@ -57,7 +56,7 @@ public class Interpreter implements Originator<Interpreter,String>
 	/**
 	 * A global logger instance to trap exceptions throughout the program
 	 */
-	public static final transient Logger LOGGER = Logger.getLogger(Interpreter.class);
+	public static final transient Logger LOGGER = Logger.getAnonymousLogger();
 
 	public Interpreter()
 	{
