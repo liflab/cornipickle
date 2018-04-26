@@ -243,7 +243,7 @@ Cornipickle.CornipickleProbe = function()
 				return Cornipickle.CornipickleProbe.INCLUDE;
 			}
 		}
-		if(n.tagName.toLowerCase() === "svg" || n.tagName.toLowerCase() === "script")
+		if (n.tagName.toLowerCase() === "svg" || n.tagName.toLowerCase() === "script")
 		{
 			return DONT_INCLUDE_RECURSIVE;
 		}
@@ -451,15 +451,12 @@ Cornipickle.CornipickleProbe = function()
 		    }
 		};
 		toSend = "contents=" + encodeURIComponent(JSON.stringify(json, Cornipickle.escape_json_string));
-
 		var cpProbeProbeHash = sessionStorage.getItem(cp_probe.probe_hash);
-
-		if( cpProbeProbeHash != null )
+		if (cpProbeProbeHash != null)
 		{
 			toSend += "&interpreter=" + encodeURIComponent(cpProbeProbeHash);
 		}
-
-		if(this.probe_id != "")
+		if (this.probe_id != "")
 		{
 			toSend += "&id=" + this.probe_id;
 		}
@@ -469,7 +466,6 @@ Cornipickle.CornipickleProbe = function()
 			toSend += "&hash=" + this.probe_hash;
 		}
 		xhttp.send(toSend);
-
 	};
 
 	this.registerNewElement = function(n)
@@ -597,7 +593,7 @@ Cornipickle.CornipickleProbe.handleResponse = function(response)
 		// Show explanation
 		var in_html = document.getElementById("bp_witness_explanation").innerHTML;
 		in_html += "<div class=\"cp-highlight-text\" id=\"highlight-zone-id-"+ i + "\" style=\"display:none;";
-		in_html += "position:absolute;cursor:help;width:186px;height:96px;padding:17px;background:url('http://" + this.server_name + "/speech-bubble.png') no-repeat;color:black;";
+		in_html += "position:absolute;cursor:help;width:186px;height:96px;padding:17px;background:url('http://" + cp_probe.server_name + "/speech-bubble.png') no-repeat;color:black;";
 		in_html += "bottom:10px;right:10px;";
 		in_html += "\">" + response["highlight-ids"][i].caption + "</div>";
 		document.getElementById("bp_witness_explanation").innerHTML = in_html;
@@ -909,10 +905,10 @@ function loadFunction() {
             return;
         }
         cp_probe.handleEvent(event);
-        window.setTimeout(function() {
-        	cp_probe.preEvaluate();
-        }, 500);
     };
+    /*window.setTimeout(function() {
+    	cp_probe.preEvaluate();
+    }, 500);*/
 }
 
 var addFunctionOnWindowLoad = function(callback){
