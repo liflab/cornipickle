@@ -17,7 +17,7 @@ highlight_predicate = function(predicate_name)
 time_since = function(ts)
 {
     now = new Date();
-    //ts = new Date(ts*1000);
+    ts = new Date(ts*1000);
     var delta = now.getTime() - ts.getTime();
     delta = delta/1000; //us to s
     var ps, pm, ph, pd, min, hou, sec, days;

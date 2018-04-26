@@ -146,7 +146,7 @@ class DummyImageMobile extends InterpreterCallback
 		if (j != null)
 		{
 			m_interpreter.evaluateAll(j);
-			//m_server.setLastProbeContact();
+			m_server.setLastProbeContact();
 		}    
 		// System.out.println(j.toString());
 		// Select the dummy image to send back

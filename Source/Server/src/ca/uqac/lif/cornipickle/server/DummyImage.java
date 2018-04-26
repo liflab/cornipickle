@@ -174,7 +174,7 @@ class DummyImage extends InterpreterCallback
 			if (j != null)
 			{
 				m_interpreter.evaluateAll(j);
-				//m_server.setLastProbeContact();
+				m_server.setLastProbeContact();
 			}
 			// Select the dummy image to send back
 			verdicts = m_interpreter.getVerdicts();
