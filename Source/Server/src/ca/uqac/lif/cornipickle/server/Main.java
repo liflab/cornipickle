@@ -42,10 +42,19 @@ public class Main
 	public static final int ERR_INPUT = 9;
 
 	/**
-	 * Build string to identify versions
+	 * Major version number
 	 */
-	protected static final String VERSION_STRING = "1.3";
-	protected static final String BUILD_STRING = "20180426";
+	public static final int s_majorVersion = 1;
+	
+	/**
+	 * Minor version number
+	 */
+	public static final int s_minorVersion = 3;
+	
+	/**
+	 * Revision version number
+	 */
+	public static final int s_revisionVersion = 1;
 
 	/**
 	 * Default server name
@@ -217,9 +226,23 @@ public class Main
 
 	private static void showHeader(PrintStream out)
 	{
-		out.println("Cornipickle, a "+ s_platform +" oracle");
-		out.println("Version " + VERSION_STRING + ", build " + BUILD_STRING);
+		String platform_type = "A web GUI";
+		if (s_platform == PlatformType.android_native)
+		{
+			platform_type = "An Android GUI";
+		}
+		out.println("Cornipickle v" + formatVersion() + " - "+ platform_type +" oracle");
+		out.println("(C) 2015-2018 Laboratoire d'informatique formelle");
+		out.println("Université du Québec à Chicoutimi, Canada");
 	}
 
-
+	private static String formatVersion()
+	{
+		String out = "" + s_majorVersion + "." + s_minorVersion;
+		if (s_revisionVersion > 0)
+		{
+			out += "." + s_revisionVersion;
+		}
+		return out;
+	}
 }

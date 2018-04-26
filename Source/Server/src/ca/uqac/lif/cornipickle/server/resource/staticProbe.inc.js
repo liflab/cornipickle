@@ -906,9 +906,6 @@ function loadFunction() {
         }
         cp_probe.handleEvent(event);
     };
-    /*window.setTimeout(function() {
-    	cp_probe.preEvaluate();
-    }, 500);*/
 }
 
 var addFunctionOnWindowLoad = function(callback){
