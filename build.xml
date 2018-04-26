@@ -128,6 +128,17 @@
       </fileset>
       <pathelement path="${java.class.path}"/>
     </path>
+    <path id="build.test.classpath">
+      <pathelement location="${build.bindir}"/>
+      <fileset dir="${build.depdir}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${build.libdir}">
+        <include name="*.jar"/>
+      </fileset>
+      <pathelement location="${build.test.bindir}"/>
+      <pathelement path="${java.class.path}"/>
+    </path>
   </target>
 
   <!-- Check if a local rt.jar is present. If so, it will override the
@@ -231,11 +242,10 @@
   <!-- Target: jar
        Generates a JAR file with the compiled files and javadoc
   -->
-  <target name="jar" depends="compile" description="Create the runnable JAR">
+  <target name="jar" depends="compile,javadoc" description="Create the runnable JAR">
       <tstamp>
          <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
       </tstamp>
-      <echo message="WITHDOC ${build.jar.withdoc}"/>
       <jar destfile="${build.jar.filename}" filesetmanifest="skip">
 	  <manifest>
 	      <attribute name="Main-Class" value="${build.mainclass}"/>
@@ -270,9 +280,7 @@
     <jacoco:coverage>
       <junit printsummary="yes" haltonfailure="false" fork="true"
         failureproperty="test.failed">
-        <classpath>
-          <classpath refid="build.classpath"/>
-        </classpath>
+        <classpath refid="build.test.classpath"/>
         <formatter type="brief" usefile="false"/>
         <formatter type="xml"/>
         <batchtest fork="yes" todir="${test.reportdir}">

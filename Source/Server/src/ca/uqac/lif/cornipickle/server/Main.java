@@ -1,6 +1,6 @@
 /*
     Cornipickle, validation of layout bugs in web applications
-    Copyright (C) 2015-2016 Sylvain Hallé
+    Copyright (C) 2015-2018 Sylvain Hallé
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,22 +22,16 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-
 import ca.uqac.lif.cornipickle.Interpreter;
 import ca.uqac.lif.cornipickle.util.AnsiPrinter;
-
-
+import ca.uqac.lif.util.CliParser;
+import ca.uqac.lif.util.CliParser.Argument;
+import ca.uqac.lif.util.CliParser.ArgumentMap;
 
 public class Main
 {
 	/**
-	 * Return codes
+	 * Exit codes
 	 */
 	public static final int ERR_OK = 0;
 	public static final int ERR_PARSE = 2;
@@ -50,8 +44,8 @@ public class Main
 	/**
 	 * Build string to identify versions
 	 */
-	protected static final String VERSION_STRING = "0.0";
-	protected static final String BUILD_STRING = "20180424";
+	protected static final String VERSION_STRING = "0.1";
+	protected static final String BUILD_STRING = "20180426";
 
 	/**
 	 * Default server name
@@ -99,8 +93,14 @@ public class Main
 		}));
 
 		// Parse command line arguments
-		Options options = setupOptions();
-		CommandLine c_line = setupCommandLine(args, options, stderr);
+		CliParser parser = setupCommandLine();
+		ArgumentMap c_line = parser.parse(args);
+		if (c_line == null)
+		{
+			// oops, something went wrong
+			stderr.println("ERROR parsing command line arguments\n");
+			System.exit(ERR_ARGUMENTS);
+		}
 		assert c_line != null;
 		if (c_line.hasOption("verbosity"))
 		{
@@ -109,7 +109,7 @@ public class Main
 
 		if (c_line.hasOption("version"))
 		{
-			stderr.println("(C) 2015-2016 Laboratoire d'informatique formelle");
+			stderr.println("(C) 2015-2018 Laboratoire d'informatique formelle");
 			stderr.println("This program comes with ABSOLUTELY NO WARRANTY.");
 			stderr.println("This is a free software, and you are welcome to redistribute it");
 			stderr.println("under certain conditions. See the file LICENSE for details.\n");
@@ -117,7 +117,7 @@ public class Main
 		}
 		if (c_line.hasOption("h"))
 		{
-			showUsage(options);
+			showUsage(parser, stderr);
 			System.exit(ERR_OK);
 		}
 		if (c_line.hasOption("p"))
@@ -144,7 +144,7 @@ public class Main
 
 		// The remaining arguments are the Cornipickle files to read
 		CornipickleServer server = new CornipickleServer(server_name, server_port);
-		List<String> remaining_args = c_line.getArgList();
+		List<String> remaining_args = c_line.getOthers();
 		for (String filename : remaining_args)
 		{
 			stdout.setForegroundColor(AnsiPrinter.Color.BROWN);
@@ -185,83 +185,39 @@ public class Main
 	}
 
 	/**
-	 * Sets up the options for the command line parser
-	 * @return The options
-	 */
-	private static Options setupOptions()
-	{
-		Options options = new Options();
-		Option opt;
-		opt = Option.builder("h")
-				.longOpt("help")
-				.desc("Display command line usage")
-				.build();
-		options.addOption(opt);
-		opt = Option.builder("s")
-				.longOpt("servername")
-				.argName("x")
-				.hasArg()
-				.desc("Set server name or IP address x (default: " + s_defaultServerName + ")")
-				.build();
-		options.addOption(opt);
-		opt = Option.builder("p")
-				.longOpt("port")
-				.argName("x")
-				.hasArg()
-				.desc("Listen on port x (default: " + s_defaultPort + ")")
-				.build();
-		options.addOption(opt);
-		opt = Option.builder()
-				.longOpt("serve-as")
-				.argName("path")
-				.hasArg()
-				.desc("Serve local folder as path")
-				.build();
-		options.addOption(opt);
-		opt = Option.builder("a")
-				.longOpt("android")
-				//.argName("x")
-				//.hasArg()
-				.desc("Change platform type")
-				.build();
-		options.addOption(opt);
-		return options;
-	}
-
-	/**
 	 * Show the benchmark's usage
 	 * @param options The options created for the command line parser
 	 */
-	private static void showUsage(Options options)
+	private static void showUsage(CliParser parser, PrintStream stderr)
 	{
-		HelpFormatter hf = new HelpFormatter();
-		hf.printHelp("java -jar Cornipickle.jar [options] [file1 [file2 ...]]", options);
+		parser.printHelp("java -jar cornipickle.jar [options] [file1 [file2 ...]]", stderr);
 	}
 	/**
 	 * Sets up the command line parser
-	 * @param args The command line arguments passed to the class' {@link main}
-	 * method
-	 * @param options The command line options to be used by the parser
-	 * @return The object that parsed the command line parameters
+	 * @return The object that parses the command line parameters
 	 */
-	private static CommandLine setupCommandLine(String[] args, Options options, PrintStream stderr)
+	private static CliParser setupCommandLine()
 	{
-		CommandLineParser parser = new DefaultParser();
-		CommandLine c_line = null;
-		try
-		{
-			// parse the command line arguments
-			c_line = parser.parse(options, args);
-		}
-		catch (org.apache.commons.cli.ParseException exp)
-		{
-			// oops, something went wrong
-			stderr.println("ERROR: " + exp.getMessage() + "\n");
-			//HelpFormatter hf = new HelpFormatter();
-			//hf.printHelp(t_gen.getAppName() + " [options]", options);
-			System.exit(ERR_ARGUMENTS);
-		}
-		return c_line;
+		CliParser parser = new CliParser();
+		parser.addArgument(new Argument().withShortName("h")
+				.withLongName("help")
+				.withDescription("Display command line usage"));
+		parser.addArgument(new Argument().withShortName("s")
+				.withLongName("servername")
+				.withArgument("x")
+				.withDescription("Set server name or IP address x (default: " + s_defaultServerName + ")"));
+		parser.addArgument(new Argument().withShortName("p")
+				.withLongName("port")
+				.withArgument("x")
+				.withDescription("Listen on port x (default: " + s_defaultPort + ")"));
+		parser.addArgument(new Argument()
+				.withLongName("serve-as")
+				.withArgument("path")
+				.withDescription("Serve local folder as path"));
+		parser.addArgument(new Argument().withShortName("a")
+				.withLongName("android")
+				.withDescription("Change platform type to Android"));
+		return parser;
 	}
 
 	private static void showHeader(PrintStream out)
