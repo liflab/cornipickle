@@ -1,6 +1,6 @@
 /*
     Cornipickle, validation of layout bugs in web applications
-    Copyright (C) 2015 Sylvain Hallé
+    Copyright (C) 2015-2018 Sylvain Hallé
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package ca.uqac.lif.cornipickle.server;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -131,7 +132,8 @@ class DummyImage extends InterpreterCallback
 
 	public DummyImage(Interpreter i)
 	{
-		super(i, RequestCallback.Method.POST, "/image/");
+		super(i, RequestCallback.Method.POST, "/image");
+		ignoreMethod();
 		s_jsonParser = new JsonParser();
 	}
 
@@ -139,34 +141,37 @@ class DummyImage extends InterpreterCallback
 	public CallbackResponse process(HttpExchange t)
 	{
 		Map<String,String> attributes = getParameters(t);
-
-		JsonElement j = null;
-		try 
+		byte[] image_to_return = s_dummyImage;
+		Map<StatementMetadata,Verdict> verdicts = new HashMap<StatementMetadata,Verdict>();
+		if (attributes.containsKey("contents"))
 		{
-			j = s_jsonParser.parse(URLDecoder.decode(attributes.get("contents"), "UTF-8"));
-			if(attributes.get("interpreter") != null)
+			JsonElement j = null;
+			try 
 			{
-				m_interpreter = m_interpreter.restoreFromMemento(URLDecoder.decode(attributes.get("interpreter"), "UTF-8"));
+				j = s_jsonParser.parse(URLDecoder.decode(attributes.get("contents"), "UTF-8"));
+				if(attributes.get("interpreter") != null)
+				{
+					m_interpreter = m_interpreter.restoreFromMemento(URLDecoder.decode(attributes.get("interpreter"), "UTF-8"));
+				}
+			} 
+			catch (JsonParseException e)
+			{
+				Interpreter.LOGGER.log(Level.SEVERE, e.toString()); //Never supposed to happen....
+			} 
+			catch (UnsupportedEncodingException e)
+			{
+				Interpreter.LOGGER.log(Level.SEVERE, e.toString());
 			}
-		} 
-		catch (JsonParseException e)
-		{
-			Interpreter.LOGGER.log(Level.SEVERE, e.toString()); //Never supposed to happen....
-		} 
-		catch (UnsupportedEncodingException e)
-		{
-			Interpreter.LOGGER.log(Level.SEVERE, e.toString());
-		}
 
-		if (j != null)
-		{
-			m_interpreter.evaluateAll(j);
-			//m_server.setLastProbeContact();
+			if (j != null)
+			{
+				m_interpreter.evaluateAll(j);
+				//m_server.setLastProbeContact();
+			}
+			// Select the dummy image to send back
+			verdicts = m_interpreter.getVerdicts();
+			image_to_return = selectImage(verdicts);
 		}
-
-		// Select the dummy image to send back
-		Map<StatementMetadata,Verdict> verdicts = m_interpreter.getVerdicts();
-		byte[] image_to_return = selectImage(verdicts);
 		// Create response
 		CallbackResponse cbr = new CallbackResponse(t);
 		cbr.setHeader("Access-Control-Allow-Origin", "*");
