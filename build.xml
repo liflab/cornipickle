@@ -185,7 +185,8 @@
       srcdir="${build.srcdir}"
       destdir="${build.bindir}"
       debug="${build.debug}"
-      includeantruntime="false">
+      includeantruntime="false"
+      encoding="UTF-8">
       <classpath refid="build.classpath"/>
     </javac>
     <copy todir="${build.bindir}" includeemptydirs="false">
@@ -206,7 +207,8 @@
       bootclasspath="${java6.boot.classpath}"
       srcdir="${build.test.srcdir}"
       destdir="${build.test.bindir}"
-      includeantruntime="false">
+      includeantruntime="false"
+      encoding="UTF-8">
       <classpath refid="build.classpath"/>
     </javac>
     <copy todir="${build.test.bindir}" includeemptydirs="false">

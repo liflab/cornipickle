@@ -21,6 +21,24 @@ Table of Contents                                                    {#toc}
 Compiling and Installing Cornipickle                             {#install}
 ------------------------------------
 
+## With Docker
+
+First make sure you have a docker installed.
+
+Build:
+
+```
+docker build . --tag cornipickle
+```
+
+Run
+
+```
+docker run -it -p10101:10101 cornipickle
+```
+
+## Without Docker
+
 First make sure you have the following installed:
 
 - The Java Development Kit (JDK) to compile. Cornipickle was developed and
@@ -108,7 +126,7 @@ specifications that the server can pre-load. Available options are:
 `-h`, `--help`
 :  Display command line usage
 
-`-p`,`--port <x>` 
+`-p`,`--port <x>`
 :  Listen on port x (default: 10101)
 
 `-s`,`--servername <x>`
