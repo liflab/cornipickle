@@ -1,7 +1,7 @@
 Cornipickle: a runtime monitor for layout constraints
 =====================================================
 
-[![Travis](https://img.shields.io/travis/liflab/cornipickle.svg?style=flat-square)]()
+[![Travis](https://img.shields.io/travis/liflab/cornipickle.svg?style=flat-square)](https://travis-ci.org/liflab/cornipickle)
 [![SonarQube Coverage](https://sonarcloud.io/api/project_badges/measure?project=liflab%3Acornipickle&metric=coverage)](https://sonarcloud.io/dashboard?id=liflab%3Acornipickle)
 
 Cornipickle is an automated testing tool that can verify declarative properties
