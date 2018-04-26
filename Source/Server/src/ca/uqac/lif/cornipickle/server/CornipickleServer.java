@@ -46,6 +46,7 @@ public class CornipickleServer extends Server
     registerCallback(new AddPropertyMobile(m_interpreter));
     registerCallback(new StatusPageCallback(m_interpreter, this));
     registerCallback(new GetProbe(m_interpreter, m_serverName, m_port));
+    registerCallback(new DummyEmptyImage(m_interpreter));
     registerCallback(new DummyImage(m_interpreter));
     registerCallback(new DummyImageMobile(m_interpreter));
     registerCallback(new PreEvaluation(m_interpreter));

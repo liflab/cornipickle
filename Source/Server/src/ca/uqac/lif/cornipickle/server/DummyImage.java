@@ -132,9 +132,14 @@ class DummyImage extends InterpreterCallback
 
 	public DummyImage(Interpreter i)
 	{
-		super(i, RequestCallback.Method.POST, "/image");
+		super(i, RequestCallback.Method.POST, "/image/");
 		ignoreMethod();
 		s_jsonParser = new JsonParser();
+	}
+	
+	protected DummyImage(Interpreter i, RequestCallback.Method m, String path)
+	{
+		super(i, m, path);
 	}
 
 	@Override
