@@ -44,7 +44,7 @@ public class Main
 	/**
 	 * Build string to identify versions
 	 */
-	protected static final String VERSION_STRING = "0.1";
+	protected static final String VERSION_STRING = "1.3";
 	protected static final String BUILD_STRING = "20180426";
 
 	/**
