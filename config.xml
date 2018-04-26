@@ -38,6 +38,9 @@
   <!-- Output jar -->
   <jar>
     <filename>cornipickle.jar</filename>
+    <withsrc>false</withsrc>
+    <withdoc>false</withdoc>
+    <withdeps>true</withdeps>
   </jar>
   
   <!-- Redefine directories -->
@@ -62,6 +65,7 @@
       <files>
         <zip>http://archive.apache.org/dist/commons/cli/binaries/commons-cli-1.3.1-bin.zip</zip>
       </files>
+      <bundle>true</bundle>
     </dependency>
     <dependency>
       <!--
@@ -72,6 +76,7 @@
       <files>
         <zip>https://github.com/sylvainhalle/Bullwinkle/releases/download/v1.4.2/bullwinkle-1.4.2.zip</zip>
       </files>
+      <bundle>true</bundle>
     </dependency>
     <dependency>
       <!--
@@ -82,6 +87,7 @@
       <files>
         <zip>https://github.com/liflab/json-lif/releases/download/v1.6.3/json-lif-1.6.3.zip</zip>
       </files>
+      <bundle>true</bundle>
     </dependency>
     <dependency>
       <!--
@@ -92,6 +98,7 @@
       <files>
         <zip>https://github.com/sylvainhalle/Azrael/releases/download/v0.7.3-alpha/azrael-0.7.3-alpha.zip</zip>
       </files>
+      <bundle>true</bundle>
     </dependency>
     <dependency>
       <!--
@@ -102,6 +109,7 @@
       <files>
         <zip>https://github.com/sylvainhalle/Jerrydog/releases/download/v0.3.1/jerrydog-0.3.1.zip</zip>
       </files>
+      <bundle>true</bundle>
     </dependency>
     <dependency>
       <!--
@@ -112,6 +120,7 @@
       <files>
         <zip>http://selenium-release.storage.googleapis.com/2.53/selenium-java-2.53.0.zip</zip>
       </files>
+      <bundle>false</bundle>
     </dependency>
     <dependency>
       <!--
@@ -122,6 +131,7 @@
       <files>
         <zip>https://selenium-release.storage.googleapis.com/2.44/selenium-server-standalone-2.44.0.jar</zip>
       </files>
+      <bundle>false</bundle>
     </dependency>
   </dependencies>
 </build>
