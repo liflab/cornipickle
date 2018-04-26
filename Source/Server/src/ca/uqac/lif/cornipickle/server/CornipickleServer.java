@@ -1,6 +1,6 @@
 /*
     Cornipickle, validation of layout bugs in web applications
-    Copyright (C) 2015 Sylvain Hallé
+    Copyright (C) 2015-2018 Sylvain Hallé
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,6 +32,11 @@ public class CornipickleServer extends Server
   protected Interpreter m_interpreter;
  
   protected Date m_lastProbeContact;
+  
+  /**
+   * Whether to persist the state of the interpreter between calls
+   */
+  protected boolean m_persistState = false;
 
   public CornipickleServer(String server_name, int port)
   {
@@ -42,18 +47,38 @@ public class CornipickleServer extends Server
     m_interpreter = new Interpreter();
     // Register callbacks
     registerCallback(new ResetHistory(m_interpreter));
-    registerCallback(new AddProperty(m_interpreter));
-    registerCallback(new AddPropertyMobile(m_interpreter));
+    registerCallback(new AddProperty(m_interpreter, this));
+    registerCallback(new AddPropertyMobile(m_interpreter, this));
     registerCallback(new StatusPageCallback(m_interpreter, this));
     registerCallback(new GetProbe(m_interpreter, m_serverName, m_port));
-    registerCallback(new DummyEmptyImage(m_interpreter));
-    registerCallback(new DummyImage(m_interpreter));
-    registerCallback(new DummyImageMobile(m_interpreter));
-    registerCallback(new PreEvaluation(m_interpreter));
+    registerCallback(new DummyEmptyImage(m_interpreter, this));
+    registerCallback(new DummyImage(m_interpreter, this));
+    registerCallback(new DummyImageMobile(m_interpreter, this));
+    registerCallback(new PreEvaluation(m_interpreter, this));
     registerCallback(new JsonGetState(m_interpreter, this));
     registerCallback(new JsonPutState(m_interpreter, this));
     registerCallback(new FiddleCallback());
     registerCallback(new FileCallback(this));
+  }
+  
+  /**
+   * Sets whether to persist the state of the interpreter between calls
+   * @param b Set to {@code true} to persist state, {@code false}
+   * otherwise
+   */
+  protected void persistState(boolean b)
+  {
+	  m_persistState = b;
+  }
+  
+  /**
+   * Returns whether the server persists the state of the interpreter
+   * between calls
+   * @return {@code true} if state is kept, {@code false} otherwise
+   */
+  public boolean doesPersistState()
+  {
+	  return m_persistState;
   }
   
   /**

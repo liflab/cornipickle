@@ -129,11 +129,14 @@ class DummyImage extends InterpreterCallback
 			CornipickleServer.class.getResourceAsStream("resource/dummy-image-green.png"));
 
 	static JsonParser s_jsonParser;
+	
+	protected CornipickleServer m_server;
 
-	public DummyImage(Interpreter i)
+	public DummyImage(Interpreter i, CornipickleServer server)
 	{
 		super(i, RequestCallback.Method.POST, "/image/");
 		ignoreMethod();
+		m_server = server;
 		s_jsonParser = new JsonParser();
 	}
 	
@@ -154,7 +157,7 @@ class DummyImage extends InterpreterCallback
 			try 
 			{
 				j = s_jsonParser.parse(URLDecoder.decode(attributes.get("contents"), "UTF-8"));
-				if(attributes.get("interpreter") != null)
+				if (attributes.get("interpreter") != null && !m_server.doesPersistState())
 				{
 					m_interpreter = m_interpreter.restoreFromMemento(URLDecoder.decode(attributes.get("interpreter"), "UTF-8"));
 				}
@@ -182,7 +185,10 @@ class DummyImage extends InterpreterCallback
 		cbr.setHeader("Access-Control-Allow-Origin", "*");
 		cbr.setContents(createResponseBody(verdicts, m_interpreter.saveToMemento(), image_to_return));
 		cbr.setContentType(CallbackResponse.ContentType.JSON);
-		m_interpreter.clear();
+		if (!m_server.doesPersistState())
+		{
+			m_interpreter.clear();
+		}
 		return cbr;
 	}
 

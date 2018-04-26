@@ -96,9 +96,10 @@ import com.sun.net.httpserver.HttpExchange;
  */
 class DummyEmptyImage extends DummyImage
 {
-	public DummyEmptyImage(Interpreter i)
+	public DummyEmptyImage(Interpreter i, CornipickleServer server)
 	{
 		super(i, RequestCallback.Method.GET, "/image");
+		m_server = server;
 	}
 
 	@Override
@@ -111,7 +112,10 @@ class DummyEmptyImage extends DummyImage
 		cbr.setHeader("Access-Control-Allow-Origin", "*");
 		cbr.setContents(createResponseBody(verdicts, m_interpreter.saveToMemento(), image_to_return));
 		cbr.setContentType(CallbackResponse.ContentType.JSON);
-		m_interpreter.clear();
+		if (!m_server.doesPersistState())
+		{
+			m_interpreter.clear();
+		}
 		return cbr;
 	}
 }

@@ -63,9 +63,12 @@ import com.sun.net.httpserver.HttpExchange;
  */
 class AddProperty extends InterpreterCallback
 {
-	public AddProperty(Interpreter i)
+	protected CornipickleServer m_server;
+	
+	public AddProperty(Interpreter i, CornipickleServer server)
 	{
 		super(i, Method.POST, "/add");
+		m_server = server;
 	}
 
 	@Override
@@ -94,7 +97,7 @@ class AddProperty extends InterpreterCallback
 		}
 		try
 		{
-			if (props != null)
+			if (props != null && !props.isEmpty())
 			{
 				// Wipe the status of the interpreter first
 				m_interpreter.clear();
@@ -131,7 +134,10 @@ class AddProperty extends InterpreterCallback
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContents(output.toString());
 		response.setContentType(CallbackResponse.ContentType.JSON);
-		m_interpreter.clear();
+		if (!m_server.doesPersistState())
+		{
+			m_interpreter.clear();
+		}
 		return response;
 	}    
 }

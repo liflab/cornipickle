@@ -150,6 +150,16 @@ public class Main
 
 		// The remaining arguments are the Cornipickle files to read
 		CornipickleServer server = new CornipickleServer(server_name, server_port);
+		// When called from the command-line (and hence working in stand-alone
+		// mode), the interpreter persists its state between requests by default
+		if (!c_line.hasOption("memento"))
+		{
+			server.persistState(true);
+		}
+		else
+		{
+			println(stdout, "Interpreter state is not kept between calls", 1);
+		}
 		List<String> remaining_args = c_line.getOthers();
 		for (String filename : remaining_args)
 		{
@@ -221,6 +231,9 @@ public class Main
 		parser.addArgument(new Argument().withShortName("a")
 				.withLongName("android")
 				.withDescription("Change platform type to Android"));
+		parser.addArgument(new Argument()
+				.withLongName("memento")
+				.withDescription("Pass interpreter state through queries as a memento"));
 		return parser;
 	}
 

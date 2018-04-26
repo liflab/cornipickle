@@ -65,10 +65,12 @@ class AddPropertyMobile extends InterpreterCallback
 {
 	public static final boolean added = false;
 
-	public AddPropertyMobile(Interpreter i)
-	{
-		super(i, Method.POST, "/addMobile");
+	protected CornipickleServer m_server;
 
+	public AddPropertyMobile(Interpreter i, CornipickleServer server)
+	{
+		super(i, Method.POST, "/add");
+		m_server = server;
 	}
 
 	@Override
@@ -140,9 +142,10 @@ class AddPropertyMobile extends InterpreterCallback
 		// System.out.println(output.toString());
 		//  System.out.println("interepter Lenght "+s.length());
 		response.setContentType(CallbackResponse.ContentType.JSON);
-
-		m_interpreter.clear();
-
+		if (!m_server.doesPersistState())
+		{
+			m_interpreter.clear();
+		}
 		return response;
 	}    
 }
