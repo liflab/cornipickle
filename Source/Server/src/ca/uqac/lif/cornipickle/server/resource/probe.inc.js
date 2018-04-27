@@ -53,7 +53,7 @@ var dynamicProbe = function()
 				codestring = codestring + codes[i].textContent.replace(/\u00A0/g, ' ');
 			}
 			cxh = new XMLHttpRequest();
-			cxh.open("POST", "/add");
+			cxh.open("POST", "http://%SERVER_NAME%%/add");
 			//cxh.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			cxh.setRequestHeader("Content-type", "text/plain");
 			cxh.onreadystatechange = function () {
@@ -82,4 +82,4 @@ var dynamicProbe = function()
 //Loads the part of the probe file that doesn't change 
 //according to the Cornipickle code given to the server
 //It can be loaded from any url
-loadScript("/staticProbe.inc.js", dynamicProbe);
+loadScript("http://%%SERVER_NAME%%/staticProbe.inc.js", dynamicProbe);

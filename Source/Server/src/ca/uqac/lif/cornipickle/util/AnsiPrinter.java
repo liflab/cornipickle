@@ -93,28 +93,28 @@ public class AnsiPrinter extends PrintStream
 		switch (c)
 		{
 		case BLACK:
-			to_print = "\u001B[2;30m";
+			to_print = "\u001B[0;30m";
 			break;
 		case RED:
-			to_print = "\u001B[2;31m";
+			to_print = "\u001B[0;31m";
 			break;
 		case GREEN:
-			to_print = "\u001B[2;32m";
+			to_print = "\u001B[0;32m";
 			break;
 		case BROWN:
-			to_print = "\u001B[2;33m";
+			to_print = "\u001B[0;33m";
 			break;
 		case BLUE:
-			to_print = "\u001B[2;34m";
+			to_print = "\u001B[0;34m";
 			break;
 		case PURPLE:
-			to_print = "\u001B[2;35m";
+			to_print = "\u001B[0;35m";
 			break;
 		case CYAN:
-			to_print = "\u001B[2;36m";
+			to_print = "\u001B[0;36m";
 			break;
 		case LIGHT_GRAY:
-			to_print = "\u001B[2;37m";
+			to_print = "\u001B[0;37m";
 			break;
 		case DARK_GRAY:
 			to_print = "\u001B[1;30m";
