@@ -1,3 +1,20 @@
+/*
+    Cornipickle, validation of layout bugs in web applications
+    Copyright (C) 2015-2018 Sylvain Hallé
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ca.uqac.lif.cornipickle.util;
 
 import org.junit.Before;
@@ -5,29 +22,32 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-public class AnsiPrinterTest {
-	
+public class AnsiPrinterTest
+{
 	AnsiPrinter ansiPrinter;
 
 	@Before
-    public void setUp() throws  Exception{
+    public void setUp() throws FileNotFoundException
+	{
         FileOutputStream fos = new FileOutputStream("temp.tmp");
         ansiPrinter = new AnsiPrinter(fos);
     }
 
     @Test
-    public void TestAnsiPrinterEnableColors() throws Exception{
+    public void TestAnsiPrinterEnableColors()
+    {
         ansiPrinter.enableColors();
-        assertTrue(ansiPrinter.m_enabled==true);
+        assertTrue(ansiPrinter.m_enabled);
     }
 
 
     @Test
     public void TestAnsiPrinterDisableColors() throws Exception{
         ansiPrinter.disableColors();
-        assertTrue(ansiPrinter.m_enabled==false);
+        assertFalse(ansiPrinter.m_enabled);
     }
 
 
@@ -43,7 +63,7 @@ public class AnsiPrinterTest {
         while((ch = fis.read())!=-1){
             sb.append((char)ch);
         }
-        assertEquals(sb.toString(), "\u001B[0;37m");
+        assertEquals("\u001B[0m\u001B[39m\u001B[49m", sb.toString());
         fis.close();
     }
 
@@ -68,7 +88,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[0;30m");
+        assertEquals("\u001B[0;30m", sb.toString());
         fis.close();
     }
 
@@ -83,7 +103,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[0;31m");
+        assertEquals("\u001B[0;31m", sb.toString());
         fis.close();
     }
 
@@ -99,7 +119,7 @@ public class AnsiPrinterTest {
         while((ch = fis.read())!=-1){
             sb.append((char)ch);
         }
-        assertEquals(sb.toString(), "\u001B[0;32m");
+        assertEquals("\u001B[0;32m", sb.toString());
         fis.close();
     }
 
@@ -116,7 +136,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[0;33m");
+        assertEquals("\u001B[0;33m", sb.toString());
         fis.close();
     }
 
@@ -133,7 +153,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[0;34m");
+        assertEquals("\u001B[0;34m", sb.toString());
         fis.close();
     }
 
@@ -150,7 +170,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[0;35m");
+        assertEquals("\u001B[0;35m", sb.toString());
         fis.close();
     }
 
@@ -167,7 +187,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[0;36m");
+        assertEquals("\u001B[0;36m", sb.toString());
         fis.close();
     }
 
@@ -183,7 +203,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[0;37m");
+        assertEquals("\u001B[0;37m", sb.toString());
         fis.close();
     }
 
@@ -200,7 +220,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[1;30m");
+        assertEquals("\u001B[1;30m", sb.toString());
         fis.close();
     }
 
@@ -215,7 +235,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[1;31m");
+        assertEquals("\u001B[1;31m", sb.toString());
         fis.close();
     }
 
@@ -230,7 +250,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[1;32m");
+        assertEquals("\u001B[1;32m", sb.toString());
         fis.close();
     }
 
@@ -245,7 +265,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[1;33m");
+        assertEquals("\u001B[1;33m", sb.toString());
         fis.close();
     }
 
@@ -260,7 +280,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[1;34m");
+        assertEquals("\u001B[1;34m", sb.toString());
         fis.close();
     }
 
@@ -274,7 +294,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[1;35m");
+        assertEquals("\u001B[1;35m", sb.toString());
         fis.close();
     }
 
@@ -288,7 +308,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[1;36m");
+        assertEquals("\u001B[1;36m", sb.toString());
         fis.close();
     }
 
@@ -302,7 +322,7 @@ public class AnsiPrinterTest {
             sb.append((char)ch);
         }
 
-        assertEquals(sb.toString(), "\u001B[1;37m");
+        assertEquals("\u001B[1;37m", sb.toString());
         fis.close();
     }
 }

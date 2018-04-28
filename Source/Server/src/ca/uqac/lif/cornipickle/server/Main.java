@@ -42,10 +42,19 @@ public class Main
 	public static final int ERR_INPUT = 9;
 
 	/**
-	 * Build string to identify versions
+	 * Major version number
 	 */
-	protected static final String VERSION_STRING = "1.3";
-	protected static final String BUILD_STRING = "20180426";
+	public static final int s_majorVersion = 1;
+	
+	/**
+	 * Minor version number
+	 */
+	public static final int s_minorVersion = 3;
+	
+	/**
+	 * Revision version number
+	 */
+	public static final int s_revisionVersion = 2;
 
 	/**
 	 * Default server name
@@ -64,7 +73,7 @@ public class Main
 
 	public enum PlatformType { web, android_native };
 
-	public static PlatformType _plateforme = PlatformType.web;
+	public static PlatformType s_platform = PlatformType.web;
 
 	/**
 	 * Main method
@@ -77,8 +86,6 @@ public class Main
 		String serve_path = null;
 		final AnsiPrinter stderr = new AnsiPrinter(System.err);
 		final AnsiPrinter stdout = new AnsiPrinter(System.out);
-		stdout.setForegroundColor(AnsiPrinter.Color.BLACK);
-		stderr.setForegroundColor(AnsiPrinter.Color.BLACK);
 
 		// Properly close print streams when closing the program
 		// https://www.securecoding.cert.org/confluence/display/java/FIO14-J.+Perform+proper+cleanup+at+program+termination
@@ -115,27 +122,26 @@ public class Main
 			stderr.println("under certain conditions. See the file LICENSE for details.\n");
 			System.exit(ERR_OK);
 		}
-		if (c_line.hasOption("h"))
+		if (c_line.hasOption("help"))
 		{
 			showUsage(parser, stderr);
 			System.exit(ERR_OK);
 		}
-		if (c_line.hasOption("p"))
+		if (c_line.hasOption("port"))
 		{
-			server_port = Integer.parseInt(c_line.getOptionValue("p"));
+			server_port = Integer.parseInt(c_line.getOptionValue("port"));
 		}
 		if (c_line.hasOption("serve-as"))
 		{
 			serve_path = c_line.getOptionValue("serve-as");
 		}
-		if(c_line.hasOption("s"))
+		if(c_line.hasOption("servername"))
 		{
-			server_name = c_line.getOptionValue("s");
+			server_name = c_line.getOptionValue("servername");
 		}
 		if(c_line.hasOption("a")){
 
-			_plateforme=PlatformType.android_native;
-			//System.out.println("oui oui");
+			s_platform=PlatformType.android_native;
 		}
 		if (s_verbosity > 0)
 		{
@@ -144,10 +150,19 @@ public class Main
 
 		// The remaining arguments are the Cornipickle files to read
 		CornipickleServer server = new CornipickleServer(server_name, server_port);
+		// When called from the command-line (and hence working in stand-alone
+		// mode), the interpreter persists its state between requests by default
+		if (!c_line.hasOption("memento"))
+		{
+			server.persistState(true);
+		}
+		else
+		{
+			println(stdout, "Interpreter state is not kept between calls", 1);
+		}
 		List<String> remaining_args = c_line.getOthers();
 		for (String filename : remaining_args)
 		{
-			stdout.setForegroundColor(AnsiPrinter.Color.BROWN);
 			println(stdout, "Reading properties in " + filename, 1);
 			server.readProperties(filename);
 		}
@@ -172,7 +187,6 @@ public class Main
 			Interpreter.LOGGER.log(Level.SEVERE, e.toString());
 			System.exit(ERR_IO);
 		}
-		stdout.setForegroundColor(AnsiPrinter.Color.BLUE);
 		println(stdout, "Server started on " + server_name + ":" + server_port, 1);
 	}
 
@@ -217,14 +231,31 @@ public class Main
 		parser.addArgument(new Argument().withShortName("a")
 				.withLongName("android")
 				.withDescription("Change platform type to Android"));
+		parser.addArgument(new Argument()
+				.withLongName("memento")
+				.withDescription("Pass interpreter state through queries as a memento"));
 		return parser;
 	}
 
 	private static void showHeader(PrintStream out)
 	{
-		out.println("Cornipickle, a "+ _plateforme +" oracle");
-		out.println("Version " + VERSION_STRING + ", build " + BUILD_STRING);
+		String platform_type = "A web GUI";
+		if (s_platform == PlatformType.android_native)
+		{
+			platform_type = "An Android GUI";
+		}
+		out.println("Cornipickle v" + formatVersion() + " - "+ platform_type +" oracle");
+		out.println("(C) 2015-2018 Laboratoire d'informatique formelle");
+		out.println("Université du Québec à Chicoutimi, Canada");
 	}
 
-
+	private static String formatVersion()
+	{
+		String out = "" + s_majorVersion + "." + s_minorVersion;
+		if (s_revisionVersion > 0)
+		{
+			out += "." + s_revisionVersion;
+		}
+		return out;
+	}
 }

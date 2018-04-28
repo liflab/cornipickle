@@ -107,11 +107,14 @@ import com.sun.net.httpserver.HttpExchange;
 class DummyImageMobile extends InterpreterCallback
 {
 	static JsonParser s_jsonParser;
+	
+	protected CornipickleServer m_server;
 
-	public DummyImageMobile(Interpreter i)
+	public DummyImageMobile(Interpreter i, CornipickleServer server)
 	{
 		super(i, RequestCallback.Method.POST, "/imageMobile/");
 		s_jsonParser = new JsonParser();
+		m_server = server;
 	}
 
 	@Override
@@ -124,7 +127,7 @@ class DummyImageMobile extends InterpreterCallback
 		{
 			j = s_jsonParser.parse(URLDecoder.decode(attributes.get("contents").toString(), "UTF-8"));
 			//j = s_jsonParser.parse(attributes.toString().substring(2,attributes.toString().length()-1 ));
-			if(attributes.get("interpreter") != null)
+			if (attributes.get("interpreter") != null && !m_server.doesPersistState())
 			{
 				// System.out.println("nombre: "+URLDecoder.decode(attributes.get("interpreter"), "UTF-8").length());
 				m_interpreter = m_interpreter.restoreFromMemento(URLDecoder.decode(attributes.get("interpreter").toString(), "UTF-8"));
@@ -143,7 +146,7 @@ class DummyImageMobile extends InterpreterCallback
 		if (j != null)
 		{
 			m_interpreter.evaluateAll(j);
-			//m_server.setLastProbeContact();
+			m_server.setLastProbeContact();
 		}    
 		// System.out.println(j.toString());
 		// Select the dummy image to send back

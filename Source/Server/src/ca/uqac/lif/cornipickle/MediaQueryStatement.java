@@ -1,6 +1,7 @@
 package ca.uqac.lif.cornipickle;
 
 import java.util.Map;
+import java.util.logging.Level;
 
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonMap;
@@ -52,6 +53,10 @@ public class MediaQueryStatement extends Statement {
   public Verdict evaluateAtemporal(JsonElement j, Map<String, JsonElement> d)
   {
     JsonMap mediaQueryList = (JsonMap) JsonPath.get(j, "mediaqueries");
+    if (mediaQueryList.isEmpty())
+    {
+    	Interpreter.LOGGER.log(Level.WARNING, "Media query list is empty");
+    }
     JsonElement verdict = mediaQueryList.get(String.valueOf(m_id));
     JsonString verdictString = (JsonString) verdict;
     if(verdictString.stringValue().equals("true"))

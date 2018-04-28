@@ -144,36 +144,6 @@ public class StatusPageCallbackTest {
 
     }*/
 
-
-    @Test
-    public void TestStatusPageCallbackCreateProbeContactMessageNull(){
-
-
-
-        StringBuilder result = new StringBuilder();
-
-        StatusPageCallback.createProbeContactMessage(null, result);
-
-        String expected = "<p id=\"last-probe-contact\">No contact with probe so far.</p>\n";
-
-        assertTrue(expected.equals(result.toString()));
-
-    }
-
-
-    @Test
-    public void TestStatusPageCallbackCreateProbeContactMessageOk(){
-
-        StringBuilder result = new StringBuilder();
-
-        StatusPageCallback.createProbeContactMessage(new Date(), result);
-
-        String expected = "<p id=\"last-probe-contact\">Last contact with probe <span id=\"time-string\">just now</span></p>\n";
-
-        assertTrue(expected.equals(result.toString()));
-
-    }
-
     @Test
     public void TestStatusPageCallBackFooter(){
 
