@@ -17,7 +17,9 @@
  */
 package ca.uqac.lif.cornipickle.server;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import ca.uqac.lif.cornipickle.CornipickleParser.ParseException;
 import ca.uqac.lif.cornipickle.Interpreter;
@@ -34,6 +36,11 @@ public class CornipickleServer extends Server
   protected Date m_lastProbeContact;
   
   /**
+   * A list of notifications to call whenever the interpreter changes its state
+   */
+  protected List<InterpreterNotification> m_notifications;
+  
+  /**
    * Whether to persist the state of the interpreter between calls
    */
   protected boolean m_persistState = false;
@@ -45,6 +52,7 @@ public class CornipickleServer extends Server
     setServerPort(port);
     // Instantiate Cornipickle interpreter
     m_interpreter = new Interpreter();
+    m_notifications = new ArrayList<InterpreterNotification>();
     // Register callbacks
     registerCallback(new ResetHistory(m_interpreter));
     registerCallback(new AddProperty(m_interpreter, this));
@@ -66,7 +74,7 @@ public class CornipickleServer extends Server
    * @param b Set to {@code true} to persist state, {@code false}
    * otherwise
    */
-  protected void persistState(boolean b)
+  public void persistState(boolean b)
   {
 	  m_persistState = b;
   }
@@ -79,6 +87,15 @@ public class CornipickleServer extends Server
   public boolean doesPersistState()
   {
 	  return m_persistState;
+  }
+  
+  /**
+   * Registers a new notification for the interpreter
+   * @param in The notification to add
+   */
+  public void registerNotification(InterpreterNotification in)
+  {
+    m_notifications.add(in);
   }
   
   /**

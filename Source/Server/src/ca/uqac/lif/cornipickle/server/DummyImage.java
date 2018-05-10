@@ -189,6 +189,10 @@ class DummyImage extends InterpreterCallback
 		{
 			m_interpreter.clear();
 		}
+		for (InterpreterNotification in : m_server.m_notifications)
+		{
+		  in.notify(m_interpreter);
+		}
 		return cbr;
 	}
 

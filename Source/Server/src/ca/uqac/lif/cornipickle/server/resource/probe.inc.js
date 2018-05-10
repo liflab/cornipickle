@@ -44,7 +44,7 @@ var dynamicProbe = function()
 		cp_probe.setProbeHash( "interpreter" );
 		document.getElementById("cp-witness").innerHTML = "%%WITNESS_CODE%%";
 
-		if(document.getElementsByClassName("cornipickle-code"))
+		/*if(document.getElementsByClassName("cornipickle-code"))
 		{
 			var codestring = "";
 			var codes = document.getElementsByClassName("cornipickle-code");
@@ -71,9 +71,8 @@ var dynamicProbe = function()
 			};
 			cxh.send(encodeURIComponent(codestring));
 		}
-		else
+		else*/
 		{
-			console.log("HELLO");
 			cp_probe.preEvaluate();
 		}
 	}, 500);

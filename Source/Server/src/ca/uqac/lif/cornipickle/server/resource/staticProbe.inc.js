@@ -399,7 +399,7 @@ Cornipickle.CornipickleProbe = function()
 		// Serialize page contents
 		var json = cp_probe.serializeWindow(cp_probe.serializePageContents(document.body, [], null));
 		
-		var url = "http://" + this.server_name + "/preevaluate/";
+		var url = "http://" + cp_probe.server_name + "/preevaluate/";
 		xhttp = new XMLHttpRequest();
 		xhttp.open("POST", url, true);
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -440,7 +440,7 @@ Cornipickle.CornipickleProbe = function()
 		// Serialize page contents
 		var json = cp_probe.serializeWindow(cp_probe.serializePageContents(document.body, [], event));
 		
-		var url = "http://" + this.server_name + "/image/";
+		var url = "http://" + cp_probe.server_name + "/image/";
 		xhttp = new XMLHttpRequest();
 		xhttp.open("POST", url, true);
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -554,7 +554,6 @@ Cornipickle.CornipickleProbe.getStyle = function(elem, prop)
 Cornipickle.CornipickleProbe.handleResponse = function(response)
 {
 
-	console.log("handle Response");
 	// eval is evil, but we can't assume JSON.parse is available
 	eval("var response = " + decodeURI(response)); //NOSONAR
 	
@@ -650,7 +649,10 @@ Cornipickle.CornipickleProbe.formatBorderString = function(elem)
 Cornipickle.CornipickleProbe.formatBackgroundString = function(elem)
 {
 	var s_background_color = Cornipickle.CornipickleProbe.getStyle(elem, "background-color");
-	return s_background_color.trim();
+	if (s_background_color)
+	  return s_background_color.trim();
+	else
+	  return "";
 };
 
 Cornipickle.CornipickleProbe.formatBool = function(property)

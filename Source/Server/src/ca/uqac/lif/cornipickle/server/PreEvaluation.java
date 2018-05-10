@@ -101,6 +101,10 @@ public class PreEvaluation extends InterpreterCallback {
 		//com.google.gson.GsonBuilder builder = new com.google.gson.GsonBuilder();
 		//com.google.gson.Gson gson = builder.create();
 		//System.out.println(gson.toJson(m_interpreter));
+		for (InterpreterNotification in : m_server.m_notifications)
+    {
+      in.notify(m_interpreter);
+    }
 		return cbr;
 	}
 
@@ -187,7 +191,14 @@ public class PreEvaluation extends InterpreterCallback {
 				num_inconclusive++;
 			}
 			element.put("ids", id_to_highlight);
-			element.put("caption", new JsonString(CornipickleServer.escapeQuotes(key.get("description"))));
+			if (key.containsKey("description"))
+			{
+			  element.put("caption", new JsonString(CornipickleServer.escapeQuotes(key.get("description"))));
+			}
+			else
+			{
+			  element.put("caption", new JsonString("No description"));
+			} 
 			highlight_ids.add(element);
 		}
 		JsonMap result = new JsonMap();

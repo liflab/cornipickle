@@ -54,7 +54,7 @@ public class Main
 	/**
 	 * Revision version number
 	 */
-	public static final int s_revisionVersion = 2;
+	public static final int s_revisionVersion = 3;
 
 	/**
 	 * Default server name
