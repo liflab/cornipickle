@@ -249,7 +249,7 @@ public class Main
 		out.println("Université du Québec à Chicoutimi, Canada");
 	}
 
-	private static String formatVersion()
+	public static String formatVersion()
 	{
 		String out = "" + s_majorVersion + "." + s_minorVersion;
 		if (s_revisionVersion > 0)
