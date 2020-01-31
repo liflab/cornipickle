@@ -3,12 +3,13 @@ dist: trusty
 install: ant download-deps
 notifications:
   # Email notifications are disabled to not annoy anybody.
-  email: false 
+  email: false
 # Run SonarQube on code
 addons:
   sonarqube:
     token:
-      secure: c11f78b32f6c5a83c760c5b6d6ea388e166b07f7 # encrypted value of your token
+      secure: KlfstdrYio7nMTXHDtHNhdkZEmVhpk1ADwIGrHoIlaGC7gPTjeweUKXATlsWUBsZaOm17YNF23327zvs/UW8n9dnwCEURLBZ+KWePaN/W/Xt/2IL81BA+y5YIEXPfhGQYHlAxnSNyMwHRfiqvjEz4lqxbWK7JPennxPxHyq6q2a8owJDsN/7G8hoEcyOj6IbI+2aDyX+rW7l84CLgZz0SMqNrp/qx/G/21ee1rVR5rZTJ9Cw0lWBk4yc/EYeN3QOgqkl2+4Js92HF19zgT7uWqEzh30iGXISPMaVOnA181oWVhpaUxs86OaAr6pkc5D/jDwsiw68tQ1KAnSirr9eqwaaLvx4HXS93XyjDW3SFBkdtfeEku5E4Gxh0wGj6AAFyyqhV7ehFHQtXe20lj3Fc2WMgViRypVb/imqQ/9gvlNDdaK8WttZeOW8i+ZDlUJzxiltAQvWrIKp0mS8zeQMFfP4WLkC67DNaSSHOABlbHtxhK+HU40oxe/vfV3JUX7io896fX+/K9sjQcwviAhxbQ3+FyPi6WVORe2WIQZtb+pcpQh5jghtfruvyY7r7VDZpHexU6FADpPiVYwVrg0obcQran+c0fbdbPCGBz6dI1YS3Ddf0k8FSQzQ1glb35HGMDNQPWELQ/jvFzJy6kvPrSMEKdbK/587Ih2sJEXo8cE=
 script:
-  - ant test
-  - sonar-scanner
+- sudo ant install-deps
+- ant test
+- sonar-scanner

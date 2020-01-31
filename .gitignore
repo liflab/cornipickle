@@ -8,6 +8,7 @@
 *.swp
 *.bak
 *.old
+*.log
 
 # Auto-generated folders
 /doc/
