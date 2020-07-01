@@ -245,7 +245,7 @@ Cornipickle.CornipickleProbe = function()
 		}
 		if (n.tagName.toLowerCase() === "svg" || n.tagName.toLowerCase() === "script")
 		{
-			return DONT_INCLUDE_RECURSIVE;
+			return Cornipickle.CornipickleProbe.DONT_INCLUDE_RECURSIVE;
 		}
 		for (var i = 0; i < this.m_tagsToInclude.length; i++)
 		{

@@ -54,7 +54,7 @@ public class Main
 	/**
 	 * Revision version number
 	 */
-	public static final int s_revisionVersion = 3;
+	public static final int s_revisionVersion = 4;
 
 	/**
 	 * Default server name
@@ -245,7 +245,7 @@ public class Main
 			platform_type = "An Android GUI";
 		}
 		out.println("Cornipickle v" + formatVersion() + " - "+ platform_type +" oracle");
-		out.println("(C) 2015-2018 Laboratoire d'informatique formelle");
+		out.println("(C) 2015-2020 Laboratoire d'informatique formelle");
 		out.println("Université du Québec à Chicoutimi, Canada");
 	}
 

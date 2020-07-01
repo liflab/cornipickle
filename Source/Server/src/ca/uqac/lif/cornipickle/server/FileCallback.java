@@ -1,6 +1,6 @@
 /*
     Cornipickle, validation of layout bugs in web applications
-    Copyright (C) 2015 Sylvain Hallé
+    Copyright (C) 2015-2020 Sylvain Hallé
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import java.net.URI;
 import com.sun.net.httpserver.HttpExchange;
 
 import ca.uqac.lif.jerrydog.CallbackResponse;
+import ca.uqac.lif.jerrydog.CallbackResponse.ContentType;
 import ca.uqac.lif.jerrydog.InnerFileCallback;
 
 /**
@@ -47,7 +48,14 @@ public class FileCallback extends InnerFileCallback
     	CallbackResponse cbr = new CallbackResponse(t, CallbackResponse.HTTP_NOT_FOUND, "", "");
       return cbr;
     }
-    return super.process(t);
+    CallbackResponse cbr = super.process(t);
+    if (u.toString().endsWith(".js"))
+    {
+    	// Hack to make sure the static probe is assigned the proper
+    	// content type
+    	cbr.setContentType(ContentType.JS);
+    }
+    return cbr;
   }
 
 }
