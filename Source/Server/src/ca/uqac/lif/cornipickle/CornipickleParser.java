@@ -208,6 +208,7 @@ public class CornipickleParser implements ParseNodeVisitor
 		else if (node_token.compareTo("<userdef_stmt>") == 0) { }
 		else if (node_token.compareTo("<var_name>") == 0) { }
 		else if (node_token.compareTo("<math>") == 0) { }
+		else if (node_token.compareTo("<bool_ct>") == 0) { }
 		else if (node_token.compareTo("<add>") == 0)
 		{
 			m_nodes.pop(); // (
@@ -714,6 +715,16 @@ public class CornipickleParser implements ParseNodeVisitor
 			String s = sc.toString();
 			s = s.replaceAll("\"", "");
 			m_nodes.push(new StringConstant(s));
+		}
+		else if (node_token.compareTo("<b_true>") == 0)
+		{
+			m_nodes.pop();
+			m_nodes.push(new BooleanConstant(true));
+		}
+		else if (node_token.compareTo("<b_false>") == 0)
+		{
+			m_nodes.pop();
+			m_nodes.push(new BooleanConstant(true));
 		}
 		else if (node_token.compareTo("<sub>") == 0)
 		{

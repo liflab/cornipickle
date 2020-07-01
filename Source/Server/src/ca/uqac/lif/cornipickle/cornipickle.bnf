@@ -58,7 +58,7 @@
 # Cornichon statements
 
 <statement>          := <foreach> | <exists> | <binary_stmt> | <unary_stmt> | <negation>
-                        | <temporal_stmt> | <userdef_stmt> | <let> | <when> | <mediaquery_stmt>;
+                        | <temporal_stmt> | <userdef_stmt> | <let> | <when> | <mediaquery_stmt> | <bool_ct>;
 <mediaquery_stmt>    := The media query <string> applies ;
 <binary_stmt>        := <equality> | <gt> | <lt> | <regex_match> 
                         | <and> | <or> | <implies> ;
@@ -98,6 +98,10 @@
 <constant>           := <number> | <string>;
 <number>             := ^\d+;
 <string>             := ^"[^"]*";
+<bool_ct>            := <b_true> | <b_false> ;
+<b_true>             := True ;
+<b_false>            := False ;
+
 
 # User-defined set in extension
 
