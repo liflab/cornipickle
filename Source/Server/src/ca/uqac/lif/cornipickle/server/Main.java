@@ -71,9 +71,9 @@ public class Main
 	 */
 	protected static int s_verbosity = 1;
 
-	public enum PlatformType { web, android_native };
+	public enum PlatformType { WEB, ANDROID_NATIVE };
 
-	public static PlatformType s_platform = PlatformType.web;
+	public static PlatformType s_platform = PlatformType.WEB;
 
 	/**
 	 * Main method
@@ -116,7 +116,7 @@ public class Main
 
 		if (c_line.hasOption("version"))
 		{
-			stderr.println("(C) 2015-2018 Laboratoire d'informatique formelle");
+			stderr.println("(C) 2015-2020 Laboratoire d'informatique formelle");
 			stderr.println("This program comes with ABSOLUTELY NO WARRANTY.");
 			stderr.println("This is a free software, and you are welcome to redistribute it");
 			stderr.println("under certain conditions. See the file LICENSE for details.\n");
@@ -141,7 +141,7 @@ public class Main
 		}
 		if(c_line.hasOption("a")){
 
-			s_platform=PlatformType.android_native;
+			s_platform=PlatformType.ANDROID_NATIVE;
 		}
 		if (s_verbosity > 0)
 		{
@@ -150,6 +150,10 @@ public class Main
 
 		// The remaining arguments are the Cornipickle files to read
 		CornipickleServer server = new CornipickleServer(server_name, server_port);
+		if (c_line.hasOption("timeout"))
+		{
+			server.setTimeout(Integer.parseInt(c_line.get("timeout")));
+		}
 		// When called from the command-line (and hence working in stand-alone
 		// mode), the interpreter persists its state between requests by default
 		if (!c_line.hasOption("memento"))
@@ -228,6 +232,10 @@ public class Main
 				.withLongName("serve-as")
 				.withArgument("path")
 				.withDescription("Serve local folder as path"));
+		parser.addArgument(new Argument()
+				.withLongName("timeout")
+				.withArgument("x")
+				.withDescription("Set onload timeout to x ms"));
 		parser.addArgument(new Argument().withShortName("a")
 				.withLongName("android")
 				.withDescription("Change platform type to Android"));
@@ -240,7 +248,7 @@ public class Main
 	private static void showHeader(PrintStream out)
 	{
 		String platform_type = "A web GUI";
-		if (s_platform == PlatformType.android_native)
+		if (s_platform == PlatformType.ANDROID_NATIVE)
 		{
 			platform_type = "An Android GUI";
 		}

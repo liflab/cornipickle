@@ -69,6 +69,15 @@ public class CornipickleServer extends Server
     registerCallback(new FileCallback(this));
   }
   
+  	/**
+	 * Sets the timeout (in ms) to give the time for the page to load
+	 * @param timeout The timeout
+	 */
+	public void setTimeout(int timeout)
+	{
+		m_interpreter.setTimeout(timeout);
+	}
+  
   /**
    * Sets whether to persist the state of the interpreter between calls
    * @param b Set to {@code true} to persist state, {@code false}

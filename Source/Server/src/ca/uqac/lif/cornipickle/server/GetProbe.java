@@ -86,6 +86,7 @@ class GetProbe extends InterpreterCallback
 		probe_code = s_probeCode;
 		probe_code = probe_code.replace("%%WITNESS_CODE%%", escapeString(s_witnessCode));
 		probe_code = probe_code.replace("%%SERVER_NAME%%", m_serverName + ":" + m_serverPort);
+		probe_code = probe_code.replace("%%TIMEOUT%%", m_interpreter.getTimeout() + "");
 		// Add attributes to include
 		Set<String> attributes = m_interpreter.getAttributes();
 		StringBuilder attribute_string = new StringBuilder();

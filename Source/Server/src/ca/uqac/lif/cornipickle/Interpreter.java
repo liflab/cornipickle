@@ -54,6 +54,11 @@ public class Interpreter implements Originator<Interpreter,String>
 	protected final transient CornipickleDeflateSerializer m_serializer;
 	
 	/**
+	 * The timeout (in ms) to give the time for the page to load
+	 */
+	protected int m_timeout = 500;
+	
+	/**
 	 * A global logger instance to trap exceptions throughout the program
 	 */
 	public static final transient Logger LOGGER = Logger.getAnonymousLogger();
@@ -79,6 +84,24 @@ public class Interpreter implements Originator<Interpreter,String>
 		interpreter.evaluateAll(jse);
 		Map<StatementMetadata,Verdict> verdicts = interpreter.getVerdicts();
 		System.out.println(verdicts);
+	}
+	
+	/**
+	 * Sets the timeout (in ms) to give the time for the page to load
+	 * @param timeout The timeout
+	 */
+	public void setTimeout(int timeout)
+	{
+		m_timeout = timeout;
+	}
+	
+	/**
+	 * Gets the timeout (in ms) to give the time for the page to load
+	 * @return The timeout
+	 */
+	public int getTimeout()
+	{
+		return m_timeout;
 	}
 
 	public void resetHistory()

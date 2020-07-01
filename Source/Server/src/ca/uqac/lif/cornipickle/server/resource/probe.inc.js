@@ -75,7 +75,7 @@ var dynamicProbe = function()
 		{
 			cp_probe.preEvaluate();
 		}
-	}, 500);
+	}, %%TIMEOUT%%);
 };
 
 //Loads the part of the probe file that doesn't change 
